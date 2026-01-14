@@ -4,6 +4,7 @@ local TOCNAME, _ = ...
 
 local slashModule = LibStub("Buffomat-SlashCommands") --[[@as SlashCommandsModule]]
 local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxModule]]
+local kvEnvModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 
 ---@class BomSlashCommand
 ---@field command string
@@ -37,9 +38,9 @@ function slashModule:PrintSlashCommand(prefix, conf, printFn)
   prefix = prefix or ""
   conf = conf or slashCommandConf
   self:PrintSlashCommand_1(
- prefix,
- conf,
- printFn)
+    prefix,
+    conf,
+    printFn)
 end
 
 ---@param prefix string
@@ -48,7 +49,7 @@ end
 function slashModule:PrintSlashCommand_1(prefix, conf, printFn)
   local colCmd = "|cFFFF9C00"
 
----@diagnostic disable-next-line: unused-local
+  ---@diagnostic disable-next-line: unused-local
   for i, subcmd in ipairs(conf) do
     -- if false then
     --   local maybeFormatTable = (type(subcmd.command) == "table") and "|r(" .. colCmd
@@ -83,7 +84,7 @@ end
 ---@param msg string[]
 ---@param conf BomSlashCommand[]
 function slashModule:ParseAndExecute(nestingLevel, msg, conf)
----@diagnostic disable-next-line: unused-local
+  ---@diagnostic disable-next-line: unused-local
   for i, subcmd in ipairs(conf) do
     local ok = (
           type(subcmd.command) == "table") and tContains(subcmd.command, msg[nestingLevel])
@@ -120,10 +121,10 @@ end
 function slashModule.HandleSlashCommand(msg, editBox)
   if msg == "help" then
     local color = "|cFFFF9C00"
-    print("|cFFFF1C1C" .. GetAddOnMetadata(TOCNAME, "Title")
-      .. " " .. GetAddOnMetadata(TOCNAME, "Version")
-      .. " by " .. GetAddOnMetadata(TOCNAME, "Author"))
-    print(GetAddOnMetadata(TOCNAME, "Notes"))
+    print("|cFFFF1C1C" .. kvEnvModule.GetAddOnMetadata(TOCNAME, "Title")
+      .. " " .. kvEnvModule.GetAddOnMetadata(TOCNAME, "Version")
+      .. " by " .. kvEnvModule.GetAddOnMetadata(TOCNAME, "Author"))
+    print(kvEnvModule.GetAddOnMetadata(TOCNAME, "Notes"))
     if type(slashCommandStrings) == "table" then
       print("SlashCommand:", color, slashModule:SlashUnpack(slashCommandStrings, "|r, " .. color), "|r")
     end

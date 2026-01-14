@@ -15,6 +15,7 @@ local legacyToolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyTool
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local eventFrame ---@type Frame
+local kvEnvModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 
 ---@class BomGPIControlEditBox: Frame
 ---@field chatFrame Frame
@@ -646,7 +647,7 @@ function legacyToolboxModule:AddDataBroker(icon, onClick, onTooltipShow, text)
         OnClick       = onClick,
         OnTooltipShow = onTooltipShow,
         tocname       = TOCNAME,
-        label         = text or GetAddOnMetadata(TOCNAME, "Title"),
+        label         = text or kvEnvModule.GetAddonMetadata(TOCNAME, "Title"),
       })
     end
   end

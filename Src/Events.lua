@@ -45,7 +45,7 @@ eventsModule.EVT_BAG_CHANGED = bagChangedEvents()
 eventsModule.EVT_PARTY_CHANGED = { "GROUP_JOINED", "GROUP_ROSTER_UPDATE",
   "RAID_ROSTER_UPDATE", "GROUP_LEFT" }
 
-eventsModule.EVT_SPELLBOOK_CHANGED = { "SPELLS_CHANGED", "LEARNED_SPELL_IN_TAB" }
+eventsModule.EVT_SPELLBOOK_CHANGED = { "SPELLS_CHANGED", } -- "LEARNED_SPELL_IN_TAB" stopped working in TBC anniversary
 
 --- Error messages which will make player stand if sitting.
 ---@enum ErrorNotStanding

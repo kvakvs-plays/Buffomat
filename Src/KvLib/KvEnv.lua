@@ -28,5 +28,6 @@ envModule.isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 envModule.GetContainerNumSlots = (C_Container and C_Container.GetContainerNumSlots) or GetContainerNumSlots
 envModule.GetContainerItemInfo = (C_Container and C_Container.GetContainerItemInfo) or GetContainerItemInfo
 envModule.GetContainerItemCooldown = (C_Container and C_Container.GetContainerItemCooldown) or GetContainerItemCooldown
+envModule.GetAddonMetadata = (C_AddOns and C_AddOns.GetAddOnMetadata) or GetAddonMetadata
 
 envModule.playerClass = select(2, UnitClass("player"))

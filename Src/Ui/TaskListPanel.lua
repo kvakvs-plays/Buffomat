@@ -176,7 +176,7 @@ function taskListPanelModule:ResetWindow()
   self.taskFrame:SetPoint("Center", UIParent, "Center", 0, 0)
   self.taskFrame:SetWidth(200)
   self.taskFrame:SetHeight(200)
-  BuffomatAddon.SaveWindowPosition()
+  self:SavePosition()
   self:ShowWindow("tlp:resetWindow")
   BuffomatAddon:Print("Window position is reset.")
 end

@@ -7,13 +7,19 @@ local TOCNAME, _ = ...
 ---@
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
+local kvEnvModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 
 constModule.TASKCOLOR_GRAY = "777777"
 constModule.TASKCOLOR_RED = "cc4444"
 constModule.TASKCOLOR_BLEAK_RED = "bb5555"
 
-constModule.TOC_VERSION = GetAddOnMetadata(TOCNAME, "Version") --used for display in options
-constModule.TOC_TITLE = GetAddOnMetadata(TOCNAME, "Title")     -- Longer title like "Buffomat Classic TBC"
+-- Same as kvEnvModule.GetAddOnMetadata but must be available on module load so calculate here
+local compat_GetAddonMetadata = (C_AddOns and C_AddOns.GetAddOnMetadata) or GetAddonMetadata
+-- Version used for display in options
+constModule.TOC_VERSION = compat_GetAddonMetadata(TOCNAME, "Version")
+-- Longer title like "Buffomat Classic TBC"
+constModule.TOC_TITLE = compat_GetAddonMetadata(TOCNAME, "Title")
+
 constModule.SHORT_TITLE = "Buffomat"
 constModule.MACRO_ICON = "INV_MISC_QUESTIONMARK"
 constModule.MACRO_ICON_DISABLED = "INV_MISC_QUESTIONMARK"
