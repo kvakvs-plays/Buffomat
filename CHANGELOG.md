@@ -1,5 +1,9 @@
 # Changelog
 
+## Buffomat Classic 2026.3.0
+
+- Fix for pets not being detected correctly in other languages than English (by jdelvare)
+
 ## Buffomat Classic 2025.5.5
 
 - [Bug] Fixed issue with "Missing Buffs to use a group buff" setting where setting it to 2 (or higher) would cause buffs to not be detected or applied when only 1 party member was missing the buff. The logic now properly checks per-group requirements for pre-WotLK and total requirements for WotLK, ensuring single buffs are cast when group buffs don't meet the threshold.
