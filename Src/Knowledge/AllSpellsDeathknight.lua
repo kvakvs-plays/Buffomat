@@ -56,8 +56,8 @@ function deathknightModule:SetupDeathknightSpells(allBuffs, enchants)
       :HasCooldown(true)
       :BuffType("summon")
       :ReagentRequired({ itemIdsModule.Deathknight_CorpseDust })
-      :SummonCreatureFamily("Ghoul")
-      :SummonCreatureType("Undead")
+      :SummonCreatureFamily(40) -- "Ghoul"
+      :SummonCreatureType(6) -- "Undead"
       :RequirePlayerClass("DEATHKNIGHT")
       :Category("pet")
 end

@@ -1005,8 +1005,8 @@ function taskScanModule:AddSummonSpell(buffDef, playerMember)
     add = true
   else
     -- Have pet? Check pet type
-    local ucType = UnitCreatureType("pet")
-    local ucFamily = UnitCreatureFamily("pet")
+    local ucTypeName, ucType = UnitCreatureType("pet")
+    local ucFamilyName, ucFamily = UnitCreatureFamily("pet")
 
     if ucType ~= buffDef.creatureType or ucFamily ~= buffDef.creatureFamily then
       add = true

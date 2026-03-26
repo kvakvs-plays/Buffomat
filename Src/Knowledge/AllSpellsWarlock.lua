@@ -241,8 +241,8 @@ function warlockModule:SetupWarlockSpells(allBuffs, enchantments)
       :BuffType("summon")
       :IsDefault(true)
       :IsOwn(true)
-      :SummonCreatureFamily("Imp")
-      :SummonCreatureType("Demon")
+      :SummonCreatureFamily(23) -- "Imp"
+      :SummonCreatureType(3) -- "Demon"
       :SacrificeAuraIds({ 18789 })
       :RequirePlayerClass("WARLOCK")
       :Category("pet")
@@ -253,8 +253,8 @@ function warlockModule:SetupWarlockSpells(allBuffs, enchantments)
       :IsDefault(false)
       :IsOwn(true)
       :ReagentRequired({ itemIdsModule.Warlock_SoulShard })
-      :SummonCreatureFamily("Voidwalker")
-      :SummonCreatureType("Demon")
+      :SummonCreatureFamily(16) -- "Voidwalker"
+      :SummonCreatureType(3) -- "Demon"
       :SacrificeAuraIds({ 18790, 1905 }) -- TBC: Restore 2% hp, and Classic: Shield the warlock
       :RequirePlayerClass("WARLOCK")
       :Category("pet")
@@ -265,8 +265,8 @@ function warlockModule:SetupWarlockSpells(allBuffs, enchantments)
       :IsDefault(false)
       :IsOwn(true)
       :ReagentRequired({ itemIdsModule.Warlock_SoulShard })
-      :SummonCreatureFamily("Succubus")
-      :SummonCreatureType("Demon")
+      :SummonCreatureFamily(17) -- "Succubus"
+      :SummonCreatureType(3) -- "Demon"
       :SacrificeAuraIds({ 18791 })
       :RequirePlayerClass("WARLOCK")
       :Category("pet")
@@ -277,8 +277,8 @@ function warlockModule:SetupWarlockSpells(allBuffs, enchantments)
       :IsDefault(false)
       :IsOwn(true)
       :ReagentRequired({ itemIdsModule.Warlock_SoulShard })
-      :SummonCreatureFamily("Incubus")
-      :SummonCreatureType("Demon")
+      :SummonCreatureFamily(302) -- "Incubus"
+      :SummonCreatureType(3) -- "Demon"
       :SacrificeAuraIds({ 18791 })
       :RequirePlayerClass("WARLOCK")
       :Category("pet")
@@ -289,8 +289,8 @@ function warlockModule:SetupWarlockSpells(allBuffs, enchantments)
       :IsDefault(false)
       :IsOwn(true)
       :ReagentRequired({ itemIdsModule.Warlock_SoulShard })
-      :SummonCreatureFamily("Felhunter")
-      :SummonCreatureType("Demon")
+      :SummonCreatureFamily(15) -- "Felhunter"
+      :SummonCreatureType(3) -- "Demon"
       :SacrificeAuraIds({ 18792 })
       :RequirePlayerClass("WARLOCK")
       :Category("pet")
@@ -301,8 +301,8 @@ function warlockModule:SetupWarlockSpells(allBuffs, enchantments)
       :IsDefault(false)
       :IsOwn(true)
       :ReagentRequired({ itemIdsModule.Warlock_SoulShard })
-      :SummonCreatureFamily("Felguard")
-      :SummonCreatureType("Demon")
+      :SummonCreatureFamily(29) -- "Felguard"
+      :SummonCreatureType(3) -- "Demon"
       :SacrificeAuraIds({ 35701 })
       :RequirePlayerClass("WARLOCK")
       :Category("pet")
