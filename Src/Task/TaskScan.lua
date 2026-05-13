@@ -958,8 +958,12 @@ end
 ---@param playerMember BomUnit - the player
 function taskScanModule:AddSelfbuff(buffDef, playerMember)
   if buffDef.requireWarlockPet then
-    if not UnitExists("pet") or UnitCreatureType("pet") ~= "Demon" then
-      return -- No demon pet - buff can not be casted
+    if not UnitExists("pet") then
+      return -- No pet - buff can not be cast
+    end
+    local ucTypeName, ucType = UnitCreatureType("pet")
+    if ucType ~= 3 then
+      return -- Pet is not a demon - buff can not be cast
     end
   end
 
