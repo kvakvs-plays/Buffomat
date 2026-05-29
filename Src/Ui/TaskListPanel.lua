@@ -17,6 +17,7 @@ local BuffomatAddon = BuffomatAddon
 -- --- User show/hide and auto show/hide mechanics ---
 ---@field windowCommand WindowCommand Delays actual window show/hide operation till it is a safe time to do
 ---@field windowCommandCallLocation string The location where the window command was called from
+---@field windowCommandForceHide? boolean Force the next autohide command to hide regardless of AutoClose
 ---@field lastUserWindowCommand? ShowHideCommand Last user operation on window (not auto)
 
 local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
@@ -129,7 +130,7 @@ function taskListPanelModule:WindowCommand(command)
     -- doHide()
     local fade = BuffomatShared.FadeWhenNothingToDo or 0.25
     self:SetAlpha(fade) -- fade the window, default 50%
-    if BuffomatShared.AutoClose then
+    if BuffomatShared.AutoClose or self.windowCommandForceHide then
       doHide()
     end
     -- --------------------------------------------------
@@ -147,20 +148,24 @@ function taskListPanelModule:WindowCommand(command)
   -- --------------------------------------------------
   self.windowCommand = nil
   self.windowCommandCallLocation = nil
+  self.windowCommandForceHide = nil
 end
 
 ---@param callLocation string The location where this is called from
 function taskListPanelModule:HideWindow(callLocation)
   self.windowCommand = "hide"
   self.windowCommandCallLocation = callLocation
+  self.windowCommandForceHide = nil
 end
 
 ---Attempt to close if holdOpen is false (holds open if user manually called up the window)
 ---@param callLocation string The location where this is called from
-function taskListPanelModule:AutoHide(callLocation)
+---@param forceHide boolean|nil Hide even when AutoClose is disabled
+function taskListPanelModule:AutoHide(callLocation, forceHide)
   -- If the window is not hold open and the buff button exists and is disabled, attempt to close the window
   self.windowCommand = "autohide"
   self.windowCommandCallLocation = callLocation
+  self.windowCommandForceHide = forceHide == true
 end
 
 ---@param callLocation string The location where this is called from
@@ -170,12 +175,14 @@ function taskListPanelModule:AutoShow(callLocation)
   end
   self.windowCommand = "autoshow"
   self.windowCommandCallLocation = callLocation
+  self.windowCommandForceHide = nil
 end
 
 ---@param callLocation string The location where this is called from
 function taskListPanelModule:ShowWindow(callLocation)
   self.windowCommand = "show"
   self.windowCommandCallLocation = callLocation
+  self.windowCommandForceHide = nil
 end
 
 -- Reset the window to the default position and size, save the default position and size

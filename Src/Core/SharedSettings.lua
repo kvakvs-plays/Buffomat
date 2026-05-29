@@ -28,6 +28,7 @@ sharedSettingsModule.defaults = {
 ---@field UIWindowScale number
 ---@field AutoOpen boolean Open the window when a task is available
 ---@field AutoClose boolean When last task is done, hide the window
+---@field HideWhenScanBlocked boolean Hide the window when scanning is blocked by inactive conditions
 ---@field FadeWhenNothingToDo number Allows Buffomat window to fade when nothing to do
 ---@field UseProfiles boolean
 ---@field SlowerHardware boolean
@@ -86,6 +87,7 @@ function sharedSettingsModule:NewDefaultSharedSettings(init)
   -- Upgrades from older versions (SomeoneIsDrinking was renamed from HideSomeoneIsDrinking)
   tab.HideSomeoneIsDrinking = nil -- delete old key
   tab.SomeoneIsDrinking = tab.SomeoneIsDrinking or self.defaults.SomeoneIsDrinking
+  tab.HideWhenScanBlocked = tab.HideWhenScanBlocked == true
 
   --setmetatable(tab, sharedStateClass)
   return tab
@@ -103,6 +105,7 @@ function sharedSettingsModule:Defaults()
 
     UIWindowScale = 1,
     AutoOpen = true,
+    HideWhenScanBlocked = false,
     FadeWhenNothingToDo = 1.0,
     UseProfiles = false,
     SlowerHardware = false,

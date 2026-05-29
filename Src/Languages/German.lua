@@ -125,6 +125,7 @@ function germanModule:Translations()
     ["options.short.AutoDisTravel"] = "Automatisch  Reiseform abbrechen beim Zaubern",
     -- ["options.short.AutoOpen"] = "Automatisches öffnen",
     ["options.short.AutoClose"] = "Automatisches schließen",
+    ["options.short.HideWhenScanBlocked"] = "Buffomat ausblenden, wenn Scannen blockiert ist",
     ["options.short.AutoStand"] = "Automatisches Aufstehen beim Zaubern",
     ["options.short.BuffTarget"] = "Aktuelles Ziel mit aufnehmen",
     ["options.short.Carrot"] = "Erinnere an die \"Karotte am Stiel\"",
@@ -157,6 +158,8 @@ function germanModule:Translations()
 
     -- ["options.long.AutoOpen"] = "Automatisches öffnen, wenn Aufgaben verfügbar sind",
     ["options.long.AutoClose"] = "Automatisches schließen, wenn alle Aufgaben erledigt sind",
+    ["options.long.HideWhenScanBlocked"] =
+    "Blendet das Buffomat-Fenster aus, wenn das Scannen durch inaktive Bedingungen gestoppt wird, z. B. Reiten, Rastgebiet, Verstohlenheit, Taxi, Fahrzeug, Tod, deaktivierte Zone oder Willensentzug.",
 
     Header_CANCELBUFF = "Buffs Abbrechen",
     Header_INFO = "Informationen",

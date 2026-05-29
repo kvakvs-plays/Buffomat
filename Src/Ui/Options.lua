@@ -69,6 +69,7 @@ function optionsModule:CreateGeneralOptionsTable()
     args = {
       autoOpen = self:TemplateCheckbox("AutoOpen", nil, nil, nil),
       autoClose = self:TemplateCheckbox("AutoClose", nil, nil, nil),
+      hideWhenScanBlocked = self:TemplateCheckbox("HideWhenScanBlocked", nil, nil, nil),
       fadeWhenNothingToDo = self:TemplateRange(
         "FadeWhenNothingToDo", 0.1, 1.0, 0.05,
         BuffomatShared, "FadeWhenNothingToDo",

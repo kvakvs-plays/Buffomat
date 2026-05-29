@@ -21,6 +21,7 @@ function chineseModule:Translations()
     ["options.short.AutoDisTravel"] = "自动离开旅行状态",
     -- ["options.short.AutoOpen"] = "自动打开 Buffomat",
     ["options.short.AutoClose"] = "自动关闭 Buffomat",
+    ["options.short.HideWhenScanBlocked"] = "扫描被阻止时隐藏 Buffomat",
     ["options.short.AutoStand"] = "自动站立",
     ["options.short.BuffTarget"] = "优先目标增益",
     ["options.short.Carrot"] = "装备物品的警告",
@@ -57,6 +58,8 @@ function chineseModule:Translations()
     ["options.long.AutoDisTravel"] = "自动离开旅行状态 (在经典中不起作用)",
     -- ["options.long.AutoOpen"] = "有工作要做时自动显示 Buffomat",
     ["options.long.AutoClose"] = "当没有工作要做时自动关闭 Buffomat",
+    ["options.long.HideWhenScanBlocked"] =
+    "当扫描因非活动条件停止时隐藏 Buffomat 窗口，例如骑乘、休息区、潜行、飞行点、载具、死亡、禁用区域或精神分流。",
     ["options.long.AutoStand"] = "如果你在坐着的状态, Buffomat 会站起来",
     ["options.long.BuffTarget"] = "强制给当前目标施放增益",
     ["options.long.Carrot"] = "提醒取消装备的骑乘/飞行饰品",

@@ -22,12 +22,15 @@ function frenchModule:Translations()
     -- ["options.short.LockMinimapButtonDistance"] = "Distance minimale bouton minimap",
     -- ["options.short.AutoOpen"] = "Ouvrir/fermer automatiquement",
     ["options.short.AutoClose"] = "Fermer automatiquement",
+    ["options.short.HideWhenScanBlocked"] = "Masquer Buffomat si le scan est bloque",
     ["options.short.DeathBlock"] = "Ne pas buff de groupe quand quelqu'un est mort",
     ["options.short.NoGroupBuff"] = "Ne pas utiliser les buffs de groupe",
     ["options.short.SameZone"] = "Uniquement dans la même zone",
 
     -- ["options.long.AutoOpen"] = "Ouvrir/fermer automatiquement, lorsque des tâches sont disponibles",
     ["options.long.AutoClose"] = "Fermer automatiquement, lorsque la dernière tâche est terminée",
+    ["options.long.HideWhenScanBlocked"] =
+    "Masquer la fenetre Buffomat quand le scan est arrete par des conditions inactives, comme monture, zone de repos, furtivite, taxi, vehicule, mort, zone desactivee ou Connexion spirituelle.",
 
     HeaderRenew = "Renouveler avant expiration (en Secondes)",
 

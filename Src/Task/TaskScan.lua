@@ -1742,6 +1742,9 @@ function taskScanModule:CheckBuffomatInactive(context)
     local isBomActive, reasonDisabled = self:IsActive(context.party.player)
     if not isBomActive then
       self:ShowInactive(reasonDisabled)
+      if BuffomatShared.HideWhenScanBlocked and taskListPanelModule:IsWindowVisible() then
+        taskListPanelModule:AutoHide("ts:CheckBuffomatInactive", true)
+      end
       return false
     end
   end

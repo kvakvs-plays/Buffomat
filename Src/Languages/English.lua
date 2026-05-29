@@ -65,6 +65,7 @@ function englishModule:Translations()
 
     ["options.short.ActivateBomOnSpiritTap"] = "Activate on Spirit Tap below mana %",
     ["options.short.AutoClose"] = "Auto close Buffomat, when no tasks.",
+    ["options.short.HideWhenScanBlocked"] = "Hide Buffomat when scanning is blocked",
     ["options.short.AutoCrusaderAura"] = "Suggest crusader aura",
     ["options.short.AutoDismount"] = "Auto dismount",
     ["options.short.AutoDismountFlying"] = "Auto dismount flying",
@@ -107,6 +108,7 @@ function englishModule:Translations()
     ["options.long.ActivateBomOnSpiritTap"] =
     "Disable Buffomat if priest 'Spirit tap' is active and player mana is below %",
     ["options.long.AutoClose"] = "Auto close Buffomat, when the last task is done",
+    ["options.long.HideWhenScanBlocked"] = "Hide the Buffomat window when scanning is stopped by inactive conditions, such as mounted, resting, stealth, taxi, vehicle, death, disabled zone, or Spirit Tap.",
     ["options.long.AutoCrusaderAura"] = "Paladin: Auto crusader aura when mounted",
     ["options.long.AutoDismount"] = "Auto-dismount from the ground mount on cast",
     ["options.long.AutoDismountFlying"] = "Auto-drop from the flying mount on cast (OUCH)",
