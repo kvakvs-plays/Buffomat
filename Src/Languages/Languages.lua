@@ -11,6 +11,7 @@ local russianModule = LibStub("Buffomat-LanguageRussian") --[[@as BomLanguageRus
 local chineseModule = LibStub("Buffomat-LanguageChinese") --[[@as BomLanguageChineseModule]]
 
 ---@alias BomLanguageId "enUS" | "deDE" | "frFR" | "ruRU" | "zhCN"
+---@alias BomLanguageSetting "auto" | BomLanguageId
 ---@alias BomLocaleDict table<string, string>
 
 ---@class BomAllLocalesCollection
@@ -21,19 +22,40 @@ local chineseModule = LibStub("Buffomat-LanguageChinese") --[[@as BomLanguageChi
 ---@field ruRU BomLocaleDict
 ---@field zhCN BomLocaleDict
 
-function languagesModule:LoadLanguage(locale)
-  local currentLang = GetLocale()
+languagesModule.languageOptions = {
+  auto = "Auto (WoW client language)",
+  enUS = "English",
+  deDE = "German",
+  frFR = "French",
+  ruRU = "Russian",
+  zhCN = "Chinese",
+}
 
-  if currentLang == "deDE" then
+languagesModule.languageOptionsOrder = { "auto", "enUS", "deDE", "frFR", "ruRU", "zhCN" }
+
+---@param language BomLanguageSetting|string|nil
+---@return BomLanguageSetting
+function languagesModule:NormalizeLanguageSetting(language)
+  if language and self.languageOptions[language] then
+    return language --[[@as BomLanguageSetting]]
+  end
+
+  return "auto"
+end
+
+---@param locale BomLanguageId|string|nil
+---@return BomLocaleDict|nil
+function languagesModule:LoadLanguage(locale)
+  if locale == "deDE" then
     return germanModule:Translations()
   end
-  if currentLang == "frFR" then
+  if locale == "frFR" then
     return frenchModule:Translations()
   end
-  if currentLang == "ruRU" then
+  if locale == "ruRU" then
     return russianModule:Translations()
   end
-  if currentLang == "zhCN" then
+  if locale == "zhCN" then
     return chineseModule:Translations()
   end
 end
@@ -51,7 +73,14 @@ function languagesModule:SetupTranslations()
         end
   })
 
-  self.currentLocale = self:LoadLanguage(GetLocale()) or {}
+  local language = "auto"
+  if BuffomatShared then
+    language = self:NormalizeLanguageSetting(BuffomatShared.Language)
+    BuffomatShared.Language = language
+  end
+
+  local locale = language == "auto" and GetLocale() or language
+  self.currentLocale = self:LoadLanguage(locale) or {}
 
   for englishKey, englishText in pairs(englishModule:Translations()) do
     if not self.currentLocale[englishKey] then

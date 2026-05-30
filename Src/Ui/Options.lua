@@ -2,6 +2,7 @@
 
 local optionsModule = LibStub("Buffomat-Options") --[[@as OptionsModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
+local languagesModule = _t
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
@@ -67,6 +68,7 @@ function optionsModule:CreateGeneralOptionsTable()
     type = "group",
     name = "1. " .. _t("options.general.group.General"),
     args = {
+      language = self:CreateLanguageOption(),
       autoOpen = self:TemplateCheckbox("AutoOpen", nil, nil, nil),
       autoClose = self:TemplateCheckbox("AutoClose", nil, nil, nil),
       hideWhenScanBlocked = self:TemplateCheckbox("HideWhenScanBlocked", nil, nil, nil),
@@ -87,7 +89,7 @@ function optionsModule:CreateGeneralOptionsTable()
       minimapButtonShow = {
         type = "toggle",
         name = _t("options.short.ShowMinimapButton"),
-        order = 6, -- Position after slowerHardware
+        order = self:NextOptionsOrder(),
         get = function(info)
           return not BuffomatShared.Minimap.hide
         end,
@@ -120,6 +122,31 @@ function optionsModule:CreateGeneralOptionsTable()
       end),
       debugLogging = self:TemplateCheckbox("DebugLogging", nil, nil, nil),
     }
+  }
+end
+
+function optionsModule:NextOptionsOrder()
+  kvOptionsModule.optionsOrder = kvOptionsModule.optionsOrder + 1
+  return kvOptionsModule.optionsOrder
+end
+
+function optionsModule:CreateLanguageOption()
+  return {
+    desc = _t("options.long.Language"),
+    name = _t("options.short.Language"),
+    order = self:NextOptionsOrder(),
+    sorting = languagesModule.languageOptionsOrder,
+    style = "dropdown",
+    type = "select",
+    values = languagesModule.languageOptions,
+    width = 2.0,
+
+    set = function(info, value)
+      BuffomatShared.Language = languagesModule:NormalizeLanguageSetting(value)
+    end,
+    get = function(info)
+      return languagesModule:NormalizeLanguageSetting(BuffomatShared.Language)
+    end,
   }
 end
 

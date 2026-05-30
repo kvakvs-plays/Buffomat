@@ -5,6 +5,18 @@ local sharedSettingsModule = LibStub("Buffomat-SharedSettings") --[[@as SharedSe
 --- Values to use when the saved data is evolving with an update, and the key doesn't exist
 sharedSettingsModule.defaults = {
   SomeoneIsDrinking = "low-prio",
+  Language = "auto",
+}
+
+---@alias BomLanguageSetting1 "auto" | "enUS" | "deDE" | "frFR" | "ruRU" | "zhCN"
+
+local supportedLanguageSettings = {
+  auto = true,
+  enUS = true,
+  deDE = true,
+  frFR = true,
+  ruRU = true,
+  zhCN = true,
 }
 
 ---@class (exact) BomMinimapSettings
@@ -21,6 +33,7 @@ sharedSettingsModule.defaults = {
 ---@field Width number Window width
 ---@field Height number Window height
 ---@field DebugLogging boolean
+---@field Language BomLanguageSetting1
 ---@field PlaySoundWhenTask string Play a sound when task list is not empty
 ---@field Minimap BomMinimapSettings
 ---@field TargetTooLowLevel table
@@ -87,6 +100,7 @@ function sharedSettingsModule:NewDefaultSharedSettings(init)
   -- Upgrades from older versions (SomeoneIsDrinking was renamed from HideSomeoneIsDrinking)
   tab.HideSomeoneIsDrinking = nil -- delete old key
   tab.SomeoneIsDrinking = tab.SomeoneIsDrinking or self.defaults.SomeoneIsDrinking
+  tab.Language = supportedLanguageSettings[tab.Language] and tab.Language or self.defaults.Language
   tab.HideWhenScanBlocked = tab.HideWhenScanBlocked == true
 
   --setmetatable(tab, sharedStateClass)
@@ -104,6 +118,7 @@ function sharedSettingsModule:Defaults()
     Y = nil,
 
     UIWindowScale = 1,
+    Language = self.defaults.Language,
     AutoOpen = true,
     HideWhenScanBlocked = false,
     FadeWhenNothingToDo = 1.0,
