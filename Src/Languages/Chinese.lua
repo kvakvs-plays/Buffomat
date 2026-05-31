@@ -221,6 +221,7 @@ function chineseModule:Translations()
     ["castButton.inactive.Vehicle"] = "载具中不增益",
 
     ["castbutton.inactive.GCD"] = "公共冷却",
+    ["castButton.inactive.GlobalCooldown"] = "公共冷却",
 
     ["error.castFailed.tooLowLevel"] = "%s 的技能等级降级为 %s。请再补一次。",
 

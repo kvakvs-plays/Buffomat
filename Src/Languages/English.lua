@@ -227,6 +227,7 @@ function englishModule:Translations()
     ["castButton.inactive.Taxi"] = "No buffing on taxi",
     ["castButton.inactive.Vehicle"] = "No buffing in a vehicle",
     ["castbutton.inactive.GCD"] = "Global cooldown",
+    ["castButton.inactive.GlobalCooldown"] = "Global cooldown",
 
     ["error.castFailed.tooLowLevel"] = "Spell rank downgrade %s for %s. Please cast again.",
 

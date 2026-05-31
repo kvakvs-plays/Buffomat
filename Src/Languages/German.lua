@@ -221,6 +221,7 @@ function germanModule:Translations()
     ["castButton.inactive.Vehicle"] = "Kein Polieren am Fahrzeug",
 
     ["castbutton.inactive.GCD"] = "Globale Abklingzeit",
+    ["castButton.inactive.GlobalCooldown"] = "Globale Abklingzeit",
 
     ["error.castFailed.tooLowLevel"] = "Erniedrige den Rang für %s auf %s. Bitte neu zaubern.",
 

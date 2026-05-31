@@ -221,6 +221,7 @@ function frenchModule:Translations()
     ["castButton.inactive.Vehicle"] = "Pas de buff en véhicule",
 
     ["castbutton.inactive.GCD"] = "Temps de recharge global",
+    ["castButton.inactive.GlobalCooldown"] = "Temps de recharge global",
 
     ["error.castFailed.tooLowLevel"] = "Rang de sort réduit %s pour %s. Veuillez relancer.",
 

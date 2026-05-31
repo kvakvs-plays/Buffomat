@@ -55,9 +55,9 @@ function taskScanModule:IsFlying()
   return false
 end
 
--- Global Cooldown Check
--- Call it with: if not GCDDone() then return; end
--- https://www.ownedcore.com/forums/world-of-warcraft/world-of-warcraft-general/wow-ui-macros-talent-specs/372421-lua-function-check-if-global-cooldown-done.html
+---Global Cooldown Check
+---@return boolean isInGlobalCooldown
+---@return number|nil cooldownEndTime
 function taskScanModule:IsInGlobalCooldown()
   local spellID = 61304
   local minValue = 0.05
@@ -72,10 +72,10 @@ function taskScanModule:IsInGlobalCooldown()
   end
 
   local start, cdDuration = GetSpellCooldown(spellID)
-  if cdDuration - curPing <= 0 then
-    return false
+  if not start or not cdDuration or cdDuration - curPing <= 0 then
+    return false, nil
   end
-  return true
+  return true, start + cdDuration
 end
 
 function taskScanModule:IsInVehicle()
@@ -1769,6 +1769,22 @@ function taskScanModule:CheckCastingChanneling(context)
   return true
 end -- end function bomUpdateScan_PreCheck2()
 
+---@param context TaskScanContext
+---@return boolean
+function taskScanModule:CheckGlobalCooldown(context)
+  local isInGlobalCooldown, cooldownEndTime = self:IsInGlobalCooldown()
+  if not isInGlobalCooldown then
+    return true
+  end
+
+  if cooldownEndTime and cooldownEndTime < BuffomatAddon.nextCooldownDue then
+    BuffomatAddon.nextCooldownDue = cooldownEndTime
+  end
+
+  self:ShowInactive(_t("castButton.inactive.GlobalCooldown"))
+  return false
+end
+
 function taskScanModule:ShowInactive(reason)
   throttleModule:ClearForceUpdate()
   BuffomatAddon.checkForError = false
@@ -1805,6 +1821,7 @@ function taskScanModule:ScanTasks(callerLocation)
   if not self:Precheck(context)
       or not self:CheckBuffomatInactive(context)
       or not self:CheckCastingChanneling(context)
+      or not self:CheckGlobalCooldown(context)
   then
     return
   end

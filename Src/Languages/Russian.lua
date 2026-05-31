@@ -221,6 +221,7 @@ function russianModule:Translations()
     ["castButton.inactive.Vehicle"] = "На транспорте бафы отключены",
 
     ["castbutton.inactive.GCD"] = "Глобальная перезарядка",
+    ["castButton.inactive.GlobalCooldown"] = "Глобальная перезарядка",
 
     ["error.castFailed.tooLowLevel"] = "Понижение ранга заклинания %s для %s. Попробуйте выполнить баф ещё раз.",
 
