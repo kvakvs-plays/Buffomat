@@ -10,8 +10,8 @@
 
 ## Required Reference Files
 
-- Read `.claude/addon-dev.md` before making non-trivial Lua addon changes.
-- Use `.claude/code-index.md` to find relevant modules and functions before broad code searches.
+- Read `codex-references/addon-dev.md` before making non-trivial Lua addon changes.
+- Use `codex-references/code-index.md` to find relevant modules and functions before broad code searches.
 - The downloaded Blizzard UI source is available at `F:\Projects\WowAddons\BlizzardInterfaceCode\` and should be used when checking WoW UI behavior or API details.
 
 ## WoW Group And Buff Semantics
