@@ -11,13 +11,13 @@ import sys
 import zipfile
 
 # Version bumping rules: Begin each new month with <year>.<month>.0 and increase by 1 with every new bump.
-VERSION = "2026.6.0"  # year.month.build_num
+VERSION = "2026.7.0"  # year.month.build_num
 
 ADDON_NAME_CLASSIC = "BuffomatClassic"  # Directory and zip name
 ADDON_TITLE_CLASSIC = "Buffomat Classic"  # Title field in TOC
 
 UI_VERSION_CLASSIC = "11508"
-UI_VERSION_CLASSIC_TBC = "20505"  # The Burning Crusade Prepatch
+UI_VERSION_CLASSIC_TBC = "20506"  # The Burning Crusade
 UI_VERSION_CLASSIC_WOTLK = "30402"  # WotLK
 UI_VERSION_CLASSIC_CATA = "40402"  # Cataclysm
 
