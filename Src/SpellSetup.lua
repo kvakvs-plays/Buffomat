@@ -5,6 +5,7 @@ local BuffomatAddon = BuffomatAddon
 local spellSetupModule = LibStub("Buffomat-SpellSetup") --[[@as BomSpellSetupModule]]
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
+local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local itemCacheModule = LibStub("Buffomat-ItemCache") --[[@as BomItemCacheModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefinitionModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
@@ -61,7 +62,7 @@ function spellSetupModule:Setup_CancelBuffs()
       local spellInfoValue = spellInfo
 
       cancelBuff.singleText = spellInfoValue.name
-      spellInfoValue.rank = GetSpellSubtext(cancelBuff.highestRankSingleId) or ""
+      spellInfoValue.rank = envModule.GetSpellSubtext(cancelBuff.highestRankSingleId) or ""
       cancelBuff.singleLink = self:FormatSpellLink((spellInfo))
       cancelBuff.spellIcon = spellInfoValue.icon
     end
@@ -145,7 +146,7 @@ function spellSetupModule:Setup_EachSpell_CacheUpdate(spell)
       allBuffsModule.spellIdIsSingleLookup[eachSingleId] = true
       allBuffsModule.buffFromSpellIdLookup[eachSingleId] = spell
 
-      if IsSpellKnown(eachSingleId) then
+      if envModule.IsSpellKnown(eachSingleId) then
         spell.highestRankSingleId = eachSingleId
       end
     end
@@ -162,7 +163,7 @@ function spellSetupModule:Setup_EachSpell_CacheUpdate(spell)
       allBuffsModule.spellIdtoBuffId[eachGroupId] = spell.buffId
       allBuffsModule.buffFromSpellIdLookup[eachGroupId] = spell
 
-      if IsSpellKnown(eachGroupId) then
+      if envModule.IsSpellKnown(eachGroupId) then
         spell.highestRankGroupId = eachGroupId
       end
     end
@@ -183,7 +184,7 @@ function spellSetupModule:Setup_EachSpell_SetupNonConsumable(buffDef)
     local spellInfoValue = spellInfo
 
     buffDef.singleText = spellInfoValue.name
-    spellInfoValue.rank = GetSpellSubtext(buffDef.highestRankSingleId) or ""
+    spellInfoValue.rank = envModule.GetSpellSubtext(buffDef.highestRankSingleId) or ""
     buffDef.singleLink = self:FormatSpellLink(spellInfoValue)
     buffDef.spellIcon = spellInfoValue.icon
 
@@ -196,7 +197,7 @@ function spellSetupModule:Setup_EachSpell_SetupNonConsumable(buffDef)
         and not buffDef.isConsumable
         and buffDef.singleDuration
         and BuffomatShared.Duration[spellInfoValue.name] == nil
-        and IsSpellKnown(buffDef.highestRankSingleId) then
+        and envModule.IsSpellKnown(buffDef.highestRankSingleId) then
       BuffomatShared.Duration[spellInfoValue.name] = buffDef.singleDuration
     end
   end -- spell info returned success
@@ -210,12 +211,12 @@ function spellSetupModule:Setup_EachSpell_SetupGroupBuff(spell)
     local spellInfoValue = spellInfo
 
     spell.groupText = spellInfoValue.name
-    spellInfoValue.rank = GetSpellSubtext(spell.highestRankGroupId) or ""
+    spellInfoValue.rank = envModule.GetSpellSubtext(spell.highestRankGroupId) or ""
     spell.groupLink = self:FormatSpellLink(spellInfoValue)
 
     if spell.groupDuration
         and BuffomatShared.Duration[spellInfoValue.name] == nil
-        and IsSpellKnown(spell.highestRankGroupId)
+        and envModule.IsSpellKnown(spell.highestRankGroupId)
     then
       BuffomatShared.Duration[spellInfoValue.name] = spell.groupDuration
     end
@@ -302,10 +303,10 @@ function spellSetupModule:Setup_EachBuff(buff)
   local add = false
 
   -- Add single buffs which are known
-  if IsSpellKnown(buff.highestRankSingleId) then
+  if envModule.IsSpellKnown(buff.highestRankSingleId) then
     add = true
     buff.singleMana = 0
-    local cost = GetSpellPowerCost(buff.singleText)
+    local cost = envModule.GetSpellPowerCost(buff.singleText)
 
     if type(cost) == "table" then
       for j = 1, #cost do
@@ -317,13 +318,13 @@ function spellSetupModule:Setup_EachBuff(buff)
   end
 
   -- Add group buffs which are known
-  if buff.groupText and IsSpellKnown(buff.highestRankGroupId) then
+  if buff.groupText and envModule.IsSpellKnown(buff.highestRankGroupId) then
     add = true
     buff.groupMana = 0
     -- This returns a table with possibly multiple costs
     -- {  { cost = 970, name = "MANA", type = 0, minCost = 970, requiredAuraID = 0, costPercent = 0, costPerSec = 0 },
     --    { cost = 0, name = "RAGE" }, ... }
-    local costsPerEnergyType = GetSpellPowerCost(buff.highestRankGroupId)
+    local costsPerEnergyType = envModule.GetSpellPowerCost(buff.highestRankGroupId)
 
     if type(costsPerEnergyType) == "table" then
       for _i, energyType in ipairs(costsPerEnergyType) do

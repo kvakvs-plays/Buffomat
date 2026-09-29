@@ -85,7 +85,7 @@ local function Event_UNIT_POWER_UPDATE(unitTarget, powerType)
   --UNIT_POWER_UPDATE: "unitTarget", "powerType"
   if powerType == "MANA" and UnitIsUnit(unitTarget, "player") then
     local maxMana = partyModule.playerManaLimit or 0
-    local actualMana = UnitPower("player", 0) or 0
+    local actualMana = envModule.UnitPower("player", 0) or 0
 
     if maxMana <= actualMana then
       throttleModule:RequestTaskRescan("powerUpdate")

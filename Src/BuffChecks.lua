@@ -17,7 +17,7 @@ local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 function buffChecksModule:IsTrackingActive(spell)
   if envModule.haveTBC then
     for i = 1, C_Minimap.GetNumTrackingTypes() do
-      local _name, _texture, active, _category, _nesting, spellId = C_Minimap.GetTrackingInfo(i)
+      local _name, _texture, active, _category, _nesting, spellId = envModule.GetTrackingInfo(i)
       if tContains(spell.singleFamily, spellId) then
         return active
       end
@@ -218,7 +218,7 @@ function buffChecksModule:PlayerNeedsSelfBuff(buff, playerUnit)
 
     -- Check if the self-buff includes creating/conjuring an item
     if buff.lockIfHaveItem then
-      if IsSpellKnown(buff.highestRankSingleId) and not (self:HasItem(buff.lockIfHaveItem, buff.hasCD)) then
+      if envModule.IsSpellKnown(buff.highestRankSingleId) and not (self:HasItem(buff.lockIfHaveItem, buff.hasCD)) then
         table.insert(buff.unitsNeedBuff, playerUnit)
       end
 
@@ -252,7 +252,7 @@ function buffChecksModule:PlayerNeedsTracking(buff, playerUnit)
   -- in cat form and track humanoids is enabled
   if (buff.highestRankSingleId == spellIdsModule.FindHerbs or
         buff.highestRankSingleId == spellIdsModule.FindMinerals)
-      and GetShapeshiftFormID() == CAT_FORM
+      and GetShapeshiftFormID() == envModule.CAT_FORM
       and buffDefModule:IsBuffEnabled(spellIdsModule.Druid_TrackHumanoids, nil) then
     -- Do nothing - ignore herbs and minerals in catform if enabled track humanoids
   elseif not self:IsTrackingActive(buff)

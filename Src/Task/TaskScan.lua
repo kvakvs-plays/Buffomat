@@ -71,7 +71,7 @@ function taskScanModule:IsInGlobalCooldown()
     curPing = maxValue
   end
 
-  local start, cdDuration = GetSpellCooldown(spellID)
+  local start, cdDuration = envModule.GetSpellCooldown(spellID)
   if not start or not cdDuration or cdDuration - curPing <= 0 then
     return false, nil
   end
@@ -90,7 +90,7 @@ function taskScanModule:IsMountedAndCrusaderAuraRequired()
   end
   local crusaderAuraShapeshiftForm = (envModule.isCata and 5) or 7
   return BuffomatShared.AutoCrusaderAura                    -- if setting enabled
-      and IsSpellKnown(spellIdsModule.Paladin_CrusaderAura) -- and has the spell
+      and envModule.IsSpellKnown(spellIdsModule.Paladin_CrusaderAura) -- and has the spell
       and (IsMounted() or self:IsFlying())                  -- and flying
       and GetShapeshiftForm() ~= crusaderAuraShapeshiftForm -- and not crusader aura
 end
@@ -100,7 +100,7 @@ function taskScanModule:CancelBuff(list)
   if not InCombatLockdown() and list then
     for i = 1, 40 do
       --name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId,
-      local _, _, _, _, _, _, source, _, _, spellId = UnitBuff("player", i, "CANCELABLE")
+      local _, _, _, _, _, _, source, _, _, spellId = envModule.UnitBuff("player", i, "CANCELABLE")
       if tContains(list, spellId) then
         ret = true
         BuffomatAddon.cancelBuffSource = source or "player"
@@ -145,7 +145,7 @@ function taskScanModule:SetTracking(spell, value)
   -- From TBC onwards tracking is a setting and not a spell
   if envModule.haveTBC then
     for i = 1, C_Minimap.GetNumTrackingTypes() do
-      local _name, _texture, _active, _category, _nesting, spellId = C_Minimap.GetTrackingInfo(i)
+      local _name, _texture, _active, _category, _nesting, spellId = envModule.GetTrackingInfo(i)
       if spellId == spell.highestRankSingleId then
         -- found, compare texture with spell icon
         --BOM:Print(_t("ActivateTracking") .. " " .. name)
@@ -206,7 +206,7 @@ function taskScanModule:UpdateMissingBuffs_EachBuff(party, buffDef, buffCtx)
 
   -- Check Spell CD
   if buffDef.hasCD and #buffDef.unitsNeedBuff > 0 then
-    local startTime, duration = GetSpellCooldown(buffDef.highestRankSingleId)
+    local startTime, duration = envModule.GetSpellCooldown(buffDef.highestRankSingleId)
     if duration ~= 0 then
       -- The buff spell is still not ready
       buffDef:ResetBuffTargets()
@@ -231,7 +231,7 @@ function taskScanModule:GetGroupInRange(spellName, units, groupIndex, spell)
   local ret
   for i, member in pairs(units) do
     if member.group == groupIndex then
-      if not (IsSpellInRange(spellName, member.unitId) == 1 or member.isDead) then
+      if not (envModule.IsSpellInRange(spellName, member.unitId) == 1 or member.isDead) then
         if member.distance > 2000 then
           return nil
         end
@@ -259,7 +259,7 @@ function taskScanModule:GetAnyPartyMemberInRange(spellName, buffDef, party, play
   end
 
   for i, member in ipairs(buffDef.unitsNeedBuff) do
-    if IsSpellInRange(spellName, member.unitId) == 1
+    if envModule.IsSpellInRange(spellName, member.unitId) == 1
         and not member.isDead
         and (minDist == nil or member.distance < minDist)
         and not tContains(buffDef.skipList, member.name) then
@@ -294,7 +294,7 @@ function taskScanModule:GetClassInRange(spellName, party, class, spell)
     if member.class == class then
       if member.isDead then
         return nil
-      elseif not (IsSpellInRange(spellName, member.unitId) == 1) then
+      elseif not (envModule.IsSpellInRange(spellName, member.unitId) == 1) then
         if member.distance > 2000 then
           return nil
         end
@@ -392,7 +392,7 @@ function taskScanModule:IsActive(playerUnit)
   -- Cancel buff tasks if is in stealth, and option to scan is not set
   -- and current mana is < 90%
   local spiritTapManaPercent = (BuffomatShared.ActivateBomOnSpiritTap or 0) * 0.01
-  local currentMana = partyModule.playerMana or UnitPower("player", 0)
+  local currentMana = partyModule.playerMana or envModule.UnitPower("player", 0) or UnitPowerMax("player", 0)
   if playerUnit.allBuffs[spellIdsModule.Priest_SpiritTap]
       and currentMana < UnitPowerMax("player", 0) * spiritTapManaPercent then
     return false, _t("castButton.inactive.PriestSpiritTap")
@@ -685,7 +685,7 @@ function taskScanModule:AddBlessing(buffDef, party, buffCtx)
         add = string.format(constModule.PICTURE_FORMAT, texturesModule.ICON_TARGET_ON)
       end
 
-      local test_in_range = IsSpellInRange(buffDef.singleText, needsBuff.unitId) == 1
+      local test_in_range = envModule.IsSpellInRange(buffDef.singleText, needsBuff.unitId) == 1
           and not tContains(buffDef.skipList, needsBuff.name)
       if self:PreventPvpTagging(buffDef:SingleLink(), buffDef.singleText, needsBuff) then
         -- Nothing, prevent poison function has already added the text
@@ -809,7 +809,7 @@ function taskScanModule:AddBuff_SingleBuff(buffDef, minBuff, buffCtx)
         add = string.format(constModule.PICTURE_FORMAT, texturesModule.ICON_TARGET_ON)
       end
 
-      local unitIsInRange = (IsSpellInRange(buffDef.singleText, needBuff.unitId) == 1)
+      local unitIsInRange = (envModule.IsSpellInRange(buffDef.singleText, needBuff.unitId) == 1)
           and not tContains(buffDef.skipList, needBuff.name)
 
       if self:PreventPvpTagging(buffDef:SingleLink(), buffDef.singleText, needBuff) then
@@ -926,7 +926,7 @@ function taskScanModule:AddResurrection(spell, playerUnit, buffCtx)
       end
 
       -- Is the body in range?
-      local targetIsInRange = (IsSpellInRange(spell.singleText, unitNeedsBuff.unitId) == 1)
+      local targetIsInRange = (envModule.IsSpellInRange(spell.singleText, unitNeedsBuff.unitId) == 1)
           and not tContains(spell.skipList, unitNeedsBuff.name)
       local task = taskModule:Create(spell:SingleLink(), spell.singleText)
           :PrefixText(_t("task.type.Resurrect"))
@@ -1285,7 +1285,7 @@ function taskScanModule:AddWeaponEnchant(buffDef, playerUnit, buffCtx)
   local playerClass = envModule.playerClass
 
   local isTBCShaman = envModule.haveTBC and playerClass == "SHAMAN"
-  local isDualwieldShaman = IsSpellKnown(674) and playerClass == "SHAMAN"
+  local isDualwieldShaman = envModule.IsSpellKnown(674) and playerClass == "SHAMAN"
   if not isTBCShaman and not isDualwieldShaman then
     return
   end
@@ -1293,7 +1293,7 @@ function taskScanModule:AddWeaponEnchant(buffDef, playerUnit, buffCtx)
   -- Special handling for TBC shamans, you cannot specify slot for enchants,
   -- and it goes into main then offhand
   local hasMainhand, _mhExpire, _mhCharges, _mhEnchantid
-  , hasOffhand, _ohExpire, _ohCharges, _ohEnchantid = GetWeaponEnchantInfo()
+  , hasOffhand, _ohExpire, _ohCharges, _ohEnchantid = envModule.GetWeaponEnchantInfo()
 
   local profileBuff = profileModule:GetProfileBuff(buffDef.buffId, nil)
 
@@ -1375,10 +1375,10 @@ function taskScanModule:CheckMissingWeaponEnchantments(playerUnit)
   -- enchantment on weapons
   ---@type boolean, number, number, number, boolean, number, number, number
   local hasMainHandEnchant, _mainHandExpiration, _mainHandCharges, _mainHandEnchantID
-  , hasOffHandEnchant, _offHandExpiration, _offHandCharges, _offHandEnchantId = GetWeaponEnchantInfo()
+  , hasOffHandEnchant, _offHandExpiration, _offHandCharges, _offHandEnchantId = envModule.GetWeaponEnchantInfo()
 
   if BuffomatShared.MainHand and not hasMainHandEnchant then
-    local link = GetInventoryItemLink("player", GetInventorySlotInfo("MainHandSlot"))
+    local link = GetInventoryItemLink("player", envModule.GetInventorySlotInfo("MainHandSlot"))
 
     if link then
       -- Text: [Consumable Enchant Link]
@@ -1387,7 +1387,7 @@ function taskScanModule:CheckMissingWeaponEnchantments(playerUnit)
   end
 
   if BuffomatShared.SecondaryHand and not hasOffHandEnchant then
-    local link = GetInventoryItemLink("player", GetInventorySlotInfo("SECONDARYHANDSLOT"))
+    local link = GetInventoryItemLink("player", envModule.GetInventorySlotInfo("SECONDARYHANDSLOT"))
 
     if link then
       self.tasklist:Comment(_t("MSG_OFFHAND_ENCHANT_MISSING"))
@@ -1625,7 +1625,7 @@ function taskScanModule:DoScan(context)
   self:CancelBuffs(context.party.player)
 
   -- fill list and find cast
-  partyModule.playerMana = UnitPower("player", 0) or 0 --mana
+  partyModule.playerMana = envModule.UnitPower("player", 0) or UnitPowerMax("player", 0) or 0 --mana
   partyModule.playerManaLimit = UnitPowerMax("player", 0) or 0
 
   --self:ClearNextCastSpell()

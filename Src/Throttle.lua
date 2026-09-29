@@ -5,6 +5,7 @@ local BuffomatAddon = BuffomatAddon
 
 local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
+local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local eventsModule = LibStub("Buffomat-Events") --[[@as EventsModule]]
 local taskScanModule = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
@@ -79,7 +80,7 @@ function throttleModule.UpdateTimer()
   end
 
   if BuffomatAddon.checkCooldown then
-    local cdtest = GetSpellCooldown(BuffomatAddon.checkCooldown)
+    local cdtest = envModule.GetSpellCooldown(BuffomatAddon.checkCooldown)
     if cdtest == 0 then
       BuffomatAddon.checkCooldown = nil
       throttleModule:RequestTaskRescan("checkCd")

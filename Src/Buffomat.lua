@@ -14,6 +14,7 @@ local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local characterSettingsModule = LibStub("Buffomat-CharacterSettings") --[[@as CharacterSettingsModule]]
 local sharedSettingsModule = LibStub("Buffomat-SharedSettings") --[[@as SharedSettingsModule]]
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
+local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local eventsModule = LibStub("Buffomat-Events") --[[@as EventsModule]]
 local macroModule = LibStub("Buffomat-Macro") --[[@as MacroModule]]
 local optionsModule = LibStub("Buffomat-Options") --[[@as OptionsModule]]
@@ -510,11 +511,11 @@ end
 
 local function perform_who_request(name)
   DEFAULT_CHAT_FRAME.editBox:SetText("/who " .. name)
-  ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox)
+  envModule.ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox)
 end
 
 local function perform_whisper_request(name)
-  ChatFrame_OpenChat("/w " .. name .. " ")
+  envModule.ChatFrame_OpenChat("/w " .. name .. " ")
 end
 
 function BuffomatAddon.EnterHyperlink(_control, link)

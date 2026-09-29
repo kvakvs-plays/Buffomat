@@ -7,6 +7,7 @@ local macroModule = LibStub("Buffomat-Macro") --[[@as MacroModule]]
 macroModule.lastMacroSet = ''
 
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
+local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 
 ---@class BomMacro
@@ -80,9 +81,9 @@ function macroClass:EnsureExists()
     local perAccount, perChar = GetNumMacros()
     local isChar
 
-    if perChar < MAX_CHARACTER_MACROS then
+    if perChar < envModule.MAX_CHARACTER_MACROS then
       isChar = 1
-    elseif perAccount >= MAX_ACCOUNT_MACROS then
+    elseif perAccount >= envModule.MAX_ACCOUNT_MACROS then
       BuffomatAddon:Print(_t("castButton.NoMacroSlots"))
       return
     end

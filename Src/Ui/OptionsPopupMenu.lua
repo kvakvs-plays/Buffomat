@@ -11,6 +11,7 @@ local optionsPopupModule = LibStub("Buffomat-OptionsPopup") --[[@as OptionsPopup
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
+local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 local popupModule = LibStub("Buffomat-Popup") --[[@as PopupModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
@@ -48,7 +49,7 @@ function optionsPopupModule:Setup(control, minimap)
   dyn._Frame:HookScript("OnLeave", function(menu)
     -- Add slight delay to allow clicking menu items
     C_Timer.After(0.5, function()
-      if not MouseIsOver(menu) then
+      if not envModule.MouseIsOver(menu) then
         menu:Hide()
       end
     end)

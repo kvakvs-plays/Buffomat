@@ -7,6 +7,7 @@ local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
 local spellIdsModule = LibStub("Buffomat-SpellIds") --[[@as SpellIdsModule]]
+local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 
 ---Add DRUID spells
 ---@param allBuffs BomBuffDefinition[]
@@ -81,7 +82,7 @@ function druidModule:SetupDruidSpells(allBuffs, enchantments)
   -- Track Humanoids (Cat Form)
   buffDefModule:createAndRegisterBuff(allBuffs, spellIdsModule.Druid_TrackHumanoids, nil)
       :BuffType("tracking")
-      :RequiresForm(CAT_FORM)
+      :RequiresForm(envModule.CAT_FORM)
       :IsDefault(true)
       :ExtraText(_t("SpellLabel_TrackHumanoids"))
       :RequirePlayerClass("DRUID")

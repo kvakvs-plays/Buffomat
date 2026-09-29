@@ -5,6 +5,7 @@ local BuffomatAddon = BuffomatAddon
 local unitModule = LibStub("Buffomat-Unit") --[[@as BomUnitModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffModule = LibStub("Buffomat-Buff") --[[@as BomBuffModule]]
+local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxModule]]
 
@@ -52,7 +53,7 @@ function unitModule:UnitAura(unitId, buffIndex, filter)
   ---@type string, string, number, string, number, number, string, boolean, boolean, number, boolean, boolean, boolean, boolean, number
   local name, icon, count, debuffType, duration, expirationTime, source, isStealable
   , nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer
-  , nameplateShowAll, timeMod = UnitAura(unitId, buffIndex, filter)
+  , nameplateShowAll, timeMod = envModule.UnitAura(unitId, buffIndex, filter)
 
   if spellId
       and allBuffsModule.allSpellIds
@@ -289,7 +290,7 @@ end
 function unitClass:UpdatePlayerWeaponEnchantments()
   ---@type boolean, number, number, BomEnchantmentId, boolean, number, number, BomEnchantmentId
   local hasMainHandEnchant, mainHandExpiration, mainHandCharges, mainHandEnchantID
-  , hasOffHandEnchant, offHandExpiration, offHandCharges, offHandEnchantId = GetWeaponEnchantInfo()
+  , hasOffHandEnchant, offHandExpiration, offHandCharges, offHandEnchantId = envModule.GetWeaponEnchantInfo()
 
   if hasMainHandEnchant and mainHandEnchantID
       and allBuffsModule.enchantToSpellLookup[mainHandEnchantID] then
