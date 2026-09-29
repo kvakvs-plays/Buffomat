@@ -15,7 +15,7 @@ local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 ---Checks whether a tracking spell is now active
 ---@param spell BomBuffDefinition The tracking spell which might have tracking enabled
 function buffChecksModule:IsTrackingActive(spell)
-  if envModule.haveTBC then
+  if envModule.haveTBC or envModule.isForever then
     for i = 1, C_Minimap.GetNumTrackingTypes() do
       local _name, _texture, active, _category, _nesting, spellId = envModule.GetTrackingInfo(i)
       if tContains(spell.singleFamily, spellId) then

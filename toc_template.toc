@@ -17,6 +17,7 @@ embeds.xml
 
 Src/EarlyBoot.lua
 Src/KvLib/KvEnv.lua
+${FLAVOR_FILES}
 Src/Buffomat.lua
 Src/Throttle.lua
 

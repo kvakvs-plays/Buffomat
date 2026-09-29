@@ -6,6 +6,7 @@
 ---@field haveWotLK boolean
 ---@field isCata boolean
 ---@field haveCata boolean
+---@field isForever boolean
 ---@field playerClass ClassName
 ---@field GetSpellInfo fun(spell: number|string): string?, string?, number?, number?, number?, number?, number?
 ---@field GetSpellSubtext fun(spell: number|string): string?
@@ -29,6 +30,7 @@
 ---@field GetTrackingInfo fun(index: number): string?, number?, boolean?, string?, number?, number?
 ---@field ChatEdit_SendText fun(editBox: table)
 ---@field ChatFrame_OpenChat fun(text: string)
+---@field IsAuraRestricted fun(): boolean
 
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 
@@ -46,6 +48,7 @@ envModule.isTBC = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
 envModule.haveTBC = envModule.isWotLK or envModule.isTBC or envModule.isCata
 
 envModule.isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
+envModule.isForever = false
 
 envModule.GetContainerNumSlots = (C_Container and C_Container.GetContainerNumSlots) or GetContainerNumSlots
 envModule.GetContainerItemInfo = (C_Container and C_Container.GetContainerItemInfo) or GetContainerItemInfo
@@ -74,5 +77,8 @@ envModule.GetActiveTalentGroup = GetActiveTalentGroup
 envModule.GetTrackingInfo = C_Minimap and C_Minimap.GetTrackingInfo
 envModule.ChatEdit_SendText = ChatEdit_SendText
 envModule.ChatFrame_OpenChat = ChatFrame_OpenChat
+envModule.IsAuraRestricted = function()
+  return false
+end
 
 envModule.playerClass = select(2, UnitClass("player"))

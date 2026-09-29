@@ -24,6 +24,8 @@ UI_VERSION_CLASSIC_WOTLK = "30402"  # WotLK
 UI_VERSION_CLASSIC_CATA = "40402"  # Cataclysm
 UI_VERSION_FOREVER = "16001"  # Forever beta; Mainline architecture, level-60 content
 
+FOREVER_FILES = ["Src/KvLib/KvEnvForever.lua"]
+
 COPY_DIRS = ["Src", "Ace3", "Sounds", "Icons", "Textures"]
 COPY_FILES = [
     "Bindings.xml",
@@ -74,13 +76,9 @@ class BuildTool:
                 dst=f"{ADDON_NAME_CLASSIC}{SUFFIX_CAMELOT}.toc",
                 ui_version=UI_VERSION_FOREVER,
                 title=ADDON_TITLE_FOREVER,
+                flavor_files=FOREVER_FILES,
             )
-            print(
-                "Warning: Forever is an experimental packaging target only. "
-                "The addon still registers COMBAT_LOG_EVENT_UNFILTERED, which "
-                "the Forever compatibility notes identify as unavailable. "
-                "Runtime compatibility has not been established."
-            )
+            print("Warning: Forever support is experimental.")
             return
 
         for suffix, ui_version in CLASSIC_TOC_VARIANTS:
@@ -173,13 +171,16 @@ class BuildTool:
         return hash1[:8]
 
     @staticmethod
-    def create_toc(dst: str, ui_version: str, title: str):
+    def create_toc(dst: str, ui_version: str, title: str, flavor_files: list[str] | None = None):
         hash1 = BuildTool.git_hash()
 
         template = open("toc_template.toc", "rt").read()
         template = template.replace("${UI_VERSION}", ui_version)
         template = template.replace("${VERSION}", f"{VERSION}-{hash1}")
         template = template.replace("${ADDON_TITLE}", title)
+        template = template.replace(
+            "${FLAVOR_FILES}\n", "".join(f"{f}\n" for f in flavor_files or [])
+        )
 
         with open(dst, "wt") as out_f:
             out_f.write(template)

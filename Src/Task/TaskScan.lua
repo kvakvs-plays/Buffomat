@@ -97,7 +97,7 @@ end
 
 function taskScanModule:CancelBuff(list)
   local ret = false
-  if not InCombatLockdown() and list then
+  if not InCombatLockdown() and not envModule.IsAuraRestricted() and list then
     for i = 1, 40 do
       --name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId,
       local _, _, _, _, _, _, source, _, _, spellId = envModule.UnitBuff("player", i, "CANCELABLE")
@@ -143,7 +143,7 @@ end
 ---@param value boolean Whether tracking should be enabled
 function taskScanModule:SetTracking(spell, value)
   -- From TBC onwards tracking is a setting and not a spell
-  if envModule.haveTBC then
+  if envModule.haveTBC or envModule.isForever then
     for i = 1, C_Minimap.GetNumTrackingTypes() do
       local _name, _texture, _active, _category, _nesting, spellId = envModule.GetTrackingInfo(i)
       if spellId == spell.highestRankSingleId then
@@ -1800,7 +1800,7 @@ end
 --- Scan the available spells and group members to find who needs the rebuff/res and what would be their priority?
 ---@param callerLocation string Debug value to trace the caller of this function
 function taskScanModule:ScanTasks(callerLocation)
-  if InCombatLockdown() then
+  if InCombatLockdown() or envModule.IsAuraRestricted() then
     return
   end
 

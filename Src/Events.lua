@@ -360,7 +360,9 @@ function eventsModule:InitEvents()
   BuffomatAddon:RegisterEvent("PLAYER_STARTED_MOVING", Event_PLAYER_STARTED_MOVING)
   BuffomatAddon:RegisterEvent("PLAYER_STOPPED_MOVING", Event_PLAYER_STOPPED_MOVING)
   BuffomatAddon:RegisterEvent("PLAYER_TARGET_CHANGED", Event_PLAYER_TARGET_CHANGED)
-  BuffomatAddon:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", Event_COMBAT_LOG_EVENT_UNFILTERED)
+  if not envModule.isForever then
+    BuffomatAddon:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", Event_COMBAT_LOG_EVENT_UNFILTERED)
+  end
   BuffomatAddon:RegisterEvent("UI_ERROR_MESSAGE", Event_UI_ERROR_MESSAGE)
 
   BuffomatAddon:RegisterEvent("UNIT_SPELLCAST_START", Event_UNIT_SPELLCAST_START)
@@ -375,6 +377,12 @@ function eventsModule:InitEvents()
   -- Dualspec talent switch
   if envModule.haveWotLK then
     BuffomatAddon:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED", Event_TALENT_GROUP_CHANGED)
+  end
+
+  if envModule.isForever then
+    BuffomatAddon:RegisterEvent("ADDON_RESTRICTION_STATE_CHANGED", function()
+      throttleModule:RequestTaskRescan("restrictionChanged")
+    end)
   end
 
   -- TODO for TBC: PLAYER_REGEN_DISABLED / ENABLED is sent before/after the combat and protected frames lock up
