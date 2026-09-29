@@ -103,19 +103,20 @@ envModule.IsItemInRange = function(item, unit)
   return C_Item.IsItemInRange(item, unit)
 end
 
----@param slot number
+---@param weaponSlot number
 ---@return boolean, number?, number?, number?
-local function getTemporaryEnchant(slot)
-  local info = C_PaperDollInfo.GetTemporaryEnchantmentInfo(slot)
-  if info == nil then
-    return false, nil, nil, nil
+local function getWeaponEnchant(weaponSlot)
+  for _, enchant in pairs(C_Item.GetWeaponEnchantInfo(weaponSlot)) do
+    if enchant.hasEnchant then
+      return true, enchant.timeLeft, enchant.charges, enchant.enchantID
+    end
   end
-  return true, info.remainingTimeMs, info.chargesRemaining, info.enchantID
+  return false, nil, nil, nil
 end
 
 envModule.GetWeaponEnchantInfo = function()
-  local hasMainHand, mainHandExpiration, mainHandCharges, mainHandEnchantId = getTemporaryEnchant(INVSLOT_MAINHAND)
-  local hasOffHand, offHandExpiration, offHandCharges, offHandEnchantId = getTemporaryEnchant(INVSLOT_OFFHAND)
+  local hasMainHand, mainHandExpiration, mainHandCharges, mainHandEnchantId = getWeaponEnchant(Enum.WeaponSlot.MainHand)
+  local hasOffHand, offHandExpiration, offHandCharges, offHandEnchantId = getWeaponEnchant(Enum.WeaponSlot.OffHand)
   return hasMainHand, mainHandExpiration, mainHandCharges, mainHandEnchantId,
       hasOffHand, offHandExpiration, offHandCharges, offHandEnchantId
 end
