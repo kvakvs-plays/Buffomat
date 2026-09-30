@@ -24,10 +24,11 @@
 
 ## Target Runtime
 
-- Target clients: WoW Classic Anniversary / Era 1.15.x and The Burning Crusade Classic 2.5.x, with existing support for WotLK and Cataclysm Classic flavors.
+- Target clients: WoW Classic Anniversary / Era 1.15.x / The Burning Crusade Classic 2.5.x / Lich King Classic and WoW Forever (with pre-existing support for WotLK and Cataclysm Classic flavors).
 - Lua runtime: Lua 5.1 plus WoW additions.
 - Do not use `goto`, `bit32`, or integer division `//`.
 - The WoW `bit` library is available.
+- Lua and luacheck are available on the development host.
 
 ## Client And API Versioning
 

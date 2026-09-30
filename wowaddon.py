@@ -9,17 +9,20 @@ import shutil
 import subprocess
 import sys
 import zipfile
+from typing import Iterator, Tuple
 
 # Version bumping rules: Begin each new month with <year>.<month>.0 and increase by 1 with every new bump.
 VERSION = "2026.9.0"  # year.month.build_num
 
 ADDON_NAME_CLASSIC = "BuffomatClassic"  # Directory and zip name
 ADDON_TITLE_CLASSIC = "Buffomat Classic"  # Title field in TOC
+ADDON_TITLE_FOREVER = "Buffomat Classic - WoW: Forever (experimental)"
 
 UI_VERSION_CLASSIC = "11508"
 UI_VERSION_CLASSIC_TBC = "20506"  # The Burning Crusade
 UI_VERSION_CLASSIC_WOTLK = "30402"  # WotLK
 UI_VERSION_CLASSIC_CATA = "40402"  # Cataclysm
+UI_VERSION_FOREVER = "16001"  # Forever beta; Mainline architecture, level-60 content
 
 COPY_DIRS = ["Src", "Ace3", "Sounds", "Icons", "Textures"]
 COPY_FILES = [
@@ -31,10 +34,31 @@ COPY_FILES = [
     "README.Deutsch.txt",
 ]
 
-SUFFIX_CLASSIC = "-Classic"  # "_Vanilla"
-SUFFIX_TBC = "-BCC"  # "_TBC"
-SUFFIX_WRATH = "-WOTLKC"  # "_Wrath"
-SUFFIX_CATA = "-Cata"  # "_Cata???"
+# Client TOC suffixes: https://warcraft.wiki.gg/wiki/TOC_format
+# Full catalog, including modes this addon does not support. A suffix constant
+# alone does not enable a build target. Filenames use AddonName<SUFFIX>.toc.
+SUFFIX_STANDARD = "_Standard"  # Midnight excluding other Modern modes
+SUFFIX_MISTS = "_Mists"  # Mists of Pandaria Classic
+SUFFIX_CATA = "_Cata"  # Cataclysm Classic
+SUFFIX_WRATH = "_Wrath"  # Wrath Classic and Titan Reforged
+SUFFIX_TBC = "_TBC"  # Burning Crusade Classic and Anniversary
+SUFFIX_CAMELOT = "_Camelot"  # WoW: Forever
+SUFFIX_VANILLA = "_Vanilla"  # World of Warcraft Classic (Era)
+SUFFIX_PLUNDERSTORM = "_Plunderstorm"
+SUFFIX_WOWLABS = "_WoWLabs"  # Unknown Modern mode
+SUFFIX_WOWHACK = "_WoWHack"  # Unknown Modern mode
+SUFFIX_MAINLINE = "_Mainline"  # Midnight, Modern modes, and Forever
+SUFFIX_CLASSIC = "_Classic"  # All Classic expansions, not specifically Era
+
+# Emit only supported flavors, with specific selectors and an unsuffixed fallback.
+# Do not use the broad _Classic or _Mainline selectors for an Era-only TOC.
+CLASSIC_TOC_VARIANTS = (
+    ("", UI_VERSION_CLASSIC),
+    (SUFFIX_VANILLA, UI_VERSION_CLASSIC),
+    (SUFFIX_TBC, UI_VERSION_CLASSIC_TBC),
+    (SUFFIX_WRATH, UI_VERSION_CLASSIC_WOTLK),
+    (SUFFIX_CATA, UI_VERSION_CLASSIC_CATA),
+)
 
 
 class BuildTool:
@@ -43,39 +67,47 @@ class BuildTool:
         self.version = VERSION
         self.copy_dirs = COPY_DIRS[:]
         self.copy_files = COPY_FILES[:]
-        self.create_toc(
-            dst=f"{ADDON_NAME_CLASSIC}.toc",
-            ui_version=UI_VERSION_CLASSIC,
-            title=ADDON_TITLE_CLASSIC,
-        )
-        self.create_toc(
-            dst=f"{ADDON_NAME_CLASSIC}{SUFFIX_CLASSIC}.toc",
-            ui_version=UI_VERSION_CLASSIC,
-            title=ADDON_TITLE_CLASSIC,
-        )
-        self.create_toc(
-            dst=f"{ADDON_NAME_CLASSIC}{SUFFIX_TBC}.toc",
-            ui_version=UI_VERSION_CLASSIC_TBC,
-            title=ADDON_TITLE_CLASSIC,
-        )
-        self.create_toc(
-            dst=f"{ADDON_NAME_CLASSIC}{SUFFIX_WRATH}.toc",
-            ui_version=UI_VERSION_CLASSIC_WOTLK,
-            title=ADDON_TITLE_CLASSIC,
-        )
-        self.create_toc(
-            dst=f"{ADDON_NAME_CLASSIC}{SUFFIX_CATA}.toc",
-            ui_version=UI_VERSION_CLASSIC_CATA,
-            title=ADDON_TITLE_CLASSIC,
-        )
+        self.is_forever = args.version == "forever"
+        if self.is_forever:
+            # Keep the Classic TOCs intact when alternating between build targets.
+            self.create_toc(
+                dst=f"{ADDON_NAME_CLASSIC}{SUFFIX_CAMELOT}.toc",
+                ui_version=UI_VERSION_FOREVER,
+                title=ADDON_TITLE_FOREVER,
+            )
+            print(
+                "Warning: Forever is an experimental packaging target only. "
+                "The addon still registers COMBAT_LOG_EVENT_UNFILTERED, which "
+                "the Forever compatibility notes identify as unavailable. "
+                "Runtime compatibility has not been established."
+            )
+            return
+
+        for suffix, ui_version in CLASSIC_TOC_VARIANTS:
+            self.create_toc(
+                dst=f"{ADDON_NAME_CLASSIC}{suffix}.toc",
+                ui_version=ui_version,
+                title=ADDON_TITLE_CLASSIC,
+            )
+
+    def package_files(self, toc_name: str) -> Iterator[Tuple[str, str]]:
+        """Yield source and packaged filenames for the selected target's TOCs and files.
+
+        Keep the addon folder name unchanged for asset paths and saved variables.
+        Forever also includes an unsuffixed fallback copied from its Camelot TOC.
+        """
+        for filename in self.copy_files:
+            yield filename, filename
+        if self.is_forever:
+            filename = f"{toc_name}{SUFFIX_CAMELOT}.toc"
+            yield filename, filename
+            yield filename, f"{toc_name}.toc"
+        else:
+            for suffix, _ in CLASSIC_TOC_VARIANTS:
+                filename = f"{toc_name}{suffix}.toc"
+                yield filename, filename
 
     def do_install(self, toc_name: str):
-        self.copy_files.append(f"{toc_name}.toc")
-        self.copy_files.append(f"{toc_name}{SUFFIX_CLASSIC}.toc")
-        self.copy_files.append(f"{toc_name}{SUFFIX_TBC}.toc")
-        self.copy_files.append(f"{toc_name}{SUFFIX_WRATH}.toc")
-        self.copy_files.append(f"{toc_name}{SUFFIX_CATA}.toc")
-
         dst_path = f"{self.args.dst}/{toc_name}"
 
         if os.path.isdir(dst_path):
@@ -90,9 +122,9 @@ class BuildTool:
             print(f"Copying directory: {copy_dir}/*")
             shutil.copytree(copy_dir, f"{dst_path}/{copy_dir}")
 
-        for copy_file in self.copy_files:
+        for copy_file, packaged_name in self.package_files(toc_name):
             print(f"Copying: {copy_file}")
-            shutil.copy(copy_file, f"{dst_path}/{copy_file}")
+            shutil.copy(copy_file, f"{dst_path}/{packaged_name}")
 
     @staticmethod
     def do_zip_add_dir(zip: zipfile.ZipFile, dir: str, toc_name: str):
@@ -117,13 +149,8 @@ class BuildTool:
                 zip.write(file, file)
 
     def do_zip(self, toc_name: str):
-        self.copy_files.append(f"{toc_name}.toc")
-        self.copy_files.append(f"{toc_name}{SUFFIX_CLASSIC}.toc")
-        self.copy_files.append(f"{toc_name}{SUFFIX_TBC}.toc")
-        self.copy_files.append(f"{toc_name}{SUFFIX_WRATH}.toc")
-        self.copy_files.append(f"{toc_name}{SUFFIX_CATA}.toc")
-
-        zip_name = f"{self.args.dst}/{toc_name}-{VERSION}.zip"
+        target_suffix = SUFFIX_CAMELOT if self.is_forever else ""
+        zip_name = f"{self.args.dst}/{toc_name}{target_suffix}-{VERSION}.zip"
 
         with zipfile.ZipFile(
             zip_name, "w", zipfile.ZIP_DEFLATED, allowZip64=True
@@ -134,9 +161,9 @@ class BuildTool:
             for input_dir in self.copy_dirs:
                 BuildTool.do_zip_add_dir(zip_file, dir=input_dir, toc_name=toc_name)
 
-            for input_f in self.copy_files:
+            for input_f, packaged_name in self.package_files(toc_name):
                 print(f"ZIP: File {input_f}")
-                zip_file.write(input_f, f"{toc_name}/{input_f}")
+                zip_file.write(input_f, f"{toc_name}/{packaged_name}")
 
     @staticmethod
     def git_hash() -> str:
@@ -172,8 +199,9 @@ def main():
 
     parser.add_argument(
         "--version",
-        choices=["classic", "tbc", "wotlk"],
-        help="The version to copy or zip: classic, TBC or WotLK",
+        choices=["classic", "tbc", "wotlk", "cata", "forever"],
+        help="Select experimental Forever packaging, or the existing combined "
+        "Classic/TBC/WotLK/Cata package (default and all other choices).",
     )
 
     parser.add_argument(

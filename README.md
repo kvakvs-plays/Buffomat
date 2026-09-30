@@ -72,6 +72,40 @@ during combat!
   Sanctity Aura, Redemption, Sense Undead
 * TRACKING Find Herbs, Find Minerals, Find Treasure
 
+## Building and installing
+
+Run the build tool from the repository root. Existing commands, including
+`--version classic`, `tbc`, `wotlk`, and `cata`, produce the combined Classic,
+TBC, Wrath, and Cataclysm package:
+
+```sh
+python wowaddon.py --dst="../_Releases" zip
+```
+
+The destination directory for ZIP files must already exist. Supported client TOCs
+use `_Vanilla`, `_TBC`, `_Wrath`, and `_Cata`, alongside the unsuffixed fallback.
+
+WoW: Forever has an explicit experimental build target using beta interface
+`16001`, as specified in the project compatibility notes. Its level-60 content
+uses Mainline/Midnight UI architecture. Build or install it with:
+
+```sh
+python wowaddon.py --version forever --dst="../_Releases" zip
+python wowaddon.py --version forever --dst="C:/Games/World of Warcraft/_classic_beta_/Interface/AddOns" install
+```
+
+The archive is named `BuffomatClassic_Camelot-<version>.zip`. It retains the
+`BuffomatClassic` addon folder, asset paths, and saved-variable names, and contains
+the Forever `BuffomatClassic_Camelot.toc` and an identical `BuffomatClassic.toc`
+fallback. Existing generated Classic TOCs are preserved.
+Restart the client if a newly installed addon folder does not appear.
+
+This target only packages the addon; it does not establish Forever runtime
+compatibility. The current addon registers `COMBAT_LOG_EVENT_UNFILTERED` and uses
+legacy aura APIs. The supplied Forever notes identify these as porting blockers
+or areas requiring changes. A working Forever port requires a separate runtime
+review and testing on the actual client. Existing client code is unchanged.
+
 ## Credits
 
 * wellcat for the Chinese translation
