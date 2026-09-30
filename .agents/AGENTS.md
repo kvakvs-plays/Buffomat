@@ -16,5 +16,5 @@
 * The source for WoW UI is conveniently downloaded from the game files and is located at     `F:\Projects\WowAddons\BlizzardInterfaceCode\`
 * Use skill `s-research` on questions related to wow and Lua programming topics.
 
-Always read `.claude/addon-dev.md`
-When need to search for code locations, consult with `.claude/code-index.md`
+Always read `.agents/addon-dev.md`
+When need to search for code locations, consult with `.agents/code-index.md`

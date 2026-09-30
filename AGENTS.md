@@ -1,4 +1,4 @@
-# Codex Instructions for BuffomatClassic
+# Agent Instructions for BuffomatClassic
 
 ## Project Context
 
@@ -10,8 +10,9 @@
 
 ## Required Reference Files
 
-- Read `codex-references/addon-dev.md` before making non-trivial Lua addon changes.
-- Use `codex-references/code-index.md` to find relevant modules and functions before broad code searches.
+- Read `.agents/AGENTS.md` for additional project instructions.
+- Read `.agents/addon-dev.md` before making non-trivial Lua addon changes.
+- Use `.agents/code-index.md` to find relevant modules and functions before broad code searches.
 - The downloaded Blizzard UI source is available at `F:\Projects\WowAddons\BlizzardInterfaceCode\` and should be used when checking WoW UI behavior or API details.
 
 ## WoW Group And Buff Semantics
