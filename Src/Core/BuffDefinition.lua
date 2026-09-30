@@ -269,7 +269,7 @@ function buffDefModule:CheckDynamicLimitations(limitations)
   end
 
   if type((limitations).hideIfSpellKnown) == "number"
-      and IsSpellKnown((limitations).hideIfSpellKnown) then
+      and envModule.IsSpellKnown((limitations).hideIfSpellKnown) then
     return false -- know a blocker spell, a better version like ice armor/frost armor pair
   end
 
@@ -533,7 +533,7 @@ end
 
 function buffDefClass:RewriteSealBuffType()
   -- for before TBC make this a seal spell, for TBC do not modify
-  if not envModule.haveTBC and not IsSpellKnown(674) then
+  if not envModule.haveTBC and not envModule.IsSpellKnown(674) then
     self.type = "seal"
   end
   return self

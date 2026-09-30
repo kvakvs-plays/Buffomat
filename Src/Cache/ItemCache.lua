@@ -1,4 +1,5 @@
 local BuffomatAddon = BuffomatAddon
+local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 
 ---@alias BomItemCacheKey number|string
 
@@ -39,7 +40,7 @@ function BuffomatAddon.GetItemInfo(arg)
 
   local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType
   , itemSubType, itemStackCount, itemEquipLoc, itemTexture, itemSellPrice
-  , itemClassID, itemSubClassID = GetItemInfo(arg)
+  , itemClassID, itemSubClassID = envModule.GetItemInfo(arg)
   if itemName == nil then
     return nil
   end
@@ -85,7 +86,7 @@ function itemCacheModule:LoadItem(itemId, onLoaded)
   local itemLoaded = function()
     local itemName, _itemLink, _itemRarity, itemLevel, itemMinLevel, itemType
     , itemSubType, itemStackCount, itemEquipLoc, _itemTexture, itemSellPrice
-    , itemClassID, itemSubClassID = GetItemInfo(itemId)
+    , itemClassID, itemSubClassID = envModule.GetItemInfo(itemId)
     if itemName == nil then
       return
     end

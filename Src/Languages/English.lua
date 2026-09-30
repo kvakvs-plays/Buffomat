@@ -212,6 +212,7 @@ function englishModule:Translations()
     InfoSomeoneIsDrinking = "1 person is drinking",
     InfoMultipleDrinking = "%d persons are drinking",
 
+    ["castButton.inactive.AuraDataUnavailable"] = "Buff scan paused: aura data unavailable",
     ["castButton.inactive.DeadMember"] = "A party member is dead",
     ["castButton.inactive.Flying"] = "Flying; Dismount disabled",
     ["castButton.inactive.InCombat"] = "You are in combat",

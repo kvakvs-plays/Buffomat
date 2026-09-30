@@ -45,7 +45,9 @@ end
 function actionMacroModule:WipeMacro(command)
   local macro = BuffomatAddon.theMacro
 
-  macro:EnsureExists()
+  if not macro:EnsureExists() then
+    return
+  end
   wipe(macro.lines)
 
   if command then

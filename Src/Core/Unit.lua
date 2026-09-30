@@ -1,4 +1,5 @@
 local BuffomatAddon = BuffomatAddon
+local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 
 ---@class BomUnitModule
 
@@ -12,6 +13,7 @@ local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxMod
 
 ---@class BomUnit
 ---@field allBuffs table<number, boolean> Availability of all auras even those not supported by BOM, by id, no extra detail stored
+---@field auraDataUnavailable boolean? Prevent decisions from an incomplete aura scan.
 ---@field class ClassName
 ---@field distance number
 ---@field group number Raid group number (9 if temporary moved out of the raid by BOM)
@@ -47,12 +49,15 @@ end
 ---@param unitId string
 ---@param buffIndex number Index of buff/debuff slot starts 1 max 40?
 ---@param filter string Filter string like "HELPFUL", "PLAYER", "RAID"... etc
----@return BomUnitAuraResult
+---@return BomUnitAuraResult?
+---@return boolean readable
 function unitModule:UnitAura(unitId, buffIndex, filter)
-  ---@type string, string, number, string, number, number, string, boolean, boolean, number, boolean, boolean, boolean, boolean, number
-  local name, icon, count, debuffType, duration, expirationTime, source, isStealable
-  , nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer
-  , nameplateShowAll, timeMod = UnitAura(unitId, buffIndex, filter)
+  local aura, readable = envModule.GetUnitAura(unitId, buffIndex, filter)
+  if not readable or aura == nil then
+    return nil, readable
+  end
+  local name, spellId, source = aura.name, aura.spellId, aura.source
+  local duration, expirationTime = aura.duration, aura.expirationTime
 
   if spellId
       and allBuffsModule.allSpellIds
@@ -68,6 +73,9 @@ function unitModule:UnitAura(unitId, buffIndex, filter)
 
       if duration > 0 and (expirationTime == nil or expirationTime == 0) then
         local destName = UnitFullName(unitId) ---@type string
+        if envModule.IsSecretValue(destName) then
+          return nil, false
+        end
         local buffOnPlayer = partyModule.unitAurasLastUpdated[destName]
 
         if type(buffOnPlayer) == "table" and buffOnPlayer[name] then
@@ -88,28 +96,20 @@ function unitModule:UnitAura(unitId, buffIndex, filter)
     end
   end
 
-  return {
-    name = name,
-    icon = icon,
-    count = count,
-    debuffType = debuffType,
-    duration = duration,
-    expirationTime = expirationTime,
-    source = source,
-    isStealable = isStealable,
-    nameplateShowPersonal = nameplateShowPersonal,
-    spellId = spellId,
-    canApplyAura = canApplyAura,
-    isBossDebuff = isBossDebuff,
-    castByPlayer = castByPlayer,
-    nameplateShowAll = nameplateShowAll,
-    timeMod = timeMod
-  }
+  aura.duration = duration
+  aura.expirationTime = expirationTime
+  return aura, true
 end
 
 ---Force updates buffs for one party member
 ---@param playerUnit BomUnit
 function unitClass:ForceUpdateBuffs(playerUnit)
+  if InCombatLockdown() then
+    self.auraDataUnavailable = true
+    self.NeedBuff = false
+    return
+  end
+  self.auraDataUnavailable = false
   self.isPlayer = (self == playerUnit)
   self.isDead = UnitIsDeadOrGhost(self.unitId) and not UnitIsFeignDeath(self.unitId)
   self.isGhost = UnitIsGhost(self.unitId)
@@ -135,7 +135,16 @@ function unitClass:ForceUpdateBuffs(playerUnit)
   repeat
     buffIndex = buffIndex + 1
 
-    local unitAura = unitModule:UnitAura(self.unitId, buffIndex, "HELPFUL")
+    local unitAura, readable = unitModule:UnitAura(self.unitId, buffIndex, "HELPFUL")
+    if not readable then
+      self.auraDataUnavailable = true
+      self.NeedBuff = false
+      wipe(self.knownBuffs)
+      wipe(self.allBuffs)
+      return
+    elseif unitAura == nil then
+      break
+    end
 
     if unitAura.spellId then
       self.allBuffs[unitAura.spellId] = true -- save all buffids even those not supported
@@ -169,7 +178,7 @@ function unitClass:ForceUpdateBuffs(playerUnit)
       --  self.hasCarrot = true
       --end
     end
-  until (not unitAura.name)
+  until false -- The API returns nil at the end of the aura list.
 
   if self.isPlayer then
     self:UpdatePlayerWeaponEnchantments()

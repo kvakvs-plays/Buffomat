@@ -310,8 +310,6 @@ end
 ---@class BomReputationTrinketZones
 ---@field itemIds WowItemId[]
 ---@field zoneId WowZoneId[]
----@field Link string
----@field spell WowSpellId
 BuffomatAddon.reputationTrinketZones = {
   itemIds = {
     12846, -- Simple AD trinket
@@ -330,8 +328,6 @@ BuffomatAddon.reputationTrinketZones = {
 ---@class BomRidingSpeedZones
 ---@field itemIds WowItemId[]
 ---@field zoneId WowZoneId[]
----@field Link string
----@field spell WowSpellId
 BuffomatAddon.ridingSpeedZones = {
   itemIds = {
     11122, -- Classic: Item [Carrot on a Stick]

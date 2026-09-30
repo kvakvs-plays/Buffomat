@@ -71,8 +71,12 @@ function taskScanModule:IsInGlobalCooldown()
     curPing = maxValue
   end
 
-  local start, cdDuration = GetSpellCooldown(spellID)
-  if not start or not cdDuration or cdDuration - curPing <= 0 then
+  local start, cdDuration = envModule.GetSpellCooldown(spellID)
+  if start == nil or cdDuration == nil then
+    -- Unknown/restricted cooldown data must not make a spell appear ready.
+    return true, nil
+  end
+  if cdDuration - curPing <= 0 then
     return false, nil
   end
   return true, start + cdDuration
@@ -90,7 +94,7 @@ function taskScanModule:IsMountedAndCrusaderAuraRequired()
   end
   local crusaderAuraShapeshiftForm = (envModule.isCata and 5) or 7
   return BuffomatShared.AutoCrusaderAura                    -- if setting enabled
-      and IsSpellKnown(spellIdsModule.Paladin_CrusaderAura) -- and has the spell
+      and envModule.IsSpellKnown(spellIdsModule.Paladin_CrusaderAura) -- and has the spell
       and (IsMounted() or self:IsFlying())                  -- and flying
       and GetShapeshiftForm() ~= crusaderAuraShapeshiftForm -- and not crusader aura
 end
@@ -99,12 +103,15 @@ function taskScanModule:CancelBuff(list)
   local ret = false
   if not InCombatLockdown() and list then
     for i = 1, 40 do
-      --name, icon, count, debuffType, duration, expirationTime, source, isStealable, nameplateShowPersonal, spellId,
-      local _, _, _, _, _, _, source, _, _, spellId = UnitBuff("player", i, "CANCELABLE")
-      if tContains(list, spellId) then
+      local aura, readable = envModule.GetUnitAura("player", i, "HELPFUL|CANCELABLE")
+      if not readable or aura == nil then
+        break
+      end
+      if tContains(list, aura.spellId) then
         ret = true
-        BuffomatAddon.cancelBuffSource = source or "player"
-        CancelUnitBuff("player", i)
+        BuffomatAddon.cancelBuffSource = aura.source or "player"
+        -- Use the same filter so the index still refers to the inspected aura.
+        CancelUnitBuff("player", i, "HELPFUL|CANCELABLE")
         break
       end
     end
@@ -142,14 +149,14 @@ end
 ---@param spell BomBuffDefinition The tracking spell to activate
 ---@param value boolean Whether tracking should be enabled
 function taskScanModule:SetTracking(spell, value)
-  -- From TBC onwards tracking is a setting and not a spell
-  if envModule.haveTBC then
-    for i = 1, C_Minimap.GetNumTrackingTypes() do
-      local _name, _texture, _active, _category, _nesting, spellId = C_Minimap.GetTrackingInfo(i)
+  -- Mainline-based clients also use tracking settings, independent of content era.
+  if envModule.usesTrackingSettings then
+    for i = 1, envModule.GetNumTrackingTypes() do
+      local _name, _texture, _active, _category, _nesting, spellId = envModule.GetTrackingInfo(i)
       if spellId == spell.highestRankSingleId then
         -- found, compare texture with spell icon
         --BOM:Print(_t("ActivateTracking") .. " " .. name)
-        C_Minimap.SetTracking(i, value)
+        envModule.SetTracking(i, value)
         return
       end
     end
@@ -206,8 +213,11 @@ function taskScanModule:UpdateMissingBuffs_EachBuff(party, buffDef, buffCtx)
 
   -- Check Spell CD
   if buffDef.hasCD and #buffDef.unitsNeedBuff > 0 then
-    local startTime, duration = GetSpellCooldown(buffDef.highestRankSingleId)
-    if duration ~= 0 then
+    local startTime, duration = envModule.GetSpellCooldown(buffDef.highestRankSingleId)
+    if startTime == nil or duration == nil then
+      buffDef:ResetBuffTargets()
+      buffCtx.someoneIsDead = false
+    elseif duration ~= 0 then
       -- The buff spell is still not ready
       buffDef:ResetBuffTargets()
       startTime = startTime + duration
@@ -231,7 +241,7 @@ function taskScanModule:GetGroupInRange(spellName, units, groupIndex, spell)
   local ret
   for i, member in pairs(units) do
     if member.group == groupIndex then
-      if not (IsSpellInRange(spellName, member.unitId) == 1 or member.isDead) then
+      if not (envModule.IsSpellInRange(spellName, member.unitId) == 1 or member.isDead) then
         if member.distance > 2000 then
           return nil
         end
@@ -259,7 +269,7 @@ function taskScanModule:GetAnyPartyMemberInRange(spellName, buffDef, party, play
   end
 
   for i, member in ipairs(buffDef.unitsNeedBuff) do
-    if IsSpellInRange(spellName, member.unitId) == 1
+    if envModule.IsSpellInRange(spellName, member.unitId) == 1
         and not member.isDead
         and (minDist == nil or member.distance < minDist)
         and not tContains(buffDef.skipList, member.name) then
@@ -294,7 +304,7 @@ function taskScanModule:GetClassInRange(spellName, party, class, spell)
     if member.class == class then
       if member.isDead then
         return nil
-      elseif not (IsSpellInRange(spellName, member.unitId) == 1) then
+      elseif not (envModule.IsSpellInRange(spellName, member.unitId) == 1) then
         if member.distance > 2000 then
           return nil
         end
@@ -685,7 +695,7 @@ function taskScanModule:AddBlessing(buffDef, party, buffCtx)
         add = string.format(constModule.PICTURE_FORMAT, texturesModule.ICON_TARGET_ON)
       end
 
-      local test_in_range = IsSpellInRange(buffDef.singleText, needsBuff.unitId) == 1
+      local test_in_range = envModule.IsSpellInRange(buffDef.singleText, needsBuff.unitId) == 1
           and not tContains(buffDef.skipList, needsBuff.name)
       if self:PreventPvpTagging(buffDef:SingleLink(), buffDef.singleText, needsBuff) then
         -- Nothing, prevent poison function has already added the text
@@ -809,7 +819,7 @@ function taskScanModule:AddBuff_SingleBuff(buffDef, minBuff, buffCtx)
         add = string.format(constModule.PICTURE_FORMAT, texturesModule.ICON_TARGET_ON)
       end
 
-      local unitIsInRange = (IsSpellInRange(buffDef.singleText, needBuff.unitId) == 1)
+      local unitIsInRange = (envModule.IsSpellInRange(buffDef.singleText, needBuff.unitId) == 1)
           and not tContains(buffDef.skipList, needBuff.name)
 
       if self:PreventPvpTagging(buffDef:SingleLink(), buffDef.singleText, needBuff) then
@@ -926,7 +936,7 @@ function taskScanModule:AddResurrection(spell, playerUnit, buffCtx)
       end
 
       -- Is the body in range?
-      local targetIsInRange = (IsSpellInRange(spell.singleText, unitNeedsBuff.unitId) == 1)
+      local targetIsInRange = (envModule.IsSpellInRange(spell.singleText, unitNeedsBuff.unitId) == 1)
           and not tContains(spell.skipList, unitNeedsBuff.name)
       local task = taskModule:Create(spell:SingleLink(), spell.singleText)
           :PrefixText(_t("task.type.Resurrect"))
@@ -1285,7 +1295,7 @@ function taskScanModule:AddWeaponEnchant(buffDef, playerUnit, buffCtx)
   local playerClass = envModule.playerClass
 
   local isTBCShaman = envModule.haveTBC and playerClass == "SHAMAN"
-  local isDualwieldShaman = IsSpellKnown(674) and playerClass == "SHAMAN"
+  local isDualwieldShaman = envModule.IsSpellKnown(674) and playerClass == "SHAMAN"
   if not isTBCShaman and not isDualwieldShaman then
     return
   end
@@ -1769,6 +1779,23 @@ function taskScanModule:CheckCastingChanneling(context)
   return true
 end -- end function bomUpdateScan_PreCheck2()
 
+---Do not infer missing buffs from aura data the client did not let us read.
+---@param context TaskScanContext
+---@return boolean
+function taskScanModule:CheckAuraData(context)
+  local party = context.party
+  local unavailable = party.player.auraDataUnavailable
+      or (party.playerPet and party.playerPet.auraDataUnavailable)
+  for _, member in pairs(party.byUnitId) do
+    unavailable = unavailable or member.auraDataUnavailable
+  end
+  if unavailable then
+    self:ShowInactive(_t("castButton.inactive.AuraDataUnavailable"))
+    return false
+  end
+  return true
+end
+
 ---@param context TaskScanContext
 ---@return boolean
 function taskScanModule:CheckGlobalCooldown(context)
@@ -1819,6 +1846,7 @@ function taskScanModule:ScanTasks(callerLocation)
   context.party = self:RotateInvalidatedGroup_GetGroup()
 
   if not self:Precheck(context)
+      or not self:CheckAuraData(context)
       or not self:CheckBuffomatInactive(context)
       or not self:CheckCastingChanneling(context)
       or not self:CheckGlobalCooldown(context)

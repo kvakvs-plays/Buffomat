@@ -1,4 +1,5 @@
 local BuffomatAddon = BuffomatAddon
+local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 
 ---@alias BomSpellCacheKey number|string
 
@@ -23,7 +24,7 @@ local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
 ---@field spellId number
 
 ---Calls GetSpellInfo and saves the results, or not (if nil was returned)
----@param arg number|string
+---@param arg number|string|nil
 ---@return BomSpellCacheElement?
 ---@nodiscard
 function BuffomatAddon.GetSpellInfo(arg)
@@ -31,7 +32,7 @@ function BuffomatAddon.GetSpellInfo(arg)
     return spellCacheModule.cache[arg]
   end
 
-  local name, rank, icon, castTime, minRange, maxRange, spellId = GetSpellInfo(arg)
+  local name, rank, icon, castTime, minRange, maxRange, spellId = envModule.GetSpellInfo(arg)
   if name == nil then
     return nil
   end
@@ -76,7 +77,7 @@ function spellCacheModule:LoadSpell(spellId, onLoaded)
 
   local spellInfoReady_func = function()
     -- Assume the spell info is loaded here and the response is instant
-    local name, rank, icon, castTime, minRange, maxRange, _spellId = GetSpellInfo(spellId)
+    local name, rank, icon, castTime, minRange, maxRange, _spellId = envModule.GetSpellInfo(spellId)
     if name == nil then
       return
     end

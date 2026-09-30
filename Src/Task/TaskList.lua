@@ -202,7 +202,9 @@ end
 ---Success case, cast is allowed, macro will be set and button will be enabled
 ---@param task BomTask
 function taskListClass:CastButton(task)
-  BuffomatAddon.theMacro:EnsureExists()
+  if not BuffomatAddon.theMacro:EnsureExists() then
+    return
+  end
   wipe(BuffomatAddon.theMacro.lines)
 
   local action = task.action
@@ -253,7 +255,9 @@ end -- if inrange
 function taskListModule:WipeMacro(command)
   local macro = BuffomatAddon.theMacro
 
-  macro:EnsureExists()
+  if not macro:EnsureExists() then
+    return
+  end
   wipe(macro.lines)
 
   if command then

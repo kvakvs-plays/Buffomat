@@ -1,4 +1,5 @@
 local BuffomatAddon = BuffomatAddon
+local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 
 ---@class MacroModule
 ---@field lastMacroSet string A cached value of the last macro set
@@ -42,13 +43,15 @@ function macroClass:Clear()
     return
   end
 
-  self:EnsureExists()
+  if not self:EnsureExists() then
+    return
+  end
   self.lines = {}
   self.icon = constModule.MACRO_ICON_DISABLED
 
   -- Prevent resetting to empty multiple times
   if macroModule.lastMacroSet ~= "" then
-    EditMacro(constModule.MACRO_NAME, nil, self.icon, "")
+    EditMacro(self.name, nil, self.icon, "")
     macroModule.lastMacroSet = ""
   end
 end
@@ -64,29 +67,49 @@ function macroClass:GetText()
 end
 
 function macroClass:UpdateMacro()
+  if not self:EnsureExists() then
+    return
+  end
   local icon = self.icon or constModule.MACRO_ICON
   local newText = self:GetText()
 
   -- Prevent multiple times setting macro to the same value
   if macroModule.lastMacroSet ~= newText then
-    EditMacro(constModule.MACRO_NAME, nil, icon, newText)
+    EditMacro(self.name, nil, icon, newText)
     --BOM.minimapButton:SetTexture("Interface\\ICONS\\" .. icon)
     macroModule.lastMacroSet = newText
   end
 end
 
+---Prefer a character slot, then an account slot; never create in combat.
+---@return boolean exists False when creation is blocked or capacity is unavailable.
 function macroClass:EnsureExists()
-  if (GetMacroInfo(constModule.MACRO_NAME)) == nil then
-    local perAccount, perChar = GetNumMacros()
-    local isChar
-
-    if perChar < MAX_CHARACTER_MACROS then
-      isChar = 1
-    elseif perAccount >= MAX_ACCOUNT_MACROS then
-      BuffomatAddon:Print(_t("castButton.NoMacroSlots"))
-      return
-    end
-
-    CreateMacro(self.name, constModule.MACRO_ICON, "", isChar)
+  if InCombatLockdown() then
+    return false
   end
+  if GetMacroInfo(self.name) ~= nil then
+    return true
+  end
+
+  local perAccount, perChar = GetNumMacros()
+  local accountLimit, characterLimit = envModule.GetMacroLimits()
+  local isChar
+  if characterLimit ~= nil and perChar < characterLimit then
+    isChar = true
+  elseif accountLimit ~= nil and perAccount < accountLimit then
+    isChar = false
+  else
+    if accountLimit ~= nil and characterLimit ~= nil then
+      BuffomatAddon:Print(_t("castButton.NoMacroSlots"))
+    end
+    return false
+  end
+
+  local index = CreateMacro(self.name, constModule.MACRO_ICON, "", isChar)
+  if index == nil or index == 0 then
+    return false
+  end
+  -- Creation invalidates the cached body even if the old macro had the same text.
+  macroModule.lastMacroSet = ""
+  return true
 end

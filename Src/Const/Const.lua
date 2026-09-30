@@ -13,12 +13,10 @@ constModule.TASKCOLOR_GRAY = "777777"
 constModule.TASKCOLOR_RED = "cc4444"
 constModule.TASKCOLOR_BLEAK_RED = "bb5555"
 
--- Same as kvEnvModule.GetAddOnMetadata but must be available on module load so calculate here
-local compat_GetAddonMetadata = (C_AddOns and C_AddOns.GetAddOnMetadata) or GetAddonMetadata
 -- Version used for display in options
-constModule.TOC_VERSION = compat_GetAddonMetadata(TOCNAME, "Version")
+constModule.TOC_VERSION = kvEnvModule.GetAddOnMetadata(TOCNAME, "Version")
 -- Longer title like "Buffomat Classic TBC"
-constModule.TOC_TITLE = compat_GetAddonMetadata(TOCNAME, "Title")
+constModule.TOC_TITLE = kvEnvModule.GetAddOnMetadata(TOCNAME, "Title")
 
 constModule.SHORT_TITLE = "Buffomat"
 constModule.MACRO_ICON = "INV_MISC_QUESTIONMARK"
