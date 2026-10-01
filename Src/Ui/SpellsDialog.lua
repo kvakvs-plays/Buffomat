@@ -363,7 +363,7 @@ function spellsDialogModule:AddClassRoleToggle(row, profileBuff, classOrRole)
   local hordePaladin = self.context.playerIsHorde and classOrRole == "PALADIN"
   local allianceShaman = not self.context.playerIsHorde and classOrRole == "SHAMAN"
   -- if not TBC hide paladin for horde, hide shaman for alliance
-  if not envModule.haveTBC and (hordePaladin or allianceShaman) then
+  if not (envModule.haveTBC or envModule.isForever) and (hordePaladin or allianceShaman) then
     skip = true
   end
 

@@ -100,11 +100,21 @@ the Forever `BuffomatClassic_Camelot.toc` and an identical `BuffomatClassic.toc`
 fallback. Existing generated Classic TOCs are preserved.
 Restart the client if a newly installed addon folder does not appear.
 
-This target only packages the addon; it does not establish Forever runtime
-compatibility. The current addon registers `COMBAT_LOG_EVENT_UNFILTERED` and uses
-legacy aura APIs. The supplied Forever notes identify these as porting blockers
-or areas requiring changes. A working Forever port requires a separate runtime
-review and testing on the actual client. Existing client code is unchanged.
+Forever runtime adaptations are integrated into the shared `KvEnv` compatibility
+layer and selected by client version and API availability. They include modern
+weapon imbues, tracking, inventory slots, class options, and public mana/range
+data. Buffomat skips combat-log registration on Forever, uses `UNIT_AURA` for
+buff updates, and pauses aura scanning during combat, encounters, challenge
+modes, and PvP restrictions. Unit-link clicks display `/who` or `/w` commands
+on Forever so the player can enter them without restricted chat activation.
+
+This remains experimental: automated tests cover mocked Classic and Forever
+APIs, not an actual Forever beta session. Verify loading, buff scans, both weapon
+imbues, restriction entry/exit, and buff-button/macro behavior in the client.
+The adaptations were ported from
+[yannlugrin/Buffomat's forever branch](https://github.com/yannlugrin/Buffomat/tree/69564aa)
+through commit `69564aa`, retaining this repository's aura and macro safeguards.
+The reference checkout in `references/forever-branch` is ignored and not packaged.
 
 ## Credits
 

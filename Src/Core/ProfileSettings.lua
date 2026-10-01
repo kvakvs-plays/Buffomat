@@ -101,7 +101,7 @@ end
 
 local function bomGetActiveTalentGroup()
   if envModule.haveWotLK then
-    return GetActiveTalentGroup()
+    return envModule.GetActiveTalentGroup()
   else
     return nil
   end

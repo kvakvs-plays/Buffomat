@@ -76,10 +76,7 @@ class BuildTool:
                 title=ADDON_TITLE_FOREVER,
             )
             print(
-                "Warning: Forever is an experimental packaging target only. "
-                "The addon still registers COMBAT_LOG_EVENT_UNFILTERED, which "
-                "the Forever compatibility notes identify as unavailable. "
-                "Runtime compatibility has not been established."
+                "Warning: Forever support is experimental and requires in-client testing."
             )
             return
 

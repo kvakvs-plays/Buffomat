@@ -11,9 +11,10 @@
 ## Required Reference Files
 
 - Read `.agents/AGENTS.md` for additional project instructions.
-- Read `.agents/addon-dev.md` before making non-trivial Lua addon changes.
+- Read `.agents/wow-classic.md` before making non-trivial Lua addon changes (for Classic and TBC Classic).
+- Read `.agents/wow-forever.md` before making non-trivial Lua addon changes (for WoW Forever).
 - Use `.agents/code-index.md` to find relevant modules and functions before broad code searches.
-- The downloaded Blizzard UI source is available at `F:\Projects\WowAddons\BlizzardInterfaceCode\` and should be used when checking WoW UI behavior or API details.
+- The downloaded Blizzard UI source for Classic (not Forever) is available at `F:\Projects\WowAddons\BlizzardInterfaceCode\` and should be used when checking WoW UI behavior or API details.
 
 ## WoW Group And Buff Semantics
 

@@ -252,7 +252,7 @@ function buffChecksModule:PlayerNeedsTracking(buff, playerUnit)
   -- in cat form and track humanoids is enabled
   if (buff.highestRankSingleId == spellIdsModule.FindHerbs or
         buff.highestRankSingleId == spellIdsModule.FindMinerals)
-      and GetShapeshiftFormID() == CAT_FORM
+      and GetShapeshiftFormID() == envModule.CAT_FORM
       and buffDefModule:IsBuffEnabled(spellIdsModule.Druid_TrackHumanoids, nil) then
     -- Do nothing - ignore herbs and minerals in catform if enabled track humanoids
   elseif not self:IsTrackingActive(buff)

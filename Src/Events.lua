@@ -81,13 +81,16 @@ local function Event_TAXIMAP_OPENED()
   end
 end
 
-local function Event_UNIT_POWER_UPDATE(unitTarget, powerType)
+---@param _event string
+---@param unitTarget string
+---@param powerType string
+local function Event_UNIT_POWER_UPDATE(_event, unitTarget, powerType)
   --UNIT_POWER_UPDATE: "unitTarget", "powerType"
   if powerType == "MANA" and UnitIsUnit(unitTarget, "player") then
     local maxMana = partyModule.playerManaLimit or 0
-    local actualMana = UnitPower("player", 0) or 0
+    local actualMana = envModule.UnitPower("player", 0)
 
-    if maxMana <= actualMana then
+    if actualMana ~= nil and maxMana <= actualMana then
       throttleModule:RequestTaskRescan("powerUpdate")
     end
   end
@@ -142,6 +145,10 @@ end
 ---Event_PLAYER_TARGET_CHANGED
 ---Handle player target change, spells possibly might have changed too.
 local function Event_PLAYER_TARGET_CHANGED()
+  if InCombatLockdown() or envModule.IsAuraRestricted() then
+    BuffomatAddon.lastTarget = nil
+    return
+  end
   local isBuffableUnit = UnitIsPlayer("target") or UnitIsOtherPlayersPet("target")
   local isPartyMember = UnitInParty("target") or UnitInRaid("target")
 
@@ -149,7 +156,12 @@ local function Event_PLAYER_TARGET_CHANGED()
     -- Allow current party members, raid members or any player
     if isPartyMember or (isBuffableUnit and UnitIsFriend("target", "player"))
     then
-      BuffomatAddon.lastTarget = UnitFullName("target")
+      local name = UnitFullName("target")
+      if not envModule.IsSecretValue(name) then
+        BuffomatAddon.lastTarget = name
+      else
+        BuffomatAddon.lastTarget = nil
+      end
     elseif BuffomatAddon.lastTarget then
       BuffomatAddon.lastTarget = nil
     end
@@ -171,6 +183,9 @@ local function Event_PLAYER_TARGET_CHANGED()
     newName = UnitName("target")
   end
 
+  if envModule.IsSecretValue(newName) then
+    return
+  end
   if newName ~= BuffomatAddon.SaveTargetName then
     BuffomatAddon.SaveTargetName = newName
     throttleModule:RequestTaskRescan("targetChanged")
@@ -178,9 +193,9 @@ local function Event_PLAYER_TARGET_CHANGED()
   end
 end
 
-local partyCheckMask = COMBATLOG_OBJECT_AFFILIATION_RAID
-    + COMBATLOG_OBJECT_AFFILIATION_PARTY
-    + COMBATLOG_OBJECT_AFFILIATION_MINE
+local partyCheckMask = (COMBATLOG_OBJECT_AFFILIATION_RAID or 0)
+    + (COMBATLOG_OBJECT_AFFILIATION_PARTY or 0)
+    + (COMBATLOG_OBJECT_AFFILIATION_MINE or 0)
 --  partyModule.buffs cleanup in scan bom_get_party_members
 
 local function Event_COMBAT_LOG_EVENT_UNFILTERED()
@@ -360,7 +375,10 @@ function eventsModule:InitEvents()
   BuffomatAddon:RegisterEvent("PLAYER_STARTED_MOVING", Event_PLAYER_STARTED_MOVING)
   BuffomatAddon:RegisterEvent("PLAYER_STOPPED_MOVING", Event_PLAYER_STOPPED_MOVING)
   BuffomatAddon:RegisterEvent("PLAYER_TARGET_CHANGED", Event_PLAYER_TARGET_CHANGED)
-  BuffomatAddon:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", Event_COMBAT_LOG_EVENT_UNFILTERED)
+  -- Forever relies on UNIT_AURA and the normal out-of-combat rescan instead.
+  if not envModule.isForever and CombatLogGetCurrentEventInfo then
+    BuffomatAddon:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", Event_COMBAT_LOG_EVENT_UNFILTERED)
+  end
   BuffomatAddon:RegisterEvent("UI_ERROR_MESSAGE", Event_UI_ERROR_MESSAGE)
 
   BuffomatAddon:RegisterEvent("UNIT_SPELLCAST_START", Event_UNIT_SPELLCAST_START)
@@ -375,6 +393,14 @@ function eventsModule:InitEvents()
   -- Dualspec talent switch
   if envModule.haveWotLK then
     BuffomatAddon:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED", Event_TALENT_GROUP_CHANGED)
+  end
+
+  if envModule.supportsAuraRestrictions then
+    BuffomatAddon:RegisterEvent("ADDON_RESTRICTION_STATE_CHANGED", function()
+      partyModule:InvalidatePartyCache()
+      throttleModule:RequestTaskRescan("restrictionChanged")
+      taskScanModule:ScanTasks("restrictionChanged")
+    end)
   end
 
   -- TODO for TBC: PLAYER_REGEN_DISABLED / ENABLED is sent before/after the combat and protected frames lock up

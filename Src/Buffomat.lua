@@ -14,6 +14,7 @@ local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local characterSettingsModule = LibStub("Buffomat-CharacterSettings") --[[@as CharacterSettingsModule]]
 local sharedSettingsModule = LibStub("Buffomat-SharedSettings") --[[@as SharedSettingsModule]]
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
+local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local eventsModule = LibStub("Buffomat-Events") --[[@as EventsModule]]
 local macroModule = LibStub("Buffomat-Macro") --[[@as MacroModule]]
 local optionsModule = LibStub("Buffomat-Options") --[[@as OptionsModule]]
@@ -508,13 +509,22 @@ function buffomatModule:PrintCallers(prefix, callersCollection)
   end
 end
 
+---@param name string
 local function perform_who_request(name)
+  if envModule.isForever then
+    BuffomatAddon:Print("/who " .. name)
+    return
+  end
   DEFAULT_CHAT_FRAME.editBox:SetText("/who " .. name)
-  ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox)
+  envModule.ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox)
 end
 
+---@param name string
 local function perform_whisper_request(name)
-  ChatFrame_OpenChat("/w " .. name .. " ")
+  local command = "/w " .. name .. " "
+  if not envModule.ChatFrame_OpenChat(command) then
+    BuffomatAddon:Print(command)
+  end
 end
 
 function BuffomatAddon.EnterHyperlink(_control, link)
@@ -534,6 +544,9 @@ function BuffomatAddon.LeaveHyperlink(self)
 end
 
 function BuffomatAddon.ClickHyperlink(self, link)
+  if envModule.IsSecretValue(link) then
+    return
+  end
   local part = toolboxModule:Split(link, ":")
   if part[1] == "unit" then
     if IsShiftKeyDown() then

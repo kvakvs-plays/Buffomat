@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Port Forever compatibility from yannlugrin/Buffomat through `69564aa`: weapon
+  imbues, restriction-aware scans, class options, and moved client APIs.
+- Keep Classic client fallbacks and pause scans when aura or enchant data cannot
+  be read. Fix the legacy spell cooldown fallback and secret cooldown handling.
+
 ## Buffomat Classic 2026.5.2
 
 - A new option for "Hiding window if scanning is disabled" for whatever reason. Convenience option.

@@ -104,7 +104,7 @@ end
 ---Force updates buffs for one party member
 ---@param playerUnit BomUnit
 function unitClass:ForceUpdateBuffs(playerUnit)
-  if InCombatLockdown() then
+  if InCombatLockdown() or envModule.IsAuraRestricted() then
     self.auraDataUnavailable = true
     self.NeedBuff = false
     return
@@ -298,7 +298,13 @@ end
 function unitClass:UpdatePlayerWeaponEnchantments()
   ---@type boolean, number, number, BomEnchantmentId, boolean, number, number, BomEnchantmentId
   local hasMainHandEnchant, mainHandExpiration, mainHandCharges, mainHandEnchantID
-  , hasOffHandEnchant, offHandExpiration, offHandCharges, offHandEnchantId = GetWeaponEnchantInfo()
+  , hasOffHandEnchant, offHandExpiration, offHandCharges, offHandEnchantId = envModule.GetWeaponEnchantInfo()
+
+  if hasMainHandEnchant == nil or hasOffHandEnchant == nil then
+    self.auraDataUnavailable = true
+    self.NeedBuff = false
+    return self
+  end
 
   if hasMainHandEnchant and mainHandEnchantID
       and allBuffsModule.enchantToSpellLookup[mainHandEnchantID] then
