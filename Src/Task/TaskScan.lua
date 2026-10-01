@@ -55,11 +55,21 @@ function taskScanModule:IsFlying()
   return false
 end
 
----Global Cooldown Check
+---Only pause the scan for a confirmed, unexpired global cooldown.
 ---@return boolean isInGlobalCooldown
 ---@return number|nil cooldownEndTime
 function taskScanModule:IsInGlobalCooldown()
   local spellID = 61304
+  local start, cdDuration = envModule.GetSpellCooldown(spellID)
+  if start == nil or cdDuration == nil then
+    -- The GCD probe can be unavailable on modern clients. It must not block
+    -- the entire scan; individual actions still check their own cooldowns.
+    return false, nil
+  end
+  if start <= 0 or cdDuration <= 0 then
+    return false, nil
+  end
+
   local minValue = 0.05
   local maxValue = 0.3
   local kbsDown, kbsUp, lagHome, lagWorld = GetNetStats()
@@ -71,15 +81,11 @@ function taskScanModule:IsInGlobalCooldown()
     curPing = maxValue
   end
 
-  local start, cdDuration = envModule.GetSpellCooldown(spellID)
-  if start == nil or cdDuration == nil then
-    -- Unknown/restricted cooldown data must not make a spell appear ready.
-    return true, nil
-  end
-  if cdDuration - curPing <= 0 then
+  local cooldownEndTime = start + cdDuration
+  if cooldownEndTime - GetTime() <= curPing then
     return false, nil
   end
-  return true, start + cdDuration
+  return true, cooldownEndTime
 end
 
 function taskScanModule:IsInVehicle()

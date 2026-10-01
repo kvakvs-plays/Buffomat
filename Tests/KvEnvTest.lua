@@ -32,6 +32,7 @@ local function fixture(mode, projectID)
     UnitClass = function() return "Mage", "MAGE" end,
     BuffomatAddon = {},
     GetNetStats = function() return 0, 0, 20, 20 end,
+    GetTime = function() return state.now or 100 end,
     issecretvalue = mode ~= "legacy" and function(value) return rawequal(value, secret) end or nil,
     LibStub = function(name)
       libs[name] = libs[name] or {}
@@ -196,7 +197,40 @@ local function fixture(mode, projectID)
   local action = libs["Buffomat-ActionCast"]:New(0, 42, "", {}, nil, false)
   equal(action:CanCast(), "cooldown")
   loadModule("Src/Task/TaskScan.lua", globals)
-  equal(libs["Buffomat-TaskScan"]:IsInGlobalCooldown(), true)
+  local scan = libs["Buffomat-TaskScan"]
+  equal(scan:IsInGlobalCooldown(), false, "unavailable GCD probe must not block the scan")
+  setmetatable(libs["Buffomat-Languages"], { __call = function(_, key) return key end })
+  scan.ShowInactive = function(_, reason) state.inactive = reason end
+  globals.BuffomatAddon.nextCooldownDue = 1000
+  equal(scan:CheckGlobalCooldown({}), true)
+  equal(state.inactive, nil, "unknown GCD must not display Global Cooldown")
+
+  state.cooldown = { startTime = 0, duration = 0, isEnabled = true, modRate = 1 }
+  equal(scan:IsInGlobalCooldown(), false, "idle GCD")
+  state.cooldown.startTime, state.cooldown.duration = 100, 1.5
+  local gcdActive, endsAt = scan:IsInGlobalCooldown()
+  equal(gcdActive, true); equal(endsAt, 101.5)
+  equal(scan:CheckGlobalCooldown({}), false)
+  equal(state.inactive, "castButton.inactive.GlobalCooldown")
+  equal(globals.BuffomatAddon.nextCooldownDue, 101.5, "rescan when GCD ends")
+  state.now = 101.49
+  equal(scan:IsInGlobalCooldown(), false, "remaining time respects latency allowance")
+  state.now = 102
+  state.inactive = nil
+  equal(scan:CheckGlobalCooldown({}), true, "expired nonzero GCD must not block")
+  equal(state.inactive, nil)
+  if mode ~= "legacy" then
+    state.cooldown.startTime = secret
+    equal(scan:CheckGlobalCooldown({}), true, "restricted GCD must not block")
+    equal(state.inactive, nil)
+    equal(action:CanCast(), "cooldown", "individual restricted cooldown still blocks casting")
+  end
+  globals.BuffomatAddon.isPlayerCasting = "cast"
+  equal(scan:CheckCastingChanneling({}), false, "casting still pauses scanning")
+  equal(state.inactive, "castButton.Busy")
+  globals.BuffomatAddon.isPlayerCasting = nil
+  equal(scan:CheckCastingChanneling({}), true)
+  state.cooldown = nil
 
   -- Item/Spell mixins request data and dispatch DATA_LOAD_RESULT in the client.
   -- Simulate their delayed completion with modern globals absent throughout.

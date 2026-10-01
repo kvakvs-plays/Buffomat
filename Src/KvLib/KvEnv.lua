@@ -107,9 +107,6 @@ function envModule.GetSpellInfo(spell)
   end
 end
 
-local getSpellCooldown = C_Spell and C_Spell.GetSpellCooldown
-local legacyGetSpellCooldown = GetSpellCooldown
-
 ---Return nil for unavailable/restricted data; never compare secret cooldowns.
 ---@param spell number|string
 ---@return number? startTime
@@ -117,17 +114,14 @@ local legacyGetSpellCooldown = GetSpellCooldown
 ---@return number? enabled Legacy 0/1 value.
 ---@return number? modRate
 function envModule.GetSpellCooldown(spell)
-  if getSpellCooldown then
-    local info = getSpellCooldown(spell)
-    if info == nil or envModule.IsSecretValue(info.startTime)
-        or envModule.IsSecretValue(info.duration) or envModule.IsSecretValue(info.isEnabled)
-        or envModule.IsSecretValue(info.modRate) then
-      return nil
-    end
-    return info.startTime, info.duration, info.isEnabled and 1 or 0, info.modRate
-  elseif legacyGetSpellCooldown then
-    return legacyGetSpellCooldown(spell)
+  if spell == nil then
+    return nil
   end
+  local info = C_Spell.GetSpellCooldown(spell)
+  if info == nil then
+    return nil
+  end
+  return info.startTime, info.duration, info.isEnabled and 1 or 0, info.modRate
 end
 
 local isSpellInRange = C_Spell and C_Spell.IsSpellInRange
