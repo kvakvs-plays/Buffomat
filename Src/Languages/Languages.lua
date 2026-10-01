@@ -90,7 +90,8 @@ function languagesModule:SetupTranslations()
 
   self.currentLocale["AboutCredits"] = "nanjuekaien1 & wellcat for the Chinese translation|n" ..
       "OlivBEL for the french translation|n" ..
-      "Arrogant_Dreamer & kvakvs for the russian translation|n"
+      "Arrogant_Dreamer & kvakvs for the russian translation|n" ..
+      "Yann Lugrin @yannlugrin - initial push for the WoW: Forever port"
 end
 
 function languagesModule:LocalizationInit()
