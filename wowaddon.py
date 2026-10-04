@@ -12,7 +12,7 @@ import zipfile
 from typing import Iterator, Tuple
 
 # Version bumping rules: Begin each new month with <year>.<month>.0 and increase by 1 with every new bump.
-VERSION = "2026.9.0"  # year.month.build_num
+VERSION = "2026.10.1"  # year.month.build_num
 
 ADDON_NAME_CLASSIC = "BuffomatClassic"  # Directory and zip name
 ADDON_TITLE_CLASSIC = "Buffomat Classic"  # Title field in TOC
@@ -68,13 +68,17 @@ class BuildTool:
         self.copy_dirs = COPY_DIRS[:]
         self.copy_files = COPY_FILES[:]
         self.is_forever = args.version == "forever"
+
+        # Camelot TOC is written for every target: Forever ships it as its only
+        # TOC, and the combined Classic package carries it alongside the others.
+        self.create_toc(
+            dst=f"{ADDON_NAME_CLASSIC}{SUFFIX_CAMELOT}.toc",
+            ui_version=UI_VERSION_FOREVER,
+            title=ADDON_TITLE_FOREVER,
+        )
+
         if self.is_forever:
             # Keep the Classic TOCs intact when alternating between build targets.
-            self.create_toc(
-                dst=f"{ADDON_NAME_CLASSIC}{SUFFIX_CAMELOT}.toc",
-                ui_version=UI_VERSION_FOREVER,
-                title=ADDON_TITLE_FOREVER,
-            )
             print(
                 "Warning: Forever support is experimental and requires in-client testing."
             )
@@ -91,14 +95,15 @@ class BuildTool:
         """Yield source and packaged filenames for the selected target's TOCs and files.
 
         Keep the addon folder name unchanged for asset paths and saved variables.
-        Forever also includes an unsuffixed fallback copied from its Camelot TOC.
+        Both targets include the Camelot TOC. Forever also includes an unsuffixed
+        fallback copied from it; Classic keeps its own Era TOC as the fallback.
         """
         for filename in self.copy_files:
             yield filename, filename
+        camelot_toc = f"{toc_name}{SUFFIX_CAMELOT}.toc"
+        yield camelot_toc, camelot_toc
         if self.is_forever:
-            filename = f"{toc_name}{SUFFIX_CAMELOT}.toc"
-            yield filename, filename
-            yield filename, f"{toc_name}.toc"
+            yield camelot_toc, f"{toc_name}.toc"
         else:
             for suffix, _ in CLASSIC_TOC_VARIANTS:
                 filename = f"{toc_name}{suffix}.toc"
