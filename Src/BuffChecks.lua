@@ -81,7 +81,7 @@ function buffChecksModule:HasOneItem(itemToCheck, cd)
     cachedItem.a = false
     cachedItem.d = 0
 
-    for bag = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
+    for _, bag in ipairs(envModule.playerBagIds) do
       for slot = 1, envModule.GetContainerNumSlots(bag) do
         local itemInfo = envModule.GetContainerItemInfo(bag, slot)
         if itemInfo then

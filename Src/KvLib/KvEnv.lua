@@ -12,6 +12,7 @@ local addonName, ns = ...
 ---@field supportsAuraRestrictions boolean
 ---@field CAT_FORM number?
 ---@field usesTrackingSettings boolean
+---@field playerBagIds number[]
 ---@field playerClass ClassName
 
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
@@ -40,11 +41,12 @@ envModule.haveWotLK = envModule.isWotLK or envModule.isCata
 envModule.isTBC = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
 envModule.haveTBC = envModule.isWotLK or envModule.isTBC or envModule.isCata
 
--- Forever shares Mainline's project ID, but uses the 1.60 interface and
--- Classic content. Do not enable Classic spell definitions on ordinary Retail.
+-- Forever runs the Mainline client with Classic content. Its WOW_PROJECT_ID
+-- changed between builds (1 = Mainline on beta 69913, 18 on 1.60.1.70205),
+-- so detect it by the 1.60 interface range, which no other client uses.
+-- Do not enable Classic spell definitions on ordinary Retail.
 local interfaceVersion = GetBuildInfo and select(4, GetBuildInfo()) or 0
-envModule.isForever = WOW_PROJECT_MAINLINE ~= nil and WOW_PROJECT_ID == WOW_PROJECT_MAINLINE
-    and interfaceVersion >= 16000 and interfaceVersion < 17000
+envModule.isForever = interfaceVersion >= 16000 and interfaceVersion < 17000
     and (LE_EXPANSION_LEVEL_CURRENT == nil or LE_EXPANSION_LEVEL_CURRENT == 0)
 envModule.isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC or envModule.isForever
 envModule.CAT_FORM = CAT_FORM or (envModule.isForever and 1 or nil)
@@ -264,6 +266,22 @@ function envModule.GetContainerItemInfo(bag, slot)
     isReadable = readable, hasLoot = lootable, hyperlink = link, isFiltered = filtered,
     hasNoValue = noValue, itemID = itemID, isBound = bound,
   }
+end
+
+---Backpack, equipped bags, and the reagent bag where one exists. Built once
+---because bag scans run often; iterate with ipairs and do not modify.
+---@type number[]
+envModule.playerBagIds = { BACKPACK_CONTAINER or 0 }
+for bag = 1, tonumber(NUM_BAG_SLOTS) or 4 do
+  table.insert(envModule.playerBagIds, bag)
+end
+-- Classic clients carry the shared ReagentBag enum too, but their bag 5 is the
+-- first bank bag. Only clients that declare reagent bag slots (Mainline and
+-- Forever, where the reagent bag is 5) have one.
+local inventoryConstants = Constants and Constants.InventoryConstants
+local numReagentBags = inventoryConstants and tonumber(inventoryConstants.NumReagentBagSlots) or 0
+if numReagentBags > 0 and Enum and Enum.BagIndex and Enum.BagIndex.ReagentBag then
+  table.insert(envModule.playerBagIds, Enum.BagIndex.ReagentBag)
 end
 
 ---@type fun(): number

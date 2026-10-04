@@ -103,5 +103,5 @@ Lookup hints below use file paths plus a function/section name (no line numbers;
 
 ## Shared (KvLib)
 
-- [Src/KvLib/KvEnv.lua](../Src/KvLib/KvEnv.lua) — `KvSharedEnvModule` aka `envModule`. `WOW_PROJECT_ID` flags: `isClassic`, `isTBC`/`haveTBC`, `isWotLK`/`haveWotLK`, `isCata`/`haveCata`, `isMistsOfPandaria`. C_Container compatibility shims: `GetContainerNumSlots`, `GetContainerItemInfo`, `GetContainerItemCooldown`, `GetAddonMetadata`. `playerClass`.
+- [Src/KvLib/KvEnv.lua](../Src/KvLib/KvEnv.lua) — `KvSharedEnvModule` aka `envModule`. `WOW_PROJECT_ID` flags: `isClassic`, `isTBC`/`haveTBC`, `isWotLK`/`haveWotLK`, `isCata`/`haveCata`, `isMistsOfPandaria`. `isForever` comes from the 16xxx interface range, not `WOW_PROJECT_ID`. C_Container compatibility shims: `GetContainerNumSlots`, `GetContainerItemInfo`, `GetContainerItemCooldown`, `GetAddonMetadata`. `playerBagIds` (backpack, bags, and the Mainline/Forever reagent bag) is used by the bag scans in `BuffChecks.lua` and `ItemListCache.lua`. `playerClass`.
 - [Src/KvLib/KvOptions.lua](../Src/KvLib/KvOptions.lua) — `KvOptionsModule`. Generic AceConfig template builders used by Options.lua: `:ValueToText` / `:TextToValue`, `:TemplateCheckbox`, `:TemplateButton`, `:TemplateMultiselect`, `:TemplateSelect`, `:TemplateInput`, `:TemplateRange`. Increments shared `optionsOrder`.

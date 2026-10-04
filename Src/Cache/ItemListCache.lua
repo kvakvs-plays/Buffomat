@@ -46,7 +46,7 @@ function itemListCacheModule:GetItemList()
     wipe(itemListCache)
     BuffomatAddon.wipeCachedItems = false
 
-    for bag = BACKPACK_CONTAINER, NUM_BAG_SLOTS do
+    for _, bag in ipairs(envModule.playerBagIds) do
       for slot = 1, envModule.GetContainerNumSlots(bag) do
         --local itemID = GetContainerItemID(bag,slot)
         local itemInfo = envModule.GetContainerItemInfo(bag, slot)

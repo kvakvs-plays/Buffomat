@@ -39,7 +39,10 @@
   - `BuffomatClassic-BCC.toc`
   - `BuffomatClassic-WOTLKC.toc`
   - `BuffomatClassic-Cata.toc`
-- Detect flavor at runtime with `WOW_PROJECT_ID` and the project constants.
+- Detect flavor at runtime with `WOW_PROJECT_ID` and the project constants, except for WoW: Forever.
+- Detect WoW: Forever only with `envModule.isForever`, which checks for interface `16xxx` from `select(4, GetBuildInfo())` and `LE_EXPANSION_LEVEL_CURRENT == 0`. `WOW_PROJECT_ID` has changed between Forever builds: it was `1` (Mainline) on beta 69913 and `18` on 1.60.1.70205. `envModule.isClassic` is also true on Forever because the game content is Classic.
+- Forever bag IDs, as dumped in 1.60.1.70205: bags `0`-`4`, reagent bag `5`, `CharacterBankTab_1..9` = `6`-`14`, `AccountBankTab_1..9` = `15`-`23`. `Keyring` is `-1`, and there is no `Bank` container. Iterate player bags with `envModule.playerBagIds`, not `BACKPACK_CONTAINER..NUM_BAG_SLOTS`, which misses the Mainline/Forever reagent bag.
+- The Warband (account) bank is unusable on Forever: at a banker `C_Bank.CanUseBank(Enum.BankType.Account)` is false. `PLAYERBANKBAGSLOTS_CHANGED` does not exist there, and registering an unknown event throws, so check uncertain events with `C_EventUtils.IsEventValid`.
 - Never assume Retail APIs exist. Check for globals or namespaces such as `_G["C_Spell"]`, `C_Timer`, and `GetSpellInfo` before use.
 - Spell IDs can differ by flavor. Do not hardcode spell IDs without verifying them for the target flavor.
 

@@ -41,9 +41,12 @@ local function fixture(projectID, interfaceVersion, expansion, modern)
     LibStub = function(name) libs[name] = libs[name] or {}; return libs[name] end,
   }, { __index = _G })
   globals._G = globals
+  globals.NUM_BAG_SLOTS = 4
   if modern then
     globals.Enum = { WeaponSlot = { MainHand = 0, OffHand = 1 },
-      AddOnRestrictionType = { Combat = 0, Encounter = 1, ChallengeMode = 2, PvPMatch = 3 } }
+      AddOnRestrictionType = { Combat = 0, Encounter = 1, ChallengeMode = 2, PvPMatch = 3 },
+      BagIndex = { ReagentBag = 5 } }
+    globals.Constants = { InventoryConstants = { NumBagSlots = 4, NumReagentBagSlots = 1 } }
     globals.C_RestrictedActions = { IsAddOnRestrictionActive = function(kind) return state.restrictions[kind] or false end }
     globals.C_Item = {
       GetWeaponEnchantInfo = function(slot) if slot == 0 then return state.main else return state.off end end,
@@ -59,6 +62,9 @@ local function fixture(projectID, interfaceVersion, expansion, modern)
     -- its event. Detection must not rely solely on the getter's presence.
     globals.CombatLogGetCurrentEventInfo = function() error("combat log unavailable") end
   else
+    -- Classic clients carry the shared ReagentBag enum, but bag 5 is a bank bag there.
+    globals.Enum = { BagIndex = { ReagentBag = 5 } }
+    globals.Constants = { InventoryConstants = { NumBagSlots = 4 } }
     globals.CAT_FORM = 1
     globals.GetWeaponEnchantInfo = function() return true, 120000, 3, 10, true, 60000, 2, 20 end
     globals.GetInventorySlotInfo = function(slot) return slot == "MainHandSlot" and 16 or 17 end
@@ -72,7 +78,8 @@ local function fixture(projectID, interfaceVersion, expansion, modern)
 end
 
 for _, client in ipairs({
-  { 1, 16001, 0, true, true }, { 1, 120105, 11, true, false },
+  -- Forever reported WOW_PROJECT_ID 1 on beta 69913 and 18 on 1.60.1.70205.
+  { 1, 16001, 0, true, true }, { 18, 16001, 0, true, true }, { 1, 120105, 11, true, false },
   { 1, 16001, 11, true, false }, { 2, 11508, 0, false, false },
   { 5, 20506, 1, false, false }, { 11, 30402, 2, false, false }, { 14, 40402, 3, false, false },
 }) do
@@ -81,6 +88,7 @@ for _, client in ipairs({
   local env = libs["KvLibShared-Env"]
   equal(env.isForever, forever, "Forever detection")
   equal(env.isClassic, project == 2 or forever, "Classic content selection")
+  equal(table.concat(env.playerBagIds, ","), modern and "0,1,2,3,4,5" or "0,1,2,3,4", "player bag IDs")
   if forever or not modern then equal(env.CAT_FORM, 1) end
   equal(env.GetInventorySlotInfo("MainHandSlot"), 16)
   equal(env.GetInventorySlotInfo("SECONDARYHANDSLOT"), 17)
