@@ -195,11 +195,20 @@ local function fixture(mode, projectID)
   state.cooldown = nil
   equal(env.GetSpellCooldown(42), nil)
 
-  -- Check real consumers as well as adapter tuples: nil data is not castable.
-  libs["Buffomat-Task"] = { CAN_CAST_ON_CD = "cooldown" }
+  -- Check real consumers as well as adapter tuples. Unknown cooldown data must
+  -- not block casting: scans only run outside combat and restrictions, and a
+  -- blocked task leaves the cast button on "Nothing to do" with no recovery.
+  libs["Buffomat-Task"] = { CAN_CAST_ON_CD = "cooldown", CAN_CAST_OK = "ok", CAN_CAST_OOM = "oom" }
+  libs["Buffomat-Party"] = { playerMana = 0 }
   loadModule("Src/Task/ActionCast.lua", globals)
   local action = libs["Buffomat-ActionCast"]:New(0, 42, "", {}, nil, false)
-  equal(action:CanCast(), "cooldown")
+  equal(action:CanCast(), "ok", "unknown cooldown is castable")
+  state.cooldown = { startTime = 10, duration = 20, isEnabled = true, modRate = 1 }
+  equal(action:CanCast(), "cooldown", "known cooldown blocks casting")
+  state.cooldown = { startTime = 0, duration = 0, isEnabled = true, modRate = 1 }
+  equal(action:CanCast(), "ok", "ready spell is castable")
+  equal(libs["Buffomat-ActionCast"]:New(10, 42, "", {}, nil, false):CanCast(), "oom")
+  state.cooldown = nil
   loadModule("Src/Task/TaskScan.lua", globals)
   local scan = libs["Buffomat-TaskScan"]
   equal(scan:IsInGlobalCooldown(), false, "unavailable GCD probe must not block the scan")
@@ -227,7 +236,7 @@ local function fixture(mode, projectID)
     state.cooldown.startTime = secret
     equal(scan:CheckGlobalCooldown({}), true, "restricted GCD must not block")
     equal(state.inactive, nil)
-    equal(action:CanCast(), "cooldown", "individual restricted cooldown still blocks casting")
+    equal(action:CanCast(), "ok", "restricted cooldown does not block casting")
   end
   globals.BuffomatAddon.isPlayerCasting = "cast"
   equal(scan:CheckCastingChanneling({}), false, "casting still pauses scanning")

@@ -38,8 +38,12 @@ function actionCastModule:New(cost, spellId, link, targetUnit, buffDef, temporar
 end
 
 function actionCastClass:CanCast()
+  -- Unknown cooldown (nil) counts as ready. Scans never run in combat or under
+  -- addon restrictions, so nil means the client gave no data; blocking left
+  -- the cast button stuck on "Nothing to do" with no rescan to recover it.
+  -- The client still rejects a cast that really is on cooldown.
   local cdtest = envModule.GetSpellCooldown(self.spellId)
-  if cdtest ~= 0 then
+  if cdtest ~= nil and cdtest ~= 0 then
     BuffomatAddon.checkCooldown = self.spellId
     --BomC_ListTab_Button:Disable()
     return taskModule.CAN_CAST_ON_CD

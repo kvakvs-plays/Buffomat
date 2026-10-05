@@ -81,7 +81,7 @@ function throttleModule.UpdateTimer()
 
   if BuffomatAddon.checkCooldown then
     local cdtest = envModule.GetSpellCooldown(BuffomatAddon.checkCooldown)
-    if cdtest == 0 then
+    if cdtest == nil or cdtest == 0 then
       BuffomatAddon.checkCooldown = nil
       throttleModule:RequestTaskRescan("checkCd")
     end

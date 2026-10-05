@@ -1641,8 +1641,12 @@ function taskScanModule:DoScan(context)
   self:CancelBuffs(context.party.player)
 
   -- fill list and find cast
-  partyModule.playerMana = envModule.UnitPower("player", 0) or 0 --mana
-  partyModule.playerManaLimit = envModule.UnitPowerMax("player", 0) or 0
+  -- Forever can report player power as a secret value (wrapper returns nil).
+  -- Falling back to 0 made every spell CAN_CAST_OOM; assume full mana instead
+  -- and let the client reject a cast that is really unaffordable.
+  local maxMana = envModule.UnitPowerMax("player", 0)
+  partyModule.playerManaLimit = maxMana or 0
+  partyModule.playerMana = envModule.UnitPower("player", 0) or maxMana or math.huge
 
   --self:ClearNextCastSpell()
 
