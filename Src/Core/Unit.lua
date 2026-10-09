@@ -62,8 +62,8 @@ function unitModule:UnitAura(unitId, buffIndex, filter)
   if spellId
       and allBuffsModule.allSpellIds
       and tContains(allBuffsModule.allSpellIds, spellId) then
-    if source ~= nil and source ~= "" and UnitIsUnit(source, "player") then
-      if UnitIsUnit(unitId, "player") and duration ~= nil and duration > 0 then
+    if source ~= nil and source ~= "" and envModule.UnitIsUnit(source, "player") then
+      if envModule.UnitIsUnit(unitId, "player") and duration ~= nil and duration > 0 then
         BuffomatShared.Duration[name] = duration
       end
 

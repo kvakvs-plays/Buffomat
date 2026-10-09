@@ -86,7 +86,7 @@ end
 ---@param powerType string
 local function Event_UNIT_POWER_UPDATE(_event, unitTarget, powerType)
   --UNIT_POWER_UPDATE: "unitTarget", "powerType"
-  if powerType == "MANA" and UnitIsUnit(unitTarget, "player") then
+  if powerType == "MANA" and envModule.UnitIsUnit(unitTarget, "player") then
     local maxMana = partyModule.playerManaLimit or 0
     local actualMana = envModule.UnitPower("player", 0)
 
@@ -297,7 +297,7 @@ local function Event_TALENT_GROUP_CHANGED(newGroup, oldGroup)
 end
 
 local function Event_UNIT_SPELLCAST_errors(unit)
-  if UnitIsUnit(unit, "player") then
+  if envModule.UnitIsUnit(unit, "player") then
     BuffomatAddon.checkForError = false
     throttleModule:RequestTaskRescan("spellcastError")
   end
@@ -311,7 +311,7 @@ function eventsModule:SafeWipeMacro()
 end
 
 local function Event_UNIT_SPELLCAST_START(eventType, unit)
-  if UnitIsUnit(unit, "player") then
+  if envModule.UnitIsUnit(unit, "player") then
     BuffomatAddon.isPlayerCasting = "cast"
     eventsModule:SafeWipeMacro() -- not sure if this has any effect
     throttleModule:RequestTaskRescan("castStart")
@@ -319,7 +319,7 @@ local function Event_UNIT_SPELLCAST_START(eventType, unit)
 end
 
 local function Event_UNIT_SPELLCAST_STOP(eventType, unit)
-  if UnitIsUnit(unit, "player") then
+  if envModule.UnitIsUnit(unit, "player") then
     BuffomatAddon.isPlayerCasting = nil
     throttleModule:RequestTaskRescan("castStop")
     BuffomatAddon.checkForError = false
@@ -327,7 +327,7 @@ local function Event_UNIT_SPELLCAST_STOP(eventType, unit)
 end
 
 local function Event_UNIT_SPELLCHANNEL_START(eventType, unit)
-  if UnitIsUnit(unit, "player") then
+  if envModule.UnitIsUnit(unit, "player") then
     BuffomatAddon.isPlayerCasting = "channel"
     eventsModule:SafeWipeMacro() -- not sure if this has any effect
     throttleModule:RequestTaskRescan("channelStart")
@@ -335,7 +335,7 @@ local function Event_UNIT_SPELLCHANNEL_START(eventType, unit)
 end
 
 local function Event_UNIT_SPELLCHANNEL_STOP(eventType, unit)
-  if UnitIsUnit(unit, "player") then
+  if envModule.UnitIsUnit(unit, "player") then
     BuffomatAddon.isPlayerCasting = nil
     throttleModule:RequestTaskRescan("channelStop")
     BuffomatAddon.checkForError = false

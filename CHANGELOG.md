@@ -1,7 +1,10 @@
 # Changelog
 
-## Unreleased
+## Buffomat Classic 2026.10.4
 
+- On Forever, inside instances, UnitIsUnit("targettarget", "player") returns a secret boolean.  
+  UNIT_POWER_UPDATE fires for every unit token, and Events.lua:89 used that result in an if,
+  which threw the error.
 - Port Forever compatibility from yannlugrin/Buffomat through `69564aa`: weapon
   imbues, restriction-aware scans, class options, and moved client APIs.
 - Keep Classic client fallbacks and pause scans when aura or enchant data cannot
@@ -24,7 +27,7 @@
 
 - Spell downranking: Restored the old broken feature, where a spell would automatically downrank if casted on a target too low level. As there isn't a way for addon to know it, it will learn from unsuccessful casts (you will need to cast the same buff again after it has learned). Requires enabled option for Downranking in 4.Convenience options tab.
 - Reintroducing option "Autoshow" when disabled, the task list will not be auto-showing till user actually calls it with a hotkey or menu, regardless of whether there are tasks or not.
-- Mage armor-type spells have now duration set to 30min, to allow better estimate of remaining duration for  rebuffing.
+- Mage armor-type spells have now duration set to 30min, to allow better estimate of remaining duration for rebuffing.
 
 ## Buffomat Classic 2025.5.3
 

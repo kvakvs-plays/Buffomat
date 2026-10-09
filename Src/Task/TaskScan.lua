@@ -471,14 +471,14 @@ function taskScanModule:GetActiveAuraAndSeal(playerUnit)
     if knownBuffOnPlayer then
       if buffDef.type == "aura" then
         if (BuffomatAddon.activePaladinAura == nil and BuffomatAddon.lastAura == buffDef.buffId)
-            or UnitIsUnit(knownBuffOnPlayer.source, "player")
+            or envModule.UnitIsUnit(knownBuffOnPlayer.source, "player")
         then
           if buffChecksModule:TimeCheck(knownBuffOnPlayer.expirationTime, knownBuffOnPlayer.duration) then
             BuffomatAddon.activePaladinAura = buffDef.buffId
           end
         end
       elseif buffDef.type == "seal" then
-        if UnitIsUnit(knownBuffOnPlayer.source, "player") then
+        if envModule.UnitIsUnit(knownBuffOnPlayer.source, "player") then
           --BOM:Print("seal check for " .. buffDef.buffId .. " expiration " .. knownBuffOnPlayer.expirationTime)
           if buffChecksModule:TimeCheck(knownBuffOnPlayer.expirationTime, knownBuffOnPlayer.duration) then
             BuffomatAddon.activePaladinSeal = buffDef.buffId

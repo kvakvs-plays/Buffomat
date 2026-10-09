@@ -169,6 +169,17 @@ for _, client in ipairs({
   state.power = 100
   handlers.UNIT_POWER_UPDATE("UNIT_POWER_UPDATE", "player", "MANA")
   equal(state.reason, "powerUpdate", "AceEvent callback includes event name")
+  -- Forever returns a secret boolean for "targettarget" inside instances.
+  local unitIsUnit = globals.UnitIsUnit
+  globals.UnitIsUnit = function() return secret end
+  loadModule("Src/KvLib/KvEnv.lua", globals)
+  equal(env.UnitIsUnit("targettarget", "player"), false, "secret unit identity")
+  equal(env.UnitIsUnit("player", "player"), true, "same token skips the API")
+  state.reason = nil
+  handlers.UNIT_POWER_UPDATE("UNIT_POWER_UPDATE", "targettarget", "MANA")
+  equal(state.reason, nil, "secret unit identity does not branch")
+  globals.UnitIsUnit = unitIsUnit
+  loadModule("Src/KvLib/KvEnv.lua", globals)
   if modern then
     scan.ScanTasks = function(_, reason) state.scanReason = reason end
     handlers.ADDON_RESTRICTION_STATE_CHANGED()

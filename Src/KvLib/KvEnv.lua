@@ -388,7 +388,23 @@ function envModule.GetUnitAura(unit, index, filter)
   return aura, true
 end
 
-local unitPower, unitPowerMax, unitInRange = UnitPower, UnitPowerMax, UnitInRange
+local unitPower, unitPowerMax, unitInRange, unitIsUnit = UnitPower, UnitPowerMax, UnitInRange, UnitIsUnit
+
+---Forever returns a secret boolean for some unit pairs (e.g. "targettarget" in
+---instances); branching on it throws. Treat unknown identity as "not the same".
+---@param unit1 string
+---@param unit2 string
+---@return boolean
+function envModule.UnitIsUnit(unit1, unit2)
+  if unit1 == unit2 then
+    return true
+  end
+  local same = unitIsUnit(unit1, unit2)
+  if envModule.IsSecretValue(same) then
+    return false
+  end
+  return same == true
+end
 local isItemInRange = (C_Item and C_Item.IsItemInRange) or IsItemInRange
 
 ---Unknown power must not be interpreted as a full mana bar.

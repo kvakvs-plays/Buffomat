@@ -202,7 +202,7 @@ function buffChecksModule:PartyNeedsInfoBuff(buff, party)
         buff.buffSource = partyMemberBuff.source
       end
 
-      if UnitIsUnit("player", partyMemberBuff.source or "") then
+      if envModule.UnitIsUnit("player", partyMemberBuff.source or "") then
         partyModule.itemListTarget[buff.buffId] = partyMember.name
       end
     end
@@ -310,7 +310,7 @@ function buffChecksModule:PartyNeedsPaladinBlessing(buffDef, party, buffCtx)
         ok = true
       end
       if profileBuff.SelfCast
-          and UnitIsUnit(partyMember.unitId, "player") then
+          and envModule.UnitIsUnit(partyMember.unitId, "player") then
         ok = true
       end
     end
@@ -368,7 +368,7 @@ function buffChecksModule:PartyNeedsBuff(buffDef, party, buffCtx)
       ok = true
     end
     if profileBuff.SelfCast
-        and UnitIsUnit(partyMember.unitId, "player") then
+        and envModule.UnitIsUnit(partyMember.unitId, "player") then
       ok = true
     end
     if partyMember.isTank and profileBuff.Class["tank"]

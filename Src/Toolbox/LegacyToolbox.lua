@@ -267,7 +267,7 @@ function legacyToolboxModule:UnitDistanceSquared(uId)
 
   local range
 
-  if UnitIsUnit(uId, "player") then
+  if kvEnvModule.UnitIsUnit(uId, "player") then
     range = 0
   else
     local distanceSquared, checkedDistance = UnitDistanceSquared(uId)
