@@ -183,11 +183,11 @@ function buffDefModule:genericConsumable(allBuffs, singleId, providedByItem)
 end
 
 ---@param allBuffs BomBuffDefinition[]
----@param buffId BomBuffId
+---@param _buffId BomBuffId
 ---@param providesAuras WowSpellId[] Auras from the food
 ---@param providedByItems WowItemId[] Item or multiple items giving this buff
 ---@return BomBuffDefinition
-function buffDefModule:consumableGroup(allBuffs, buffId, providesAuras, providedByItems)
+function buffDefModule:consumableGroup(allBuffs, _buffId, providesAuras, providedByItems)
   local b = buffDefModule:createAndRegisterBuff(allBuffs, providesAuras[1], nil)
       :IsConsumable(true)
       :IsDefault(false)
@@ -792,7 +792,7 @@ function buffDefClass:DoesUnitHaveBetterBuffs(unit)
   end
 
   if self.providesAuras then
-    for i, aura in pairs(self.providesAuras) do
+    for _, aura in pairs(self.providesAuras) do
       if unit.allBuffs[aura] then
         return true -- have one of known provided auras, means we don't need that buff
       end

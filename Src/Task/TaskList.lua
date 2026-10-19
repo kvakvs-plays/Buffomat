@@ -236,7 +236,7 @@ function taskListClass:CastButton_OutOfRange()
 
   local skipreset = false
 
-  for spellIndex, spell in ipairs(allBuffsModule.selectedBuffs) do
+  for _, spell in ipairs(allBuffsModule.selectedBuffs) do
     if #spell.skipList > 0 then
       skipreset = true
       wipe(spell.skipList)

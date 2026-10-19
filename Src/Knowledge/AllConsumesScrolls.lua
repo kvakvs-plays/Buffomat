@@ -1,5 +1,3 @@
-local BuffomatAddon = BuffomatAddon
-
 ---@class AllConsumesScrollsModule
 
 local scrollsModule = LibStub("Buffomat-AllConsumesScrolls") --[[@as AllConsumesScrollsModule]]
@@ -250,9 +248,9 @@ function scrollsModule:_SetupScrollsIntellect(allBuffs, enchantments)
       :ExtraText(_t("tooltip.scroll.bestInBag"))
 end
 
----@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
+---@param _allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function scrollsModule:_SetupInscriptionScrolls(allBuffs, enchantments)
+function scrollsModule:_SetupInscriptionScrolls(_allBuffs, enchantments)
   -- TODO: Brilliance scroll
   -- TODO: Fortitude scroll
   -- TODO: Cataclysm - Runescroll of Fort & Might

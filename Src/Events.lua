@@ -200,9 +200,9 @@ local partyCheckMask = (COMBATLOG_OBJECT_AFFILIATION_RAID or 0)
 
 local function Event_COMBAT_LOG_EVENT_UNFILTERED()
   ---@type number, any, boolean, string, string, any, any, string, string, any, any, number, string, number, number, number
-  local timestamp, event, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags
-  , destGUID, unitName, destFlags, destRaidFlags, spellId, spellName, spellSchool
-  , auraType, amount = CombatLogGetCurrentEventInfo()
+  local _timestamp, event, _hideCaster, _sourceGUID, _sourceName, _sourceFlags, _sourceRaidFlags
+  , _destGUID, unitName, destFlags, _destRaidFlags, spellId, _spellName, _spellSchool
+  , _auraType, _amount = CombatLogGetCurrentEventInfo()
 
   if bit.band(destFlags, partyCheckMask) > 0 and unitName ~= nil and unitName ~= "" then
     --print(event,spellName,bit.band(destFlags,partyCheckMask)>0,bit.band(sourceFlags,COMBATLOG_OBJECT_AFFILIATION_MINE)>0)
@@ -232,9 +232,9 @@ end
 ---Event_UI_ERROR_MESSAGE
 ---Will stand if sitting, will dismount if mounted, will cancel shapeshift, if
 ---shapeshifted while trying to cast a spell and that produces an error message.
----@param errorType table
+---@param _errorType table
 ---@param message table
-local function Event_UI_ERROR_MESSAGE(_, errorType, message)
+local function Event_UI_ERROR_MESSAGE(_, _errorType, message)
   if tContains(eventsModule.ERR_NOT_STANDING, message) then
     if BuffomatShared.AutoStand then
       UIErrorsFrame:Clear()
@@ -292,7 +292,7 @@ local function Event_PartyChanged()
   end
 end
 
-local function Event_TALENT_GROUP_CHANGED(newGroup, oldGroup)
+local function Event_TALENT_GROUP_CHANGED(_newGroup, _oldGroup)
   buffomatModule:UseProfile(profileModule:ChooseProfile())
 end
 
@@ -310,7 +310,7 @@ function eventsModule:SafeWipeMacro()
   end
 end
 
-local function Event_UNIT_SPELLCAST_START(eventType, unit)
+local function Event_UNIT_SPELLCAST_START(_eventType, unit)
   if envModule.UnitIsUnit(unit, "player") then
     BuffomatAddon.isPlayerCasting = "cast"
     eventsModule:SafeWipeMacro() -- not sure if this has any effect
@@ -318,7 +318,7 @@ local function Event_UNIT_SPELLCAST_START(eventType, unit)
   end
 end
 
-local function Event_UNIT_SPELLCAST_STOP(eventType, unit)
+local function Event_UNIT_SPELLCAST_STOP(_eventType, unit)
   if envModule.UnitIsUnit(unit, "player") then
     BuffomatAddon.isPlayerCasting = nil
     throttleModule:RequestTaskRescan("castStop")
@@ -326,7 +326,7 @@ local function Event_UNIT_SPELLCAST_STOP(eventType, unit)
   end
 end
 
-local function Event_UNIT_SPELLCHANNEL_START(eventType, unit)
+local function Event_UNIT_SPELLCHANNEL_START(_eventType, unit)
   if envModule.UnitIsUnit(unit, "player") then
     BuffomatAddon.isPlayerCasting = "channel"
     eventsModule:SafeWipeMacro() -- not sure if this has any effect
@@ -334,7 +334,7 @@ local function Event_UNIT_SPELLCHANNEL_START(eventType, unit)
   end
 end
 
-local function Event_UNIT_SPELLCHANNEL_STOP(eventType, unit)
+local function Event_UNIT_SPELLCHANNEL_STOP(_eventType, unit)
   if envModule.UnitIsUnit(unit, "player") then
     BuffomatAddon.isPlayerCasting = nil
     throttleModule:RequestTaskRescan("channelStop")
@@ -407,32 +407,32 @@ function eventsModule:InitEvents()
 
   -- TODO for TBC: PLAYER_REGEN_DISABLED / ENABLED is sent before/after the combat and protected frames lock up
 
-  for i, event in ipairs(eventsModule.EVT_COMBAT_START) do
+  for _, event in ipairs(eventsModule.EVT_COMBAT_START) do
     BuffomatAddon:RegisterEvent(event, Event_CombatStart)
   end
-  for i, event in ipairs(eventsModule.EVT_COMBAT_STOP) do
+  for _, event in ipairs(eventsModule.EVT_COMBAT_STOP) do
     BuffomatAddon:RegisterEvent(event, Event_CombatStop)
   end
-  for i, event in ipairs(eventsModule.EVT_LOADING_SCREEN_START) do
+  for _, event in ipairs(eventsModule.EVT_LOADING_SCREEN_START) do
     BuffomatAddon:RegisterEvent(event, Event_LoadingStart)
   end
-  for i, event in ipairs(eventsModule.EVT_LOADING_SCREEN_END) do
+  for _, event in ipairs(eventsModule.EVT_LOADING_SCREEN_END) do
     BuffomatAddon:RegisterEvent(event, Event_LoadingStop)
   end
 
-  for i, event in ipairs(eventsModule.EVT_SPELLBOOK_CHANGED) do
+  for _, event in ipairs(eventsModule.EVT_SPELLBOOK_CHANGED) do
     BuffomatAddon:RegisterEvent(event, eventsModule.Event_SpellsChanged)
   end
-  for i, event in ipairs(eventsModule.EVT_PARTY_CHANGED) do
+  for _, event in ipairs(eventsModule.EVT_PARTY_CHANGED) do
     BuffomatAddon:RegisterEvent(event, Event_PartyChanged)
   end
-  for i, event in ipairs(eventsModule.GENERIC_UPDATE_EVENTS) do
+  for _, event in ipairs(eventsModule.GENERIC_UPDATE_EVENTS) do
     local e = event .. ""
     BuffomatAddon:RegisterEvent(event, function()
       throttleModule:RequestTaskRescan(e)
     end)
   end
-  for i, event in ipairs(eventsModule.EVT_BAG_CHANGED) do
+  for _, event in ipairs(eventsModule.EVT_BAG_CHANGED) do
     BuffomatAddon:RegisterEvent(event, Event_Bag)
   end
 end

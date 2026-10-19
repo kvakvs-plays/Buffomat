@@ -86,9 +86,6 @@ local supportedLanguageSettings = {
 ---@field ShamanFlametongueRanked boolean Try and use rank 9 on mainhand for shaman when buffing double Flametongue
 ---@field CustomBuffSorting boolean Each buff row will also have a text field with sorting order
 
-local sharedStateClass = {}
-sharedStateClass.__index = sharedStateClass
-
 ---@param init SharedSettings
 ---@return SharedSettings
 function sharedSettingsModule:NewDefaultSharedSettings(init)
@@ -103,7 +100,6 @@ function sharedSettingsModule:NewDefaultSharedSettings(init)
   tab.Language = supportedLanguageSettings[tab.Language] and tab.Language or self.defaults.Language
   tab.HideWhenScanBlocked = tab.HideWhenScanBlocked == true
 
-  --setmetatable(tab, sharedStateClass)
   return tab
 end
 

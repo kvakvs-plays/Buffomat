@@ -27,13 +27,13 @@ end
 ---@param dict table
 ---@param key string
 ---@param notify function|nil Call this with (key, value) on option change
----@param _t fun(key:string):string Translation callable
-function kvOptionsModule:TemplateCheckbox(name, dict, key, notify, _t)
+---@param translate fun(key:string):string Translation callable
+function kvOptionsModule:TemplateCheckbox(name, dict, key, notify, translate)
   self.optionsOrder = self.optionsOrder + 1
 
   return {
-    name = _t("options.short." .. name),
-    desc = _t("options.long." .. name),
+    name = translate("options.short." .. name),
+    desc = translate("options.long." .. name),
     type = "toggle",
     width = "full",
     order = self.optionsOrder,
@@ -58,13 +58,13 @@ end
 
 ---@param name string
 ---@param onClick function Call this when button is pressed
----@param _t fun(key:string):string Translation callable
-function kvOptionsModule:TemplateButton(name, onClick, _t)
+---@param translate fun(key:string):string Translation callable
+function kvOptionsModule:TemplateButton(name, onClick, translate)
   self.optionsOrder = self.optionsOrder + 1
 
   return {
-    name = _t("options.short." .. name),
-    desc = _t("options.long." .. name),
+    name = translate("options.short." .. name),
+    desc = translate("options.long." .. name),
     type = "execute",
     width = "half",
     order = self.optionsOrder,
@@ -75,19 +75,19 @@ end
 ---@param values table|function Key is sent to the setter, value is the string displayed
 ---@param dict table|nil
 ---@param notifyFn function|nil Call this with (key, value) on option change
----@param _t fun(key:string):string Translation callable
-function kvOptionsModule:TemplateMultiselect(name, values, dict, notifyFn, setFn, getFn, _t)
+---@param translate fun(key:string):string Translation callable
+function kvOptionsModule:TemplateMultiselect(name, values, dict, notifyFn, setFn, getFn, translate)
   self.optionsOrder = self.optionsOrder + 1
 
   return {
-    name = _t("options.short." .. name),
-    desc = _t("options.long." .. name),
+    name = translate("options.short." .. name),
+    desc = translate("options.long." .. name),
     type = "multiselect",
     width = "full",
     order = self.optionsOrder,
     values = values,
 
-    set = setFn or function(state, key, value)
+    set = setFn or function(_state, key, value)
       if dict then
         ( dict)[key] = value
         if notifyFn then
@@ -95,7 +95,7 @@ function kvOptionsModule:TemplateMultiselect(name, values, dict, notifyFn, setFn
         end
       end
     end,
-    get = getFn or function(state, key)
+    get = getFn or function(_state, key)
       if dict then
         return (dict)[key] == true
       else
@@ -109,13 +109,13 @@ end
 ---@param dict table
 ---@param style string|nil "dropdown" or "radio"
 ---@param notifyFn function|nil Call this with (key, value) on option change
----@param _t fun(key:string):string Translation callable
-function kvOptionsModule:TemplateSelect(name, values, style, dict, notifyFn, setFn, getFn, _t)
+---@param translate fun(key:string):string Translation callable
+function kvOptionsModule:TemplateSelect(name, values, style, dict, notifyFn, setFn, getFn, translate)
   self.optionsOrder = self.optionsOrder + 1
 
   return {
-    desc = _t("options.long." .. name),
-    name = _t("options.short." .. name),
+    desc = translate("options.long." .. name),
+    name = translate("options.short." .. name),
     order = self.optionsOrder,
     style = style or "dropdown",
     type = "select",
@@ -146,13 +146,13 @@ end
 ---@param dict table
 ---@param key string
 ---@param notify function|nil Call this with (key, value) on option change
----@param _t fun(key:string):string Translation callable
-function kvOptionsModule:TemplateInput(type, name, dict, key, notify, _t)
+---@param translate fun(key:string):string Translation callable
+function kvOptionsModule:TemplateInput(type, name, dict, key, notify, translate)
   self.optionsOrder = self.optionsOrder + 1
 
   return {
-    name = _t("options.short." .. name),
-    desc = _t("options.long." .. name),
+    name = translate("options.short." .. name),
+    desc = translate("options.long." .. name),
     type = "input",
     width = "full",
     order = self.optionsOrder,
@@ -179,13 +179,13 @@ end
 ---@param dict table
 ---@param key string
 ---@param notify function|nil Call this with (key, value) on option change
----@param _t fun(key:string):string Translation callable
-function kvOptionsModule:TemplateRange(name, rangeFrom, rangeTo, step, dict, key, notify, _t)
+---@param translate fun(key:string):string Translation callable
+function kvOptionsModule:TemplateRange(name, rangeFrom, rangeTo, step, dict, key, notify, translate)
   self.optionsOrder = self.optionsOrder + 1
 
   return {
-    name = _t("options.short." .. name),
-    desc = _t("options.long." .. name),
+    name = translate("options.short." .. name),
+    desc = translate("options.long." .. name),
     type = "range",
     min = rangeFrom,
     max = rangeTo,

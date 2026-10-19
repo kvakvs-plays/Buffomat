@@ -1,5 +1,3 @@
-local BuffomatAddon = BuffomatAddon
-
 ---@class WarriorModule
 
 local warriorModule = LibStub("Buffomat-AllSpellsWarrior") --[[@as WarriorModule]]

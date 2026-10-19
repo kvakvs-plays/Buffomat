@@ -121,9 +121,9 @@ local function generateMenuSeparator(level)
 end
 
 ---@param level number
----@param frame BomGPIControl
+---@param _frame BomGPIControl
 ---@param menuItemDef BomMenuItemDef
-local function generateClickableMenuItem(level, frame, menuItemDef)
+local function generateClickableMenuItem(level, _frame, menuItemDef)
   ---@type WowPopupMenuItem
   local info = {}
   info.text = menuItemDef.text
@@ -132,7 +132,7 @@ local function generateClickableMenuItem(level, frame, menuItemDef)
   info.value = menuItemDef.onClick
   info.arg1 = menuItemDef.arg1
   info.arg2 = menuItemDef.arg2
-  info.func = function(menuItm, a1, a2, chk)
+  info.func = function(menuItm, a1, a2, _chk)
     menuItm.value(a1, a2)
   end
   info.hasArrow = false
@@ -149,7 +149,7 @@ local function generateBooleanMenuItem(level, menuItemDef)
   info.arg1 = menuItemDef.arg1
   info.arg2 = menuItemDef.arg2
   info.checked = menuItemDef.arg2 and not menuItemDef.value[menuItemDef.arg1] or menuItemDef.value[menuItemDef.arg1]
-  info.func = function(menuItm, a1, a2, chk)
+  info.func = function(menuItm, a1, _a2, _chk)
     menuItm.value[a1] = not menuItm.value[a1]
     local buffomatModule = LibStub("Buffomat-Buffomat") ---@type BuffomatModule
     if menuItm.arg1 == "hide" and buffomatModule and buffomatModule.libIcon then

@@ -30,7 +30,6 @@ local flagIsOutofBounds = false
 
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local actionMacroModule = LibStub("Buffomat-ActionMacro") --[[@as BomActionMacroModule]]
-local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local libGUI = LibStub("AceGUI-3.0")
 local ngToolboxModule = LibStub("Buffomat-NgToolbox") --[[@as NgToolboxModule]]
@@ -71,8 +70,8 @@ function taskListPanelModule:SetTitle()
   end
 end
 
----@param holdOpen boolean
-function taskListPanelModule:ToggleWindow(holdOpen)
+---@param _holdOpen boolean
+function taskListPanelModule:ToggleWindow(_holdOpen)
   self.windowCommandCallLocation = "tlp:toggleWindow"
 
   if self:IsWindowVisible() then
@@ -113,8 +112,8 @@ local function doHide()
 end
 
 --- Do not call this directly. Called from the throttle module on timed updates.
----@param command WindowCommand
-function taskListPanelModule:WindowCommand(command)
+---@param _command WindowCommand
+function taskListPanelModule:WindowCommand(_command)
   if not self.windowCommand then
     return
   end

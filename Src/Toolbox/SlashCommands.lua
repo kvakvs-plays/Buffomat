@@ -50,7 +50,7 @@ function slashModule:PrintSlashCommand_1(prefix, conf, printFn)
   local colCmd = "|cFFFF9C00"
 
   ---@diagnostic disable-next-line: unused-local
-  for i, subcmd in ipairs(conf) do
+  for _, subcmd in ipairs(conf) do
     -- if false then
     --   local maybeFormatTable = (type(subcmd.command) == "table") and "|r(" .. colCmd
     --       .. slashModule:SlashUnpack(subcmd.command, "|r/" .. colCmd)
@@ -85,7 +85,7 @@ end
 ---@param conf BomSlashCommand[]
 function slashModule:ParseAndExecute(nestingLevel, msg, conf)
   ---@diagnostic disable-next-line: unused-local
-  for i, subcmd in ipairs(conf) do
+  for _, subcmd in ipairs(conf) do
     local ok = (
           type(subcmd.command) == "table") and tContains(subcmd.command, msg[nestingLevel])
         or (subcmd.command == msg[nestingLevel]
@@ -116,9 +116,9 @@ end
 
 ---Here the game will send input text
 ---@param msg string
----@param editBox WowControl UI control, the user input box, can :Show, :SetText etc
+---@param _editBox WowControl UI control, the user input box, can :Show, :SetText etc
 ---@diagnostic disable-next-line: unused-local
-function slashModule.HandleSlashCommand(msg, editBox)
+function slashModule.HandleSlashCommand(msg, _editBox)
   if msg == "help" then
     local color = "|cFFFF9C00"
     print("|cFFFF1C1C" .. kvEnvModule.GetAddOnMetadata(TOCNAME, "Title")

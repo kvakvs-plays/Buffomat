@@ -60,7 +60,7 @@ function optionsModule:CreateGeneralOptionsTable()
   sounds[_t("task.notifications.no-sound")] = "-"
 
   ---@diagnostic disable-next-line: unused-local
-  for i, sound in ipairs(constModule.TASK_NOTIFICATION_SOUNDS) do
+  for _, sound in ipairs(constModule.TASK_NOTIFICATION_SOUNDS) do
     sounds[sound .. ".mp3"] = sound
   end
 
@@ -83,7 +83,7 @@ function optionsModule:CreateGeneralOptionsTable()
       useProfiles = self:TemplateCheckbox("UseProfiles", BuffomatCharacter, nil, nil),
       slowerHardware = self:TemplateCheckbox("SlowerHardware", BuffomatShared, nil,
         ---@diagnostic disable-next-line: unused-local
-        function(key, value)
+        function(_key, _value)
           buffomatModule:ScheduleUpdateTimer()
         end),
       minimapButtonShow = {
@@ -241,12 +241,12 @@ function optionsModule:CreateVisibilityOptionsTable()
         BuffomatCharacter.BuffCategoriesHidden, -- settings table
         nil,
         ---@diagnostic disable-next-line: unused-local
-        function(state, key, value)
+        function(_state, key, value)
           BuffomatCharacter.BuffCategoriesHidden[ --[[@as string]] key ] = not value -- invert
           eventsModule.Event_SpellsChanged()
         end,
         ---@diagnostic disable-next-line: unused-local
-        function(state, key)
+        function(_state, key)
           return BuffomatCharacter.BuffCategoriesHidden[ --[[@as string]] key ] ~= true -- invert
         end
       ),

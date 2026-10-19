@@ -309,8 +309,8 @@ end
 
 function unitClass:UpdatePlayerWeaponEnchantments()
   ---@type boolean, number, number, BomEnchantmentId, boolean, number, number, BomEnchantmentId
-  local hasMainHandEnchant, mainHandExpiration, mainHandCharges, mainHandEnchantID
-  , hasOffHandEnchant, offHandExpiration, offHandCharges, offHandEnchantId = envModule.GetWeaponEnchantInfo()
+  local hasMainHandEnchant, mainHandExpiration, _mainHandCharges, mainHandEnchantID
+  , hasOffHandEnchant, offHandExpiration, _offHandCharges, offHandEnchantId = envModule.GetWeaponEnchantInfo()
 
   if hasMainHandEnchant == nil or hasOffHandEnchant == nil then
     self.auraDataUnavailable = true

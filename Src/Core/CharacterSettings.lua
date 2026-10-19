@@ -1,7 +1,6 @@
 ---@class CharacterSettingsModule
 ---@field profileNames ProfileName[]
 
-local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local characterSettingsModule = LibStub("Buffomat-CharacterSettings") --[[@as CharacterSettingsModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
@@ -33,9 +32,6 @@ characterSettingsModule.profileNames = {
 ---@field CancelBuff table<BomBuffId, BomBuffDefinition>|nil [⚠DO NOT RENAME]
 ---@field LastSeal number|nil
 ---@field LastAura number|nil
-
-local characterStateClass = {}
-characterStateClass.__index = characterStateClass
 
 function characterSettingsModule:LocalizedProfileName(profileName)
   return _t("profileName." .. profileName)

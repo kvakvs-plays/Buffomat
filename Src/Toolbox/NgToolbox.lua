@@ -38,7 +38,7 @@ end
 ---@param link string The string in format "spell:<id>" or "item:<id>"
 function ngToolboxModule:TooltipLink(widget, link)
   widget:SetCallback("OnEnter", function()
-    local spellId = GameTooltip:SetOwner(widget.frame, "ANCHOR_RIGHT")
+    GameTooltip:SetOwner(widget.frame, "ANCHOR_RIGHT")
     GameTooltip:SetHyperlink(link)
     GameTooltip:Show()
   end)
@@ -96,7 +96,7 @@ function ngToolboxModule:CreateToggle(tooltip, width, height, textureOn, texture
   if valueOnCreation then setTextureOn() else setTextureOff() end
 
   ---@diagnostic disable-next-line: unused-local
-  button:SetCallback("OnClick", function(_control, mouseButton)
+  button:SetCallback("OnClick", function(_control, _mouseButton)
     local newValue = not getValue()
     setValue(newValue)
     if newValue then setTextureOn() else setTextureOff() end
@@ -122,7 +122,7 @@ function ngToolboxModule:CreateButton(text, tooltip, width, height, texture, onC
   if tooltip then self:SetTooltip(button, tooltip) end
 
   ---@diagnostic disable-next-line: unused-local
-  button:SetCallback("OnClick", function(_control, mouseButton) onClick() end)
+  button:SetCallback("OnClick", function(_control, _mouseButton) onClick() end)
 
   return button
 end

@@ -656,7 +656,7 @@ function foodModule:_SetupMiscFoodCata(allBuffs, enchantments)
   --             :ExtraText(_t("tooltip.food.bestInBag"))  --
 
   -- All Combo Food Buff providers
-  local comboFoodItemIds = {
+  local _comboFoodItemIds = {
     62290, -- Seafood Magnifique Feast; +90 Stam/90 other stat
     62649, -- Fortune Cookie; +90 Stam/90 other stat
     60858, -- Goblin Barbecue; +60 Stam/60 other stat

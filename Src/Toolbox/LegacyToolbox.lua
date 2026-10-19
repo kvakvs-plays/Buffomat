@@ -90,7 +90,7 @@ local bom_special_letter_to_ascii = {
 
 -- Hyperlink
 
-local function bom_on_enter_hyperlink(self, link, text)
+local function bom_on_enter_hyperlink(_self, link, _text)
   --print(link,text)
   local part = legacyToolboxModule:Split(link, ":")
   if part[1] == "spell"
@@ -108,7 +108,7 @@ local function bom_on_enter_hyperlink(self, link, text)
   end
 end
 
-local function bom_on_leave_hyperlink(self)
+local function bom_on_leave_hyperlink(_self)
   GameTooltip:Hide()
 end
 
@@ -122,18 +122,8 @@ end
 --local eventFrame ---@type Control
 
 ---@param self BomGPIControl
----@deprecated
-local function bom_gpiprivat_event_handler(self, event, ...)
-  for key, callback in pairs(self._GPIPRIVAT_events) do
-    if key == event then
-      callback(...)
-    end
-  end
-end
-
----@param self BomGPIControl
 function legacyToolboxModule.gpiprivat_update_handler(self, ...)
-  for i, Entry in pairs(self._GPIPRIVAT_updates) do
+  for _, Entry in pairs(self._GPIPRIVAT_updates) do
     Entry(...)
   end
 end
@@ -188,7 +178,7 @@ function legacyToolboxModule:ScanToolTip(what, ...)
   myScanningTooltip[what](myScanningTooltip, ...)
 
   --print("do",TOCNAME.."_MyScanningTooltip")
-  for i, region in ipairs({ myScanningTooltip:GetRegions() }) do
+  for _, region in ipairs({ myScanningTooltip:GetRegions() }) do
     if region and region:GetObjectType() == "FontString" then
       local text = region:GetText()
       if text then
@@ -313,7 +303,7 @@ function legacyToolboxModule:iMerge(t1, ...)
     local var = select(index, ...)
 
     if type(var) == "table" then
-      for i, v in ipairs(var) do
+      for _, v in ipairs(var) do
         if tContains(t1, v) == false then
           table.insert(t1, v)
         end
@@ -416,7 +406,7 @@ end
 local ResizeCursor ---@type BomGPIControl
 
 ---@param self BomGPIControl
-local function SizingStop(self, button)
+local function SizingStop(self, _button)
   self:GetParent():StopMovingOrSizing()
 
   if self.GPI_DoStop then
@@ -425,7 +415,7 @@ local function SizingStop(self, button)
 end
 
 ---@param self BomGPIControl
-local function SizingStart(self, button)
+local function SizingStart(self, _button)
   self:GetParent():StartSizing(self.GPI_SIZETYPE)
   if self.GPI_DoStart then
     self.GPI_DoStart(self:GetParent())
@@ -441,8 +431,8 @@ local function SizingEnter(self)
   end
 end
 
----@param self BomGPIControl
-local function SizingLeave(self, button)
+---@param _self BomGPIControl
+local function SizingLeave(_self, _button)
   ResizeCursor:Hide()
 end
 

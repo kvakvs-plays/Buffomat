@@ -1,5 +1,3 @@
-local BuffomatAddon = BuffomatAddon
-
 ---@class BomTaskModule
 
 local taskModule = LibStub("Buffomat-Task") --[[@as BomTaskModule]]

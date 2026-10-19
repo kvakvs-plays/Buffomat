@@ -4,7 +4,6 @@ local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 ---@class BomSpellSetupModule
 
 local spellSetupModule = LibStub("Buffomat-SpellSetup") --[[@as BomSpellSetupModule]]
-local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local itemCacheModule = LibStub("Buffomat-ItemCache") --[[@as BomItemCacheModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
@@ -45,12 +44,12 @@ function spellSetupModule:Setup_ResetCaches()
 end
 
 function spellSetupModule:Setup_CancelBuffs()
-  for i, cancelBuff in ipairs(BuffomatAddon.cancelBuffs) do
+  for _, cancelBuff in ipairs(BuffomatAddon.cancelBuffs) do
     -- save "buffId"
     --spell.buffId = spell.buffId or spell.singleId
 
     if cancelBuff.singleFamily then
-      for sindex, sID in ipairs(cancelBuff.singleFamily) do
+      for _, sID in ipairs(cancelBuff.singleFamily) do
         allBuffsModule.spellIdtoBuffId[sID] = cancelBuff.buffId
       end
     end
@@ -69,7 +68,7 @@ function spellSetupModule:Setup_CancelBuffs()
 
     toolboxModule:iMerge(allBuffsModule.allSpellIds, cancelBuff.singleFamily)
 
-    for j, profileName in ipairs(profileModule.ALL_PROFILES) do
+    for _, profileName in ipairs(profileModule.ALL_PROFILES) do
       if BuffomatCharacter.profiles[profileName].CancelBuff[cancelBuff.buffId] == nil then
         BuffomatCharacter.profiles[profileName].CancelBuff[cancelBuff.buffId] = buffDefinitionModule:New(0)
         BuffomatCharacter.profiles[profileName].CancelBuff[cancelBuff.buffId].Enable = cancelBuff.default or false
@@ -141,7 +140,7 @@ end
 function spellSetupModule:Setup_EachSpell_CacheUpdate(spell)
   -- get highest rank and store SpellID=buffId
   if spell.singleFamily then
-    for sindex, eachSingleId in ipairs(spell.singleFamily) do
+    for _, eachSingleId in ipairs(spell.singleFamily) do
       allBuffsModule.spellIdtoBuffId[eachSingleId] = spell.buffId
       allBuffsModule.spellIdIsSingleLookup[eachSingleId] = true
       allBuffsModule.buffFromSpellIdLookup[eachSingleId] = spell
@@ -159,7 +158,7 @@ function spellSetupModule:Setup_EachSpell_CacheUpdate(spell)
   end
 
   if spell.groupFamily then
-    for sindex, eachGroupId in ipairs(spell.groupFamily) do
+    for _, eachGroupId in ipairs(spell.groupFamily) do
       allBuffsModule.spellIdtoBuffId[eachGroupId] = spell.buffId
       allBuffsModule.buffFromSpellIdLookup[eachGroupId] = spell
 
@@ -248,7 +247,7 @@ function spellSetupModule:Setup_EachBuff_AddKnown(buffDef)
   end
 
   --setDefaultValues!
-  for j, eachProfile in ipairs(profileModule.ALL_PROFILES) do
+  for _, eachProfile in ipairs(profileModule.ALL_PROFILES) do
     ---@type BomBuffDefinition
     local profileSpell = BuffomatCharacter.profiles[eachProfile].Spell[buffDef.buffId]
 
@@ -265,7 +264,7 @@ function spellSetupModule:Setup_EachBuff_AddKnown(buffDef)
         local SelfCast = true
         profileSpell.SelfCast = false
 
-        for ci, class in ipairs(constModule.CLASSES) do
+        for _, class in ipairs(constModule.CLASSES) do
           profileSpell.Class[class] = tContains(buffDef.targetClasses or {}, class)
           SelfCast = profileSpell.Class[class] and false or SelfCast
         end
@@ -362,7 +361,7 @@ end
 ---Scan all spells known to Buffomat and see if they are available to the player
 function spellSetupModule:SetupAvailableSpells()
   local character = BuffomatCharacter
-  for i, profileName in ipairs(profileModule.ALL_PROFILES) do
+  for _, profileName in ipairs(profileModule.ALL_PROFILES) do
     character.profiles[profileName].Spell = character.profiles[profileName].Spell or {}
     character.profiles[profileName].CancelBuff = character.profiles[profileName].CancelBuff or {}
     character.profiles[profileName].CurrentBlessing = character.profiles[profileName].CurrentBlessing or

@@ -36,8 +36,8 @@ end
 ---@param getValue fun(): {[string]: boolean}
 ---@param setValue fun(dictionary: {[string]: boolean})
 ---@param title string
----@param spellsDialog AceGUIWidget Parent dialog that we want to position against
-function forceTargetDialogModule:Show(buffDef, getValue, setValue, title, spellsDialog)
+---@param _spellsDialog AceGUIWidget Parent dialog that we want to position against
+function forceTargetDialogModule:Show(buffDef, getValue, setValue, title, _spellsDialog)
   self:Hide()
   local dialog = libGUI:Create("Window")
   self.dialog = dialog
@@ -62,7 +62,7 @@ function forceTargetDialogModule:Show(buffDef, getValue, setValue, title, spells
   editBox:SetFullHeight(true)
   editBox:SetLabel(_t("label.ForceCast.TargetList"))
   editBox:SetText(targetsDictToString(getValue()))
-  editBox:SetCallback("OnEnterPressed", function(widget, event, text)
+  editBox:SetCallback("OnEnterPressed", function(_widget, _event, text)
     setValue(targetsDictFromString(text))
     forceTargetDialogModule:Hide()
   end)

@@ -10,7 +10,7 @@ local pairs = pairs
 
 -- WoW APIs
 local _G = _G
-local PlaySound, CreateFrame, UIParent = PlaySound, CreateFrame, UIParent
+local CreateFrame, UIParent = CreateFrame, UIParent
 
 --[[-----------------------------------------------------------------------------
 Methods

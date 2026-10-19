@@ -2,7 +2,6 @@
 
 local buffTargetModule = LibStub("Buffomat-UnitBuffTarget") --[[@as BomUnitBuffTargetModule]]
 local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxModule]]
-local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 
 ---@class BomUnitBuffTarget

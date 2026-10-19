@@ -177,7 +177,7 @@ end
 ---@param playerUnit BomUnit
 function buffChecksModule:PlayerNeedsConsumable(buff, playerUnit)
   if buff.providesAuras then
-    for i, aura in pairs(buff.providesAuras) do
+    for _, aura in pairs(buff.providesAuras) do
       if playerUnit.allBuffs[aura] then
         return -- have one of known provided auras, means we don't need that consumable
       end
@@ -294,7 +294,7 @@ function buffChecksModule:PartyNeedsPaladinBlessing(buffDef, party, buffCtx)
   local profileBuff = profileModule:GetProfileBuff(buffDef.buffId, nil)
 
   ---@param partyMember BomUnit
-  for i, partyMember in pairs(party.byUnitId) do
+  for _, partyMember in pairs(party.byUnitId) do
     local ok = false
     local notGroup = false
 
@@ -358,7 +358,7 @@ end
 ---@param buffCtx BomBuffScanContext
 function buffChecksModule:PartyNeedsBuff(buffDef, party, buffCtx)
   --spells
-  for i, partyMember in pairs(party.byUnitId) do
+  for _, partyMember in pairs(party.byUnitId) do
     local ok = false
     local profileBuff = profileModule:GetProfileBuff(buffDef.buffId, nil)
 

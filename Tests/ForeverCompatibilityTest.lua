@@ -49,7 +49,9 @@ local function fixture(projectID, interfaceVersion, expansion, modern)
       AddOnRestrictionType = { Combat = 0, Encounter = 1, ChallengeMode = 2, PvPMatch = 3 },
       BagIndex = { ReagentBag = 5 } }
     globals.Constants = { InventoryConstants = { NumBagSlots = 4, NumReagentBagSlots = 1 } }
-    globals.C_RestrictedActions = { IsAddOnRestrictionActive = function(kind) return state.restrictions[kind] or false end }
+    globals.C_RestrictedActions = {
+      IsAddOnRestrictionActive = function(kind) return state.restrictions[kind] or false end,
+    }
     globals.C_Item = {
       GetWeaponEnchantInfo = function(slot) if slot == 0 then return state.main else return state.off end end,
       IsItemInRange = function() return state.range end,

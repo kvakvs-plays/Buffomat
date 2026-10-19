@@ -104,7 +104,6 @@ end
 ---@param now number
 ---@param needForceUpdate boolean
 function throttleModule:Update(now, needForceUpdate)
-  local timeSinceLastUpdate = now - (throttleState.lastUpdateTimestamp or 0)
 
   if (needForceUpdate or BuffomatAddon.repeatUpdate)
   --and timeSinceLastUpdate > throttleState.updateTimerLimit

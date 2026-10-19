@@ -47,8 +47,6 @@ function actionCastClass:CanCast()
     BuffomatAddon.checkCooldown = self.spellId
     --BomC_ListTab_Button:Disable()
     return taskModule.CAN_CAST_ON_CD
-  else
-    --BomC_ListTab_Button:Enable()
   end
   BuffomatAddon.castFailedBuff = self.buffDef
   BuffomatAddon.castFailedBuffTarget = self.target

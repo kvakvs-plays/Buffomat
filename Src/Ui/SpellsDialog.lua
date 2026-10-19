@@ -202,7 +202,7 @@ function spellsDialogModule:CreateInfoIcon(buffDef)
       end
     end)
     ngToolboxModule:TooltipWithTranslationKey(iconButton, "Click to print all items which provide this buff")
-    iconButton:SetCallback("OnClick", function(_control, mouseButton)
+    iconButton:SetCallback("OnClick", function(_control, _mouseButton)
       buffDef:ShowItemsProvidingBuff()
     end)
   else
@@ -223,8 +223,8 @@ end
 
 -- Player choices are stored separately in their profile
 ---@param buffDef BomBuffDefinition
----@param context SpellsDialogContext
-function spellsDialogModule:CreateBuffRow(buffDef, profileBuff, context)
+---@param _context SpellsDialogContext
+function spellsDialogModule:CreateBuffRow(buffDef, profileBuff, _context)
   local row = libGUI:Create("SimpleGroup")
   row:SetLayout("Flow")
   row:SetFullWidth(true)

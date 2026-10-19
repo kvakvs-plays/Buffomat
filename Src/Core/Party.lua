@@ -68,8 +68,8 @@ function partyModule:New()
 end
 
 ---@param unitName string
----@param evType string
-function partyModule:OnBuffsChangedEvent(unitName, spellId, evType)
+---@param _evType string
+function partyModule:OnBuffsChangedEvent(unitName, _spellId, _evType)
   if self.theParty
       and not (self.theParty):IsNameInParty(unitName) then
     return
@@ -98,7 +98,7 @@ end
 ---@param party BomParty
 function partyModule:CleanUpBuffs(party)
   -- Clean partyModule.buffs up
-  for name, val in pairs(self.unitAurasLastUpdated) do
+  for name, _ in pairs(self.unitAurasLastUpdated) do
     if not party:IsNameInParty(name) then
       self.unitAurasLastUpdated[name] = nil
     end
@@ -266,8 +266,8 @@ function partyClass:GetRaidMembers(invalidGroups)
 
     for raidIndex = raidBegin, raidEnd do
       ---@type string, string, number, number, ClassName, string, number, boolean, boolean, BomRaidRole, boolean, string
-      local name, rank, subgroup, level, class, fileName, zone, online, isDead
-      , role, isML, combatRole = GetRaidRosterInfo(raidIndex)
+      local name, _rank, subgroup, _level, _class, _fileName, _zone, _online, _isDead
+      , role, _isML, combatRole = GetRaidRosterInfo(raidIndex)
 
       if name then
         name = toolboxModule:Split(name, "-")[1]
@@ -302,7 +302,7 @@ end
 ---@param party BomParty
 ---@return boolean
 local function validatePartyMembers(party)
-  for i, member in pairs(party.byUnitId) do
+  for _, member in pairs(party.byUnitId) do
     local name = UnitFullName(member.unitId)
 
     if name ~= member.name then

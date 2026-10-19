@@ -1,5 +1,3 @@
-local BuffomatAddon = BuffomatAddon
-
 ---@class PriestModule
 
 local priestModule = LibStub("Buffomat-AllSpellsPriest") --[[@as PriestModule]]
@@ -45,8 +43,8 @@ end
 
 ---Add PRIEST spells
 ---@param allBuffs BomBuffDefinition[]
----@param enchants BomEnchantmentsMapping
-function priestModule:SetupPriestSpells(allBuffs, enchants)
+---@param _enchants BomEnchantmentsMapping
+function priestModule:SetupPriestSpells(allBuffs, _enchants)
   -- Fortitude / Seelenstärke
   buffDefModule:createAndRegisterBuff(allBuffs, 10938, nil)
       :IsDefault(true)

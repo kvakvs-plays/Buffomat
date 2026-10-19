@@ -538,11 +538,11 @@ function BuffomatAddon.EnterHyperlink(_control, link)
   end
 end
 
-function BuffomatAddon.LeaveHyperlink(self)
+function BuffomatAddon.LeaveHyperlink(_self)
   BomC_Tooltip:Hide()
 end
 
-function BuffomatAddon.ClickHyperlink(self, link)
+function BuffomatAddon.ClickHyperlink(_self, link)
   if envModule.IsSecretValue(link) then
     return
   end
@@ -557,6 +557,6 @@ function BuffomatAddon.ClickHyperlink(self, link)
   end
 end
 
-function BuffomatAddon.MyButtonOnClick(self)
+function BuffomatAddon.MyButtonOnClick(_self)
   buffomatModule:OptionsUpdate()
 end

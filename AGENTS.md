@@ -8,6 +8,8 @@
 - Use Ace3 libraries where possible for user interface, addon state, options windows, game events, timers, console integration, and the minimap icon.
 - Supported clients include Classic Era / Anniversary, The Burning Crusade Classic, Wrath of the Lich King Classic, and Cataclysm Classic. Do not assume Retail-only APIs exist.
 
+**IMPORTANT** When committing do not use "Co-Authored By" line.
+
 ## Required Reference Files
 
 - Read `.agents/AGENTS.md` for additional project instructions.
@@ -101,3 +103,7 @@
 - `wowaddon.py` is the Python build/install tool. It writes flavor TOCs, installs addon files, and builds release zips.
 - `toc_template.toc` is the authoritative load-order template for generated TOC files.
 - When adding a module, update `Src/EarlyBoot.lua` and ensure the module is included in the TOC load order.
+- `luacheck Src Tests` must report 0 warnings with the committed `.luacheckrc`. Prefix intentionally unused
+  values with `_`, and add new WoW API globals to `read_globals` there. On Windows there is no launcher:
+  run `lua "%APPDATA%\luarocks\bin\luacheck"` with `LUA_PATH` set (see `.agents/luacheck-plan.md`).
+- Run the tests with `lua Tests/<name>.lua` from the repository root.

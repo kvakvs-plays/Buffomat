@@ -1,5 +1,3 @@
-local BuffomatAddon = BuffomatAddon
-
 ---@class PaladinModule
 
 local paladinModule = LibStub("Buffomat-AllSpellsPaladin") --[[@as PaladinModule]]
@@ -11,8 +9,8 @@ local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
 
 ---Add PALADIN spells
 ---@param allBuffs BomBuffDefinition[]
----@param enchants BomEnchantmentsMapping
-function paladinModule:SetupPaladinSpells(allBuffs, enchants)
+---@param _enchants BomEnchantmentsMapping
+function paladinModule:SetupPaladinSpells(allBuffs, _enchants)
   --Righteous Fury, same in TBC
   buffDefModule:createAndRegisterBuff(allBuffs, 25780, nil)
       :IsOwn(true)

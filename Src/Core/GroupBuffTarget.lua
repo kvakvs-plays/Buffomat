@@ -26,7 +26,7 @@ function groupBuffTargetClass:GetDistanceRaid()
   --local nearestCount = 0
 
   for raidIndex = 1, 40 do
-    local name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(raidIndex);
+    local subgroup = select(3, GetRaidRosterInfo(raidIndex))
     local rName = "raid" .. raidIndex
 
     if subgroup == self.groupIndex and UnitExists(rName) and UnitIsConnected(rName) then

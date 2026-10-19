@@ -1,5 +1,3 @@
-local BuffomatAddon = BuffomatAddon
-
 ---@class AllConsumesElixirsModule
 
 local elixirsModule = LibStub("Buffomat-AllConsumesElixirs") --[[@as AllConsumesElixirsModule]]
@@ -314,11 +312,11 @@ function elixirsModule:_SetupGuardianElixirsClassic(allBuffs, enchantments)
       :ElixirType("guardian")
 
   --All Intellect elixirs
-  local intItemIds = {
+  local _intItemIds = {
     3383,     -- Elixir of Wisdom +6
     9179,     -- Elixir of Greater Intellect +25
   }
-  local intAuras = {
+  local _intAuras = {
     3166,      -- +6 INT
     11396,     -- +25 INT
   }
@@ -389,6 +387,8 @@ function elixirsModule:_SetupGuardianElixirsClassic(allBuffs, enchantments)
       :Category("classicElixir")
       :ElixirType("guardian")
 
+  -- Disabled on purpose; kept as data for a possible potions category
+  -- luacheck: push ignore 511
   if false then
     --
     -- 2min potion buff not real elixirs
@@ -438,6 +438,7 @@ function elixirsModule:_SetupGuardianElixirsClassic(allBuffs, enchantments)
         :Category("tbcElixir")
         :ElixirType("guardian")
   end
+  -- luacheck: pop
 end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)

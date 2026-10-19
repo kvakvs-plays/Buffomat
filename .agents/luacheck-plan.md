@@ -6,12 +6,27 @@ Baseline taken 2026-10-19 on branch `feature/wowforever`, luacheck 1.2.0, run ov
 **2546 warnings, 0 errors.** Most of the noise comes from `.luacheckrc`, not the code. After the
 config fix (Phase 1) about 490 warnings remain. Among them are a handful of real bugs (Phase 0).
 
-## Status (2026-10-19)
+## Status (2026-10-19): done, 0 warnings in 71 files
 
-- Phase 0: done, except the forced-target icon (new item 8). Phase 1: done (`.luacheckrc` committed).
-  Lint is down from 2546 to **358 warnings**. Nothing is a bug any more except item 8. Tests pass.
-- Still open: Phase 2, Phase 3, Phase 4.
-- Remaining: W211 112, W631 85, W213 77, W212 64, W542 8, W214 6, W241 2, W231 2, W581 1, W511 1.
+All phases are complete and the tests pass. Item 8 is restored as well. What was done beyond the
+plan below:
+
+- Config: `ignore` covers `_`-prefixed unused values (the repo's existing convention), the
+  `addonName, ns` file header, and W542 (commented empty branches in elseif chains are deliberate).
+  `max_comment_line_length = false`: `---@alias` and `---@type` lines and aligned data comments
+  cannot be wrapped usefully.
+- Phase 2: deleted dead imports (`local BuffomatAddon = BuffomatAddon` in 17 files, unused
+  `buffomatModule` in 5), the unused `bom_gpiprivat_event_handler`, and other dead locals. Remaining
+  unused loop variables became `_`. Unused locals and arguments were prefixed with `_` by a script
+  that renames at luacheck's exact columns and keeps `---@param` names in sync.
+- Phase 3:
+  - Removed the `else` branches that held only commented-out code (ItemCache, ActionCast).
+  - Renamed the KvOptions `_t` parameter to `translate`.
+  - Deleted the class tables in CharacterSettings and SharedSettings, which were never attached.
+  - Fixed `not (x == 1)`.
+  - The disabled TBC potion block in Elixirs is kept inside `-- luacheck: push ignore 511` / `pop`.
+- Phase 4: the lint rule and the run command are in the root `AGENTS.md`. `CHECKLIST.md` is a
+  feature TODO list, so the rule went to `AGENTS.md` instead.
 
 ## How to run
 

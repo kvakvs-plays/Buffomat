@@ -58,7 +58,7 @@ do
   end
 
   ---@diagnostic disable-next-line: unused-local
-  local function frameOnMouseDown(this)
+  local function frameOnMouseDown(_this)
     AceGUI:ClearFocus()
   end
 
@@ -104,7 +104,7 @@ do
   end
 
   ---@diagnostic disable-next-line: unused-local
-  local function SetStatusText(self, text)
+  local function SetStatusText(_self, _text)
     -- self.statustext:SetText(text)
   end
 

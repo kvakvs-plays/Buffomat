@@ -8,6 +8,8 @@
 - Fixed: Lua error from the options popup menu callback (removed call into deleted UI code).
 - Fixed: WotLK hit food group offered haste food instead of Worg Tartare/Snapper Extreme.
 - Group buff tasks show the reagent count again (for example Arcane Powder x12).
+- Single buff and blessing tasks show the crosshair icon again for players with a forced or
+  assigned target.
 
 ## Buffomat Classic 2026.10.4
 

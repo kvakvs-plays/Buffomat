@@ -1,5 +1,3 @@
-local BuffomatAddon = BuffomatAddon
-
 ---@class AllConsumesOtherModule
 
 local otherModule = LibStub("Buffomat-AllConsumesOther") --[[@as AllConsumesOtherModule]]

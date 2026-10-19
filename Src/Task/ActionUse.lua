@@ -1,5 +1,3 @@
-local BuffomatAddon = BuffomatAddon
-
 ---@class BomActionUseModule
 
 local actionUseModule = LibStub("Buffomat-ActionUse") --[[@as BomActionUseModule]]
@@ -51,8 +49,8 @@ function actionUseClass:UpdateMacro(m)
   end
 end
 
----@param task BomTask
-function actionUseClass:GetButtonText(task)
+---@param _task BomTask
+function actionUseClass:GetButtonText(_task)
   if self.buffDef == nil then
     return _t("task.UseOrOpen") .. " " .. (self.extraText or "")
   end

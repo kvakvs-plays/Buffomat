@@ -498,7 +498,8 @@ end
 ---@type fun(slotName: string): number
 envModule.GetInventorySlotInfo = (C_PaperDollInfo and C_PaperDollInfo.GetInventorySlotInfo) or GetInventorySlotInfo
 ---@type fun(): number
-envModule.GetActiveTalentGroup = (C_SpecializationInfo and C_SpecializationInfo.GetActiveSpecGroup) or GetActiveTalentGroup
+envModule.GetActiveTalentGroup = (C_SpecializationInfo and C_SpecializationInfo.GetActiveSpecGroup)
+    or GetActiveTalentGroup
 
 ---@param frame Frame
 ---@return boolean

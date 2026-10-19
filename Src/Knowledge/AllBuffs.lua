@@ -283,7 +283,7 @@ function allBuffsModule:SetupSpells()
   allBuffs = self:ApplyPostLimitations(allBuffs) --filter the list and make new shorter list
 
   --Preload items!
-  for x, spell in ipairs(allBuffs) do
+  for _, spell in ipairs(allBuffs) do
     if spell.isConsumable and spell.items then
       for _, item in ipairs(spell.items or {}) do
         BuffomatAddon.GetItemInfo(item)
@@ -293,7 +293,7 @@ function allBuffsModule:SetupSpells()
 
   allBuffsModule.enchantToSpellLookup = {}
   for dest, list in pairs(enchantments) do
-    for i, id in ipairs(list) do
+    for _, id in ipairs(list) do
       allBuffsModule.enchantToSpellLookup[id] = dest
     end
   end
@@ -352,7 +352,7 @@ BuffomatAddon.buffExchangeId = {            -- combine-spell-ids to new one
 
 allBuffsModule.spellToSpellLookup = {}
 for dest, list in pairs(BuffomatAddon.buffExchangeId) do
-  for i, id in ipairs(list) do
+  for _, id in ipairs(list) do
     allBuffsModule.spellToSpellLookup[id] = dest
   end
 end

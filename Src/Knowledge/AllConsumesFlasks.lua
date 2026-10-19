@@ -1,5 +1,3 @@
-local BuffomatAddon = BuffomatAddon
-
 ---@class AllConsumesFlasksModule
 
 local flasksModule = LibStub("Buffomat-AllConsumesFlasks") --[[@as AllConsumesFlasksModule]]

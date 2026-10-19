@@ -1,5 +1,3 @@
-local BuffomatAddon = BuffomatAddon
-
 ---@class MageModule
 
 local mageModule = LibStub("Buffomat-AllSpellsMage") --[[@as MageModule]]

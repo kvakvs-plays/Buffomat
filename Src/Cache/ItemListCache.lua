@@ -4,7 +4,6 @@ local BuffomatAddon = BuffomatAddon
 
 local itemListCacheModule = LibStub("Buffomat-ItemListCache") --[[@as BomItemListCacheModule]]
 local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
-local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 
@@ -69,7 +68,7 @@ function itemListCacheModule:GetItemList()
           if self:IsOpenable(itemInfo) and BuffomatShared.OpenLootable then
             local locked = false
 
-            for i, text in ipairs(toolboxModule:ScanToolTip("SetBagItem", bag, slot)) do
+            for _, text in ipairs(toolboxModule:ScanToolTip("SetBagItem", bag, slot)) do
               if text == LOCKED then
                 locked = true
                 break
@@ -95,7 +94,7 @@ function itemListCacheModule:GetItemList()
   end
 
   --Update CD
-  for i, items in ipairs(itemListCache) do
+  for _, items in ipairs(itemListCache) do
     if items.CD then
       items.CD = { envModule.GetContainerItemCooldown(items.Bag, items.Slot) }
     end

@@ -1,8 +1,16 @@
 -- Lint: lua "%APPDATA%\luarocks\bin\luacheck" Src Tests --codes  (see .agents/luacheck-plan.md)
 std = "lua51"
 max_line_length = 120
+-- Type annotations (---@alias unions, ---@type tuples) and aligned trailing comments on data
+-- tables cannot be wrapped usefully; the limit applies to code
+max_comment_line_length = false
 -- `function module:Method()` without touching self is the normal module style here
 self = false
+ignore = {
+  "21[123]/_.*", -- a leading underscore marks a value as unused on purpose
+  "211/addonName", "211/ns", -- every file starts with `local addonName, ns = ...` (see AGENTS.md)
+  "542", -- a commented empty branch documents a deliberate no-op in an elseif chain
+}
 
 exclude_files = {
   "Ace3/**",
