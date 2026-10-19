@@ -410,8 +410,8 @@ function foodModule:_SetupMiscFoodWotLK(allBuffs, enchantments)
   local hitFoodItemIds = {
     44953, 42996,                  -- Worg Tartare/Snapper Extreme +40 Hit/40 Stam
   }
-  local hasteFoodAuras = { 57360 } -- Well Fed, +40 Hit, +40 Stamina
-  buffDefModule:consumableGroup(allBuffs, "wotlkHitFood", hasteFoodAuras, hasteFoodItemIds)
+  local hitFoodAuras = { 57360 } -- Well Fed, +40 Hit, +40 Stamina
+  buffDefModule:consumableGroup(allBuffs, "wotlkHitFood", hitFoodAuras, hitFoodItemIds)
       :RequireWotLK()
       :IgnoreIfHaveBuff(spellIdsModule.WotLKFood)                                                                -- [Food] While eating Worg Tartare/Snapper Extreme
       :Category("wotlkFood")

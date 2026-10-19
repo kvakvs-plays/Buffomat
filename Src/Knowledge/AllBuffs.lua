@@ -416,11 +416,6 @@ BuffomatAddon.buffIgnoreAll = {
   4511 -- Phase Shift (imp)
 }
 
-local ShapeShiftTravel = {
-  2645,
-  783
-} --Ghost wolf and travel druid
-
 BuffomatAddon.drinkingPersonCount = 0
 BuffomatAddon.AllDrink = {
   30024,                                          -- Restores 20% mana

@@ -71,7 +71,6 @@ local popupLastWipeName ---@type string|nil
 ---@param WipeName string|nil
 function popupDynamicClass:Wipe(WipeName)
   wipe(self._Frame.bomMenuItems)
-  popupDepth = nil
 
   if UIDROPDOWNMENU_OPEN_MENU == self._Frame then
     libDD:ToggleDropDownMenu(nil, nil, self._Frame, self._where, self._x, self._y)

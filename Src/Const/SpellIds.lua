@@ -66,6 +66,8 @@ spellIdsModule.Warlock_CreateFirestone7 = 60220
 spellIdsModule.Priest_SpiritTap = 15271
 
 spellIdsModule.Druid_TrackHumanoids = 5225
+---Auras cancelled by the AutoDisTravel option: Ghost Wolf, Travel Form
+spellIdsModule.TravelShapeshiftForms = --[[@as WowSpellId[] ]] { 2645, 783 }
 
 spellIdsModule.Paladin_CrusaderAura = 32223
 

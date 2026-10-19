@@ -127,7 +127,7 @@ function taskScanModule:CancelBuff(list)
 end
 
 function BuffomatAddon.CancelShapeShift()
-  return taskScanModule:CancelBuff(ShapeShiftTravel)
+  return taskScanModule:CancelBuff(spellIdsModule.TravelShapeshiftForms)
 end
 
 ---If player just left the raid or party, reset watched frames to "watch all 8"
@@ -611,24 +611,22 @@ function taskScanModule:FormatItemBuffText(bag, slot, count)
   return string.format(" %s %s (x%d)", picture, itemInfo.hyperlink, count)
 end
 
+---Reagents left for a group buff, shown after the task text: "x12", or "x0" when out.
+---@param buffDef BomBuffDefinition
+---@return string Empty when the buff needs no reagent
+function taskScanModule:FormatReagentCount(buffDef)
+  if not buffDef.reagentRequired then
+    return ""
+  end
+  local _, _, _, count = buffChecksModule:HasItem(buffDef.reagentRequired, true)
+  return "x" .. (count or 0)
+end
+
 ---Add a paladin blessing
 ---@param buffDef BomBuffDefinition - spell to cast
 ---@param party BomParty - the party
 ---@param buffCtx BomBuffScanContext
 function taskScanModule:AddBlessing(buffDef, party, buffCtx)
-  local ok, bag, slot, count
-  if buffDef.reagentRequired then
-    ok, bag, slot, count = buffChecksModule:HasItem(buffDef.reagentRequired, true)
-  else
-    ok, bag, slot, count = true, 0, 0, 0
-  end
-
-  if type(count) == "number" then
-    count = " x" .. count .. " "
-  else
-    count = ""
-  end
-
   if buffDef.groupMana ~= nil
       and not BuffomatShared.NoGroupBuff
   then
@@ -654,6 +652,7 @@ function taskScanModule:AddBlessing(buffDef, party, buffCtx)
           self.tasklist:Add(
             taskModule:Create(buffDef.groupLink or buffDef.groupText, buffDef.singleText)
             :PrefixText(_t("TASK_BLESS_GROUP"))
+            :ExtraText(self:FormatReagentCount(buffDef))
             :Target(groupBuffTargetModule:New(eachClassName))
             :InRange(true)
             :Action(actionCastModule:New(
@@ -667,6 +666,7 @@ function taskScanModule:AddBlessing(buffDef, party, buffCtx)
           self.tasklist:Add(
             taskModule:Create(buffDef.groupLink or buffDef.groupText, buffDef.singleText)
             :PrefixText(_t("TASK_BLESS_GROUP"))
+            :ExtraText(self:FormatReagentCount(buffDef))
             :Target(groupBuffTargetModule:New(eachClassName))
             :IsInfo()
             :LinkToBuffDef(buffDef)
@@ -759,6 +759,7 @@ function taskScanModule:FindTargetForGroupBuff(groupIndex, buffDef, party, minBu
       self.tasklist:Add(
         taskModule:Create(buffDef.groupLink or buffDef.groupText, buffDef.singleText)
         :PrefixText(_t("task.type.GroupBuff"))
+        :ExtraText(self:FormatReagentCount(buffDef))
         :Target(groupBuffTargetModule:New(groupIndex))
         :InRange(true)
         :Action(actionCastModule:New(
@@ -782,6 +783,7 @@ function taskScanModule:AddBuff_GroupBuff(buffDef, party, minBuff, buffCtx)
     self.tasklist:Add(
       taskModule:Create(buffDef.groupLink or buffDef.groupText, buffDef.singleText)
       :PrefixText(_t("task.type.GroupBuff"))
+      :ExtraText(self:FormatReagentCount(buffDef))
       :Target(groupBuffTargetModule:New(0))
       :InRange(true)
       -- WotLK buff self for group buffs
@@ -863,17 +865,6 @@ end
 ---@param party BomParty The party
 ---@param buffCtx BomBuffScanContext
 function taskScanModule:AddBuff(buffDef, party, buffCtx)
-  local ok, bag, slot, count
-  if buffDef.reagentRequired then
-    ok, bag, slot, count = buffChecksModule:HasItem(buffDef.reagentRequired, true)
-  end
-
-  if type(count) == "number" then
-    count = " x" .. count .. " "
-  else
-    count = ""
-  end
-
   local minBuff = BuffomatShared.MinBuff or 3
 
   -- Check if any group qualifies for group buffing
@@ -949,7 +940,7 @@ function taskScanModule:AddResurrection(spell, playerUnit, buffCtx)
           :PrefixText(_t("task.type.Resurrect"))
           :Target(buffTargetModule:FromUnit(unitNeedsBuff))
           :Prio(prio)
-          :LinkToBuffDef(buffDef)
+          :LinkToBuffDef(spell)
       if targetIsInRange then
         -- Text: Target [Spell Name]
         self.tasklist:Add(task:InRange(true))

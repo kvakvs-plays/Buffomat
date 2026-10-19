@@ -4,6 +4,10 @@
 
 - Restrict aura scanning while PvP match is active. Items in the bag checks (conjurables) and
   weapon enchantments still should operate normally.
+- Fixed: "Auto cancel travel form" never cancelled Ghost Wolf or Travel Form (broken since 2022).
+- Fixed: Lua error from the options popup menu callback (removed call into deleted UI code).
+- Fixed: WotLK hit food group offered haste food instead of Worg Tartare/Snapper Extreme.
+- Group buff tasks show the reagent count again (for example Arcane Powder x12).
 
 ## Buffomat Classic 2026.10.4
 
