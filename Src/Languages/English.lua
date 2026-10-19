@@ -172,6 +172,7 @@ function englishModule:Translations()
     ["task.type.MissingConsumable"] = "Missing consumable",
     ["task.type.Consumable"] = "Consumable", -- deprecated?
     ["task.hint.HoldShiftConsumable"] = "Hold Shift/Ctrl or Alt",
+    ["task.hint.PvPMatchAuraFree"] = "PvP match: only weapon buffs, conjured items, tracking and items are checked",
     TASK_BLESS_GROUP = "Bless Group",
     TASK_BLESS = "Bless",
     TASK_SUMMON = "Summon",
@@ -204,6 +205,7 @@ function englishModule:Translations()
     ["castButton.NoMacroSlots"] = "Need one macro slot!",
     ["castButton.CantCastMaybeOOM"] = "Can't buff, out of mana or something else",
     ["message.CancelBuff"] = "Cancel buff %s from %s",
+    ["message.PvPMatchAuraFree"] = "During a PvP match the game hides buffs from addons. Buffomat only checks weapon buffs, conjured items, tracking and items to open or use.",
     ["message.BuffExpired"] = "%s expired.",
     -- ["message.ShowHideInCombat"] = "Can't show/hide window in combat",
     ["task.UseOrOpen"] = "Open",
@@ -213,6 +215,7 @@ function englishModule:Translations()
     InfoMultipleDrinking = "%d persons are drinking",
 
     ["castButton.inactive.AuraDataUnavailable"] = "Buff scan paused: aura data unavailable",
+    ["castButton.inactive.PvPMatch"] = "PvP match: buffs hidden by the game",
     ["castButton.inactive.DeadMember"] = "A party member is dead",
     ["castButton.inactive.Flying"] = "Flying; Dismount disabled",
     ["castButton.inactive.InCombat"] = "You are in combat",

@@ -1,5 +1,10 @@
 # Changelog
 
+## Buffomat Classic 2026.10.5
+
+- Restrict aura scanning while PvP match is active. Items in the bag checks (conjurables) and
+  weapon enchantments still should operate normally.
+
 ## Buffomat Classic 2026.10.4
 
 - On Forever, inside instances, UnitIsUnit("targettarget", "player") returns a secret boolean.  

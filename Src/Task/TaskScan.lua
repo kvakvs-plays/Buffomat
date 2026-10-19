@@ -4,6 +4,7 @@ local BuffomatAddon = BuffomatAddon
 ---@field taskListSizeBeforeScan number Saved size before scan
 ---@field roundRobinGroup number Group number to refresh, rotates from 1 to 8 in raid, or stays always 1 otherwise
 ---@field saveSomeoneIsDead boolean
+---@field pvpMatchNoticeShown boolean? The PvP match chat notice was printed this session
 
 local taskScanModule = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
 taskScanModule.taskListSizeBeforeScan = 0
@@ -1641,12 +1642,7 @@ function taskScanModule:DoScan(context)
   self:CancelBuffs(context.party.player)
 
   -- fill list and find cast
-  -- Forever can report player power as a secret value (wrapper returns nil).
-  -- Falling back to 0 made every spell CAN_CAST_OOM; assume full mana instead
-  -- and let the client reject a cast that is really unaffordable.
-  local maxMana = envModule.UnitPowerMax("player", 0)
-  partyModule.playerManaLimit = maxMana or 0
-  partyModule.playerMana = envModule.UnitPower("player", 0) or maxMana or math.huge
+  self:UpdatePlayerMana()
 
   --self:ClearNextCastSpell()
 
@@ -1673,6 +1669,87 @@ function taskScanModule:DoScan(context)
   end
 end
 
+---Store the player's current and max mana for the mana checks while creating tasks.
+function taskScanModule:UpdatePlayerMana()
+  -- Forever can report player power as a secret value (wrapper returns nil).
+  -- Falling back to 0 made every spell CAN_CAST_OOM; assume full mana instead
+  -- and let the client reject a cast that is really unaffordable.
+  local maxMana = envModule.UnitPowerMax("player", 0)
+  partyModule.playerManaLimit = maxMana or 0
+  partyModule.playerMana = envModule.UnitPower("player", 0) or maxMana or math.huge
+end
+
+---Whether a buff's need check reads only bags, weapon enchants, or tracking
+---state, never unit auras, so it stays decidable while auras are secret.
+---@param buffDef BomBuffDefinition
+---@param playerUnit BomUnit
+---@return boolean
+function taskScanModule:IsAuraFreeBuff(buffDef, playerUnit)
+  if buffDef.type == "weapon" then
+    return not playerUnit.weaponDataUnavailable
+  elseif buffDef.type == "tracking" then
+    return true
+  end
+  -- Conjured items (mana gems, healthstones...) are needed when missing from bags
+  return buffDef.isOwn == true and buffDef.lockIfHaveItem ~= nil
+      and not buffDef.isConsumable and not buffDef.petBuff and not buffDef.isInfo
+end
+
+---A party of only the player. In a PvP match other players' names can be secret,
+---and the full party refresh uses names as table keys and compares them.
+---@return BomParty|nil
+function taskScanModule:GetPlayerOnlyParty()
+  local player = unitCacheModule:GetUnit("player", nil, nil, nil)
+  if not player then
+    return nil
+  end
+  local party = partyModule:New()
+  party.player = player
+  party:Add(player)
+  player:UpdateBuffs(party, C_Map.GetBestMapForUnit("player"))
+  return party
+end
+
+---Scan only tasks which do not depend on aura data: weapon buffs, conjured items,
+---tracking, and usable or openable items. Used during a PvP match, where the
+---client keeps aura data secret even out of combat.
+---@param context TaskScanContext
+function taskScanModule:DoAuraFreeScan(context)
+  local buffCtx = --[[@as BomBuffScanContext]] { someoneIsDead = false }
+  local playerUnit = context.party.player
+
+  self:ActivateSelectedTracking()
+  self:UpdatePlayerMana()
+  BuffomatAddon.scanModifierKeyDown = false
+
+  for _, buffDef in ipairs(allBuffsModule.selectedBuffs) do
+    if self:IsAuraFreeBuff(buffDef, playerUnit) then
+      self:UpdateMissingBuffs_EachBuff(context.party, buffDef, buffCtx)
+      if buffDefModule:IsBuffEnabled(buffDef.buffId, nil)
+          and (buffDef.requiresForm == nil or GetShapeshiftFormID() == buffDef.requiresForm) then
+        self:CreateOneBuffTask(buffDef, context.party, buffCtx)
+      end
+    else
+      -- Targets found before the match began are stale now
+      buffDef:ResetBuffTargets()
+    end
+  end
+
+  if not playerUnit.weaponDataUnavailable then
+    self:CheckMissingWeaponEnchantments(playerUnit)
+  end
+  self:CheckItemsAndContainers(playerUnit, buffCtx)
+  self.tasklist:LowPrioComment(_t("task.hint.PvPMatchAuraFree"))
+end
+
+---Explain once per session why most buffs are not checked during a PvP match.
+function taskScanModule:NotifyPvPMatchOnce()
+  if not self.pvpMatchNoticeShown then
+    self.pvpMatchNoticeShown = true
+    BuffomatAddon:Print(_t("message.PvPMatchAuraFree"))
+  end
+end
+
 ---@param context TaskScanContext
 function taskScanModule:Finalize(context)
   -- Open Buffomat if any cast tasks were added to the task list
@@ -1695,7 +1772,11 @@ function taskScanModule:Finalize(context)
     self.tasklist:CastButton(firstToCast)
   else
     taskListPanelModule:AutoHide("ts:Finalize/nothing")
-    return self.tasklist:CastButton_Nothing() -- this is basically equal to if #tasklist.tasks == 0 below
+    self.tasklist:CastButton_Nothing() -- this is basically equal to if #tasklist.tasks == 0 below
+    if context.auraFree then
+      -- "Nothing to do" would suggest that everyone is buffed
+      taskListPanelModule:CastButtonText(_t("castButton.inactive.PvPMatch"), false)
+    end
   end
 end
 
@@ -1793,6 +1874,9 @@ end -- end function bomUpdateScan_PreCheck2()
 ---@param context TaskScanContext
 ---@return boolean
 function taskScanModule:CheckAuraData(context)
+  if context.auraFree then
+    return true -- auras are known to be unreadable; the aura-free scan does not use them
+  end
   local party = context.party
   local unavailable = party.player.auraDataUnavailable
       or (party.playerPet and party.playerPet.auraDataUnavailable)
@@ -1832,6 +1916,7 @@ end
 ---@class TaskScanContext
 ---@field callerLocation string Debug value to trace the caller of this function
 ---@field party BomParty
+---@field auraFree boolean PvP match hides auras: scan only tasks that do not read them
 
 --- THIS IS THE SCAN ENTRY POINT
 --- Scan the available spells and group members to find who needs the rebuff/res and what would be their priority?
@@ -1840,7 +1925,10 @@ function taskScanModule:ScanTasks(callerLocation)
   if InCombatLockdown() then
     return
   end
-  if envModule.IsAuraRestricted() then
+  -- A PvP match alone still allows tasks which do not read auras
+  local restriction = envModule.GetAuraRestriction()
+  local auraFree = restriction == "PvPMatch"
+  if restriction ~= nil and not auraFree then
     self:ShowInactive(_t("castButton.inactive.AuraDataUnavailable"))
     return
   end
@@ -1855,9 +1943,18 @@ function taskScanModule:ScanTasks(callerLocation)
   ---@type TaskScanContext
   local context = {
     callerLocation = callerLocation,
+    auraFree = auraFree,
   }
 
-  context.party = self:RotateInvalidatedGroup_GetGroup()
+  if auraFree then
+    context.party = self:GetPlayerOnlyParty()
+    if not context.party then
+      self:ShowInactive(_t("castButton.inactive.PvPMatch"))
+      return
+    end
+  else
+    context.party = self:RotateInvalidatedGroup_GetGroup()
+  end
 
   if not self:Precheck(context)
       or not self:CheckAuraData(context)
@@ -1868,7 +1965,13 @@ function taskScanModule:ScanTasks(callerLocation)
     return
   end
 
-  self:DoScan(context)   -- All pre-checks passed
+  -- All pre-checks passed
+  if auraFree then
+    self:NotifyPvPMatchOnce()
+    self:DoAuraFreeScan(context)
+  else
+    self:DoScan(context)
+  end
   self:Finalize(context) -- Sort and display the tasks, update the cast button
 end
 

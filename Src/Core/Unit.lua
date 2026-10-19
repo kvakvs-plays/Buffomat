@@ -14,6 +14,7 @@ local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxMod
 ---@class BomUnit
 ---@field allBuffs table<number, boolean> Availability of all auras even those not supported by BOM, by id, no extra detail stored
 ---@field auraDataUnavailable boolean? Prevent decisions from an incomplete aura scan.
+---@field weaponDataUnavailable boolean? Player weapon enchants could not be read; skip weapon buff decisions.
 ---@field class ClassName
 ---@field distance number
 ---@field group number Raid group number (9 if temporary moved out of the raid by BOM)
@@ -107,6 +108,17 @@ function unitClass:ForceUpdateBuffs(playerUnit)
   if InCombatLockdown() or envModule.IsAuraRestricted() then
     self.auraDataUnavailable = true
     self.NeedBuff = false
+    -- Stale auras must not drive the aura-free scan; a full read refills these.
+    wipe(self.knownBuffs)
+    wipe(self.allBuffs)
+    -- Weapon enchants stay readable in a PvP match out of combat, and the
+    -- aura-free scan still offers weapon buffs from them.
+    if self == playerUnit and not InCombatLockdown() then
+      self.isPlayer = true
+      local isDead = UnitIsDeadOrGhost("player")
+      self.isDead = not envModule.IsSecretValue(isDead) and isDead == true
+      self:UpdatePlayerWeaponEnchantments()
+    end
     return
   end
   self.auraDataUnavailable = false
@@ -302,9 +314,11 @@ function unitClass:UpdatePlayerWeaponEnchantments()
 
   if hasMainHandEnchant == nil or hasOffHandEnchant == nil then
     self.auraDataUnavailable = true
+    self.weaponDataUnavailable = true
     self.NeedBuff = false
     return self
   end
+  self.weaponDataUnavailable = false
 
   if hasMainHandEnchant and mainHandEnchantID
       and allBuffsModule.enchantToSpellLookup[mainHandEnchantID] then

@@ -151,6 +151,7 @@ function russianModule:Translations()
     ["task.type.MissingConsumable"] = "Не хватает",
     ["task.type.Consumable"] = "Расходник",
     ["task.hint.HoldShiftConsumable"] = "Удерживайте Shift/Ctrl или Alt",
+    ["task.hint.PvPMatchAuraFree"] = "PvP-матч: проверяются только бафы на оружие, сотворённые предметы, отслеживание и предметы",
 
     TASK_BLESS_GROUP = "Благословить группу",
     TASK_BLESS = "Благословить",
@@ -194,6 +195,7 @@ function russianModule:Translations()
     ["castButton.CantCastMaybeOOM"] = "Недостаточно маны или другая причина",
 
     ["message.CancelBuff"] = "Отменён баф %s от %s",
+    ["message.PvPMatchAuraFree"] = "Во время PvP-матча игра скрывает бафы от аддонов. Buffomat проверяет только бафы на оружие, сотворённые предметы, отслеживание и предметы для открытия или использования.",
     ["message.BuffExpired"] = "%s заклинание истекло.",
 
     ["task.UseOrOpen"] = "Открыть",
@@ -218,6 +220,7 @@ function russianModule:Translations()
     ["castButton.inactive.PvpZone"] = "Бафы в ПвП зоне отключены",
     ["castButton.inactive.RestArea"] = "В зоне отдыха (откл. в опциях)",
     ["castButton.inactive.Taxi"] = "В такси бафы отключены",
+    ["castButton.inactive.PvPMatch"] = "PvP-матч: игра скрывает бафы",
     ["castButton.inactive.Vehicle"] = "На транспорте бафы отключены",
 
     ["castbutton.inactive.GCD"] = "Глобальная перезарядка",

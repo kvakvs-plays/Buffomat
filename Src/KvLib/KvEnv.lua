@@ -59,28 +59,58 @@ function envModule.IsSecretValue(value)
   return issecretvalue ~= nil and issecretvalue(value)
 end
 
+---@alias KvAuraRestrictionName "Combat"|"Encounter"|"ChallengeMode"|"PvPMatch"
+
 local restrictionTypes = Enum and Enum.AddOnRestrictionType
+local restrictionStates = Enum and Enum.AddOnRestrictionState
 local isRestrictionActive = C_RestrictedActions and C_RestrictedActions.IsAddOnRestrictionActive
+local getRestrictionState = C_RestrictedActions and C_RestrictedActions.GetAddOnRestrictionState
 envModule.supportsAuraRestrictions = isRestrictionActive ~= nil and restrictionTypes ~= nil
-local auraRestrictions = {} ---@type number[]
+-- PvPMatch goes last so it is reported only when no stricter restriction is also active.
+local auraRestrictions = {} ---@type {name: KvAuraRestrictionName, value: number}[]
 if envModule.supportsAuraRestrictions then
   for _, name in ipairs({ "Combat", "Encounter", "ChallengeMode", "PvPMatch" }) do
     if restrictionTypes[name] ~= nil then
-      auraRestrictions[#auraRestrictions + 1] = restrictionTypes[name]
+      auraRestrictions[#auraRestrictions + 1] = { name = name, value = restrictionTypes[name] }
     end
   end
+end
+
+---IsAddOnRestrictionActive returns false for the type whose ADDON_RESTRICTION_STATE_CHANGED
+---is being dispatched, before enforcement begins. GetAddOnRestrictionState reports
+---Activating in that window, so prefer it and treat anything but Inactive as restricted.
+---@param restriction number Enum.AddOnRestrictionType value
+---@return boolean
+local function isRestrictionOn(restriction)
+  if getRestrictionState and restrictionStates and restrictionStates.Inactive ~= nil then
+    local state = getRestrictionState(restriction)
+    if envModule.IsSecretValue(state) then
+      return true
+    elseif state ~= nil then
+      return state ~= restrictionStates.Inactive
+    end
+  end
+  local active = isRestrictionActive(restriction)
+  return envModule.IsSecretValue(active) or active == true
+end
+
+---Name the active restriction which hides aura data, or nil when auras are readable.
+---"PvPMatch" means it is the only one: auras stay secret for the whole match, even
+---out of combat, while bags and protected actions remain usable.
+---@return KvAuraRestrictionName?
+function envModule.GetAuraRestriction()
+  for _, restriction in ipairs(auraRestrictions) do
+    if isRestrictionOn(restriction.value) then
+      return restriction.name
+    end
+  end
+  return nil
 end
 
 ---Restrictions may outlast combat; never query auras while any is active.
 ---@return boolean
 function envModule.IsAuraRestricted()
-  for _, restriction in ipairs(auraRestrictions) do
-    local active = isRestrictionActive(restriction)
-    if envModule.IsSecretValue(active) or active then
-      return true
-    end
-  end
-  return false
+  return envModule.GetAuraRestriction() ~= nil
 end
 
 ---@type fun(addon: string|number, field: string): string?
@@ -234,8 +264,22 @@ end
 
 ---@type fun(bag: number): number
 envModule.GetContainerNumSlots = (C_Container and C_Container.GetContainerNumSlots) or GetContainerNumSlots
----@type fun(bag: number, slot: number): number, number, number
-envModule.GetContainerItemCooldown = (C_Container and C_Container.GetContainerItemCooldown) or GetContainerItemCooldown
+local getContainerItemCooldown = (C_Container and C_Container.GetContainerItemCooldown) or GetContainerItemCooldown
+
+---Cooldowns can be secret during a restriction (e.g. a PvP match); callers compare
+---the result, so report unknown cooldowns as nil instead.
+---@param bag number
+---@param slot number
+---@return number? startTime
+---@return number? duration
+---@return number|boolean|nil enable
+function envModule.GetContainerItemCooldown(bag, slot)
+  local startTime, duration, enable = getContainerItemCooldown(bag, slot)
+  if envModule.IsSecretValue(startTime) or envModule.IsSecretValue(duration) or envModule.IsSecretValue(enable) then
+    return nil
+  end
+  return startTime, duration, enable
+end
 local getContainerItemInfo = (C_Container and C_Container.GetContainerItemInfo) or GetContainerItemInfo
 
 ---@class KvContainerItemInfo

@@ -398,8 +398,10 @@ function eventsModule:InitEvents()
   if envModule.supportsAuraRestrictions then
     BuffomatAddon:RegisterEvent("ADDON_RESTRICTION_STATE_CHANGED", function()
       partyModule:InvalidatePartyCache()
+      -- Do not scan here: during this event IsAddOnRestrictionActive still reports
+      -- false for a restriction that is about to activate. The throttle timer
+      -- runs the requested rescan on the next frame.
       throttleModule:RequestTaskRescan("restrictionChanged")
-      taskScanModule:ScanTasks("restrictionChanged")
     end)
   end
 

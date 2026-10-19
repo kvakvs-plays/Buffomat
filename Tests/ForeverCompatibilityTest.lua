@@ -33,6 +33,8 @@ local function fixture(projectID, interfaceVersion, expansion, modern)
     UnitIsUnit = function(a, b) return a == b end,
     InCombatLockdown = function() return state.combat or false end,
     IsInRaid = function() return false end, IsInGroup = function() return false end,
+    UnitIsDeadOrGhost = function() return false end,
+    wipe = function(t) for k in pairs(t) do t[k] = nil end return t end,
     GetTime = function() return 100 end,
     issecretvalue = function(value) return rawequal(value, secret) end,
     ChatFrame_OpenChat = function() state.chat = true end,
@@ -141,18 +143,76 @@ for _, client in ipairs({
   setmetatable(libs["Buffomat-Languages"], { __call = function(_, key) return key end })
   scan.ShowInactive = function(_, reason) state.inactive = reason end
   if modern then
+    local names = { [0] = "Combat", "Encounter", "ChallengeMode", "PvPMatch" }
+    libs["Buffomat-TaskList"].New = function() return { tasks = {} } end
+    libs["Buffomat-Buffomat"].UseProfile = function() end
+    libs["Buffomat-Profile"].ChooseProfile = function() end
+    scan.GetPlayerOnlyParty = function() state.playerOnlyParty = true; return {} end
+    scan.RotateInvalidatedGroup_GetGroup = function() state.fullParty = true; return {} end
+    scan.Precheck = function(_, context) state.auraFreeContext = context.auraFree; return false end
     for kind = 0, 3 do
       state.restrictions[kind] = true
       equal(env.IsAuraRestricted(), true)
+      equal(env.GetAuraRestriction(), names[kind])
       local aura, readable = env.GetUnitAura("player", 1, "HELPFUL")
       equal(aura, nil); equal(readable, false); equal(state.auraRead, nil)
+      state.inactive, state.auraFreeContext, state.playerOnlyParty, state.fullParty = nil, nil, nil, nil
       scan:ScanTasks("test")
-      equal(state.inactive, "castButton.inactive.AuraDataUnavailable")
+      if kind == 3 then
+        -- PvP match: aura-free scan over the player only, no full party refresh
+        equal(state.inactive, nil, "PvP match does not pause the scan")
+        equal(state.auraFreeContext, true); equal(state.playerOnlyParty, true); equal(state.fullParty, nil)
+      else
+        equal(state.inactive, "castButton.inactive.AuraDataUnavailable")
+        equal(state.auraFreeContext, nil)
+      end
       state.restrictions[kind] = nil
     end
+    -- A stricter restriction wins over the PvP match
+    state.restrictions[0], state.restrictions[3] = true, true
+    equal(env.GetAuraRestriction(), "Combat")
+    state.restrictions[0], state.restrictions[3] = nil, nil
     equal(env.IsAuraRestricted(), false)
+    equal(env.GetAuraRestriction(), nil)
     local _, readable = env.GetUnitAura("player", 1, "HELPFUL")
     equal(readable, true); equal(state.auraRead, true)
+
+    -- Weapon enchants are read for the player even while auras are restricted
+    state.restrictions[3] = true
+    player.allBuffs = { [1] = true }
+    player.knownBuffs[1] = {}
+    player:ForceUpdateBuffs(player)
+    equal(player.auraDataUnavailable, true)
+    equal(player.weaponDataUnavailable, false)
+    equal(player.mainhandEnchantment, nil); equal(player.knownBuffs[1], nil, "stale auras wiped")
+    equal(next(player.allBuffs), nil)
+    state.restrictions[3] = nil
+
+    -- During ADDON_RESTRICTION_STATE_CHANGED the restriction reports Activating
+    globals.Enum.AddOnRestrictionState = { Inactive = 0, Activating = 1, Active = 2 }
+    globals.C_RestrictedActions.GetAddOnRestrictionState = function(kind)
+      return state.restrictionState[kind] or 0
+    end
+    state.restrictionState = { [3] = 1 }
+    loadModule("Src/KvLib/KvEnv.lua", globals)
+    equal(env.GetAuraRestriction(), "PvPMatch", "Activating counts as restricted")
+    state.restrictionState = { [3] = secret }
+    equal(env.GetAuraRestriction(), "PvPMatch", "secret state counts as restricted")
+    state.restrictionState = {}
+    equal(env.GetAuraRestriction(), nil)
+    globals.Enum.AddOnRestrictionState = nil
+    globals.C_RestrictedActions.GetAddOnRestrictionState = nil
+    loadModule("Src/KvLib/KvEnv.lua", globals)
+
+    globals.C_Container = { GetContainerItemCooldown = function() return secret, secret, 1 end }
+    loadModule("Src/KvLib/KvEnv.lua", globals)
+    equal(env.GetContainerItemCooldown(0, 1), nil, "secret item cooldown")
+    globals.C_Container.GetContainerItemCooldown = function() return 5, 10, 1 end
+    loadModule("Src/KvLib/KvEnv.lua", globals)
+    local cdStart, cdDuration = env.GetContainerItemCooldown(0, 1)
+    equal(cdStart, 5); equal(cdDuration, 10)
+    globals.C_Container = nil
+    loadModule("Src/KvLib/KvEnv.lua", globals)
   end
 
   loadModule("Src/Events.lua", globals)
@@ -184,7 +244,8 @@ for _, client in ipairs({
     scan.ScanTasks = function(_, reason) state.scanReason = reason end
     handlers.ADDON_RESTRICTION_STATE_CHANGED()
     equal(state.invalidated, true); equal(state.reason, "restrictionChanged")
-    equal(state.scanReason, "restrictionChanged")
+    -- Scanning inside the event would see the activating restriction as inactive
+    equal(state.scanReason, nil, "rescan is deferred to the throttle timer")
   end
   print("PASS: interface " .. interface .. " detection, enchants, restrictions, power, range, chat, and events")
 end
