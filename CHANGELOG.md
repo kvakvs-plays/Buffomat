@@ -1,5 +1,9 @@
 # Changelog
 
+## Buffomat Classic 2026.11.0
+
+- Hunter tracking is using correct API in TBC
+
 ## Buffomat Classic 2026.10.5
 
 - Restrict aura scanning while PvP match is active. Items in the bag checks (conjurables) and

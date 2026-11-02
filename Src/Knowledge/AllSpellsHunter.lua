@@ -88,56 +88,56 @@ function hunterModule:_SetupHunterSpellsTBC(allBuffs, enchantments)
 
   -- Track Beast
   buffDefModule:createAndRegisterBuff(allBuffs, 1494, nil)
-      :BuffType("aura")
+      :BuffType("tracking")
       :IsDefault(false)
       :RequirePlayerClass("HUNTER")
       :Category("tracking")
 
   -- Track Demon
   buffDefModule:createAndRegisterBuff(allBuffs, 19878, nil)
-      :BuffType("aura")
+      :BuffType("tracking")
       :IsDefault(false)
       :RequirePlayerClass("HUNTER")
       :Category("tracking")
 
   -- Track Dragonkin
   buffDefModule:createAndRegisterBuff(allBuffs, 19879, nil)
-      :BuffType("aura")
+      :BuffType("tracking")
       :IsDefault(false)
       :RequirePlayerClass("HUNTER")
       :Category("tracking")
 
   -- Track Elemental
   buffDefModule:createAndRegisterBuff(allBuffs, 19880, nil)
-      :BuffType("aura")
+      :BuffType("tracking")
       :IsDefault(false)
       :RequirePlayerClass("HUNTER")
       :Category("tracking")
 
   -- Track Humanoids
   buffDefModule:createAndRegisterBuff(allBuffs, 19883, nil)
-      :BuffType("aura")
+      :BuffType("tracking")
       :IsDefault(false)
       :RequirePlayerClass("HUNTER")
       :Category("tracking")
 
   -- Track Giants / riesen
   buffDefModule:createAndRegisterBuff(allBuffs, 19882, nil)
-      :BuffType("aura")
+      :BuffType("tracking")
       :IsDefault(false)
       :RequirePlayerClass("HUNTER")
       :Category("tracking")
 
   -- Track Undead
   buffDefModule:createAndRegisterBuff(allBuffs, 19884, nil)
-      :BuffType("aura")
+      :BuffType("tracking")
       :IsDefault(false)
       :RequirePlayerClass("HUNTER")
       :Category("tracking")
 
   -- Track Hidden / verborgenes
   buffDefModule:createAndRegisterBuff(allBuffs, 19885, nil)
-      :BuffType("aura")
+      :BuffType("tracking")
       :IsDefault(false)
       :RequirePlayerClass("HUNTER")
       :Category("tracking")

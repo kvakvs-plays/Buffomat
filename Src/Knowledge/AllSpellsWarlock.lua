@@ -205,13 +205,6 @@ function warlockModule:SetupWarlockSpells(allBuffs, enchantments)
       :RequirePlayerClass("WARLOCK")
       :Category("tracking")
 
-  --Sense Demons
-  buffDefModule:createAndRegisterBuff(allBuffs, 5500, nil)
-      :BuffType("tracking")
-      :IsDefault(false)
-      :RequirePlayerClass("WARLOCK")
-      :Category("tracking")
-
   ------------------------
   -- Pet Management
   ------------------------

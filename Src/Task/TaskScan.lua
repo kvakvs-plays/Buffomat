@@ -491,6 +491,13 @@ function taskScanModule:GetActiveAuraAndSeal(playerUnit)
 end
 
 function taskScanModule:CheckChangesAndUpdateSpelltab()
+  -- Hunter tracks used to be "aura" buffs; a profile which saved one as LastAura would otherwise
+  -- block aspects forever, because tracks no longer go through the aura code.
+  local lastAuraDef = allBuffsModule.allBuffs and allBuffsModule.allBuffs[buffomatModule.currentProfile.LastAura]
+  if lastAuraDef ~= nil and lastAuraDef.type ~= "aura" then
+    buffomatModule.currentProfile.LastAura = nil
+  end
+
   --reset aura/seal
   ---@param buffDef BomBuffDefinition
   for _, buffDef in ipairs(allBuffsModule.selectedBuffs) do
