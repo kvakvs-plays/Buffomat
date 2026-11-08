@@ -84,6 +84,15 @@ for _, mode in ipairs({ "modern", "legacy" }) do
   main, off = checks:WeaponHandsNeedingBuff(daggerScroll, player)
   equal(main, true, mode .. " dagger main hand"); equal(off, false, mode .. " a shield is not a weapon")
 
+  local sharpening = { buffId = 4, weaponSubclasses = ids.BladedWeapons, unitsNeedBuff = {} }
+  local weightstone = { buffId = 5, weaponSubclasses = ids.BluntWeapons, unitsNeedBuff = {} }
+  state.equipped = { [16] = 1, [17] = 2 } -- staff and dagger
+  equal(checks:WeaponFitsBuff(sharpening, 16), false, mode .. " a staff is not bladed")
+  equal(checks:WeaponFitsBuff(sharpening, 17), true, mode .. " a dagger is bladed")
+  equal(checks:WeaponFitsBuff(weightstone, 16), true, mode .. " a staff is blunt")
+  equal(checks:WeaponFitsBuff(weightstone, 17), false, mode .. " a dagger is not blunt")
+
+  state.equipped = { [16] = 2, [17] = 4 } -- dagger and shield
   state.profile.MainHandEnable = false
   main = checks:WeaponHandsNeedingBuff(daggerScroll, player)
   equal(main, false, mode .. " disabled main hand")

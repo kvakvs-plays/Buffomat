@@ -39,6 +39,20 @@ itemIdsModule.WeaponSubclass = {
   Staff = 10, FistWeapon = 13, Misc = 14, Dagger = 15, Thrown = 16, Crossbow = 18, Wand = 19, FishingPole = 20,
 }
 
+local ws = itemIdsModule.WeaponSubclass
+-- Weapon types that weapon stones fit, from SpellEquippedItems (the same on Era, TBC and Forever).
+---Sharpening stones fit bladed weapons only.
+---@type WowWeaponSubclass[]
+itemIdsModule.BladedWeapons = { ws.Axe1H, ws.Axe2H, ws.Polearm, ws.Sword1H, ws.Sword2H, ws.Dagger }
+---Weightstones fit blunt weapons only.
+---@type WowWeaponSubclass[]
+itemIdsModule.BluntWeapons = { ws.Mace1H, ws.Mace2H, ws.Staff, ws.FistWeapon }
+---Elemental and Consecrated stones fit any melee weapon. The game also allows a Consecrated stone on a
+---fishing pole, but suggesting that is pointless.
+---@type WowWeaponSubclass[]
+itemIdsModule.MeleeWeapons = { ws.Axe1H, ws.Axe2H, ws.Polearm, ws.Sword1H, ws.Sword2H, ws.Dagger,
+                               ws.Mace1H, ws.Mace2H, ws.Staff, ws.FistWeapon }
+
 ---Class reagents sold by vendors. On WoW: Forever the Legacy talent Reagent Economy removes the
 ---need for these, but not for Soul Shards or other farmed reagents.
 ---@type {[WowItemId]: boolean}

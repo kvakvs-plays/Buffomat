@@ -3,6 +3,7 @@
 local enchantmentsModule = LibStub("Buffomat-AllConsumesEnchantments") --[[@as AllConsumesEnchantmentsModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
+local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
 
 ---SCROLLS
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
@@ -71,6 +72,8 @@ end
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
 function enchantmentsModule:_SetupPhysicalEnchantments(allBuffs, enchantments)
+  -- Read here, not at file scope: ItemIds loads after the Knowledge files
+  local blunt, bladed, melee = itemIdsModule.BluntWeapons, itemIdsModule.BladedWeapons, itemIdsModule.MeleeWeapons
   --
   -- Weightstones for blunt weapons
   --
@@ -78,12 +81,14 @@ function enchantmentsModule:_SetupPhysicalEnchantments(allBuffs, enchantments)
   self:RegisterEnchantment(allBuffs, 16622)
       :CreatesOrProvidedByItem({ 12643, 7965, 3241, 3240, 3239 })
       :RequirePlayerClass(allBuffsModule.PHYSICAL_CLASSES)
+      :RequireWeaponType(blunt)
   enchantments[16622] = { 1703, 484, 21, 20, 19 }   -- Weightstone
 
   --TBC: Adamantite Weightstone +12 BLUNT +14 CRIT
   self:RegisterEnchantment(allBuffs, 34340)
       :CreatesOrProvidedByItem({ 28421 })
       :RequirePlayerClass(allBuffsModule.PHYSICAL_CLASSES)
+      :RequireWeaponType(blunt)
       :RequireTBC()
   enchantments[34340] = { 2955 }   --TBC: Adamantite Weightstone (Weight Weapon)
 
@@ -91,6 +96,7 @@ function enchantmentsModule:_SetupPhysicalEnchantments(allBuffs, enchantments)
   self:RegisterEnchantment(allBuffs, 34339)
       :CreatesOrProvidedByItem({ 28420 })
       :RequirePlayerClass(allBuffsModule.PHYSICAL_CLASSES)
+      :RequireWeaponType(blunt)
       :RequireTBC()
   enchantments[34339] = { 2954 }   --TBC: Fel Weightstone (Weighted +12)
 
@@ -101,30 +107,35 @@ function enchantmentsModule:_SetupPhysicalEnchantments(allBuffs, enchantments)
   self:RegisterEnchantment(allBuffs, 16138)
       :CreatesOrProvidedByItem({ 12404, 7964, 2871, 2863, 2862, 287978 }) -- Forever: Rough Sharpening Stone 287978
       :RequirePlayerClass(allBuffsModule.PHYSICAL_CLASSES)
+      :RequireWeaponType(bladed)
   enchantments[16138] = { 1643, 483, 14, 13, 40 }   --Sharpening Stone
 
   --Consecrated Sharpening Stone
   self:RegisterEnchantment(allBuffs, 28891)
       :CreatesOrProvidedByItem({ 23122 })
       :RequirePlayerClass(allBuffsModule.PHYSICAL_CLASSES)
+      :RequireWeaponType(melee)
   enchantments[28891] = { 2684 }   --Consecrated Sharpening Stone
 
   --Elemental Sharpening Stone
   self:RegisterEnchantment(allBuffs, 22756)
       :CreatesOrProvidedByItem({ 18262, 287980 }) -- Forever: 287980
       :RequirePlayerClass(allBuffsModule.PHYSICAL_CLASSES)
+      :RequireWeaponType(melee)
   enchantments[22756] = { 2506 }   --Elemental Sharpening Stone
 
   --TBC: Adamantite Sharpening Stone +12 WEAPON +14 CRIT
   self:RegisterEnchantment(allBuffs, 29453)
       :CreatesOrProvidedByItem({ 23529 })
       :RequirePlayerClass(allBuffsModule.PHYSICAL_CLASSES)
+      :RequireWeaponType(bladed)
       :RequireTBC()
 
   --TBC: Fel Sharpening Stone +12 WEAPON
   self:RegisterEnchantment(allBuffs, 29452)
       :CreatesOrProvidedByItem({ 23528 })
       :RequirePlayerClass(allBuffsModule.PHYSICAL_CLASSES)
+      :RequireWeaponType(bladed)
       :RequireTBC()
   enchantments[29452] = { 2712 }   --TBC: Fel Sharpening Stone (Sharpened +12)
   enchantments[29453] = { 2713 }   --TBC: Adamantite Sharpening Stone (Sharpened +14 Crit, +12)

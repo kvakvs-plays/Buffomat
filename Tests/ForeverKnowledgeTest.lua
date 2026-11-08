@@ -239,7 +239,15 @@ do
   equal(flame.extraText, "Staves", "spells dialog names the weapon type")
   equal(mage[1302227].weaponSubclasses[1], 7, "Imbue Spark needs a one-handed sword")
   equal(mage[1296225].weaponSubclasses[1], 15, "Imbue Chillknife needs a dagger")
-  equal(warrior[16138].weaponSubclasses, nil, "classic sharpening stones keep no weapon limit")
+  assert(contains(warrior[16138].weaponSubclasses, 15) and not contains(warrior[16138].weaponSubclasses, 4),
+    "sharpening stones fit daggers, not maces")
+  assert(contains(warrior[16622].weaponSubclasses, 10) and not contains(warrior[16622].weaponSubclasses, 7),
+    "weightstones fit staves, not swords")
+  assert(contains(warrior[22756].weaponSubclasses, 4) and not contains(warrior[22756].weaponSubclasses, 20),
+    "Elemental Sharpening Stone fits any melee weapon but not a fishing pole")
+  local _, eraWarrior = setup("era", "WARRIOR", "Human")
+  assert(contains(eraWarrior[16138].weaponSubclasses, 7), "Era sharpening stones carry the same limit")
+  equal(mage[25122].weaponSubclasses, nil, "wizard oil fits any weapon")
   equal(warrior[1302304], nil, "Imbue scrolls are for casters")
   assert(contains(warrior[16138].items, 287978), "Forever Rough Sharpening Stone item")
 end

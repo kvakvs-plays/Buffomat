@@ -3,6 +3,8 @@
 ## Buffomat Classic 2026.11.0
 
 - Hunter tracking is using correct API in TBC
+- Sharpening stones are suggested only for bladed weapons and weightstones only for blunt weapons
+  (maces, staves, fist weapons); Elemental and Consecrated stones only for melee weapons, not fishing poles.
 - WoW: Forever buff and consumable update (client build 1.60.1.70862):
   - Group buffs cover the whole raid, like WotLK; dual specialization profiles work.
   - Blessings last 60 minutes; Fortitude, Mark of the Wild, Arcane Intellect and Divine Spirit 60 minutes;
