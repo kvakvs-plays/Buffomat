@@ -18,3 +18,14 @@
 
 Always read `.agents/addon-dev.md`
 When need to search for code locations, consult with `.agents/code-index.md`
+
+# Game data sources
+
+* Do not fetch Wowhead; its robots.txt disallows Anthropic agents and it answers scripts with 403.
+  `.agents/wowhead/` is deprecated and marked for deletion.
+* For Forever trainer lists, talents, consumables and spell details use ForeverDB, which welcomes
+  AI assistants: `.agents/foreverdb/foreverdb.py` (API key in `.agents/foreverdb/.apikey`), then read
+  `.agents/foreverdb/out/summary.txt`. Credit "Data from ForeverDB.net"; its addon data is GPL-3.0,
+  so never copy it into `Src/`.
+* For raw game data (spells, items, talents) use wago.tools DB2 CSV exports through
+  `.agents/wowf-scan/scripts/fetch.py`; see `.agents/wowf-scan/README.md`.

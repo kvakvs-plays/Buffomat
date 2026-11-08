@@ -1,0 +1,466 @@
+## 132 Detect Lesser Invisibility  [Src/Knowledge/AllSpellsWarlock.lua:24]
+  NAME Detect Lesser Invisibility -> Detect Invisibility
+## 430 Drink  [Src/Knowledge/AllBuffs.lua:422]
+  DESC: 'Restores ${($s1/5)*$d} mana over $d.  Must remain seated while drinking.'
+## 431 Drink  [Src/Knowledge/AllBuffs.lua:423]
+  DESC: 'Restores ${($s1/5)*$d} mana over $d.  Must remain seated while drinking.'
+## 432 Drink  [Src/Knowledge/AllBuffs.lua:369]
+  DESC: 'Restores ${($s1/5)*$d} mana over $d.  Must remain seated while drinking.'
+## 546 Water Walking  [Src/Knowledge/AllSpellsShaman.lua:114]
+  DESC: 'Allows the friendly target to walk across water for $d. Any damage will cancel the effect.'
+## 603 Curse of Doom  [Src/Knowledge/AllSpellsRogue.lua:104]
+  NAME Curse of Doom -> Bane of Doom
+  DESC: 'Afflicts the target with impending doom, causing $s1 Shadow damage after $d.  If the target dies from this damage, there is a chance that a Doomguard will be summoned.  Cannot be cast on players. Only one Bane per Warloc'
+## 687 Demon Skin  [Src/Knowledge/AllSpellsWarlock.lua:56]
+  DESC: 'Protects the caster, increasing armor by $m1 and increases health regeneration by $s2 health per 5 sec. for $d.'
+## 693 Create Soulstone (Minor)  [Src/Knowledge/AllSpellsWarlock.lua:195]
+  NAME Create Soulstone (Minor) -> Create Soulstone
+## 696 Demon Skin  [Src/Knowledge/AllSpellsWarlock.lua:56]
+  DESC: 'Protects the caster, increasing armor by $m1 and increases health regeneration by $s2 health per 5 sec. for $d.'
+## 703 Garrote  [Src/Knowledge/AllSpellsRogue.lua:87]
+  EFF [(6, 3, 6), (328, 0, 6)] -> [(6, 3, 6), (30, 0, 1)]
+## 704 Curse of Recklessness  [Src/Knowledge/AllSpellsRogue.lua:87]
+  EFF [(6, 99, 6), (6, 22, 6), (6, 92, 6)] -> [(6, 92, 6), (6, 674, 6)]
+  DESC: "Curses the target with recklessness, reducing the target's armor by $s2 for $d. Cursed enemies will not flee and will ignore Fear and Horror effects. Only one Curse per Warlock can be active on any one target."
+## 706 Demon Armor  [Src/Knowledge/AllSpellsRogue.lua:87]
+  DESC: 'Protects the caster, increasing armor by $s1, Shadow resistance by $s2 and increases health regeneration by $s3 health per 5 sec. for $d.'
+## 1086 Demon Armor  [Src/Knowledge/AllSpellsWarlock.lua:57]
+  DESC: 'Protects the caster, increasing armor by $s1, Shadow resistance by $s2 and increases health regeneration by $s3 health per 5 sec. for $d.'
+## 1126 Mark of the Wild  [Src/Knowledge/AllSpellsDruid.lua:18]
+  DUR 1800000 -> 3600000
+## 1133 Drink  [Src/Knowledge/AllBuffs.lua:425]
+  DESC: 'Restores ${($s1/5)*$d} mana over $d.  Must remain seated while drinking.'
+## 1243 Power Word: Fortitude  [Src/Knowledge/AllSpellsPriest.lua:51]
+  DUR 1800000 -> 3600000
+## 1244 Power Word: Fortitude  [Src/Knowledge/AllSpellsPriest.lua:51]
+  DUR 1800000 -> 3600000
+## 1245 Power Word: Fortitude  [Src/Knowledge/AllSpellsPriest.lua:51]
+  DUR 1800000 -> 3600000
+## 1459 Arcane Intellect  [Src/Knowledge/AllSpellsMage.lua:11]
+  DUR 1800000 -> 3600000
+## 1460 Arcane Intellect  [Src/Knowledge/AllSpellsMage.lua:11]
+  DUR 1800000 -> 3600000
+## 1461 Arcane Intellect  [Src/Knowledge/AllSpellsMage.lua:11]
+  DUR 1800000 -> 3600000
+## 2362 Create Spellstone  [Src/Knowledge/AllSpellsWarlock.lua:163]
+  DESC: 'Creates a Spellstone which can be used to enchant your weapon with Shadow, increasing your spell haste by $1237162s2% and the damage done by your Shadow spells by up to $1237162s1.\r\n\r\nConjured items disappear if logged o'
+## 2458 Berserker Stance  [Src/Knowledge/AllSpellsWarrior.lua:35]
+  DESC: 'An aggressive stance. Critical strike chance increased by $7381s1% and all damage taken is increased by $7381s2%.'
+## 2481 Find Treasure  [Src/Const/SpellIds.lua:76]
+  DESC: 'Allows the dwarf to sense nearby treasure, making it appear on the minimap and sometimes increase treasure found. Lasts $d.'
+## 2651 Elune's Grace  [Src/Knowledge/AllSpellsPriest.lua:156]
+  COST (60, 0, 0) -> (0, 3, 0)
+  DESC: "Reduces the chance you'll be hit by melee and ranged attacks by $s1% for $d or until you are missed $n times."
+## 2652 Touch of Weakness  [Src/Knowledge/AllSpellsPriest.lua:128]
+  DESC: "The next melee attack against the caster will cause $2943s1 Shadow damage and reduce the attacker's melee attack power by $2943s2 for $2943d."
+## 2791 Power Word: Fortitude  [Src/Knowledge/AllSpellsPriest.lua:51]
+  DUR 1800000 -> 3600000
+## 5232 Mark of the Wild  [Src/Knowledge/AllSpellsDruid.lua:18]
+  DUR 1800000 -> 3600000
+## 5234 Mark of the Wild  [Src/Knowledge/AllSpellsDruid.lua:18]
+  DUR 1800000 -> 3600000
+  EFF [(6, 22, 21), (6, 29, 21), (6, 558, 21)] -> [(6, 674, 21), (6, 29, 21), (6, 22, 21), (6, 22, 21), (6, 22, 21), (6, 22, 21), (6, 22, 21), (6, 22, 21)]
+## 5242 Battle Shout  [Src/Knowledge/AllSpellsWarrior.lua:12]
+  DUR 120000 -> 180000
+  EFF [(6, 99, 20)] -> [(6, 99, 56)]
+  DESC: 'The warrior shouts, increasing the melee attack power of all party or raid members within $a1 yards by $s1.  Lasts $d.'
+## 5502 Sense Undead  [Src/Knowledge/AllSpellsPaladin.lua:303]
+  STATUS era[class:Holy(acq0)] -> wf[class:Holy(acq0)/Holy(acq2)]
+  LVL (20, 20) -> (0, 0)
+## 6192 Battle Shout  [Src/Knowledge/AllSpellsWarrior.lua:12]
+  DUR 120000 -> 180000
+  EFF [(6, 99, 20)] -> [(6, 99, 56)]
+  DESC: 'The warrior shouts, increasing the melee attack power of all party or raid members within $a1 yards by $s1.  Lasts $d.'
+## 6201 Create Healthstone (Minor)  [Src/Knowledge/AllSpellsWarlock.lua:181]
+  NAME Create Healthstone (Minor) -> Create Healthstone
+## 6202 Create Healthstone (Lesser)  [Src/Knowledge/AllSpellsWarlock.lua:181]
+  NAME Create Healthstone (Lesser) -> Create Healthstone
+## 6346 Fear Ward  [Src/Knowledge/AllSpellsPriest.lua:114]
+  DUR 600000 -> 180000
+## 6366 Create Firestone (Lesser)  [Src/Knowledge/AllSpellsWarlock.lua:111]
+  NAME Create Firestone (Lesser) -> Create Firestone
+  DESC: 'Creates a Lesser Firestone which can be used to enchant your weapon with Fire, increasing your spell critical strike chance by $23480s2% and the damage done by your Fire spells by up to $23480s1.\r\n\r\nConjured items disapp'
+## 6673 Battle Shout  [Src/Knowledge/AllSpellsWarrior.lua:12]
+  DUR 120000 -> 180000
+  EFF [(6, 99, 20)] -> [(6, 99, 56)]
+  DESC: 'The warrior shouts, increasing the melee attack power of all party or raid members within $a1 yards by $s1.  Lasts $d.'
+## 6756 Mark of the Wild  [Src/Knowledge/AllSpellsDruid.lua:18]
+  DUR 1800000 -> 3600000
+## 7294 Retribution Aura  [Src/Knowledge/AllSpellsPaladin.lua:222]
+  DESC: 'Causes $s1 Holy damage to any creature that strikes a party member within $a1 yards. Players may only have one Aura on them per Paladin at any one time.'
+## 8017 Rockbiter Weapon  [Src/Knowledge/AllSpellsShaman.lua:59]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon, increasing melee attack power by $10400s1 and allowing melee attacks to cause additional threat when using that weapon.  Lasts for 60 minutes."
+## 8018 Rockbiter Weapon  [Src/Knowledge/AllSpellsShaman.lua:59]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon, increasing melee attack power by $15567s1 and allowing melee attacks to cause additional threat when using that weapon.  Lasts for 60 minutes."
+## 8019 Rockbiter Weapon  [Src/Knowledge/AllSpellsShaman.lua:59]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon, increasing melee attack power by $15568s1 and allowing melee attacks to cause additional threat when using that weapon.  Lasts for 60 minutes."
+## 8024 Flametongue Weapon  [Src/Knowledge/AllSpellsShaman.lua:23]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon with fire. Each hit causes ${$8026m1/77-1+($29469m1)} to ${$8026m1/25+($29469m1)} additional Fire damage, based on the speed of the weapon. Slower weapons cause more fire damage per swing. When "
+## 8027 Flametongue Weapon  [Src/Knowledge/AllSpellsShaman.lua:23]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon with fire. Each hit causes ${$8028m1/77-1+($29470m1)} to ${$8028m1/25+($29470m1)} additional Fire damage, based on the speed of the weapon. Slower weapons cause more fire damage per swing. When "
+## 8030 Flametongue Weapon  [Src/Knowledge/AllSpellsShaman.lua:23]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon with fire. Each hit causes ${$8029m1/77-1+($10444m1)} to ${$8029m1/25+($10444m1)} additional Fire damage, based on the speed of the weapon. Slower weapons cause more fire damage per swing. When "
+## 8033 Frostbrand Weapon  [Src/Knowledge/AllSpellsShaman.lua:42]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon with frost.  Each hit has a chance of causing $8034s2 additional Frost damage and slowing the target's movement speed by $8034s1% for $8034d.  Lasts for 60 minutes."
+## 8038 Frostbrand Weapon  [Src/Knowledge/AllSpellsShaman.lua:42]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon with frost.  Each hit has a chance of causing $8037s2 additional Frost damage and slowing the target's movement speed by $8037s1% for $8037d.  Lasts for 60 minutes."
+## 8232 Windfury Weapon  [Src/Knowledge/AllSpellsShaman.lua:80]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon with wind.  Each hit has a 20% chance of granting you $8233s2 extra $lattack:attacks; with $8233s1 extra melee attack power. When applied to main hand, disables any benefit you personally receiv"
+## 8235 Windfury Weapon  [Src/Knowledge/AllSpellsShaman.lua:80]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon with wind.  Each hit has a 20% chance of granting you $8236s2 extra $lattack:attacks; with $8236s1 extra melee attack power. When appied to main hand, disables any benefit you personally receive"
+## 8907 Mark of the Wild  [Src/Knowledge/AllSpellsDruid.lua:18]
+  DUR 1800000 -> 3600000
+  EFF [(6, 22, 21), (6, 29, 21), (6, 558, 21)] -> [(6, 674, 21), (6, 29, 21), (6, 22, 21), (6, 22, 21), (6, 22, 21), (6, 22, 21), (6, 22, 21), (6, 22, 21)]
+## 9884 Mark of the Wild  [Src/Knowledge/AllSpellsDruid.lua:18]
+  DUR 1800000 -> 3600000
+  EFF [(6, 22, 21), (6, 29, 21), (6, 558, 21)] -> [(6, 674, 21), (6, 29, 21), (6, 22, 21), (6, 22, 21), (6, 22, 21), (6, 22, 21), (6, 22, 21), (6, 22, 21)]
+## 9885 Mark of the Wild  [Src/Knowledge/AllSpellsDruid.lua:15]
+  DUR 1800000 -> 3600000
+  EFF [(6, 22, 21), (6, 29, 21), (6, 558, 21)] -> [(6, 674, 21), (6, 29, 21), (6, 22, 21), (6, 22, 21), (6, 22, 21), (6, 22, 21), (6, 22, 21), (6, 22, 21)]
+## 10156 Arcane Intellect  [Src/Knowledge/AllSpellsMage.lua:11]
+  DUR 1800000 -> 3600000
+## 10157 Arcane Intellect  [Src/Knowledge/AllSpellsMage.lua:10]
+  DUR 1800000 -> 3600000
+## 10298 Retribution Aura  [Src/Knowledge/AllSpellsPaladin.lua:222]
+  DESC: 'Causes $s1 Holy damage to any creature that strikes a party member within $a1 yards. Players may only have one Aura on them per Paladin at any one time.'
+## 10299 Retribution Aura  [Src/Knowledge/AllSpellsPaladin.lua:222]
+  DESC: 'Causes $s1 Holy damage to any creature that strikes a party member within $a1 yards. Players may only have one Aura on them per Paladin at any one time.'
+## 10300 Retribution Aura  [Src/Knowledge/AllSpellsPaladin.lua:222]
+  DESC: 'Causes $s1 Holy damage to any creature that strikes a party member within $a1 yards. Players may only have one Aura on them per Paladin at any one time.'
+## 10301 Retribution Aura  [Src/Knowledge/AllSpellsPaladin.lua:219]
+  DESC: 'Causes $s1 Holy damage to any creature that strikes a party member within $a1 yards. Players may only have one Aura on them per Paladin at any one time.'
+## 10399 Rockbiter Weapon  [Src/Knowledge/AllSpellsShaman.lua:59]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon, increasing melee attack power by $15569s1 and allowing melee attacks to cause additional threat when using that weapon.  Lasts for 60 minutes."
+## 10456 Frostbrand Weapon  [Src/Knowledge/AllSpellsShaman.lua:42]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon with frost.  Each hit has a chance of causing $10458s2 additional Frost damage and slowing the target's movement speed by $10458s1% for $10458d.  Lasts for 60 minutes."
+## 10486 Windfury Weapon  [Src/Knowledge/AllSpellsShaman.lua:80]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon with wind.  Each hit has a 20% chance of granting you $10484s2 extra $lattack:attacks; with $10484s1 extra melee attack power. When applied to main hand, disables any benefit you personally rece"
+## 10937 Power Word: Fortitude  [Src/Knowledge/AllSpellsPriest.lua:51]
+  DUR 1800000 -> 3600000
+## 10938 Power Word: Fortitude  [Src/Knowledge/AllSpellsPriest.lua:49]
+  DUR 1800000 -> 3600000
+## 11202 Crippling Poison  [Src/Knowledge/AllSpellsRogue.lua:92]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: 'Coats a weapon with poison that lasts for ${$m1/60} minutes.\r\nEach strike has a $h% chance of poisoning the enemy, slowing their movement speed by $11201s1% for $11201d.'
+## 11340 Instant Poison VI  [Src/Knowledge/AllSpellsRogue.lua:52]
+  EFF [(54, 0, 0)] -> [(360, 0, 0), (3, 0, 0)]
+  DESC: 'Coats a weapon with poison that lasts for ${$m1/60} minutes.\r\nEach strike has a $h% chance of poisoning the enemy which instantly inflicts $11337s1 Nature damage.  $m2 charges.'
+## 11399 Mind-numbing Poison III  [Src/Knowledge/AllSpellsRogue.lua:35]
+  EFF [(54, 0, 0)] -> [(360, 0, 0), (3, 0, 0)]
+  DESC: 'Coats a weapon with poison that lasts for ${$m1/60} minutes.\r\nEach strike has a $h% chance of poisoning the enemy, increasing their casting time by $11398s1% for $11398d.  $m2 charges.'
+## 11426 Ice Barrier  [Src/Knowledge/AllSpellsMage.lua:68]
+  EFF [(6, 69, 1)] -> [(6, 69, 1), (6, 108, 1), (6, 108, 1)]
+  DESC: 'Shield yourself, absorbing ${$s1+($SPFR*0.1)*($11189s3/100+1)} damage and increasing your Frost damage by $1326891s1% for $d. While shielded, your Frost damage is increased by an additional $s2% and you do not lose casti'
+## 11549 Battle Shout  [Src/Knowledge/AllSpellsWarrior.lua:12]
+  DUR 120000 -> 180000
+  EFF [(6, 99, 20)] -> [(6, 99, 56)]
+  DESC: 'The warrior shouts, increasing the melee attack power of all party or raid members within $a1 yards by $s1.  Lasts $d.'
+## 11550 Battle Shout  [Src/Knowledge/AllSpellsWarrior.lua:12]
+  DUR 120000 -> 180000
+  EFF [(6, 99, 20)] -> [(6, 99, 56)]
+  DESC: 'The warrior shouts, increasing the melee attack power of all party or raid members within $a1 yards by $s1.  Lasts $d.'
+## 11551 Battle Shout  [Src/Knowledge/AllSpellsWarrior.lua:12]
+  DUR 120000 -> 180000
+  EFF [(6, 99, 20)] -> [(6, 99, 56)]
+  DESC: 'The warrior shouts, increasing the melee attack power of all party or raid members within $a1 yards by $s1.  Lasts $d.'
+## 11729 Create Healthstone (Greater)  [Src/Knowledge/AllSpellsWarlock.lua:181]
+  NAME Create Healthstone (Greater) -> Create Healthstone
+## 11730 Create Healthstone (Major)  [Src/Knowledge/AllSpellsWarlock.lua:170]
+  NAME Create Healthstone (Major) -> Create Healthstone
+## 11733 Demon Armor  [Src/Knowledge/AllSpellsWarlock.lua:57]
+  DESC: 'Protects the caster, increasing armor by $s1, Shadow resistance by $s2 and increases health regeneration by $s3 health per 5 sec. for $d.'
+## 11734 Demon Armor  [Src/Knowledge/AllSpellsWarlock.lua:57]
+  DESC: 'Protects the caster, increasing armor by $s1, Shadow resistance by $s2 and increases health regeneration by $s3 health per 5 sec. for $d.'
+## 11735 Demon Armor  [Src/Knowledge/AllSpellsWarlock.lua:53]
+  DESC: 'Protects the caster, increasing armor by $s1, Shadow resistance by $s2 and increases health regeneration by $s3 health per 5 sec. for $d.'
+## 11743 Detect Greater Invisibility  [Src/Knowledge/AllSpellsWarlock.lua:27]
+  NAME Detect Greater Invisibility -> Detect Invisibility
+## 13031 Ice Barrier  [Src/Knowledge/AllSpellsMage.lua:72]
+  EFF [(6, 69, 1)] -> [(6, 69, 1), (6, 108, 1), (6, 108, 1)]
+  DESC: 'Shield yourself, absorbing ${$s1+($SPFR*0.1)*($11189s3/100+1)} damage and increasing your Frost damage by $1326891s1% for $d. While shielded, your Frost damage is increased by an additional $s2% and you do not lose casti'
+## 13032 Ice Barrier  [Src/Knowledge/AllSpellsMage.lua:72]
+  EFF [(6, 69, 1)] -> [(6, 69, 1), (6, 108, 1), (6, 108, 1)]
+  DESC: 'Shield yourself, absorbing ${$s1+($SPFR*0.1)*($11189s3/100+1)} damage and increasing your Frost damage by $1326891s1% for $d. While shielded, your Frost damage is increased by an additional $s2% and you do not lose casti'
+## 13033 Ice Barrier  [Src/Knowledge/AllSpellsMage.lua:72]
+  EFF [(6, 69, 1)] -> [(6, 69, 1), (6, 108, 1), (6, 108, 1)]
+  DESC: 'Shield yourself, absorbing ${$s1+($SPFR*0.1)*($11189s3/100+1)} damage and increasing your Frost damage by $1326891s1% for $d. While shielded, your Frost damage is increased by an additional $s2% and you do not lose casti'
+## 13161 Aspect of the Beast  [Src/Knowledge/AllSpellsHunter.lua:75]
+  EFF [(6, 120, 1)] -> [(6, 120, 1), (6, 99, 1), (6, 42, 1)]
+  DESC: 'The hunter takes on the aspects of a beast, becoming untrackable and increasing Melee Attack Power by $s2. Only one Aspect can be active at a time.'
+## 13227 Wound Poison  [Src/Knowledge/AllSpellsRogue.lua:72]
+  EFF [(54, 0, 0)] -> [(360, 0, 0), (3, 0, 0)]
+  DESC: 'Coats a weapon with poison that lasts for ${$m1/60} minutes.\r\nEach strike has a $h% chance of poisoning the enemy, reducing all healing effects used on them by $13224s1 for $13224d.  Stacks up to $13224u times on a singl'
+## 14752 Divine Spirit  [Src/Knowledge/AllSpellsPriest.lua:10]
+  DUR 1800000 -> 3600000
+## 14818 Divine Spirit  [Src/Knowledge/AllSpellsPriest.lua:10]
+  DUR 1800000 -> 3600000
+## 14819 Divine Spirit  [Src/Knowledge/AllSpellsPriest.lua:8]
+  DUR 1800000 -> 3600000
+## 15286 Vampiric Embrace  [Src/Knowledge/AllSpellsPriest.lua:177]
+  DUR 60000 -> 30000
+  LVL (1, 1) -> (30, 30)
+  DESC: 'Afflicts your target with Shadow energy that causes all party members to be healed for $s1% of any Shadow spell damage you deal for $d.'
+## 15473 Shadowform  [Src/Knowledge/AllSpellsPriest.lua:161]
+  DESC: 'Assume Shadowform, increasing your Shadow damage by $s2%, reducing the Mana cost of all Shadow spells by $m4%, increasing the critical strike damage bonus of your Shadow spells by $m5%, and reducing Physical damage taken'
+## 16314 Rockbiter Weapon  [Src/Knowledge/AllSpellsShaman.lua:59]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon, increasing melee attack power by $16311s1 and allowing melee attacks to cause additional threat when using that weapon.  Lasts for 60 minutes."
+## 16315 Rockbiter Weapon  [Src/Knowledge/AllSpellsShaman.lua:59]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon, increasing melee attack power by $16312s1 and allowing melee attacks to cause additional threat when using that weapon.  Lasts for 60 minutes."
+## 16316 Rockbiter Weapon  [Src/Knowledge/AllSpellsShaman.lua:52]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon, increasing melee attack power by $16313s1 and allowing melee attacks to cause additional threat when using that weapon.  Lasts for 60 minutes."
+## 16339 Flametongue Weapon  [Src/Knowledge/AllSpellsShaman.lua:23]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon with fire. Each hit causes ${$10445m1/77-1+($10444m1)} to ${$10445m1/25+($10444m1)} additional Fire damage, based on the speed of the weapon. Slower weapons cause more fire damage per swing. Whe"
+## 16341 Flametongue Weapon  [Src/Knowledge/AllSpellsShaman.lua:23]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon with fire. Each hit causes ${$16343m1/77-1+($10444m1)} to ${$16343m1/25+($10444m1)} additional Fire damage, based on the speed of the weapon. Slower weapons cause more fire damage per swing. Whe"
+## 16342 Flametongue Weapon  [Src/Const/SpellIds.lua:79]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon with fire.  Each hit causes ${$16344m1/77-1+($10444m1)} to ${$16344m1/25+($10444m1)} additional Fire damage, based on the speed of the weapon. Slower weapons cause more fire damage per swing. Wh"
+## 16355 Frostbrand Weapon  [Src/Knowledge/AllSpellsShaman.lua:42]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon with frost.  Each hit has a chance of causing $16352s2 additional Frost damage and slowing the target's movement speed by $16352s1% for $16352d.  Lasts for 60 minutes."
+## 16356 Frostbrand Weapon  [Src/Knowledge/AllSpellsShaman.lua:35]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon with frost.  Each hit has a chance of causing $16353s2 additional Frost damage and slowing the target's movement speed by $16353s1% for $16353d.  Lasts for 60 minutes."
+## 16362 Windfury Weapon  [Src/Knowledge/AllSpellsShaman.lua:73]
+  EFF [(54, 0, 0)] -> [(360, 0, 0)]
+  DESC: "Imbue the Shaman's weapon with wind.  Each hit has a 20% chance of granting you $16361s2 extra $lattack:attacks; with $16361s1 extra melee attack power. When applied to main hand, disables any benefit you personally rece"
+## 16589 Noggenfogger Elixir  [Src/Knowledge/AllBuffs.lua:350]
+  LVL (0, 5) -> (0, 0)
+## 16591 Noggenfogger Elixir  [Src/Knowledge/AllBuffs.lua:350]
+  LVL (5, 5) -> (0, 0)
+## 16593 Noggenfogger Elixir  [Src/Knowledge/AllBuffs.lua:350]
+  LVL (5, 5) -> (0, 0)
+## 16595 Noggenfogger Elixir  [Src/Knowledge/AllBuffs.lua:350]
+  LVL (5, 5) -> (0, 0)
+## 16689 Nature's Grasp  [Src/Knowledge/AllSpellsDruid.lua:64]
+  DESC: 'The next $n melee $Lattack:attacks; that $Lstrikes:strike; the caster will afflict the attacker with Entangling Roots (Rank 1). Castable while shapeshifted. Lasts $d.'
+## 16810 Nature's Grasp  [Src/Knowledge/AllSpellsDruid.lua:64]
+  DESC: 'The next $n melee $Lattack:attacks; that $Lstrikes:strike; the caster will afflict the attacker with Entangling Roots (Rank 2). Castable while shapeshifted. Lasts $d.'
+## 16811 Nature's Grasp  [Src/Knowledge/AllSpellsDruid.lua:64]
+  DESC: 'The next $n melee $Lattack:attacks; that $Lstrikes:strike; the caster will afflict the attacker with Entangling Roots (Rank 3). Castable while shapeshifted. Lasts $d.'
+## 16812 Nature's Grasp  [Src/Knowledge/AllSpellsDruid.lua:64]
+  DESC: 'The next $n melee $Lattack:attacks; that $Lstrikes:strike; the caster will afflict the attacker with Entangling Roots (Rank 4). Castable while shapeshifted. Lasts $d.'
+## 16813 Nature's Grasp  [Src/Knowledge/AllSpellsDruid.lua:64]
+  DESC: 'The next $n melee $Lattack:attacks; that $Lstrikes:strike; the caster will afflict the attacker with Entangling Roots (Rank 5). Castable while shapeshifted. Lasts $d.'
+## 16864 Omen of Clarity  [Src/Knowledge/AllSpellsDruid.lua:50]
+  STATUS era[class:Balance(acq0) talent Balance tier2 r1] -> wf[class:Balance(acq0) talent Balance tier2 r1 PASSIVE]
+  DUR 600000 -> 0
+  COST (120, 0, 0) -> None
+  DESC: 'Your spells and attacks have a chance to grant you Clearcasting, reducing the Mana, Rage, or Energy cost of your next damage or healing spell or offensive ability by $16870s1%. Clearcasting is not consumed by Wrath or by'
+## 17329 Nature's Grasp  [Src/Knowledge/AllSpellsDruid.lua:58]
+  DESC: 'The next $n melee $Lattack:attacks; that $Lstrikes:strike; the caster will afflict the attacker with Entangling Roots (Rank 6). Castable while shapeshifted. Lasts $d.'
+## 17727 Create Spellstone (Greater)  [Src/Knowledge/AllSpellsWarlock.lua:163]
+  NAME Create Spellstone (Greater) -> Create Spellstone
+  DESC: 'Creates a Greater Spellstone which can be used to enchant your weapon with Shadow, increasing your spell haste by $1237164s2% and the damage done by your Shadow spells by up to $1237164s1.\r\n\r\nConjured items disappear if '
+## 17728 Create Spellstone (Major)  [Src/Knowledge/AllSpellsWarlock.lua:158]
+  NAME Create Spellstone (Major) -> Create Spellstone
+  DESC: 'Creates a Major Spellstone which can be used to enchant your weapon with Shadow, increasing your spell haste by $1237165s2% and the damage done by your Shadow spells by up to $1237165s1.\r\n\r\nConjured items disappear if lo'
+## 17951 Create Firestone  [Src/Knowledge/AllSpellsWarlock.lua:111]
+  DESC: 'Creates a Firestone which can be used to enchant your weapon with Fire, increasing your spell critical strike chance by $23481s2% and the damage done by your Fire spells by up to $23481s1.\r\n\r\nConjured items disappear if '
+## 17952 Create Firestone (Greater)  [Src/Knowledge/AllSpellsWarlock.lua:111]
+  NAME Create Firestone (Greater) -> Create Firestone
+  DESC: 'Creates a Greater Firestone which can be used to enchant your weapon with Fire, increasing your spell critical strike chance by $23482s2% and the damage done by your Fire spells by up to $23482s1.\r\n\r\nConjured items disap'
+## 17953 Create Firestone (Major)  [Src/Knowledge/AllSpellsWarlock.lua:104]
+  NAME Create Firestone (Major) -> Create Firestone
+  DESC: 'Creates a Major Firestone which can be used to enchant your weapon with Fire, increasing your spell critical strike chance by $23483s2% and the damage done by your Fire spells by up to $23483s1.\r\n\r\nConjured items disappe'
+## 18229 Food  [Src/Const/SpellIds.lua:12]
+  DESC: 'Restores $o1 health over $d.   Must remain seated while eating.   Also increases your Stamina by $18191s for $18191d.'
+## 18230 Food  [Src/Const/SpellIds.lua:12]
+  DESC: 'Restores $o1 health over $d.   Must remain seated while eating.   If you eat for 10 seconds will also increase your Agility by $18192s for $18192d.'
+## 18231 Food  [Src/Const/SpellIds.lua:12]
+  DESC: 'Restores $o1 health over $d.   Must remain seated while eating.   Also increases your Spirit by $18193s for $18193d.'
+## 18234 Food  [Src/Const/SpellIds.lua:14]
+  DESC: 'Restores $o1 health over $d.   Must remain seated while eating.   Also increases your Stamina by $18191s for $18191d.'
+## 18788 Demonic Sacrifice  [Src/Knowledge/AllBuffs.lua:349]
+  DESC: 'When activated, sacrifices your summoned Demon to enhance the opposing aspect of your power, granting you an effect that lasts $18789d. The effect is canceled if any Demon is summoned.\r\n\r\nImp: Increases your Shadow damag'
+## 18789 Burning Wish  [Src/Knowledge/AllSpellsWarlock.lua:237]
+  NAME Burning Wish -> Burning Shadow
+  DUR 1800000 -> 7200000
+## 18790 Fel Stamina  [Src/Knowledge/AllSpellsWarlock.lua:249]
+  DUR 1800000 -> 7200000
+## 18791 Touch of Shadow  [Src/Knowledge/AllSpellsWarlock.lua:261]
+  NAME Touch of Shadow -> Touch of Fire
+  DUR 1800000 -> 7200000
+## 18792 Fel Energy  [Src/Knowledge/AllSpellsWarlock.lua:285]
+  DUR 1800000 -> 7200000
+## 19028 Soul Link  [Src/Knowledge/AllSpellsWarlock.lua:222]
+  LVL (40, 40) -> (0, 1)
+  DESC: 'When active, $18814s1% of all damage taken by the caster is taken by your Imp, Voidwalker, Succubus, Incubus, or Felhunter Demon instead. In addition, both the Demon and the master will inflict $25228s1% more damage. Las'
+## 19261 Touch of Weakness  [Src/Knowledge/AllSpellsPriest.lua:128]
+  DESC: "The next melee attack against the caster will cause $19249s1 Shadow damage and reduce the attacker's melee attack power by $19249s2 for $19249d."
+## 19262 Touch of Weakness  [Src/Knowledge/AllSpellsPriest.lua:128]
+  DESC: "The next melee attack against the caster will cause $19251s1 Shadow damage and reduce the attacker's melee attack power by $19251s2 for $19251d."
+## 19264 Touch of Weakness  [Src/Knowledge/AllSpellsPriest.lua:128]
+  DESC: "The next melee attack against the caster will cause $19252s1 Shadow damage and reduce the attacker's melee attack power by $19252s2 for $19252d."
+## 19265 Touch of Weakness  [Src/Knowledge/AllSpellsPriest.lua:128]
+  DESC: "The next melee attack on the caster will cause $19253s1 Shadow damage and reduce the attacker's melee attack power by the attacker by $19253s2 for $19253d."
+## 19266 Touch of Weakness  [Src/Knowledge/AllSpellsPriest.lua:125]
+  DESC: "The next melee attack on the caster will cause $19254s1 Shadow damage and reduce the attacker's melee attack power by the attacker by $19254s2 for $19254d."
+## 19506 Trueshot Aura  [Src/Knowledge/AllSpellsHunter.lua:22]
+  EFF [(35, 124, 1), (35, 99, 1), (6, 124, 1)] -> [(65, 124, 1)]
+  DESC: 'Increases the Ranged Attack Power of party or raid members within $a1 yards by $s1. Lasts $d.'
+## 19740 Blessing of Might  [Src/Knowledge/AllSpellsPaladin.lua:66]
+  DUR 300000 -> 3600000
+## 19742 Blessing of Wisdom  [Src/Knowledge/AllSpellsPaladin.lua:105]
+  DUR 300000 -> 3600000
+## 19834 Blessing of Might  [Src/Knowledge/AllSpellsPaladin.lua:66]
+  DUR 300000 -> 3600000
+## 19835 Blessing of Might  [Src/Knowledge/AllSpellsPaladin.lua:66]
+  DUR 300000 -> 3600000
+## 19836 Blessing of Might  [Src/Knowledge/AllSpellsPaladin.lua:66]
+  DUR 300000 -> 3600000
+## 19837 Blessing of Might  [Src/Knowledge/AllSpellsPaladin.lua:66]
+  DUR 300000 -> 3600000
+## 19838 Blessing of Might  [Src/Knowledge/AllSpellsPaladin.lua:66]
+  DUR 300000 -> 3600000
+## 19850 Blessing of Wisdom  [Src/Knowledge/AllSpellsPaladin.lua:105]
+  DUR 300000 -> 3600000
+## 19852 Blessing of Wisdom  [Src/Knowledge/AllSpellsPaladin.lua:105]
+  DUR 300000 -> 3600000
+## 19853 Blessing of Wisdom  [Src/Knowledge/AllSpellsPaladin.lua:105]
+  DUR 300000 -> 3600000
+## 19854 Blessing of Wisdom  [Src/Knowledge/AllSpellsPaladin.lua:105]
+  DUR 300000 -> 3600000
+## 19876 Shadow Resistance Aura  [Src/Knowledge/AllSpellsPaladin.lua:239]
+  EFF [(35, 558, 1)] -> [(65, 22, 1), (65, 118, 1)]
+  DESC: 'Gives $s1 additional Shadow resistance to all party and raid members within $a1 yards. Players may only have one Aura on them per Paladin at any one time.'
+## 19888 Frost Resistance Aura  [Src/Knowledge/AllSpellsPaladin.lua:249]
+  EFF [(35, 558, 1)] -> [(65, 22, 1), (65, 118, 1)]
+  DESC: 'Gives $s1 additional Frost resistance to all party and raid members within $a1 yards. Players may only have one Aura on them per Paladin at any one time.'
+## 19891 Fire Resistance Aura  [Src/Knowledge/AllSpellsPaladin.lua:259]
+  EFF [(35, 558, 1)] -> [(65, 22, 1), (65, 118, 1)]
+  DESC: 'Gives $s1 additional Fire resistance to all party and raid members within $a1 yards. Players may only have one Aura on them per Paladin at any one time.'
+## 19895 Shadow Resistance Aura  [Src/Knowledge/AllSpellsPaladin.lua:239]
+  EFF [(35, 558, 1)] -> [(65, 22, 1), (65, 118, 1)]
+  DESC: 'Gives $s1 additional Shadow resistance to all party and raid members within $a1 yards. Players may only have one Aura on them per Paladin at any one time.'
+## 19896 Shadow Resistance Aura  [Src/Knowledge/AllSpellsPaladin.lua:236]
+  EFF [(35, 558, 1)] -> [(65, 22, 1), (65, 118, 1)]
+  DESC: 'Gives $s1 additional Shadow resistance to all party and raid members within $a1 yards. Players may only have one Aura on them per Paladin at any one time.'
+## 19897 Frost Resistance Aura  [Src/Knowledge/AllSpellsPaladin.lua:249]
+  EFF [(35, 558, 1)] -> [(65, 22, 1), (65, 118, 1)]
+  DESC: 'Gives $s1 additional Frost resistance to all party and raid members within $a1 yards. Players may only have one Aura on them per Paladin at any one time.'
+## 19898 Frost Resistance Aura  [Src/Knowledge/AllSpellsPaladin.lua:246]
+  EFF [(35, 558, 1)] -> [(65, 22, 1), (65, 118, 1)]
+  DESC: 'Gives $s1 additional Frost resistance to all party and raid members within $a1 yards. Players may only have one Aura on them per Paladin at any one time.'
+## 19899 Fire Resistance Aura  [Src/Knowledge/AllSpellsPaladin.lua:259]
+  EFF [(35, 558, 1)] -> [(65, 22, 1), (65, 118, 1)]
+  DESC: 'Gives $s1 additional Fire resistance to all party and raid members within $a1 yards. Players may only have one Aura on them per Paladin at any one time.'
+## 19900 Fire Resistance Aura  [Src/Knowledge/AllSpellsPaladin.lua:256]
+  EFF [(35, 558, 1)] -> [(65, 22, 1), (65, 118, 1)]
+  DESC: 'Gives $s1 additional Fire resistance to all party and raid members within $a1 yards. Players may only have one Aura on them per Paladin at any one time.'
+## 20043 Aspect of the Wild  [Src/Knowledge/AllSpellsHunter.lua:57]
+  EFF [(35, 558, 1)] -> [(65, 22, 1)]
+  DESC: 'The hunter and all party and raid members within $a1 yards take on the aspect of the wild, increasing Nature resistance by $s1.  Only one Aspect can be active at a time.'
+## 20154 Seal of Righteousness  [Src/Knowledge/AllSpellsPaladin.lua:338]
+  DESC: 'Fills the Paladin with holy spirit for $d, granting each melee attack an additional ${($s1/87+$<1h>)*$<mult>} to ${($s1/25+$<2h>)*$<mult>} Holy damage.  Slower weapons cause more Holy damage per swing.  Only one Seal can'
+## 20190 Aspect of the Wild  [Src/Knowledge/AllSpellsHunter.lua:54]
+  EFF [(35, 558, 1)] -> [(65, 22, 1)]
+  DESC: 'The hunter and all party and raid members within $a1 yards take on the aspect of the wild, increasing Nature resistance by $s1.  Only one Aspect can be active at a time.'
+## 20217 Blessing of Kings  [Src/Knowledge/AllSpellsPaladin.lua:28]
+  DUR 300000 -> 3600000
+## 20218 Sanctity Aura  [Src/Knowledge/AllSpellsPaladin.lua:266]
+  STATUS era[class:Retribution(acq0)/Retribution(acq0) talent Retribution tier4 r1] -> wf[talent Retribution tier4 r1]
+## 20287 Seal of Righteousness  [Src/Knowledge/AllSpellsPaladin.lua:341]
+  DESC: 'Fills the Paladin with holy spirit for $d, granting each melee attack an additional ${($20280s3/87+$<1h>)*$<mult>} to ${($20280s3/25+$<2h>)*$<mult>} Holy damage.  Slower weapons cause more Holy damage per swing.  Only on'
+## 20288 Seal of Righteousness  [Src/Knowledge/AllSpellsPaladin.lua:341]
+  DESC: 'Fills the Paladin with holy spirit for $d, granting each melee attack an additional ${($20281s3/87+$<1h>)*$<mult>} to ${($20281s3/25+$<2h>)*$<mult>} Holy damage.  Slower weapons cause more Holy damage per swing.  Only on'
+## 20289 Seal of Righteousness  [Src/Knowledge/AllSpellsPaladin.lua:341]
+  DESC: 'Fills the Paladin with holy spirit for $d, granting each melee attack an additional ${($20282s3/87+$<1h>)*$<mult>} to ${($20282s3/25+$<2h>)*$<mult>} Holy damage.  Slower weapons cause more Holy damage per swing.  Only on'
+## 20290 Seal of Righteousness  [Src/Knowledge/AllSpellsPaladin.lua:341]
+  DESC: 'Fills the Paladin with holy spirit for $d, granting each melee attack an additional ${($20283s3/87+$<1h>)*$<mult>} to ${($20283s3/25+$<2h>)*$<mult>} Holy damage.  Slower weapons cause more Holy damage per swing.  Only on'
+## 20291 Seal of Righteousness  [Src/Knowledge/AllSpellsPaladin.lua:341]
+  DESC: 'Fills the Paladin with holy spirit for $d, granting each melee attack an additional ${($20284s3/87+$<1h>)*$<mult>} to ${($20284s3/25+$<2h>)*$<mult>} Holy damage.  Slower weapons cause more Holy damage per swing.  Only on'
+## 20292 Seal of Righteousness  [Src/Knowledge/AllSpellsPaladin.lua:341]
+  DESC: 'Fills the Paladin with holy spirit for $d, granting each melee attack an additional ${($20285s3/87+$<1h>)*$<mult>} to ${($20285s3/25+$<2h>)*$<mult>} Holy damage.  Slower weapons cause more Holy damage per swing.  Only on'
+## 20293 Seal of Righteousness  [Src/Knowledge/AllSpellsPaladin.lua:341]
+  DESC: 'Fills the Paladin with holy spirit for $d, granting each melee attack an additional ${($20286s3/87+$<1h>)*$<mult>} to ${($20286s3/25+$<2h>)*$<mult>} Holy damage.  Slower weapons cause more Holy damage per swing.  Only on'
+## 20756 Create Soulstone (Greater)  [Src/Knowledge/AllSpellsWarlock.lua:195]
+  NAME Create Soulstone (Greater) -> Create Soulstone
+## 20757 Create Soulstone (Major)  [Src/Knowledge/AllSpellsWarlock.lua:189]
+  NAME Create Soulstone (Major) -> Create Soulstone
+## 20905 Trueshot Aura  [Src/Knowledge/AllSpellsHunter.lua:22]
+  EFF [(35, 124, 1), (35, 99, 1), (6, 124, 1)] -> [(65, 124, 1)]
+  DESC: 'Increases the Ranged Attack Power of party or raid members within $a1 yards by $s1. Lasts $d.'
+## 20906 Trueshot Aura  [Src/Knowledge/AllSpellsHunter.lua:19]
+  EFF [(35, 124, 1), (35, 99, 1), (6, 124, 1)] -> [(65, 124, 1)]
+  DESC: 'Increases the Ranged Attack Power of party or raid members within $a1 yards by $s1. Lasts $d.'
+## 21084 Seal of Righteousness  [Src/Knowledge/AllSpellsPaladin.lua:343]
+  DESC: 'Fills the Paladin with holy spirit for $d, granting each melee attack an additional ${($20187s3/87+$<1h>)*$<mult>} to ${($20187s3/25+$<2h>)*$<mult>} Holy damage.  Slower weapons cause more Holy damage per swing.  Only on'
+## 21562 Prayer of Fortitude  [Src/Knowledge/AllSpellsPriest.lua:54]
+  EFF [(6, 29, 37)] -> [(6, 29, 56)]
+  DESC: 'Power infuses all party and raid members, increasing their Stamina by $s1 for $d.'
+## 21564 Prayer of Fortitude  [Src/Knowledge/AllSpellsPriest.lua:54]
+  EFF [(6, 29, 37)] -> [(6, 29, 56)]
+  DESC: 'Power infuses all party and raid members, increasing their Stamina by $s1 for $d.'
+## 21849 Gift of the Wild  [Src/Knowledge/AllSpellsDruid.lua:22]
+  EFF [(6, 22, 37), (6, 29, 37), (6, 558, 37)] -> [(6, 674, 56), (6, 29, 56), (6, 22, 56), (6, 22, 56), (6, 22, 56), (6, 22, 56), (6, 22, 56), (6, 22, 56)]
+  DESC: 'Gives the Gift of the Wild to all party and raid members, increasing armor by $s1, all attributes by $s2 and all resistances by $s3 for $d.'
+## 21850 Gift of the Wild  [Src/Knowledge/AllSpellsDruid.lua:22]
+  EFF [(6, 22, 37), (6, 29, 37), (6, 558, 37)] -> [(6, 674, 56), (6, 29, 56), (6, 22, 56), (6, 22, 56), (6, 22, 56), (6, 22, 56), (6, 22, 56), (6, 22, 56)]
+  DESC: 'Gives the Gift of the Wild to all party and raid members, increasing armor by $s1, all attributes by $s2 and all resistances by $s3 for $d.'
+## 22731 Food  [Src/Const/SpellIds.lua:14]
+  DESC: 'Restores $o1 health over $d.   Must remain seated while eating.   Also increases your Intellect by $18191s for $18191d.'
+## 23028 Arcane Brilliance  [Src/Knowledge/AllSpellsMage.lua:15]
+  EFF [(6, 29, 37)] -> [(6, 29, 56)]
+  DESC: "Infuses the target's party and raid with brilliance, increasing their Intellect by $s1 for $d."
+## 25228 Soul Link  [Src/Knowledge/AllSpellsWarlock.lua:225]
+  LVL (40, 40) -> (0, 0)
+## 25289 Battle Shout  [Src/Knowledge/AllSpellsWarrior.lua:9]
+  DUR 120000 -> 180000
+  EFF [(6, 99, 20)] -> [(6, 99, 56)]
+  DESC: 'The warrior shouts, increasing the melee attack power of all party or raid members within $a1 yards by $s1.  Lasts $d.'
+## 25290 Blessing of Wisdom  [Src/Knowledge/AllSpellsPaladin.lua:102]
+  DUR 300000 -> 3600000
+## 25291 Blessing of Might  [Src/Knowledge/AllSpellsPaladin.lua:63]
+  DUR 300000 -> 3600000
+## 25351 Deadly Poison V  [Src/Knowledge/AllSpellsRogue.lua:15]
+  EFF [(54, 0, 0)] -> [(360, 0, 0), (3, 0, 0), (3, 0, 0)]
+  DESC: 'Coats a weapon with poison that lasts for ${$m1/60} minutes.\r\nEach strike has a $h% chance of poisoning the enemy for $25349o1 Nature damage over $25349d.  Stacks up to $25349u times on a single target.  $m3 charges.'
+## 25780 Righteous Fury  [Src/Knowledge/AllSpellsPaladin.lua:15]
+  LVL (16, 16) -> (10, 10)
+  EFF [(6, 10, 1), (6, 108, 1)] -> [(6, 10, 1), (6, 87, 1), (6, 108, 1), (6, 668, 1), (6, 10, 1)]
+  DESC: 'Increases all threat generated by $s5%, and all threat generated by your Holy attacks by an additional $s1%.  Lasts $d.'
+## 25782 Greater Blessing of Might  [Src/Knowledge/AllSpellsPaladin.lua:72]
+  DUR 900000 -> 3600000
+  EFF [(6, 99, 61)] -> [(6, 99, 153)]
+## 25894 Greater Blessing of Wisdom  [Src/Knowledge/AllSpellsPaladin.lua:182]
+  DUR 900000 -> 3600000
+  EFF [(6, 24, 61)] -> [(6, 24, 153)]
+## 25898 Greater Blessing of Kings  [Src/Knowledge/AllSpellsPaladin.lua:29]
+  DUR 900000 -> 3600000
+  EFF [(6, 137, 61)] -> [(6, 137, 153)]
+## 25916 Greater Blessing of Might  [Src/Knowledge/AllSpellsPaladin.lua:72]
+  DUR 900000 -> 3600000
+  EFF [(6, 99, 61)] -> [(6, 99, 153)]
+## 25918 Greater Blessing of Wisdom  [Src/Knowledge/AllSpellsPaladin.lua:179]
+  DUR 900000 -> 3600000
+  EFF [(6, 24, 61)] -> [(6, 24, 153)]
+## 27656 Flame Lash  [Src/Knowledge/AllSpellsHunter.lua:156]
+  DUR -1 -> 0
+  DESC: 'Melee and Ranged attacks have a chance to deal $27655s1 Fire damage. Deals $s2 times as much damage to Orcs.'
+## 27681 Prayer of Spirit  [Src/Knowledge/AllSpellsPriest.lua:13]
+  EFF [(6, 29, 37)] -> [(6, 29, 56)]
+  DESC: 'Power infuses all party and raid members, increasing their Spirit by $s1 for $d.'
+## 27683 Prayer of Shadow Protection  [Src/Knowledge/AllSpellsPriest.lua:90]
+  EFF [(6, 558, 37)] -> [(6, 22, 56)]
+  DESC: 'Power infuses all party and raid members, increasing their Shadow resistance by $s1 for $d.'
+## 27841 Divine Spirit  [Src/Knowledge/AllSpellsPriest.lua:10]
+  DUR 1800000 -> 3600000

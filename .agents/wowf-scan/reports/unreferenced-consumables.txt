@@ -1,0 +1,1461 @@
+== Forever Well Fed aura spells (new ids)
+  1248406 dur=15m aura='Your Stamina is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]'
+  1248420 dur=15m aura='Your Agility is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]'
+  1248421 dur=15m aura='Your Intellect is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]'
+  1248422 dur=15m aura='Your Strength is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]'
+  1248688 dur=15m aura='Your movement speed is increased by $w2% while in Westfall. $?a1243969[Experience gained from kills increased by $1243969w1%.][]'
+  1249519 dur=15m aura='Your Attack Power is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]'
+  1249520 dur=15m aura='Your Spell Damage is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]'
+  1249521 dur=15m aura='Your Fishing Skill is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]'
+  1249523 dur=15m aura='Your Critical Strike chance is increased by $w1%. $?a1243969[Experience gained from kills increased by $1243969w1%.][]'
+  1249907 dur=15m aura='Your Herbalism skill is increased by $w2. $?a1243969[Experience gained from kills increased by $1243969w1%.][]'
+  1249926 dur=15m aura='Your Spirit is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]'
+  1249927 dur=15m aura='Your Healing Power is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]'
+  1283082 dur=2m aura='Full of boar meat.'
+  1294007 dur=15m aura='Your movement speed is increased by $w2% while in Hyjal.'
+  1302064 dur=15m aura='Your Strength is increased by $w1.'
+  1319310 dur=15m aura='Your Armor is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]'
+
+== Consumables (class 0) with long buffs (>=10min or weapon enchant), not referenced by Buffomat
+
+# food (75)
+  NEW  249865 Peace Tea                                q1 | 1249927:Well Fed(15m) | Your Healing Power is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  249866 Royal Tea                                q1 | 1249927:Well Fed(15m) | Your Healing Power is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  249867 Root Tea                                 q1 | 1249927:Well Fed(15m) | Your Healing Power is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  249868 Triage Tea                               q1 | 1249927:Well Fed(15m) | Your Healing Power is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  249869 Sunny Tea                                q1 | 1249927:Well Fed(15m) | Your Healing Power is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  249870 Sage's Tea                               q1 | 1249927:Well Fed(15m) | Your Healing Power is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  249871 Venomous Smoothie                        q1 | 1249926:Well Fed(15m) | Your Spirit is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  249872 Slimy Smoothie                           q1 | 1249926:Well Fed(15m) | Your Spirit is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  249873 Mrrggl Smrrthle                          q1 | 1249926:Well Fed(15m) | Your Spirit is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  249874 Calcified Smoothie                       q1 | 1249926:Well Fed(15m) | Your Spirit is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  249875 Spicy Smoothie                           q1 | 1249926:Well Fed(15m) | Your Spirit is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  249876 Wicked Smoothie                          q1 | 1249926:Well Fed(15m) | Your Spirit is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  250065 Savory Stag Sliders                      q1 | 1248422:Well Fed(15m) | Your Strength is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  250066 Soaring Pamplona                         q1 | 1248421:Well Fed(15m) | Your Intellect is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  250067 Bat Hachee                               q1 | 1248421:Well Fed(15m) | Your Intellect is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  250068 Savory Turtle Stew                       q1 | 1248406:Well Fed(15m) | Your Stamina is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  250069 Flank au Poivre                          q1 | 1248420:Well Fed(15m) | Your Agility is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  250070 Bear Bruscitti                           q1 | 1248422:Well Fed(15m) | Your Strength is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  250071 Steaming Stag Steak                      q1 | 1248422:Well Fed(15m) | Your Strength is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  250072 Swiftstrike Steak                        q1 | 1248420:Well Fed(15m) | Your Agility is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  250073 Raging Raptor Ribs                       q1 | 1248421:Well Fed(15m) | Your Intellect is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  250074 Bear Brisket                             q1 | 1248422:Well Fed(15m) | Your Strength is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  250075 Prehistoric Pulled Raptor                q1 | 1248421:Well Fed(15m) | Your Intellect is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  250076 Raptor Rouladen                          q1 | 1248421:Well Fed(15m) | Your Intellect is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  250077 Twice-Spiced Raptor Slice                q1 | 1248421:Well Fed(15m) | Your Intellect is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  250078 Giant Scrambled Eggs                     q1 | 1248406:Well Fed(15m) | Your Stamina is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  250079 Tasty Raptor Bites                       q1 | 1248421:Well Fed(15m) | Your Intellect is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  250080 Breakfast Omelette                       q1 | 1248406:Well Fed(15m) | Your Stamina is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  263509 Skywall Souffle                          q1 | 1248406:Well Fed(15m) | Your Stamina is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  263512 Pincer Bites                             q1 | 1248421:Well Fed(15m) | Your Intellect is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  267341 Sweetpaw Jam                             q1 | 1294007:Well Fed(15m) | Your movement speed is increased by $w2% while in Hyjal.
+  NEW  268912 Expiring Crab Cake                       q1 | 1248406:Well Fed(15m) | Your Stamina is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  268913 Expiring Crocolisk Steak                 q1 | 1248406:Well Fed(15m) | Your Stamina is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  274971 Briny Seafood Stew                       q1 | 1249520:Well Fed(15m) | Your Spell Damage is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  274976 Plain Ol' Paletusk                       q1 | 1248422:Well Fed(15m) | Your Strength is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  286152 Plated Armorfish                         q1 | 1319310:Well Fed(15m) | Your Armor is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  287416 Truskis' Cheesecake Slice                q1 | 1322587:Yay(20m) | Yay cheesecake!
+  NEW  287972 Rumsey Rum Dark                          q1 | 25722:Rumsey Rum Dark(15m) | Stamina increased by $s1.
+  NEW  287973 Tender Wolf Steak                        q1 | 1248420:Well Fed(15m) | Your Agility is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  NEW  287974 Grilled Squid                            q1 | 1249523:Well Fed(15m) | Your Critical Strike chance is increased by $w1%. $?a1243969[Experience gained from kills increased by $124396
+  era     733 Westfall Stew                            q1 | 1248688:Well Fed(15m) | Your movement speed is increased by $w2% while in Westfall. $?a1243969[Experience gained from kills increased 
+  era     787 Slitherskin Mackerel                     q1 | 1249519:Well Fed(15m) | Your Attack Power is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era    2681 Roasted Boar Meat                        q1 | 1248422:Well Fed(15m) | Your Strength is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era    2682 Cooked Crab Claw                         q1 | 1248421:Well Fed(15m) | Your Intellect is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era    3726 Big Bear Steak                           q1 | 1248422:Well Fed(15m) | Your Strength is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era    4457 Barbecued Buzzard Wing                   q1 | 1248421:Well Fed(15m) | Your Intellect is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era    4592 Longjaw Mud Snapper                      q1 | 1249519:Well Fed(15m) | Your Attack Power is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era    4593 Bristle Whisker Catfish                  q1 | 1249521:Well Fed(15m) | Your Fishing Skill is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era    4594 Rockscale Cod                            q1 | 1249521:Well Fed(15m) | Your Fishing Skill is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era    5095 Rainbow Fin Albacore                     q1 | 1249520:Well Fed(15m) | Your Spell Damage is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era    5265 Watered-down Beer                        q1 | 5909:Watered-down Beer(10m) | 
+  era    6290 Brilliant Smallfish                      q1 | 1249519:Well Fed(15m) | Your Attack Power is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era    6316 Loch Frenzy Delight                      q1 | 1249521:Well Fed(15m) | Your Fishing Skill is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era    6657 Savory Deviate Delight                   q1 | 8213:Savory Deviate Delight(60m) | You feel funny.
+  era    6887 Spotted Yellowtail                       q1 | 1249520:Well Fed(15m) | Your Spell Damage is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era    6890 Smoked Bear Meat                         q1 | 1248422:Well Fed(15m) | Your Strength is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era    7806 Lollipop                                 q1 | 19705:Well Fed(15m) | Stamina and Spirit increased by $w1.
+  era    7807 Candy Bar                                q1 | 19705:Well Fed(15m) | Stamina and Spirit increased by $w1.
+  era    7808 Chocolate Square                         q1 | 19705:Well Fed(15m) | Stamina and Spirit increased by $w1.
+  era    8364 Mithril Head Trout                       q1 | 1249519:Well Fed(15m) | Your Attack Power is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era    8957 Spinefin Halibut                         q1 | 1249521:Well Fed(15m) | Your Fishing Skill is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era   10841 Goldthorn Tea                            q1 | 1249907:Well Fed(15m) | Your Herbalism skill is increased by $w2. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era   12217 Dragonbreath Chili                       q1 | 15852:Dragonbreath Chili(10m) | You don't feel so well....
+  era   13927 Cooked Glossy Mightfish                  q1 | 1249519:Well Fed(15m) | Your Attack Power is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era   13929 Hot Smoked Bass                          q1 | 1249523:Well Fed(15m) | Your Critical Strike chance is increased by $w1%. $?a1243969[Experience gained from kills increased by $124396
+  era   13930 Filet of Redgill                         q1 | 1249521:Well Fed(15m) | Your Fishing Skill is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era   13932 Poached Sunscale Salmon                  q1 | 1249519:Well Fed(15m) | Your Attack Power is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era   13933 Lobster Stew                             q1 | 1249520:Well Fed(15m) | Your Spell Damage is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era   13934 Mightfish Steak                          q1 | 1249519:Well Fed(15m) | Your Attack Power is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era   13935 Baked Salmon                             q1 | 1249520:Well Fed(15m) | Your Spell Damage is increased by $w1. $?a1243969[Experience gained from kills increased by $1243969w1%.][]
+  era   17197 Gingerbread Cookie                       q1 | 19705:Well Fed(15m) | Stamina and Spirit increased by $w1.
+  era   17198 Egg Nog                                  q1 | 19705:Well Fed(15m) | Stamina and Spirit increased by $w1.
+  era   20709 Rumsey Rum Light                         q1 | 25037:Rumsey Rum Light(15m) | Stamina increased by $s1.
+  era   21114 Rumsey Rum Dark                          q1 | 25722:Rumsey Rum Dark(15m) | Stamina increased by $s1.
+  era  238638 Filet o' Flank                           q1 | 1225779:Well Fed(15m) | Your Agility is increased by $w1 and Stamina by $w2.
+
+# scroll (29)
+  NEW  274947 Scroll of Imbue Lesser Flame             q2 |  | weapon enchant: Imbue a staff with magic for 1 hour, increasing damage done by Fire spells and effects by up to $130
+  NEW  275067 Scroll of Imbue Chillknife               q2 |  | weapon enchant: Imbue a dagger with magic for 1 hour, causing it to occasionally chill foes when hit.
+  NEW  275069 Scroll of Rat Familiar                   q1 | 1296202:Rat Familiar(60m) | Your familiar increases your Intellect by $s2.
+  NEW  277483 Scroll of Frog Familiar                  q1 | 1302285:Frog Familiar(60m) | Your familiar increases your Intellect by $s2.
+  NEW  277485 Scroll of Imbue Frost                    q2 |  | weapon enchant: Imbue a staff with magic for 1 hour, increasing damage done by Frost spells and effects by up to $13
+  NEW  277486 Scroll of Imbue Striking                 q2 |  | weapon enchant: Imbue a staff with magic for 1 hour, causing it to occasionally unleash an Arcane Missile at targets
+  NEW  277487 Scroll of Imbue Baleflame                q2 |  | weapon enchant: Imbue a staff with magic for 1 hour, reducing your spell targets' Fire resistance by $1306572s1.
+  NEW  277488 Scroll of Imbue Iceknife                 q2 |  | weapon enchant: Imbue a dagger with magic for 1 hour, causing it to occasionally freeze foes when hit.
+  NEW  277489 Scroll of Imbue Spark                    q2 |  | weapon enchant: Imbue a sword with magic for 1 hour, causing your Fire Blast cooldown to sometimes reset when you ar
+  NEW  277493 Scroll of Cat Familiar                   q1 | 1302303:Cat Familiar(60m) | Your familiar increases your Intellect by $s2.
+  NEW  277494 Scroll of Imbue Accuracy                 q2 |  | weapon enchant: Imbue a staff with magic for 1 hour, increasing your chance to hit with spells by ${$1306578s1/10}.1
+  NEW  277495 Scroll of Imbue Quickening               q2 |  | weapon enchant: Imbue a staff with magic for 1 hour, giving your damaging spells a chance to increase your attack sp
+  NEW  277496 Scroll of Imbue Balefrost                q2 |  | weapon enchant: Imbue a staff with magic for 1 hour, reducing your spell targets' Frost resistance by $1306580s1.
+  NEW  277497 Scroll of Imbue Flame                    q2 |  | weapon enchant: Imbue a staff with magic for 1 hour, increasing damage done with Fire spells and effects by up to $1
+  NEW  277498 Scroll of Imbue Manablade                q2 |  | weapon enchant: Imbue a dagger with magic for 1 hour, causing it to occasionally restore Mana when it strikes a targ
+  NEW  277500 Scroll of Imbue Greater Flame            q2 |  | weapon enchant: Imbue a staff with magic for 1 hour, increasing damage done with Fire spells and effects by up to $1
+  NEW  277501 Scroll of Imbue Greater Frost            q2 |  | weapon enchant: Imbue a staff with magic for 1 hour, increasing damage done with Frost spells and effects by up to $
+  NEW  277502 Scroll of Imbue Precision                q2 |  | weapon enchant: Imbue a staff with magic for 1 hour, increasing your chance to critically hit by ${$1306583s1}.1%.
+  NEW  277503 Scroll of Imbue Spellbreak               q2 |  | weapon enchant: Imbue a staff with magic for 1 hour, increasing damage done by Fire spells and effects by up to $130
+  NEW  289088 Scroll of Endless Fortitude              q1 | 1327754:Scroll of Endless Fortitude(60m) | Stamina increased by $s1%.
+  era     954 Scroll of Strength                       q1 | 8118:Strength(30m) | Strength increased by $s1.
+  era    1180 Scroll of Stamina                        q1 | 8099:Stamina(30m) | Stamina increased by $s1.
+  era    1477 Scroll of Agility II                     q1 | 8116:Agility(30m) | Agility increased by $s1.
+  era    1711 Scroll of Stamina II                     q1 | 8100:Stamina(30m) | Stamina increased by $s1.
+  era    2289 Scroll of Strength II                    q1 | 8119:Strength(30m) | Strength increased by $s1.
+  era    3012 Scroll of Agility                        q1 | 8115:Agility(30m) | Agility increased by $s1.
+  era    4422 Scroll of Stamina III                    q1 | 8101:Stamina(30m) | Stamina increased by $s1.
+  era   10307 Scroll of Stamina IV                     q1 | 12178:Stamina(30m) | Stamina increased by $s1.
+  era  215257 Scroll of Comprehension                  q1 | 435563:Comprehension(60m) | Comprehension skill increased by $s1.
+
+# other (330)
+  NEW  251525 Savory Whimsyfin Delight                 q1 | 1252576:Savory Whimsyfin Delight(60m) | You feel funny.
+  NEW  268880 "Secret" Bait                            q1 |  | weapon enchant: When applied to your fishing pole, increases Fishing by 25 for 10 min.
+  NEW  287978 Rough Sharpening Stone                   q1 |  | weapon enchant: Increase sharp weapon damage by 2 for 30 minutes.
+  NEW  287980 Elemental Sharpening Stone               q2 |  | weapon enchant: Increase critical chance on a melee weapon by 2% for 30 minutes.
+  era    1177 Oil of Olaf                              q1 | 673:Elixir of Minor Defense(60m) | Armor increased by $s1.
+  era    3824 Shadow Oil                               q1 |  | weapon enchant: When applied to a melee weapon it gives a 15% chance of casting Shadowbolt III at the opponent when 
+  era    3829 Frost Oil                                q1 |  | weapon enchant: When applied to a melee weapon it gives a 10% chance of casting Frostbolt at the opponent when it hi
+  era    4546 Call of the Raptor                       q1 | 4318:Guile of the Raptor(30m) | Increased Agility.
+  era    5206 Bogling Root                             q1 | 5665:Fury of the Bogling(10m) | Increased melee damage.
+  era    5421 Fiery Blaze Enchantment                  q1 |  | weapon enchant: Enchants a weapon to have a 15% chance to inflict $6297s1 Fire damage to all enemies within $6297a1 
+  era    6529 Shiny Bauble                             q1 |  | weapon enchant: When applied to your fishing pole, increases Fishing by 25 for 10 min.
+  era    6530 Nightcrawlers                            q1 |  | weapon enchant: When applied to your fishing pole, increases Fishing by 50 for 10 min.
+  era    6532 Bright Baubles                           q1 |  | weapon enchant: When applied to your fishing pole, increases Fishing by 75 for 10 minutes.
+  era    6635 Earth Sapta                              q1 | 8202:Sapta Sight(20m) | Detect elemental spirits.
+  era    6636 Fire Sapta                               q1 | 8898:Sapta Sight(20m) | Detect elemental spirits.
+  era    6637 Water Sapta                              q1 | 8899:Sapta Sight(20m) | Detect elemental spirits.
+  era    6638 Air Sapta                                q1 | 8900:Sapta Sight(20m) | Detect elemental spirits.
+  era    6811 Aquadynamic Fish Lens                    q1 |  | weapon enchant: When applied to your fishing pole, increases Fishing by 50 for 10 minutes.
+  era    7307 Flesh Eating Worm                        q1 |  | weapon enchant: When applied to your fishing pole, increases Fishing by 75 for 10 minutes.
+  era    8410 R.O.I.D.S.                               q1 | 10667:Rage of Ages(60m) | Increases Strength by $s1.
+  era    8411 Lung Juice Cocktail                      q1 | 10668:Spirit of Boar(60m) | Increases Stamina by $s1.
+  era    8412 Ground Scorpok Assay                     q1 | 10669:Strike of the Scorpok(60m) | Increases Agility by $s1.
+  era    8423 Cerebral Cortex Compound                 q1 | 10692:Infallible Mind(60m) | Increases Intellect by $s1.
+  era    8424 Gizzard Gum                              q1 | 10693:Spiritual Domination(60m) | Increases Spirit by $s1.
+  era   11950 Windblossom Berries                      q1 | 18191:Increased Stamina(10m) | Stamina increased by $s1.
+  era   17048 Rumsey Rum                               q1 | 20875:Rumsey Rum(15m) | Stamina increased by $s1.
+  era   19318 Bottled Alterac Spring Water             q1 | 23697:Alterac Spring Water(10m) | Spirit increased by $m1.
+  era   20079 Spirit of Zanza                          q2 | 24382:Spirit of Zanza(120m) | Spirit increased by $s1 and Stamina by $s2.
+  era   20080 Sheen of Zanza                           q2 | 24417:Sheen of Zanza(120m), 30003:Sheen of Zanza(120m) | Hostile spells reflected $s1% of the time.
+  era   20081 Swiftness of Zanza                       q2 | 24383:Swiftness of Zanza(120m) | Run speed increased by $s1%.
+  era   20410 Hallowed Wand - Bat                      q1 | 24732:Bat Costume(60m) | Bat Costume.   Cannot cast spells while in bat form.  Right-Click this icon to remove the effect.
+  era   20411 Hallowed Wand - Skeleton                 q1 | 24723:Skeleton Costume(60m) | Skeleton Costume.
+  era   20414 Hallowed Wand - Wisp                     q1 | 24740:Wisp Costume(60m) | Wisp Costume.   Cannot attack or cast spells while in wisp form.  Right-Click this icon to remove the effect.
+  era   22192 Bloodkelp Elixir of Dodging              q1 | 27653:Elixir of Dodging(30m) | Dodge chance increased by 3%.
+  era   22193 Bloodkelp Elixir of Resistance           q1 | 27652:Elixir of Resistance(30m) | Magical resistances increased by $s1.
+  era   22236 Buttermilk Delight                       q1 | 27720:Buttermilk Delight(60m) | Defense increased by $s1.
+  era   22237 Dark Desire                              q1 | 27723:Dark Desire(60m) | Chance to hit with attacks increased by $s1%.
+  era   22238 Very Berry Cream                         q1 | 27721:Very Berry Cream(60m) | Magical damage dealt is increased by up to $s1.
+  era   22239 Sweet Surprise                           q1 | 27722:Sweet Surprise(60m) | Healing done by magical spells is increased by up to $s1.
+  era   23164 Bubbly Beverage                          q1 | 29006:Bubbly Refreshment(30m) | You feel refreshed!  +$s1 Stamina!
+  era   23176 Fizzy Energy Drink                       q1 | 29040:Fizzy Energy Drink(15m) | Mana Regeneration increased by $s1 every 5 seconds.
+  era   23194 Lesser Mark of the Dawn                  q1 | 30088:Lesser Mark of the Dawn(60m) | Increases Stamina by $s.
+  era   23195 Mark of the Dawn                         q1 | 30089:Mark of the Dawn(60m) | Increases Stamina by $s1.
+  era   23196 Greater Mark of the Dawn                 q1 | 30090:Greater Mark of the Dawn(60m) | Increases Stamina by $s1.
+  era   23211 Toasted Smorc                            q1 | 29334:Toasted Smorc(60m) | Healing done by magical spells is increased by up to $s1.
+  era   23326 Midsummer Sausage                        q1 | 29333:Midsummer Sausage(60m) | Magical damage dealt is increased by up to $s1.
+  era   23327 Fire-toasted Bun                         q1 | 29332:Fire-toasted Bun(60m) | Chance to hit with attacks increased by $s1%.
+  era   23435 Elderberry Pie                           q1 | 29335:Elderberry Pie(60m) | Defense increased by $s1.
+  era   23794 Permanent Sheen of Zanza                 q2 | 30003:Sheen of Zanza(120m), 30331:Permanent Sheen of Zanza(120m) | Hostile spells reflected $s1% of the time.
+  era   23795 Permanent Spirit of Zanza                q2 | 30336:Permanent Spirit of Zanza(120m) | Spirit increased by $s1 and Stamina by $s2.
+  era   23796 Permanent Swiftness of Zanza             q2 | 30338:Permanent Swiftness of Zanza(120m) | Run speed increased by $s1%.
+  era  191268 Orb of Corruption                        q2 | 370303:Orb of Corruption(30m) | Increases the amount of lesser deathstones absorbed from Kel'Thuzad's minions by $s1%.
+  era  191280 Fungal Spore Cluster                     q3 | 370336:Fungal Spore Cluster(60m) | Your offensive abilities have a chance to summon a spore.
+  era  191660 Thaddius' Lightning Bolts                q3 | 370831:Thaddius' Lightning Bolts(60m) | Harnessing the power of lightning.
+  era  191661 Monstrous Spider Fang                    q3 | 370832:Gift of the Spider(60m) | Movement speed, attack speed, and cast speed are increased by $s1%.
+
+You feel uneasy...
+  era  202316 Runecarving Test - Crippling Poison      q1 |  | weapon enchant: Coats a weapon with poison that lasts for 30 minutes.
+Each strike has a $h% chance of poisoning the
+  era  203990 Rune of Mutilation                       q2 |  | weapon enchant: Engrave your gloves with the Mutilate rune:
+
+$@spellicon399956
+$@spelldesc399956
+  era  203991 Rune of Quick Draw                       q2 |  | weapon enchant: 
+  era  203993 Rune of Slaughter                        q2 |  | weapon enchant: Engrave your chest or robe with the Slaughter from the Shadows rune:
+
+$@spellicon424925
+$@spellde
+  era  203994 Rune of Deadly Brew                      q2 |  | weapon enchant: 
+  era  204174 Rune of Precision                        q2 |  | weapon enchant: 
+  era  204441 Rune of Blood Frenzy                     q2 |  | weapon enchant: 
+  era  204703 Rune of Devastate                        q2 |  | weapon enchant: 
+  era  204716 Rune of Frenzied Assault                 q2 |  | weapon enchant: 
+  era  204795 Rune of Shadowstrike                     q2 |  | weapon enchant: Engrave your gloves with the Shadowstrike rune:
+
+$@spellicon399985
+$@spelldesc399985
+  era  204806 Rune of Victory Rush                     q2 |  | weapon enchant: Engrave your gloves with the Victory Rush rune:
+
+$@spellicon402927
+$@spelldesc402927
+  era  204809 Rune of Furious Thunder                  q2 |  | weapon enchant: 
+  era  204912 Rune of Grace                            q2 |  | weapon enchant: 
+  era  205022 Rune of Soul Siphon                      q2 |  | weapon enchant: 
+  era  205215 Rune of Tactics                          q2 |  | weapon enchant: 
+  era  205228 Rune of Chaos Bolt                       q2 |  | weapon enchant: Engrave your gloves with the Chaos Bolt rune:
+
+$@spellicon403629
+$@spelldesc403629
+  era  205230 Rune of Haunting                         q2 |  | weapon enchant: Engrave your gloves with the Haunt rune:
+
+$@spellicon403501
+$@spelldesc403501
+  era  205683 Rune of Rebuke                           q2 |  | weapon enchant: Engrave your pants with the Rebuke
+ rune:
+
+$@spellicon425609
+$@spelldesc425609
+  era  205685 Rune of Aegis                            q2 |  | weapon enchant: Engrave your chest with the Aegis rune:
+
+$@spellicon425589
+$@spelldesc425589
+  era  205897 Rune of Divine Light                     q2 |  | weapon enchant: Engrave your cloak with the Divine Light rune:
+
+$@spellicon458856
+$@spelldesc458856
+  era  205905 Memory of a Devout Champion              q2 |  | weapon enchant: Engrave your chest or robe with the Twisted Faith rune:
+
+$@spellicon425198
+$@spelldesc425198
+  era  205932 Prophecy of a King's Demise              q2 |  | weapon enchant: Engrave your gloves with the Shadow Word: Death rune:
+
+$@spellicon401955
+$@spelldesc401955
+  era  205940 Memory of a Dark Purpose                 q2 |  | weapon enchant: Engrave your boots with the Void Plague rune:
+
+$@spellicon425204
+$@spelldesc425204
+  era  205942 Chimaeric Epiphany                       q1 |  | weapon enchant: Engrave your pants with the Prayer of Mending rune:
+
+$@spellicon401859
+$@spelldesc401859
+  era  205943 Prophecy of a Desecrated Citadel         q1 |  | weapon enchant: Engrave your pants with the Homunculi rune:
+
+$@spellicon402799
+$@spelldesc402799
+  era  205944 Reciprocal Epiphany                      q2 |  | weapon enchant: Engrave your pants with the Prayer of Mending rune:
+
+$@spellicon401859
+$@spelldesc401859
+  era  205945 Memory of an Imprisoned Savior           q2 |  | weapon enchant: Engrave your pants with the Shared Pain rune:
+
+$@spellicon401969
+$@spelldesc401969
+  era  205946 Memory of a Leader's Betrayal            q2 |  | weapon enchant: Engrave your boots with the Pain Suppression rune:
+
+$@spellicon402004
+$@spelldesc402004
+  era  205947 Prophecy of a Desecrated Citadel         q2 |  | weapon enchant: Engrave your pants with the Homunculi rune:
+
+$@spellicon402799
+$@spelldesc402799
+  era  205948 Anodyne Epiphany                         q1 |  | weapon enchant: Engrave your cloak with the Vampiric Touch rune:
+
+$@spellicon402668
+$@spelldesc402668
+  era  205949 Manifold Epiphany                        q1 |  | weapon enchant: Engrave your gloves with the Circle of Healing rune:
+
+$@spellicon401946
+$@spelldesc401946
+  era  205950 Tenebrous Epiphany                       q2 |  | weapon enchant: Engrave your gloves with the Mind Sear rune:
+
+$@spellicon413259
+$@spelldesc413259
+  era  205951 Memory of a Troubled Acolyte             q2 |  | weapon enchant: Engrave your gloves with the Penance rune:
+
+$@spellicon402174
+$@spelldesc402174
+  era  205953 Prophecy of a Broken Vow                 q2 |  | weapon enchant: Engrave your belt with the Mind Spike rune:
+
+$@spellicon431655
+$@spelldesc431655
+  era  205979 Rune of Flanking                         q2 |  | weapon enchant: Engrave your pants with the Flanking Strike rune:
+
+$@spellicon415320
+$@spelldesc415320
+  era  205995 Prairie Dog Musk                         q1 | 411622:Prairie Dog Musk(10m) | Your Tame Beast ability also works on prairie dogs (as companion pet)
+  era  206032 Rune of Carve                            q2 |  | weapon enchant: Engrave your gloves with the Carve rune:
+
+$@spellicon425711
+$@spelldesc425711
+  era  206155 Rune of Marksmanship                     q2 |  | weapon enchant: Engrave your chest or robe with the Master Marksman rune:
+
+$@spellicon409428
+$@spelldesc409428
+  era  206168 Rune of the Chimera                      q2 |  | weapon enchant: Engrave your gloves with the Chimera Shot rune:
+
+$@spellicon409433
+$@spelldesc409433
+  era  206169 Rune of Explosive Shot                   q2 |  | weapon enchant: Engrave your gloves with the Explosive Shot rune:
+
+$@spellicon409552
+$@spelldesc409552
+  era  206177 Pine Nut Butter                          q1 | 19705:Well Fed(15m) | Stamina and Spirit increased by $w1.
+  era  206264 Rune of Inspiration                      q2 |  | weapon enchant: Engrave your pants with the Inspiration Exemplar rune:
+
+$@spellicon407880
+$@spelldesc407880
+  era  206963 Rune of Natural Potential                q2 |  | weapon enchant: Engrave your chest or robe with the Living Seed rune:
+
+$@spellicon414677
+$@spelldesc414677
+  era  206970 Rune of Life                             q2 |  | weapon enchant: Engrave your pants with the Lifebloom rune:
+
+$@spelldesc409824
+  era  206985 Echo of the Alpha                        q2 |  | weapon enchant: 
+  era  206989 Rune of the Sun                          q2 |  | weapon enchant: Engrave your gloves with the Sunfire rune:
+
+$@spellicon414684
+$@spelldesc414684
+
+In addition, w
+  era  206992 Rune of Skull Bash                       q2 |  | weapon enchant: Engrave your gloves with the Skull Bash rune:
+
+$@spellicon410176
+$@spelldesc410176
+  era  207631 Adder Pheromone                          q1 | 416861:Adder Pheromone(10m) | Your Tame Beast ability also works on adders (as companion pet)
+  era  208180 Rabbit Musk                              q1 | 418236:Rabbit Musk(10m) | Your Tame Beast ability also works on rabbits (as companion pet)
+  era  208607 Deer Musk                                q1 | 421311:Deer Musk(10m) | Your Tame Beast ability also works on deer (as companion pet)
+  era  208687 Rune of Lacerate                         q2 |  | weapon enchant: Engrave your pants with the Lacerate
+ rune:
+
+$@spellicon414644
+$@spelldesc414644
+  era  208701 Rune of Beast Mastery                    q2 |  | weapon enchant: Engrave your chest or robe with the Beast Mastery rune:
+
+$@spellicon409368
+$@spelldesc409368
+  era  208741 Rune of Endless Rage                     q2 |  | weapon enchant: Engrave your helm with the Endless Rage rune:
+
+$@spellicon403218
+$@spelldesc403218
+  era  208744 Rune of Shadowbolts                      q2 |  | weapon enchant: Engrave your gloves with the Shadow Bolt Volley rune:
+
+$@spellicon403628
+$@spelldesc403628
+  era  208750 Rune of Channeling                       q2 |  | weapon enchant: Engrave your chest or robe with the Master Channeler rune:
+
+$@spellicon403668
+$@spelldesc403668
+  era  208758 Earthen Rune                             q2 |  | weapon enchant: Engrave your pants with the Way of Earth rune:
+
+$@spellicon408531
+$@spelldesc408531
+  era  208764 Rune of the Mind                         q2 |  | weapon enchant: Engrave your belt with the Mind Spike rune:
+
+$@spellicon431655
+$@spelldesc431655
+  era  208767 Rune of Mending                          q2 |  | weapon enchant: Engrave your pants with the Prayer of Mending rune:
+
+$@spellicon401859
+$@spelldesc401859
+  era  208771 Rune of Blade Dance                      q2 |  | weapon enchant: Engrave your pants with the Blade Dance rune:
+
+$@spellicon400012
+$@spelldesc400012
+  era  208772 Rune of Saber Slash                      q2 |  | weapon enchant: Engrave your gloves with the Saber Slash rune:
+
+$@spellicon424785
+$@spelldesc424785
+  era  208777 Rune of the Sniper                       q2 |  | weapon enchant: Engrave your pants with the Sniper Training rune:
+
+$@spellicon415399
+$@spelldesc415399
+  era  208778 Rune of Quick Strike                     q2 |  | weapon enchant: Engrave your gloves with the Quick Strike rune:
+
+$@spellicon429765
+$@spelldesc429765
+  era  208799 Spell Notes: Living Bomb                 q2 |  | weapon enchant: Engrave your gloves with the Living Bomb rune:
+
+$@spellicon400613
+$@spelldesc400613
+  era  208828 Memory of a Broken Vow                   q1 |  | weapon enchant: Engrave your belt with the Mind Spike rune:
+
+$@spellicon431655
+$@spelldesc431655
+  era  209852 Rune of Kill Command                     q2 |  | weapon enchant: Engrave your pants with the Kill Shot rune:
+
+$@spellicon409593
+$@spelldesc409593
+  era  210015 Rune of Raging Blow                      q2 |  | weapon enchant: Engrave your chest with the Raging Blow rune:
+
+$@spellicon402911
+$@spelldesc402911
+  era  210137 Rune of Wild Growth                      q2 |  | weapon enchant: Engrave your gloves with the Wild Growth rune:
+
+$@spellicon408120
+$@spelldesc408120
+  era  210229 Rune of Mutilation                       q2 |  | weapon enchant: Engrave your gloves with the Mutilate rune:
+
+$@spellicon399956
+$@spelldesc399956
+  era  210252 Rune of Shiving                          q2 |  | weapon enchant: Engrave your gloves with the Cutthroat rune:
+
+$@spellicon462708
+$@spelldesc462708
+  era  210322 Rune of Venom                            q2 |  | weapon enchant: Engrave your pants with the Envenom rune:
+
+$@spellicon399963
+$@spelldesc399963
+  era  210499 Marshroom                                q1 | 426019:Marshroom(15m) | Granted a new kind of vision.
+  era  210500 Rune of the Stars                        q2 |  | weapon enchant: Engrave your pants with the Starsurge rune:
+
+$@spellicon417157
+$@spelldesc417157
+  era  210569 Rune of Flagellation                     q2 |  | weapon enchant: Engrave your chest with the Flagellation rune:
+
+$@spellicon402877
+$@spelldesc402877
+  era  210573 Rune of Consuming Rage                   q2 |  | weapon enchant: Engrave your pants with the Consumed by Rage rune:
+
+$@spellicon425418
+$@spelldesc425418
+  era  210589 Echo of the Ancestors                    q2 |  | weapon enchant: 
+  era  210596 Rune of Cobra Strikes                    q2 |  | weapon enchant: Engrave your chest or robe with the Cobra Strikes rune:
+
+$@spellicon425713
+$@spelldesc425713
+  era  210653 Rune of Main Gauche                      q2 |  | weapon enchant: Engrave your gloves with the Main Gauche rune:
+
+$@spellicon424919
+$@spelldesc424919
+  era  210708 Elixir of Coalesced Regret               q1 | 426606:Speak with the Dead?(120m) | Allows the imbiber to speak with the corpse of an individual with unfinished business in the mortal world. Als
+  era  210746 Rune of Earth Shield                     q2 |  | weapon enchant: Engrave your pants with the Earth Shield rune:
+
+$@spellicon408514
+$@spelldesc408514
+  era  210811 Rune of Primordial Fury                  q2 |  | weapon enchant: Engrave your pants with the Greater Ghost Wolf rune:
+
+$@spellicon415813
+$@spelldesc415813
+  era  210817 Rune of Survival                         q2 |  | weapon enchant: Engrave your chest or robe with the Survival of the Fittest rune:
+
+$@spellicon411115
+$@spelldesc4
+  era  210818 Rune of Lone Wolf                        q2 |  | weapon enchant: Engrave your chest or robe with the Lone Wolf rune:
+
+$@spellicon415370
+$@spelldesc415370
+  era  210820 Rune of Sacrifice                        q2 |  | weapon enchant: Engrave your pants with the Hand of Sacrifice rune:
+
+$@spellicon462853
+$@spelldesc462853
+  era  210822 Harmonious Epiphany                      q2 |  | weapon enchant: Engrave your chest or robe with the Serendipity rune:
+
+$@spellicon413248
+$@spelldesc413248
+  era  210823 Rune of Dual Wield Specialization        q2 |  | weapon enchant: Engrave your chest or robe with the Dual Wield Specialization rune:
+
+$@spellicon408496
+$@spelldes
+  era  210824 Rune of the Pact                         q2 |  | weapon enchant: 
+  era  210825 Rune of the Warbringer                   q2 |  | weapon enchant: Engrave your chest with the Warbringer rune:
+
+$@spellicon425421
+$@spelldesc425421
+  era  210979 Rune of Shadowstep                       q2 |  | weapon enchant: Engrave your belt with the Shadowstep rune:
+
+$@spellicon400029
+$@spelldesc400029
+  era  210980 Rune of Metamorphosis                    q2 |  | weapon enchant: Engrave your gloves with the Metamorphosis rune:
+
+$@spellicon403789
+$@spelldesc403789
+  era  211205 Rune of Cobra Slayer                     q2 |  | weapon enchant: Engrave your gloves with the Cobra Slayer rune:
+
+$@spellicon458393
+$@spelldesc458393
+  era  211301 Rune of Expose Weakness                  q2 |  | weapon enchant: Engrave your belt with the Expose Weakness rune:
+
+$@spellicon409504
+$@spelldesc409504
+  era  211385 Rune of Serpent Spread                   q2 |  | weapon enchant: Engrave your pants with the Serpent Spread rune:
+
+$@spellicon425738
+$@spelldesc425738
+  era  211387 Rune of Beckoning Light                  q2 |  | weapon enchant: Engrave your gloves with the Beacon of Light rune:
+
+$@spellicon407613
+$@spelldesc407613
+  era  211390 Rune of Teasing                          q2 |  | weapon enchant: Engrave your chest or robe with the Just a Flesh Wound rune:
+
+$@spellicon400014
+$@spelldesc400014
+  era  211391 Rune of Healing Rain                     q2 |  | weapon enchant: Engrave your chest or robe with the Healing Rain rune:
+
+$@spellicon415236
+$@spelldesc415236
+  era  211392 Rune of Everlasting Affliction           q2 |  | weapon enchant: Engrave your pants with the Everlasting Affliction rune:
+
+$@spellicon412689
+$@spelldesc412689
+  era  211393 Rune of Single-Minded Fury               q2 |  | weapon enchant: Engrave your gloves with the Single-Minded Fury rune:
+
+$@spellicon413404
+$@spelldesc413404
+  era  211476 Rune of Fires Wake                       q2 |  | weapon enchant: Engrave your chest or robe with the Lake of Fire rune:
+
+$@spellicon403666
+$@spelldesc403666
+  era  211477 Rune of Incinerate                       q2 |  | weapon enchant: Engrave your bracers with the Incinerate rune:
+
+$@spellicon412758
+$@spelldesc412758
+  era  211488 Rune of the Avenger                      q2 |  | weapon enchant: Engrave your pants with the Avenger's Shield rune:
+
+$@spellicon407669
+$@spelldesc407669
+  era  211490 Prophecy of a Thousand Lights            q2 |  | weapon enchant: Engrave your gloves with the Circle of Healing rune:
+
+$@spellicon401946
+$@spelldesc401946
+  era  211514 Spell Notes: Mass Regeneration           q2 |  | weapon enchant: Engrave your pants with the Mass Regeneration rune:
+
+$@spellicon412510
+$@spelldesc412510
+  era  211530 Prophecy of a City Enthralled            q2 |  | weapon enchant: Engrave your bracers with the Power Word: Barrier rune:
+
+$@spellicon425207
+$@spelldesc425207
+  era  211531 Prophecy of Seven Visitors               q2 |  | weapon enchant: Engrave your chest or robe with the Strength of Soul rune:
+
+$@spellicon415739
+$@spelldesc415739
+  era  211691 Spell Notes: Arcane Blast                q2 |  | weapon enchant: Engrave your gloves with the Arcane Blast rune:
+
+$@spellicon400574
+$@spelldesc400574
+  era  211815 Silverwing Battle Hymn                   q1 | 430352:Ashenvale Rallying Cry(120m) | Increases all damage and healing done by $s1%.
+  era  211816 Warsong Battle Drum                      q1 | 430352:Ashenvale Rallying Cry(120m) | Increases all damage and healing done by $s1%.
+  era  211953 Scroll of Arcane Recovery I              q2 | 430948:Arcane Recovery(30m) | Restores $s1 mana per $t1 sec.
+  era  211954 Scroll of Arcane Accuracy I              q2 | 430949:Arcane Accuracy(30m) | Increases your chance to hit with spells by $s1%.
+  era  211955 Scroll of Arcane Protection - Fire I     q2 | 430950:Arcane Protection - Fire(30m) | Increases your fire resistance by $s1 for $d1.
+  era  211956 Scroll of Arcane Protection - Frost I    q2 | 430951:Arcane Protection - Frost(30m) | Increases your frost resistance by $s1 for $d1.
+  era  211957 Scroll of Arcane Power I                 q2 | 430952:Arcane Power(30m) | Improves your chance to get a critical strike with spells by $s1%.
+  era  212548 Rune of Eclipse                          q2 |  | weapon enchant: Engrave your belt with the Eclipse rune:
+
+$@spellicon408248
+$@spelldesc408248
+  era  212549 Rune of the Trapper                      q2 |  | weapon enchant: Engrave your boots with the Trap Launcher rune:
+
+$@spellicon409541
+$@spelldesc409541
+  era  212551 Rune of Warfare                          q2 |  | weapon enchant: Engrave your boots with the The Art of War rune:
+
+$@spellicon426157
+$@spelldesc426157
+  era  212552 Psychosophic Epiphany                    q2 |  | weapon enchant: Engrave your belt with the Mind Spike rune:
+
+$@spellicon431655
+$@spelldesc431655
+  era  212559 Rune of the Poisoned Blade               q2 |  | weapon enchant: Engrave your belt with the Poisoned Knife rune:
+
+$@spellicon425012
+$@spelldesc425012
+  era  212560 Rune of Ancestral Awakening              q2 |  | weapon enchant: Engrave your boots with the Ancestral Awakening rune:
+
+$@spellicon425858
+$@spelldesc425858
+  era  212561 Rune of Burning Darkness                 q2 |  | weapon enchant: Engrave your belt with the Shadow and Flame rune:
+
+$@spellicon426316
+$@spelldesc426316
+  era  212562 Rune of Healing Rage                     q2 |  | weapon enchant: Engrave your boots with the Enraged Regeneration rune:
+
+$@spellicon402913
+$@spelldesc402913
+  era  212568 Wolfshead Trophy                         q3 |  | weapon enchant: Permanently enchant a helm slot item, causing you to gain 20 energy or 5 rage when shapeshifting int
+  era  213074 Rune of Nourishing                       q2 |  | weapon enchant: Engrave your belt with the Nourish rune:
+
+$@spellicon408247
+$@spelldesc408247
+  era  213086 Rune of the Storm                        q2 |  | weapon enchant: Engrave your belt with the Maelstrom Weapon rune:
+
+$@spellicon408498
+$@spelldesc408498
+  era  213090 Rune of Synergy                          q2 |  | weapon enchant: Engrave your belt with the Grimoire of Synergy rune:
+
+$@spellicon426301
+$@spelldesc426301
+  era  213093 Rune of Power                            q2 |  | weapon enchant: Engrave your belt with the Power Surge rune:
+
+$@spellicon415100
+$@spelldesc415100
+  era  213094 Rune of Fire Nova                        q2 |  | weapon enchant: Engrave your belt with the Fire Nova rune:
+
+$@spellicon408339
+$@spelldesc408339
+  era  213096 Rune of Decoys                           q2 |  | weapon enchant: Engrave your boots with the Decoy Totem rune:
+
+$@spellicon425874
+$@spelldesc425874
+  era  213098 Rune of Invocation                       q2 |  | weapon enchant: Engrave your belt with the Invocation rune:
+
+$@spellicon426243
+$@spelldesc426243
+  era  213100 Rune of Forbidden Knowledge              q2 |  | weapon enchant: Engrave your boots with the Demonic Knowledge rune:
+
+$@spellicon412732
+$@spelldesc412732
+  era  213101 Rune of Shadowflames                     q2 |  | weapon enchant: Engrave your boots with the Shadowflame rune:
+
+$@spellicon426320
+$@spelldesc426320
+  era  213102 Rune of Wickedness                       q2 |  | weapon enchant: Engrave your boots with the Dance of the Wicked rune:
+
+$@spellicon412798
+$@spelldesc412798
+  era  213103 Rune of Blood Surge                      q2 |  | weapon enchant: Engrave your belt with the Blood Surge rune:
+
+$@spellicon413380
+$@spelldesc413380
+  era  213104 Rune of Ruthless Precision               q2 |  | weapon enchant: Engrave your belt with the Precision Timing rune:
+
+$@spellicon402922
+$@spelldesc402922
+  era  213109 Rune of Focused Rage                     q2 |  | weapon enchant: Engrave your belt with the Focused Rage rune:
+
+$@spellicon29787
+$@spelldesc29787
+  era  213110 Rune of the Commander                    q2 |  | weapon enchant: Engrave your boots with the Rallying Cry rune:
+
+$@spellicon426490
+$@spelldesc426490
+  era  213111 Rune of Intervention                     q2 |  | weapon enchant: Engrave your boots with the Intervene rune:
+
+$@spellicon403338
+$@spelldesc403338
+  era  213112 Spell Notes: Missile Barrage             q2 |  | weapon enchant: Engrave your belt with the Missile Barrage rune:
+
+$@spellicon400588
+$@spelldesc400588
+  era  213117 Rune of Berserk                          q2 |  | weapon enchant: Engrave your belt with the Berserk rune:
+
+$@spellicon417141
+$@spelldesc417141
+  era  213118 Rune of the Jungle King                  q2 |  | weapon enchant: Engrave your boots with the King of the Jungle rune:
+
+$@spellicon417046
+$@spelldesc417046
+  era  213119 Rune of Instinct                         q2 |  | weapon enchant: Engrave your boots with the Survival Instincts rune:
+
+$@spellicon408024
+$@spelldesc408024
+  era  213120 Rune of the Dreamer                      q2 |  | weapon enchant: Engrave your boots with the Dreamstate rune:
+
+$@spellicon408258
+$@spelldesc408258
+  era  213122 Rune of Steady Shot                      q2 |  | weapon enchant: Engrave your belt with the Steady Shot rune:
+
+$@spellicon437123
+$@spelldesc437123
+  era  213123 Rune of Exposure                         q2 |  | weapon enchant: Engrave your belt with the Expose Weakness rune:
+
+$@spellicon409504
+$@spelldesc409504
+  era  213124 Rune of Close Combat                     q2 |  | weapon enchant: Engrave your belt with the Melee Specialist rune:
+
+$@spellicon415352
+$@spelldesc415352
+  era  213125 Rune of Invigoration                     q2 |  | weapon enchant: Engrave your boots with the Wyvern Strike rune:
+
+$@spellicon458479
+$@spelldesc458479
+  era  213126 Rune of the Scrapper                     q2 |  | weapon enchant: Engrave your boots with the Dual Wield Specialization rune:
+
+$@spellicon409687
+$@spelldesc409687
+  era  213128 Rune of Piety                            q2 |  | weapon enchant: Engrave your belt with the Malleable Protection rune:
+
+$@spellicon458318
+$@spelldesc458318
+  era  213129 Rune of Light's Embrace                  q2 |  | weapon enchant: Engrave your belt with the Sheath of Light rune:
+
+$@spellicon426158
+$@spelldesc426158
+  era  213130 Rune of Infusions                        q2 |  | weapon enchant: Engrave your belt with the Infusion of Light rune:
+
+$@spellicon426065
+$@spelldesc426065
+  era  213131 Rune of Sacred Shields                   q2 |  | weapon enchant: Engrave your boots with the Sacred Shield rune:
+
+$@spellicon412019
+$@spelldesc412019
+  era  213132 Rune of the Guardian                     q2 |  | weapon enchant: Engrave your boots with the Guarded by the Light rune:
+
+$@spellicon415059
+$@spelldesc415059
+  era  213136 Rune of Subtlety                         q2 |  | weapon enchant: Engrave your boots with the Master of Subtlety rune:
+
+$@spellicon425096
+$@spelldesc425096
+  era  213137 Rune of the Assailant                    q2 |  | weapon enchant: Engrave your boots with the Waylay rune:
+
+$@spellicon408700
+$@spelldesc408700
+  era  213138 Rune of the Southpaw                     q2 |  | weapon enchant: Engrave your boots with the Rolling with the Punches rune:
+
+$@spellicon400016
+$@spelldesc400016
+  era  213139 Rune of the Assassin                     q2 |  | weapon enchant: Engrave your belt with the Shuriken Toss rune:
+
+$@spellicon399986
+$@spelldesc399986
+  era  213140 Prophecy of the Quickened Path           q2 |  | weapon enchant: Engrave your belt with the Empowered Renew rune:
+
+$@spellicon425266
+$@spelldesc425266
+  era  213141 Rune of Hope                             q2 |  | weapon enchant: Engrave your belt with the Renewed Hope rune:
+
+$@spellicon425280
+$@spelldesc425280
+  era  213142 Prophecy of Imprisoned Malice            q2 |  | weapon enchant: Engrave your boots with the Dispersion
+ rune:
+
+$@spellicon425294
+$@spelldesc425294
+  era  213143 Apocryphal Epiphany                      q2 |  | weapon enchant: Engrave your boots with the Pain Suppression rune:
+
+$@spellicon402004
+$@spelldesc402004
+  era  213144 Luminous Epiphany                        q2 |  | weapon enchant: Engrave your boots with the Spirit of the Redeemer rune:
+
+$@spellicon425284
+$@spelldesc425284
+  era  213599 Unsettling Vision                        q2 |  | weapon enchant: Engrave your belt with the Renewed Hope rune:
+
+$@spellicon425280
+$@spelldesc425280
+  era  215126 UNUSED Flask of Merciless Pursuit        q1 | 17628:Supreme Power(120m) | Spell damage increased by up to $s1.
+  era  216606 Rune of Two-Handed Mastery               q2 |  | weapon enchant: Engrave your chest or robe with the Two-Handed Mastery rune:
+
+$@spellicon436364
+$@spelldesc436364
+  era  217308 Enchanted Sigil: Innovation              q2 | 439155:Sigil of Innovation(30m) | Empowered by Innovation. Dealing up to $s1 increased damage and healing with spells, and increasing attack pow
+  era  217345 Sebacious Poison                         q1 |  | weapon enchant: Coats a weapon with poison that lasts for 30 minutes.
+Each strike has a $h% chance of poisoning the
+  era  217346 Numbing Poison                           q1 |  | weapon enchant: Coats a weapon with poison that lasts for 30 minutes.
+Each strike has a $h% chance of poisoning the
+  era  217347 Atrophic Poison                          q1 |  | weapon enchant: Coats a weapon with poison that lasts for 30 minutes.
+Each strike has a $h% chance of poisoning the
+  era  217736 Rune of the Coterie                      q2 |  | weapon enchant: Engrave your helm with the Honor Among Thieves rune:
+
+$@spellicon432264
+$@spelldesc432264
+  era  219147 Rune of Grace                            q2 |  | weapon enchant: Engrave your bracers with the Light's Grace rune:
+
+$@spellicon428909
+$@spelldesc428909
+  era  220164 Rune of the Gladiator                    q2 |  | weapon enchant: Engrave your boots with the Gladiator Stance rune:
+
+$@spellicon412513
+$@spelldesc412513
+  era  220165 Rune of Wrath                            q2 |  | weapon enchant: Engrave your helm with the Wrath rune:
+
+$@spellicon429139
+$@spelldesc429139
+  era  220217 Rune of the Ravenous                     q2 |  | weapon enchant: Engrave your helm with the Rapid Killing rune:
+
+$@spellicon415405
+$@spelldesc415405
+  era  220360 Rune of Efflorescence                    q2 |  | weapon enchant: Engrave your bracers with the Efflorescence rune:
+
+$@spellicon417149
+$@spelldesc417149
+  era  220610 Rune of Mental Dexterity                 q2 |  | weapon enchant: Engrave your helm with the Mental Dexterity rune:
+
+$@spellicon415140
+$@spelldesc415140
+  era  220612 Rune of Tidal Waves                      q2 |  | weapon enchant: Engrave your helm with the Tidal Waves rune:
+
+$@spellicon432042
+$@spelldesc432042
+  era  220613 Rune of Rolling Thunder                  q2 |  | weapon enchant: Engrave your bracers with the Rolling Thunder rune:
+
+$@spellicon432056
+$@spelldesc432056
+  era  220614 Rune of Static Shock                     q2 |  | weapon enchant: Engrave your bracers with the Static Shock rune:
+
+$@spellicon432134
+$@spelldesc432134
+  era  220616 Rune of Overcharged                      q2 |  | weapon enchant: Engrave your bracers with the Overcharged rune:
+
+$@spellicon432140
+$@spelldesc432140
+  era  220617 Rune of Pandemic                         q2 |  | weapon enchant: Engrave your helm with the Pandemic rune:
+
+$@spellicon427712
+$@spelldesc427712
+  era  220618 Rune of Immolation Aura                  q2 |  | weapon enchant: Engrave your bracers with the Immolation Aura rune:
+
+$@spellicon431757
+$@spelldesc427726
+  era  220682 Rune of the Unbridled                    q2 |  | weapon enchant: Engrave your bracers with the Rampage rune:
+
+$@spellicon426940
+$@spelldesc426940
+  era  220687 Rune of the Raptor                       q2 |  | weapon enchant: Engrave your bracers with the Raptor Fury rune:
+
+$@spellicon415358
+$@spelldesc415358
+  era  220754 Rune of the Windstorm                    q2 |  | weapon enchant: Engrave your helm with the Gale Winds rune:
+
+$@spellicon417135
+$@spelldesc417135
+  era  220791 Rune of the Jungle Cat                   q2 |  | weapon enchant: Engrave your helm with the Catlike Reflexes rune:
+
+$@spellicon415428
+$@spelldesc415428
+  era  220913 Rune of Demolition                       q2 |  | weapon enchant: Engrave your bracers with the Wrecking Crew rune:
+
+$@spellicon427065
+$@spelldesc427065
+  era  221020 Rune of the Moon Goddess                 q2 |  | weapon enchant: Engrave your bracers with the Elune's Fires rune:
+
+$@spellicon414719
+$@spelldesc414719
+  era  221267 Rune of the Bloodthirsty                 q2 |  | weapon enchant: Engrave your helm with the Taste for Blood rune:
+
+$@spellicon426953
+$@spelldesc426953
+  era  221428 Rune of Foul Play                        q2 |  | weapon enchant: Engrave your bracers with the Unfair Advantage rune:
+
+$@spellicon432273
+$@spelldesc432273
+  era  221433 Rune of Focus                            q2 |  | weapon enchant: Engrave your helm with the Focused Attacks rune:
+
+$@spellicon432256
+$@spelldesc432256
+  era  221445 Rune of Focused Fire                     q2 |  | weapon enchant: Engrave your bracers with the Focus Fire rune:
+
+$@spellicon428726
+$@spelldesc428726
+  era  221461 Rune of Carnage                          q2 |  | weapon enchant: Engrave your bracers with the Carnage rune:
+
+$@spellicon432276
+$@spelldesc432276
+  era  221473 Rune of the Watchman                     q2 |  | weapon enchant: Engrave your helm with the Vigilance rune:
+
+$@spellicon426972
+$@spelldesc426972
+  era  221480 Spell Notes: Molten Armor                q2 |  | weapon enchant: Engrave your bracers with the Molten Armor rune:
+
+$@spellicon428741
+$@spelldesc428741
+  era  221481 Nihilist Epiphany                        q2 |  | weapon enchant: Engrave your bracers with the Void Zone rune:
+
+$@spellicon431681
+$@spelldesc431681
+  era  221482 Rune of Affliction                       q2 |  | weapon enchant: Engrave your bracers with the Unstable Affliction rune:
+
+$@spellicon427717
+$@spelldesc427717
+  era  221483 Rune of Burn                             q2 |  | weapon enchant: Engrave your helm with the Burn rune:
+
+$@spellicon415231
+$@spelldesc415231
+  era  221487 Spell Notes: Advanced Warding            q2 |  | weapon enchant: Engrave your helm with the Advanced Warding rune:
+
+$@spellicon412115
+$@spelldesc412115
+  era  221488 Resolute Epiphany                        q2 |  | weapon enchant: Engrave your helm with the Divine Aegis rune:
+
+$@spellicon431622
+$@spelldesc431622
+  era  221489 Rune of Vengeance                        q2 |  | weapon enchant: Engrave your helm with the Vengeance rune:
+
+$@spellicon426195
+$@spelldesc426195
+  era  221490 Rune of Riptide                          q2 |  | weapon enchant: Engrave your bracers with the Riptide
+ rune:
+
+$@spellicon408521
+$@spelldesc408521
+  era  221499 Rune of the Felguard                     q2 |  | weapon enchant: Engrave your bracers with the Summon Felguard rune:
+
+$@spellicon427733
+$@spelldesc427733
+  era  221510 Rune of the Knight                       q2 |  | weapon enchant: Engrave your bracers with the Sword and Board rune:
+
+$@spellicon426978
+$@spelldesc426978
+  era  221511 Rune of the Protector                    q2 |  | weapon enchant: Engrave your helm with the Shield Mastery rune:
+
+$@spellicon426980
+$@spelldesc426980
+  era  221512 Rune of Alacrity                         q2 |  | weapon enchant: Engrave your bracers with the Cut to the Chase rune:
+
+$@spellicon432271
+$@spelldesc432271
+  era  221513 Rune of Potency                          q2 |  | weapon enchant: Engrave your helm with the Combat Potency rune:
+
+$@spellicon432259
+$@spelldesc432259
+  era  221514 Rune of Firepower                        q2 |  | weapon enchant: Engrave your helm with the Lock and Load rune:
+
+$@spellicon415413
+$@spelldesc415413
+  era  221515 Rune of Detonation                       q2 |  | weapon enchant: Engrave your bracers with the T.N.T. rune:
+
+$@spellicon428717
+$@spelldesc428717
+  era  221516 Rune of Primal Energy                    q2 |  | weapon enchant: Engrave your bracers with the Improved Frenzied Regeneration rune:
+
+$@spellicon431389
+$@spelldesc
+  era  221517 Rune of Bloodshed                        q2 |  | weapon enchant: Engrave your helm with the Gore rune:
+
+$@spellicon417145
+$@spelldesc417145
+  era  221979 Prophecy of Verdant Winter               q2 |  | weapon enchant: Engrave your helm with the Pain and Suffering rune:
+
+$@spellicon413251
+$@spelldesc413251
+  era  221980 Prophecy of Awakened Chaos               q2 |  | weapon enchant: Engrave your helm with the Eye of the Void rune:
+
+$@spellicon402789
+$@spelldesc402789
+  era  221981 Prophecy of the Lost Tribe               q2 |  | weapon enchant: Engrave your bracers with the Surge of Light rune:
+
+$@spellicon431664
+$@spelldesc431664
+  era  223147 Spell Notes: Balefire Bolt               q2 |  | weapon enchant: Engrave your bracers with the Balefire Bolt rune:
+
+$@spellicon428878
+$@spelldesc428878
+  era  223288 Rune of the Hammer                       q2 |  | weapon enchant: Engrave your bracers with the Hammer of Wrath rune:
+
+$@spellicon429152
+$@spelldesc429152
+  era  225686 Rune of Decimation                       q2 |  | weapon enchant: Engrave your boots with the Decimation rune:
+
+$@spellicon440870
+$@spelldesc440870
+  era  225687 Rune of Infernal Armor                   q2 |  | weapon enchant: Engrave your cloak with the Infernal Armor rune:
+
+$@spellicon440882
+$@spelldesc440882
+  era  225688 Rune of Mark of Chaos                    q2 |  | weapon enchant: Engrave your cloak with the Mark of Chaos rune:
+
+$@spellicon440892
+$@spelldesc440892
+  era  225689 Spell Notes: Arcane Barrage              q2 |  | weapon enchant: Engrave your cloak with the Arcane Barrage rune:
+
+$@spellicon400610
+$@spelldesc400610
+  era  225690 Spell Notes: Frozen Orb                  q2 |  | weapon enchant: Engrave your cloak with the Frozen Orb
+rune:
+
+$@spellicon440802
+$@spelldesc440802
+  era  225691 Spell Notes: Overheat                    q2 |  | weapon enchant: Engrave your cloak with the Overheat rune:
+
+$@spellicon400615
+$@spelldesc400615
+  era  225740 Rune of Composure                        q2 |  | weapon enchant: Engrave your cloak with the Coherence rune:
+
+$@spellicon415096
+$@spelldesc415096
+  era  225914 Rune of the Bound Spirit                 q2 |  | weapon enchant: Engrave your cloak with the Feral Spirit rune:
+
+$@spellicon440580
+$@spelldesc440580
+  era  225955 Rune of the Resourceful                  q2 |  | weapon enchant: Engrave your cloak with the Resourcefulness rune:
+
+$@spellicon440529
+$@spelldesc440529
+  era  226252 Rune of the Guerrilla                    q2 |  | weapon enchant: Engrave your cloak with the Hit and Run rune:
+
+$@spellicon440533
+$@spelldesc440533
+  era  226374 Occult Poison I                          q1 |  | weapon enchant: Coats a weapon with poison that lasts for 30 minutes. Each strike has a $h% chance of poisoning the 
+  era  226406 Rune of Sword Specialization             q2 |  | weapon enchant: Engrave your ring with the Sword Specialization rune:
+
+$@spellicon442813
+$@spelldesc442813
+  era  226407 Rune of Axe Specialization               q2 |  | weapon enchant: Engrave your ring with the Axe Specialization rune:
+
+$@spellicon442876
+$@spelldesc442876
+  era  226408 Rune of Mace Specialization              q2 |  | weapon enchant: Engrave your ring with the Mace Specialization rune:
+
+$@spellicon442881
+$@spelldesc442881
+  era  226409 Rune of Dagger Specialization            q2 |  | weapon enchant: Engrave your ring with the Dagger Specialization rune:
+
+$@spellicon442887
+$@spelldesc442887
+  era  226410 Rune of Ranged Weapon Specialization     q2 |  | weapon enchant: Engrave your ring with the Ranged Weapon Specialization rune:
+
+$@spellicon442891
+$@spelldesc44289
+  era  226411 Rune of Fist Weapon Specialization       q2 |  | weapon enchant: Engrave your ring with the Fist Weapon Specialization rune:
+
+$@spellicon442890
+$@spelldesc442890
+  era  226412 Rune of Pole Weapon Specialization       q2 |  | weapon enchant: Engrave your ring with the Pole Weapon Specialization rune:
+
+$@spellicon442892
+$@spelldesc442892
+  era  226413 Rune of Arcane Specialization            q2 |  | weapon enchant: Engrave your ring with the Arcane Specialization rune:
+
+$@spellicon442893
+$@spelldesc442893
+  era  226414 Rune of Fire Specialization              q2 |  | weapon enchant: Engrave your ring with the Fire Specialization rune:
+
+$@spellicon442894
+$@spelldesc442894
+  era  226415 Rune of Frost Specialization             q2 |  | weapon enchant: Engrave your ring with the Frost Specialization rune:
+
+$@spellicon442895
+$@spelldesc442895
+  era  226416 Rune of Nature Specialization            q2 |  | weapon enchant: Engrave your ring with the Nature Specialization rune:
+
+$@spellicon442896
+$@spelldesc442896
+  era  226417 Rune of Shadow Specialization            q2 |  | weapon enchant: Engrave your ring with the Shadow Specialization rune:
+
+$@spellicon442897
+$@spelldesc442897
+  era  226418 Rune of Holy Specialization              q2 |  | weapon enchant: Engrave your ring with the Holy Specialization rune:
+
+$@spellicon442898
+$@spelldesc442898
+  era  226419 Rune of Feral Combat Specialization      q2 |  | weapon enchant: Engrave your ring with the Feral Combat Specialization rune:
+
+$@spellicon453622
+$@spelldesc453622
+  era  226587 Rune of Shelling                         q2 |  | weapon enchant: Engrave your cloak with the Improved Volley rune:
+
+$@spellicon440520
+$@spelldesc440520
+  era  226679 Timeless Wanderer's Insights             q3 |  | weapon enchant: Engrave your cloak with the Sudden Death rune:
+
+$@spellicon440113
+$@spelldesc440113
+  era  226680 Rune of the First Warrior                q3 |  | weapon enchant: Engrave your cloak with the Fresh Meat
+ rune:
+
+$@spellicon440484
+$@spelldesc440484
+  era  226694 Rune of Defense Specialization           q2 |  | weapon enchant: Engrave your ring with the Defense Specialization rune:
+
+$@spellicon459312
+$@spelldesc459312
+  era  227286 Warmed Rumsey Rum with Cream             q1 | 460332:Warmed Rumsey with Cream(45m) | Stamina increased by $s2.
+Spirit increased by $s1.
+  era  227456 Rune of the Crimson Tempest              q2 |  | weapon enchant: Engrave your cloak with the Crimson Tempest rune:
+
+$@spellicon412096
+$@spelldesc412096
+  era  227746 Rune of the World Tree                   q2 |  | weapon enchant: Engrave your cloak with the Tree of Life rune:
+
+$@spellicon439766
+$@spelldesc439733
+  era  227749 Rune of the Falling Star                 q2 |  | weapon enchant: Engrave your cloak with the Starfall
+ rune:
+
+$@spellicon439748
+$@spelldesc439748
+  era  227921 Rune of Knives                           q2 |  | weapon enchant: Engrave your cloak with the Fan of Knives rune:
+
+$@spellicon409240
+$@spelldesc409240
+  era  227922 Rune of the Swashbuckler                 q2 |  | weapon enchant: Engrave your cloak with the Blunderbuss rune:
+
+$@spellicon436564
+$@spelldesc436564
+  era  228123 Jubilant Epiphany                        q2 |  | weapon enchant: Engrave your cloak with the Binding Heal rune:
+
+$@spellicon401937
+$@spelldesc401937
+  era  228124 Oneiric Epiphany                         q2 |  | weapon enchant: Engrave your cloak with the Soul Warding rune:
+
+$@spellicon402000
+$@spelldesc402000
+  era  228126 Aperitive Epiphany                       q2 |  | weapon enchant: Engrave your cloak with the Vampiric Touch rune:
+
+$@spellicon402668
+$@spelldesc402668
+  era  228227 Scroll of Overwhelming Power             q4 | 15366:Songflower Serenade(60m), 22817:Fengus' Ferocity(120m), 22818:Mol'dar's Moxie(120m), 22820:Slip'kik's Savvy(120m), 23768:Sayge's Dark Fortune of Damage(120m), 23770:Sayge's Carnie Buff(240m), 355363:Rallying Cry of the Dragonslayer(120m), 355365:Spirit of Zandalar(120m), 355366:Warchief's Blessing(60m), 460940:Might of Stormwind(60m) | Increases chance for a melee, ranged, or spell critical by $s1% and all attributes by $s2. No effect while in 
+  era  228978 Enchanted Sigil: Flowing Waters          q3 | 463864:Sigil of Flowing Waters(60m) | Empowered by Flowing Waters. Dealing up to $s1 increased damage and healing with spells, and increasing attack
+  era  231828 Rune of Meditation Specialization        q2 |  | weapon enchant: Engrave your ring with the Meditation Specialization rune:
+
+$@spellicon468762
+$@spelldesc468762
+  era  231829 Rune of Healing Specialization           q2 |  | weapon enchant: Engrave your ring with the Healing Specialization rune:
+
+$@spellicon468758
+$@spelldesc468758
+  era  232436 Darkclaw Bisque                          q1 | 470361:Increased Spell Damage(10m) | Spell Damage increased by $s1.
+  era  232438 Smoked Redgill                           q1 | 470367:Increased Healing Power(10m) | Healing done increased by $s1.
+  era  232458 Rune of Improved Sanctuary               q2 |  | weapon enchant: Engrave your helm with the Improved Sanctuary rune:
+
+$@spellicon429133
+$@spelldesc429133
+  era  232459 Rune of Backdraft                        q2 |  | weapon enchant: Engrave your helm with the Backdraft rune:
+
+$@spellicon427713
+$@spelldesc427713
+  era  232460 Rune of Displacement                     q2 |  | weapon enchant: Engrave your bracers with the Displacement rune:
+
+$@spellicon428861
+$@spelldesc428861
+  era  232461 Rune of Despair                          q2 |  | weapon enchant: Engrave your bracers with the Despair rune:
+
+$@spellicon431670
+$@spelldesc431670
+  era  232462 Rune of Purifying Power                  q2 |  | weapon enchant: Engrave your bracers with the Purifying Power rune:
+
+$@spellicon429144
+$@spelldesc429144
+  era  234444 Occult Poison II                         q1 |  | weapon enchant: Coats a weapon with poison that lasts for 30 minutes. Each strike has a $h% chance of poisoning the 
+  era  235597 Spell Notes: Deep Freeze                 q2 |  | weapon enchant: Engrave your helm with the Deep Freeze rune:
+
+$@spellicon428739
+$@spelldesc428739
+  era  235598 Spell Notes: Icy Veins                   q2 |  | weapon enchant: Engrave your pants with the Icy Veins rune:
+
+$@spellicon425121
+$@spelldesc425121
+  era  235599 Spell Notes: Temporal Anomaly            q2 |  | weapon enchant: Engrave your helm with the Temporal Anomaly rune:
+
+$@spellicon428885
+$@spelldesc428885
+  era  235600 Rune of Divine Storm                     q2 |  | weapon enchant: Engrave your chest with the Divine Storm rune:
+
+$@spellicon407778
+$@spelldesc407778
+  era  235601 Rune of Fanaticism                       q2 |  | weapon enchant: Engrave your helm with the Fanaticism rune:
+
+$@spellicon429142
+$@spelldesc429142
+  era  235602 Rune of Hammer of the Righteous          q2 |  | weapon enchant: Engrave your bracers with the Hammer of the Righteous rune:
+
+$@spellicon407632
+$@spelldesc407632
+  era  235603 Rune of Righteous Vengeance              q2 |  | weapon enchant: Engrave your cloak with the Righteous Vengeance rune:
+
+$@spellicon440672
+$@spelldesc440672
+  era  235604 Rune of Shield of Righteousness          q2 |  | weapon enchant: Engrave your cloak with the Shield of Righteousness rune:
+
+$@spellicon440658
+$@spelldesc440658
+  era  235605 Rune of Shock and Awe                    q2 |  | weapon enchant: Engrave your cloak with the Shock and Awe rune:
+
+$@spellicon462834
+$@spelldesc462834
+  era  238637 Prowler Steak                            q1 | 1225778:Well Fed(15m) | Your Strength is increased by $w1 and Stamina by $w2.
+  era  238639 Sunrise Omelette                         q1 | 1225780:Well Fed(15m) | Your Spell Damage is increased by $w1, Healing Power by $w3, and Stamina by $w2.
+
+# item-enh (201)
+  NEW  252436 Mystic Medium Armor Kit                  q2 |  | weapon enchant: Permanently increase the Spell Power value by 2 and the armor value by 16 of an item worn on the che
+  NEW  252437 Forceful Medium Armor Kit                q2 |  | weapon enchant: Permanently increase the Attack Power value by 4 and the armor value by 16 of an item worn on the ch
+  NEW  252452 Mystic Heavy Armor Kit                   q2 |  | weapon enchant: Permanently increase the Spell Power value by $ec2 and armor value by $ec1 of an item worn on the ch
+  NEW  252453 Forceful Heavy Armor Kit                 q2 |  | weapon enchant: Permanently increase the Attack Power value by $ec2 and armor value by $ec1 of an item worn on the c
+  NEW  252462 Mystic Thick Armor Kit                   q2 |  | weapon enchant: Permanently increase the Spell Power value by $ec2 and armor value by $ec1 of an item worn on the ch
+  NEW  252463 Forceful Thick Armor Kit                 q2 |  | weapon enchant: Permanently increase the Attack Power value by $ec2 and armor value by $ec1 of an item worn on the c
+  NEW  252487 Mystic Rugged Armor Kit                  q2 |  | weapon enchant: Permanently increase the Spell Power value by $ec2 and armor value by $ec1 of an item worn on the ch
+  NEW  252488 Forceful Rugged Armor Kit                q2 |  | weapon enchant: Permanently increase the Attack Power value by $ec2 and armor value by $ec1 of an item worn on the c
+  NEW  273458 Enchant Bracer - Inferior Stamina        q1 |  | weapon enchant: Permanently enchant bracers to increase the Stamina of the wearer by $7419s1.
+  NEW  273459 Enchant Chest - Inferior Stamina         q1 |  | weapon enchant: Permanently enchant a piece of chest armor so that it increases the Stamina of the wearer by $7419s1
+  NEW  273460 Enchant Chest - Minor Absorption         q1 |  | weapon enchant: Enchant a piece of chest armor so it has a 2% chance per hit of giving you 10 points of damage absor
+  NEW  273461 Enchant Bracer - Minor Deflect           q1 |  | weapon enchant: Permanently enchant bracers so that the defense skill of the wearer is increased by 3.
+  NEW  273462 Enchant Chest - Minor Intellect          q1 |  | weapon enchant: Permanently enchant a piece of chest armor so that it increases the Intellect of the wearer by $7442
+  NEW  273463 Enchant Cloak - Minor Resistance         q1 |  | weapon enchant: Permanently enchant a cloak so that it increases the resistance to all schools of magic by $7452s1.
+  NEW  273464 Enchant Bracer - Minor Stamina           q1 |  | weapon enchant: Permanently enchant bracers so they increase the wearer's Stamina by 3.
+  NEW  273465 Enchant 2H Weapon - Minor Impact         q1 |  | weapon enchant: Permanently enchant a Two-Handed Melee Weapon to do 4 additional points of damage.
+  NEW  273466 Enchant Chest - Lesser Stamina           q1 |  | weapon enchant: Permanently enchant a piece of chest armor so that it increases the Stamina of the wearer by 3.
+  NEW  273467 Enchant Bracer - Minor Spirit            q1 |  | weapon enchant: Permanently enchant bracers so they increase the wearer's Spirit by 3.
+  NEW  273468 Enchant Cloak - Minor Protection         q1 |  | weapon enchant: Permanently enchant a cloak to increase armor by $ec1.
+  NEW  273469 Enchant Chest - Lesser Intellect         q1 |  | weapon enchant: Permanently enchant a piece of chest armor so that it increases the Intellect of the wearer by 3.
+  NEW  273470 Enchant Bracer - Minor Agility           q1 |  | weapon enchant: Permanently enchant bracers so they increase the wearer's Agility by 3.
+  NEW  273471 Enchant Bracer - Minor Strength          q1 |  | weapon enchant: Permanently enchant bracers so they increase the wearer's Strength by 3.
+  NEW  273472 Enchant Weapon - Minor Beastslayer       q1 |  | weapon enchant: Permanently enchant a Melee Weapon to do 2 additional points of damage to Beasts.
+  NEW  273473 Enchant Weapon - Minor Striking          q1 |  | weapon enchant: Permanently enchant a Melee Weapon to do 1 additional point of damage.
+  NEW  273474 Enchant 2H Weapon - Lesser Intellect     q1 |  | weapon enchant: Permanently enchant a Two-Handed Melee Weapon to add 5 to Intellect.
+  NEW  273475 Enchant Chest - Stamina                  q1 |  | weapon enchant: Permanently enchant a piece of chest armor to increase the Stamina of the wearer by 4.
+  NEW  273476 Enchant Bracer - Lesser Spirit           q1 |  | weapon enchant: Permanently enchant a bracer so it increases the wearer's Spirit by 4.
+  NEW  273477 Enchant Cloak - Lesser Fire Resistance   q1 |  | weapon enchant: Permanently enchant a cloak so that it increases resistance to fire by 10.
+  NEW  273478 Enchant Boots - Minor Stamina            q1 |  | weapon enchant: Permanently enchant a pair of boots so they increase the wearer's Stamina by 3.
+  NEW  273479 Enchant Boots - Minor Agility            q1 |  | weapon enchant: Permanently enchant a pair of boots so they increase the wearer's Agility by 3.
+  NEW  273480 Enchant Shield - Minor Stamina           q1 |  | weapon enchant: Permanently enchant a shield so that it increases the Stamina of the bearer by 3.
+  NEW  273481 Enchant 2H Weapon - Lesser Spirit        q1 |  | weapon enchant: Permanently enchant a Two-Handed Melee Weapon to add 5 to Spirit.
+  NEW  273482 Enchant Cloak - Minor Agility            q1 |  | weapon enchant: Permanently enchant a cloak to grant +3 Agility.
+  NEW  273483 Enchant Cloak - Lesser Protection        q1 |  | weapon enchant: Permanently enchant a cloak to increase armor by $ec1.
+  NEW  273484 Enchant Shield - Lesser Protection       q1 |  | weapon enchant: Permanently enchant a shield to increase its armor by 30.
+  NEW  273485 Enchant Shield - Lesser Spirit           q1 |  | weapon enchant: Permanently enchant a shield to give 3 spirit.
+  NEW  273486 Enchant Bracer - Lesser Stamina          q1 |  | weapon enchant: Permanently enchant a bracer so it increases the wearer's Stamina by 4.
+  NEW  273487 Enchant Weapon - Lesser Striking         q1 |  | weapon enchant: Permanently enchant a Melee Weapon to do 2 additional points of damage.
+  NEW  273488 Enchant Cloak - Lesser Shadow Resistance q1 |  | weapon enchant: Permanently enchant a cloak so that it increases resistance to shadow by 10.
+  NEW  273489 Enchant 2H Weapon - Lesser Impact        q1 |  | weapon enchant: Permanently enchant a Two-handed Melee Weapon to do 5 additional points of damage.
+  NEW  273490 Enchant Bracer - Lesser Strength         q1 |  | weapon enchant: Permanently enchant a bracer so it increases the wearer's Strength by 4.
+  NEW  273491 Enchant Chest - Lesser Absorption        q1 |  | weapon enchant: Enchant a piece of chest armor so it has a 5% chance per hit of giving you 25 points of damage absor
+  NEW  273492 Enchant Chest - Intellect                q1 |  | weapon enchant: Permanently enchant a piece of chest armor to increase the Intellect of the wearer by 4.
+  NEW  273493 Enchant Gloves - Mining                  q1 |  | weapon enchant: Permanently enchant gloves to grant +2 mining skill.
+  NEW  273494 Enchant Gloves - Herbalism               q1 |  | weapon enchant: Permanently enchant gloves to grant +2 herbalism skill.
+  NEW  273495 Enchant Gloves - Fishing                 q1 |  | weapon enchant: Permanently enchant gloves to grant +2 fishing skill.
+  NEW  273496 Enchant Bracer - Lesser Intellect        q1 |  | weapon enchant: Permanently enchant a bracer so it increases the wearer's Intellect by $ec1.
+  NEW  273497 Enchant Chest - Minor Stats              q1 |  | weapon enchant: Permanently enchant a piece of chest armor to grant +$13624s1 to all stats.
+  NEW  273498 Enchant Shield - Lesser Stamina          q1 |  | weapon enchant: Permanently enchant a shield to give 5 Stamina.
+  NEW  273499 Enchant Cloak - Defense                  q1 |  | weapon enchant: Permanently enchant a cloak to give $ec1 additional armor.
+  NEW  273500 Enchant Boots - Lesser Agility           q1 |  | weapon enchant: Permanently enchant boots to give +4 Agility.
+  NEW  273501 Enchant Chest - Greater Stamina          q1 |  | weapon enchant: Permanently enchant a piece of chest armor to give +6 Stamina.
+  NEW  273502 Enchant Bracer - Spirit                  q1 |  | weapon enchant: Permanently enchant bracers to give +5 Spirit.
+  NEW  273503 Enchant Boots - Lesser Stamina           q1 |  | weapon enchant: Permanently enchant boots to give +4 Stamina.
+  NEW  273504 Enchant Bracer - Lesser Deflection       q1 |  | weapon enchant: Permanently enchant bracers to give +5 Defense.
+  NEW  273505 Enchant Bracer - Stamina                 q1 |  | weapon enchant: Permanently enchant bracers to give +5 Stamina.
+  NEW  273506 Enchant Weapon - Lesser Beastslayer      q1 |  | weapon enchant: Permanently enchant a Melee Weapon to do 6 additional points of damage to Beasts.
+  NEW  273507 Enchant Weapon - Lesser Elemental Slayer q1 |  | weapon enchant: Permanently enchant a Melee Weapon to do 6 additional damage against Elementals.
+  NEW  273508 Enchant Cloak - Fire Resistance          q1 |  | weapon enchant: Permanently enchant a cloak to give 12 Fire Resistance.
+  NEW  273509 Enchant Shield - Spirit                  q1 |  | weapon enchant: Permanently enchant a shield to give 5 Spirit.
+  NEW  273510 Enchant Bracer - Strength                q1 |  | weapon enchant: Permanently enchant bracers to give +5 Strength.
+  NEW  273511 Enchant Chest - Greater Intellect        q1 |  | weapon enchant: Permanently enchant a piece of chest armor to give +6 Intellect.
+  NEW  273512 Enchant Boots - Lesser Spirit            q1 |  | weapon enchant: Permanently enchant boots to give +4 Spirit.
+  NEW  273513 Enchant Shield - Lesser Block            q1 |  | weapon enchant: Permanently enchant a shield to give +2% chance to block.
+  NEW  273514 Enchant Weapon - Striking                q1 |  | weapon enchant: Permanently enchant a Melee Weapon to do 3 additional points of damage.
+  NEW  273515 Enchant 2H Weapon - Impact               q1 |  | weapon enchant: Permanently enchant a Two-handed Melee Weapon to do 6 additional points of damage.
+  NEW  273516 Enchant Gloves - Skinning                q1 |  | weapon enchant: Permanently enchant gloves to grant +5 skinning skill.
+  NEW  273517 Enchant Chest - Lesser Stats             q1 |  | weapon enchant: Permanently enchant a piece of chest armor to grant +2 to all stats.
+  NEW  273518 Enchant Cloak - Greater Defense          q1 |  | weapon enchant: Permanently enchant a cloak to give $ec1 additional armor.
+  NEW  273519 Enchant Cloak - Resistance               q1 |  | weapon enchant: Permanently enchant a cloak to give 3 to all resistances.
+  NEW  273520 Enchant Gloves - Agility                 q1 |  | weapon enchant: Permanently enchant gloves to grant +7 Agility.
+  NEW  273521 Enchant Shield - Stamina                 q1 |  | weapon enchant: Permanently enchant a shield to give +7 Stamina.
+  NEW  273522 Enchant Bracer - Intellect               q1 |  | weapon enchant: Permanently enchant bracers to give +5 Intellect.
+  NEW  273523 Enchant Boots - Stamina                  q1 |  | weapon enchant: Permanently enchant boots to give +5 Stamina.
+  NEW  273524 Enchant Gloves - Advanced Mining         q1 |  | weapon enchant: Permanently enchant gloves to grant +5 mining skill.
+  NEW  273525 Enchant Bracer - Greater Spirit          q1 |  | weapon enchant: Permanently enchant bracers to give +7 Spirit.
+  NEW  273526 Enchant Chest - Superior Stamina         q1 |  | weapon enchant: Permanently enchant a piece of chest armor to grant +8 Stamina.
+  NEW  273527 Enchant Gloves - Advanced Herbalism      q1 |  | weapon enchant: Permanently enchant gloves to grant +5 herbalism skill.
+  NEW  273528 Enchant Cloak - Lesser Agility           q1 |  | weapon enchant: Permanently enchant a cloak to give 3 Agility.
+  NEW  273529 Enchant Gloves - Strength                q1 |  | weapon enchant: Permanently enchant gloves to grant +7 Strength.
+  NEW  273530 Enchant Boots - Minor Speed              q1 |  | weapon enchant: Permanently enchant boots to increase movement speed by $13889s1%.
+  NEW  273531 Enchant Weapon - Fiery Weapon            q1 |  | weapon enchant: Permanently enchant a melee weapon to often strike for $13897s1 additional fire damage.
+  NEW  273532 Enchant Shield - Greater Spirit          q1 |  | weapon enchant: Permanently enchant a shield to give +7 Spirit.
+  NEW  273533 Enchant Weapon - Demonslaying            q1 |  | weapon enchant: Permanently enchant a melee weapon to have a chance of stunning and doing heavy damage to demons.
+  NEW  273534 Enchant Chest - Superior Intellect       q1 |  | weapon enchant: Permanently enchant a piece of chest armor to give +8 Intellect.
+  NEW  273535 Enchant Bracer - Deflection              q1 |  | weapon enchant: Permanently enchant bracers to give +7 Defense.
+  NEW  273536 Enchant Shield - Frost Resistance        q1 |  | weapon enchant: Permanently enchant a shield to give +8 Frost Resistance.
+  NEW  273537 Enchant Boots - Agility                  q1 |  | weapon enchant: Permanently enchant boots to give +5 Agility.
+  NEW  273538 Enchant 2H Weapon - Greater Impact       q1 |  | weapon enchant: Permanently enchant a two-handed melee weapon to do +7 damage.
+  NEW  273539 Enchant Bracer - Greater Strength        q1 |  | weapon enchant: Permanently enchant bracers to give +7 Strength.
+  NEW  273540 Enchant Chest - Stats                    q1 |  | weapon enchant: Permanently enchant a piece of chest armor to grant +3 to all stats.
+  NEW  273541 Enchant Weapon - Greater Striking        q1 |  | weapon enchant: Permanently enchant a Melee Weapon to do 4 additional points of damage.
+  NEW  273542 Enchant Bracer - Greater Stamina         q1 |  | weapon enchant: Permanently enchant bracers to give +7 Stamina.
+  NEW  273543 Enchant Gloves - Riding Skill            q1 |  | weapon enchant: Permanently enchant gloves to grant a minor movement bonus while mounted.
+  NEW  273544 Enchant Gloves - Minor Haste             q1 |  | weapon enchant: Permanently enchant gloves to grant a +1% attack and casting speed bonus.
+  NEW  273545 Enchant Bracer - Greater Intellect       q1 |  | weapon enchant: Permanently enchant bracers to give +7 Intellect.
+  NEW  273546 Enchant Bracer - Superior Spirit         q1 |  | weapon enchant: Permanently enchant bracers to give +9 Spirit.
+  NEW  273547 Enchant Bracer - Superior Strength       q1 |  | weapon enchant: Permanently enchant bracers to give +9 Strength.
+  NEW  273548 Enchant Bracer - Superior Stamina        q1 |  | weapon enchant: Permanently enchant bracers to give +9 Stamina.
+  NEW  273549 Enchant Gloves - Greater Agility         q1 |  | weapon enchant: Permanently enchant gloves to grant +10 Agility.
+  NEW  273550 Enchant Gloves - Greater Strength        q1 |  | weapon enchant: Permanently enchant gloves to grant +10 Strength.
+  NEW  273551 Enchant Cloak - Greater Resistance       q1 |  | weapon enchant: Permanently enchant a cloak to give 5 to all resistances.
+  NEW  273552 Enchant Cloak - Superior Defense         q1 |  | weapon enchant: Permanently enchant a cloak to give $ec1 additional armor.
+  NEW  273553 Enchant Shield - Superior Spirit         q1 |  | weapon enchant: Permanently enchant a shield to give +9 Spirit.
+  NEW  273554 Enchant Shield - Greater Stamina         q1 |  | weapon enchant: Permanently enchant a shield to give +9 Stamina.
+  NEW  273555 Enchant Boots - Greater Stamina          q1 |  | weapon enchant: Permanently enchant boots to give +7 Stamina.
+  NEW  273556 Enchant Boots - Greater Agility          q1 |  | weapon enchant: Permanently enchant boots to give +7 Agility.
+  NEW  273557 Enchant Boots - Spirit                   q1 |  | weapon enchant: Permanently enchant boots to give +5 Spirit.
+  NEW  273558 Enchant Chest - Greater Stats            q1 |  | weapon enchant: Permanently enchant a piece of chest armor to grant +4 to all stats.
+  NEW  273559 Enchant Chest - Major Stamina            q1 |  | weapon enchant: Permanently enchant a piece of chest armor to grant +10 Stamina.
+  NEW  273560 Enchant Chest - Major Intellect          q1 |  | weapon enchant: Permanently enchant a piece of chest armor to give +10 Intellect.
+  NEW  273561 Enchant Weapon - Icy Chill               q1 |  | weapon enchant: Permanently enchant a melee weapon to often chill the target reducing their movement and attack spee
+  NEW  273562 Enchant 2H Weapon - Superior Impact      q1 |  | weapon enchant: Permanently enchant a two-handed melee weapon to do +9 damage.
+  NEW  273563 Enchant Weapon - Superior Striking       q1 |  | weapon enchant: Permanently enchant a Melee Weapon to do 5 additional points of damage.
+  NEW  273564 Enchant Weapon - Lifestealing            q1 |  | weapon enchant: Permanently enchant a melee weapon to often steal life from the enemy and give it to the wielder.
+  NEW  273565 Enchant Weapon - Unholy Weapon           q1 |  | weapon enchant: Permanently enchant a melee weapon to often inflict a curse on the target reducing their melee damag
+  NEW  273566 Enchant Weapon - Crusader                q1 |  | weapon enchant: Permanently enchant a melee weapon so that often when attacking in melee it heals for $20007s2 and i
+  NEW  273567 Enchant 2H Weapon - Major Spirit         q1 |  | weapon enchant: Permanently enchant a Two-Handed Melee Weapon to add 9 to Spirit.
+  NEW  273568 Enchant 2H Weapon - Major Intellect      q1 |  | weapon enchant: Permanently enchant a Two-Handed Melee Weapon to add 9 to intellect.
+  NEW  273569 Enchant Weapon - Winter's Might          q1 |  | weapon enchant: Permanently enchant a weapon to grant up to 15 additional frost damage when casting frost spells.
+  NEW  273570 Enchant Weapon - Spell Power             q1 |  | weapon enchant: Permanently enchant a Melee Weapon to add up to 30 damage to spells.
+  NEW  273571 Enchant Weapon - Healing Power           q1 |  | weapon enchant: Permanently enchant a Melee Weapon to add up to 55 points of healing to healing spells and up to 19 
+  NEW  273572 Enchant Weapon - Strength                q1 |  | weapon enchant: Permanently enchant a melee weapon to grant +15 strength.
+  NEW  273573 Enchant Weapon - Agility                 q1 |  | weapon enchant: Permanently enchant a melee weapon to grant +15 Agility.
+  NEW  273574 Enchant Bracer - Mana Regeneration       q1 |  | weapon enchant: Permanently enchant bracers to restore 4 mana every 5 seconds.
+  NEW  273575 Enchant Bracer - Healing Power           q1 |  | weapon enchant: Permanently enchant bracers to increase the effects of your healing spells by up to 24 and the effec
+  NEW  273576 Enchant Weapon - Mighty Spirit           q1 |  | weapon enchant: Permanently enchant a melee weapon to grant +22 Spirit.
+  NEW  273577 Enchant Weapon - Mighty Intellect        q1 |  | weapon enchant: Permanently enchant a melee weapon to grant +22 Intellect.
+  NEW  273578 Enchant Gloves - Threat                  q1 |  | weapon enchant: Permanently enchant gloves to increase threat from all attacks and spells by 2%.
+  NEW  273579 Enchant Gloves - Shadow Power            q1 |  | weapon enchant: Permanently enchant gloves to increase shadow damage by up to 20.
+  NEW  273580 Enchant Gloves - Frost Power             q1 |  | weapon enchant: Permanently enchant gloves to increase frost damage by up to 20.
+  NEW  273581 Enchant Gloves - Fire Power              q1 |  | weapon enchant: Permanently enchant gloves to increase fire damage by up to 20.
+  NEW  273582 Enchant Gloves - Healing Power           q1 |  | weapon enchant: Permanently enchant gloves to increase the caster's healing spells by up to 35 and damage spells by 
+  NEW  273583 Enchant Gloves - Superior Agility        q1 |  | weapon enchant: Permanently enchant gloves to increase agility by 15.
+  NEW  273584 Enchant Cloak - Greater Fire Resistance  q1 |  | weapon enchant: Permanently enchant a cloak to give 15 fire resistance.
+  NEW  273585 Enchant Cloak - Greater Nature Resistance q1 |  | weapon enchant: Permanently enchant a cloak to give 15 nature resistance.
+  NEW  273586 Enchant Cloak - Stealth                  q1 |  | weapon enchant: Permanently enchant a cloak to give an increase to your stealth as if you were 1 level higher.
+  NEW  273587 Enchant Cloak - Subtlety                 q1 |  | weapon enchant: Permanently enchant a cloak to decrease threat caused by the wearer by 2%.
+  NEW  273588 Enchant Cloak - Dodge                    q1 |  | weapon enchant: Permanently enchant a cloak to give a 1% chance to dodge.
+  NEW  273589 Enchant 2H Weapon - Agility              q1 |  | weapon enchant: Permanently enchant a two-handed melee weapon to grant +25 Agility.
+  NEW  273590 Enchant Weapon - Dismantle               q1 |  | weapon enchant: Permanently enchant a Weapon to cause all spells and attacks to sometimes deal $439164s1 additional 
+  NEW  273591 Enchant Chest - Retricutioner            q1 |  | weapon enchant: Teaches you how to permanently enchant a piece of chest armor to reflect 9 damage back to the attack
+  NEW  273592 Enchant Shield - Law of Nature           q1 |  | weapon enchant: Permanently enchant a Shield to add up to 30 damage to spells and up to 55 points of healing to heal
+  NEW  273593 Enchant Chest - Living Stats             q1 |  | weapon enchant: Permanently enchant a piece of chest armor to increase all stats by 4, and Nature Resistance by 15.
+  NEW  273594 Enchant Gloves - Holy Power              q1 |  | weapon enchant: Permanently enchant gloves to increase holy damage by up to 20.
+  NEW  273595 Enchant Gloves - Arcane Power            q1 |  | weapon enchant: Permanently enchant gloves to increase arcane damage by up to 20.
+  NEW  273596 Enchant Bracer - Spell Power             q1 |  | weapon enchant: Permanently enchant bracers to add up to 12 damage to spells.
+  NEW  273597 Enchant Bracer - Agility                 q1 |  | weapon enchant: Permanently enchant bracers to increase Agility by 9.
+  NEW  273598 Enchant Off-Hand - Superior Intellect    q1 |  | weapon enchant: Permanently enchant an Off-Hand to add $M1 to intellect.
+  NEW  273599 Enchant Off-Hand - Excellent Spirit      q1 |  | weapon enchant: Permanently enchant an Off-Hand to add $M1 to spirit.
+  NEW  273600 Enchant Off-Hand - Wisdom                q1 |  | weapon enchant: Permanently enchant an Off-Hand to add $M1 to intellect and $M2 to spirit.
+  NEW  273601 Enchant 2H Weapon - Spellblasting        q1 |  | weapon enchant: Permanently enchant a 2H Weapon to add $M1 Spell Power.
+  NEW  273602 Enchant Shield - Excellent Stamina       q1 |  | weapon enchant: Permanently enchant a Shield to add $M1 to stamina.
+  NEW  273604 Enchant Cloak - Agility                  q1 |  | weapon enchant: Permanently enchant a Cloak to add $M1 to agility.
+  NEW  273605 Enchant Shield - Critical Strike         q1 |  | weapon enchant: Permanently enchant a Shield to add $1220596M1% critical strike chance.
+  NEW  273606 Enchant Bracer - Greater Spellpower      q1 |  | weapon enchant: Permanently enchant Bracers to add $M1 to spell power.
+  NEW  273607 Enchant Weapon - Grand Crusader          q1 |  | weapon enchant: Permanently enchant a melee weapon so that often when attacking in melee it heals for $1231124s2 and
+  NEW  273608 Enchant 2H Weapon - Grand Arcanist       q1 |  | weapon enchant: Permanently enchant a two-handed melee weapon so that often when striking with a spell it restores $
+  NEW  273609 Enchant Weapon - Grand Sorcerer          q1 |  | weapon enchant: Permanently enchant a melee weapon so that often when striking with a spell it restores $1231162s2 m
+  NEW  273610 Enchant 2H Weapon - Grand Inquisitor     q1 |  | weapon enchant: Permanently enchant a two-handed melee weapon so that often when attacking in melee it heals for $12
+  NEW  273611 Enchant Bracer - Minor Intellect         q1 |  | weapon enchant: Permanently enchant bracers to give +3 Intellect.
+  NEW  273612 Enchant Bracer - Minor Healing Power     q1 |  | weapon enchant: Permanently enchant bracers so they increase the wearer's healing spells by up to 8 and damage spell
+  NEW  273613 Enchant Bracer - Lesser Agility          q1 |  | weapon enchant: Permanently enchant a bracer so it increases the wearer's Agility by 4.
+  NEW  273614 Enchant Bracer - Agility                 q1 |  | weapon enchant: Permanently enchant bracers to give +5 Agility.
+  NEW  273615 Enchant Bracer - Lesser Healing Power    q1 |  | weapon enchant: Permanently enchant bracers to increase healing by up to 16 and damage by up to 6.
+  NEW  273616 Enchant Bracer - Greater Agility         q1 |  | weapon enchant: Permanently enchant bracers to give +7 Agility.
+  NEW  273617 Enchant 2H Weapon - Lesser Agility       q1 |  | weapon enchant: Permanently enchant a Two-handed Melee Weapon to grant +15 Agility.
+  NEW  273618 Enchant 2H Weapon - Lesser Strength      q1 |  | weapon enchant: Permanently enchant a Two-handed Melee Weapon to grant +15 Strength.
+  NEW  273619 Enchant Gloves - Advanced Skinning       q1 |  | weapon enchant: Permanently enchant gloves to grant +10 skinning skill.
+  NEW  273620 Enchant Bracer - Superior Agility        q1 |  | weapon enchant: Permanently enchant bracers to give +9 Agility.
+  NEW  273621 Enchant 2H Weapon - Mighty Spell Power   q1 |  | weapon enchant: Permanently enchant a two-handed melee weapon to increase damage and healing by up to 55.
+  NEW  273622 Enchant 2H Weapon - Mighty Healing Power q1 |  | weapon enchant: Permanently enchant a two-handed melee weapon to increase healing by up to 100 and damage by up to 3
+  NEW  273623 Enchant Gloves - Superior Strength       q1 |  | weapon enchant: Permanently enchant gloves to increase Strength by 15.
+  NEW  273624 Enchant Gloves - Natural Power           q1 |  | weapon enchant: Permanently enchant gloves to increase Nature damage by up to 20.
+  NEW  273625 Enchant Bracer - Superior Intellect      q1 |  | weapon enchant: Permanently enchant bracers to give +9 Intellect.
+  NEW  273626 Enchant Bracer - Superior Deflection     q1 |  | weapon enchant: Permanently enchant bracers to give +$ec1 defense skill.
+  NEW  273627 Enchant Weapon - Insight                 q1 |  | weapon enchant: Permanently enchant a Melee Weapon to have a chance to grant Insight when you cast a spell, increasi
+  NEW  273628 Enchant Weapon - Recovery                q1 |  | weapon enchant: Permanently enchant a Melee Weapon to trigger Recovery when you are Parried or Dodged, healing you f
+  NEW  273629 Enchant Weapon - Revelation              q1 |  | weapon enchant: Permanently enchant a Melee Weapon to have a chance to trigger Revelation when a non-periodic spell 
+  NEW  273630 Enchant Necklace - Strength              q1 |  | weapon enchant: Permanently enchant a necklace to increase Strength by 5.
+  NEW  273631 Enchant Necklace - Spell Power           q1 |  | weapon enchant: Permanently enchant a necklace to increase spell damage and healing by up to 6.
+  NEW  273632 Enchant Necklace - Healing Power         q1 |  | weapon enchant: Permanently enchant a necklace to increase healing by up to 11 and spell damage by up to 4.
+  NEW  273633 Enchant Necklace - Agility               q1 |  | weapon enchant: Permanently enchant a necklace to increase Agility by 5.
+  NEW  273634 Enchant Necklace - Deflection            q1 |  | weapon enchant: Permanently enchant a necklace to increase defense skill by 5.
+  NEW  273635 Enchant Chest - Absorption               q1 |  | weapon enchant: Enchant a piece of chest armor so it has a 25% chance per hit of giving you 50 points of damage abso
+  NEW  274426 Enchant Gloves - Lotus Claw              q1 |  | weapon enchant: Permanently enchant a pair of gloves to give a small chance to acquire Death Lotus when gathering an
+  NEW  279258 Wild Leather Armor Kit                   q3 |  | weapon enchant: Permanently increase the Defense Skill by $ec1 and the Stamina value by $ec2 of an item worn on the 
+  NEW  289559 Enchant Boots - Speed                    q1 |  | weapon enchant: Permanently enchant boots to increase movement speed by $1328947s1%.
+  era    2304 Light Armor Kit                          q1 |  | weapon enchant: Permanently increase the Stamina value by 1 and the Armor value by 8 of an item worn on the chest, l
+  era    2313 Medium Armor Kit                         q1 |  | weapon enchant: Permanently increase the Stamina value by 2 and the armor value by 16 of an item worn on the chest, 
+  era    4265 Heavy Armor Kit                          q1 |  | weapon enchant: Permanently increase the Stamina value by $ec2 and armor value by $ec1 of an item worn on the chest,
+  era    6041 Steel Weapon Chain                       q1 |  | weapon enchant: Attaches a chain to your weapon, making it impossible to disarm.
+  era    6042 Iron Shield Spike                        q1 |  | weapon enchant: Attaches an Iron Spike to your shield that deals damage every time you block with it.
+  era    6043 Iron Counterweight                       q1 |  | weapon enchant: Attaches a counterweight to a two-handed sword, mace, axe or polearm making it 3% faster.
+  era    7967 Mithril Shield Spike                     q2 |  | weapon enchant: Attaches a Mithril Spike to your shield that deals damage every time you block with it.
+  era    7969 Mithril Spurs                            q2 |  | weapon enchant: Attaches spurs to your boots that increase your mounted movement speed slightly.
+  era    8173 Thick Armor Kit                          q1 |  | weapon enchant: Permanently increase the Stamina value by $ec2 and armor value by $ec1 of an item worn on the chest,
+  era   12645 Thorium Shield Spike                     q2 |  | weapon enchant: Attaches a Thorium Spike to your shield that deals damage every time you block with it.
+  era   15564 Rugged Armor Kit                         q1 |  | weapon enchant: Permanently increase the Stamina value by $ec2 and armor value by $ec1 of an item worn on the chest,
+  era   18251 Core Armor Kit                           q3 |  | weapon enchant: Permanently increase the defense value of an item worn on the chest, legs, hands or feet by $ec1. On
+  era   19971 High Test Eternium Fishing Line          q2 |  | weapon enchant: Replaces the fishing line on your fishing pole with a high test eternium line.
+
+# elixir (51)
+  NEW  246948 Distilled Firewater                      q1 | 17038:Winterfall Firewater(20m) | Increases size, and melee attack power by $s1.
+  NEW  247754 Minor Arcane Elixir                      q1 | 1245244:Minor Arcane Elixir(30m) | Magical damage dealt by spells and abilities is increased by up to $s1.
+  NEW  247755 Elixir of Minor Force                    q1 | 1245249:Elixir of Minor Force(30m) | Increased melee damage by $s1.
+  NEW  250328 Elixir of Cunning                        q1 | 1250918:Elixir of Cunning(30m) | Agility and Intellect increased by $w1.
+  NEW  250329 Elixir of the Phalanx                    q1 | 1250920:Elixir of the Phalanx(30m) | Maximum Health increased by $w1 and Armor increased by $w2.
+  NEW  250330 Minor Cleric's Elixir                    q1 | 1250922:Minor Cleric's Elixir(30m) | Healing done by spells and effects increased by up to $w1.
+  NEW  250331 Lesser Cleric's Elixir                   q1 | 1250924:Lesser Cleric's Elixir(30m) | Healing done by spells and effects increased by up to $w1.
+  NEW  250332 Cleric's Elixir                          q1 | 1250925:Cleric's Elixir(30m) | Healing done by spells and effects increased by up to $w1.
+  NEW  250333 Greater Cleric's Elixir                  q1 | 1250926:Greater Cleric's Elixir(30m) | Healing done by spells and effects increased by up to $w1.
+  NEW  250334 Elixir of Fortitude                      q1 | 1250928:Elixir of Fortitude(30m) | Maximum health is increased by $w1.
+  NEW  250335 Elixir of Greater Fortitude              q1 | 1250931:Elixir of Greater Fortitude(30m) | Maximum health is increased by $w1.
+  NEW  250336 Elixir of Wicked Regeneration            q1 | 1250932:Elixir of Wicked Regeneration(30m) | Regenerate $w1 health and $w2 mana every 5 sec.
+  NEW  250337 Elixir of the Owl                        q1 | 1250940:Elixir of the Owl(30m) | Your intellect is increased by $w1 and your chance to critically hit is increased by $w2%.
+  NEW  250338 Elixir of Sages                          q1 | 1250941:Elixir of Sages(30m) | Your spirit is increased by $w1 and your chance to critically hit is increased by $w2%.
+  NEW  250339 Minor Mageblood Elixir                   q1 | 1250942:Minor Mageblood Elixir(30m) | Regenerating $w1 mana every 5 sec.
+  NEW  250340 Lesser Mageblood Elixir                  q1 | 1250944:Lesser Mageblood Elixir(30m) | Regenerating $w1 mana every 5 sec.
+  NEW  250341 Greater Mageblood Elixir                 q1 | 1250948:Greater Mageblood Elixir(30m) | Regenerating $w1 mana every 5 sec.
+  NEW  250342 Lesser Arcane Elixir                     q1 | 1250971:Lesser Arcane Elixir(30m) | Magical damage dealt by spells and abilities is increased by up to $w1.
+  NEW  250343 Elixir of Nature Power                   q1 | 1250972:Elixir of Nature Power(30m) | Nature damage dealt by spells and abilities is increased by up to $w1.
+  NEW  250344 Elixir of Minor Spirit                   q1 | 1250974:Elixir of Minor Spirit(30m) | Your Spirit is increased by $w1.
+  NEW  250345 Elixir of Lesser Spirit                  q1 | 1250976:Elixir of Lesser Spirit(30m) | Your Spirit is increased by $w1.
+  NEW  250346 Elixir of Spirit                         q1 | 1250978:Elixir of Spirit(30m) | Your Spirit is increased by $w1.
+  NEW  250347 Elixir of Greater Spirit                 q1 | 1250979:Elixir of Greater Spirit(30m) | Your Spirit is increased by $w1.
+  NEW  250348 Elixir of the Whale                      q1 | 1250981:Elixir of the Whale(30m) | Your spirit is increased by $w1 and your chance to critically hit is increased by $w2%.
+  NEW  250349 Elixir of Strength                       q1 | 1250984:Elixir of Strength(30m) | Your Strength is increased by $w1.
+  NEW  250350 Elixir of Ferocity                       q1 | 1250985:Elixir of Ferocity(30m) | Your Strength and Agility are increased by $w1.
+  NEW  250351 Elixir of the Grizzly                    q1 | 1250986:Elixir of the Grizzly(30m) | Your strength is increased by $w1 and your chance to critically hit is increased by $w2%.
+  NEW  250353 Elixir of Lesser Intellect               q1 | 1250988:Elixir of Lesser Intellect(30m) | Your Intellect is increased by $w1.
+  NEW  250354 Elixir of Intellect                      q1 | 1250989:Elixir of Intellect(30m) | Your Intellect is increased by $w1.
+  NEW  289082 Elixir of Endless Intellect              q1 | 1327736:Elixir of Endless Intellect(60m) | Intellect increased by $s1%.
+  NEW  289083 Elixir of Endless Power                  q1 | 1327737:Elixir of Endless Power(60m) | Increases damage dealt by $s1%.
+  NEW  289084 Elixir of Endless Healing                q1 | 1327738:Elixir of Endless Healing(60m) | Increases healing done by $s1%.
+  NEW  289086 Elixir of Endless Rapidity               q1 | 1327751:Elixir of Endless Rapidity(60m) | Haste increased by $s1%.
+  NEW  289087 Elixir of Endless Opportunity            q1 | 1327753:Elixir of Endless Opportunity(60m) | Critical Strike chance increased by $s1%.
+  NEW  289321 Elixir of Endless Mana                   q1 | 1328032:Elixir of Endless Mana(60m) | Mana regeneration increased by $s1%.
+  NEW  289329 Elixir of Endless Growth                 q1 | 1328118:Elixir of Endless Growth(10m) | Feeling much bigger now.
+  NEW  289334 Elixir of Endless Experience             q1 | 1328127:Elixir of Endless Experience(60m) | Experience gain increased by $s1%.
+  era    3389 Elixir of Lesser Defense                 q1 | 3220:Armor(60m) | Armor increased by $s1.
+  era    3826 Troll's Blood Elixir                     q1 | 3223:Troll's Blood Elixir(60m) | Regenerate $s1 health every 5 sec.
+  era    3828 Draught of Detect Lesser Invisibility    q1 | 6512:Detect Lesser Invisibility(10m) | Detecting Lesser Invisiblity.
+  era    5996 Draught of Water Breathing               q1 | 7178:Water Breathing(30m) | Waterbreathing.
+  era    5997 Elixir of Minor Defense                  q1 | 673:Elixir of Minor Defense(60m) | Armor increased by $s1.
+  era    6373 Elixir of Fire Power                     q1 | 7844:Fire Power(30m) | Fire damage dealt by spells and abilities is increased by up to $s1.
+  era    8827 Draught of Water Walking                 q1 | 11319:Water Walking(30m) | Allows walking over water and water-like surfaces.
+  era    8951 Elixir of Defense                        q1 | 11349:Armor(60m) | Armor increased by $s1.
+  era    9154 Draught of Detect Undead                 q1 | 11389:Detect Undead(60m) | Detecting Undead.
+  era    9233 Draught of Detect Demon                  q1 | 11407:Detect Demon(60m) | Detects Demons.
+  era   10592 Catseye Draught                          q1 | 12608:Stealth Detection(10m) | Slightly increased stealth detection.
+  era   13453 Elixir of Brute Force                    q1 | 17537:Elixir of Brute Force(60m) | Strength and Stamina increased by $s1.
+  era   18294 Draught of Greater Water Breathing       q1 | 22807:Greater Water Breathing(60m) | Waterbreathing.
+  era  217398 Lesser Arcane Elixir                     q1 | 439959:Lesser Arcane Elixir(30m) | Magical damage dealt by spells and abilities is increased by up to $s1.
+
+# 14 (9)
+  NEW  269902 Hoof-Shaped Foot Pedal                   q1 | 1286814:Hoof-Shaped Foot Pedal(20m) | Transformed into a centaur.
+
+While in Desolace, you also gain $s2% movement speed and the transformation per
+  NEW  279272 SAF-T Ultra Precision Scope              q3 |  | weapon enchant: Attaches a permanent scope to a bow, gun, or crossbow that increases its critical strike chance by $
+  era    4405 Crude Scope                              q1 |  | weapon enchant: Attaches a permanent scope to a bow or gun that increases its damage by 1.
+  era    4406 Standard Scope                           q1 |  | weapon enchant: Attaches a permanent scope to a bow or gun that increases its damage by 2.
+  era    4407 Accurate Scope                           q1 |  | weapon enchant: Attaches a permanent scope to a bow or gun that increases its damage by 3.
+  era    6533 Aquadynamic Fish Attractor               q1 |  | weapon enchant: When applied to your fishing pole, increases Fishing by 100 for 5 minutes.
+  era   10546 Deadly Scope                             q1 |  | weapon enchant: Attaches a permanent scope to a bow or gun that increases its damage by 5.
+  era   10548 Sniper Scope                             q1 |  | weapon enchant: Attaches a permanent scope to a bow or gun that increases its damage by 7.
+  era   18283 Biznicks 247x128 Accurascope             q3 |  | weapon enchant: Attaches a permanent scope to a bow or gun that increases its chance to hit by 3%.
+
+# 15 (3)
+  NEW  271871 Gift of Galloping                        q4 | 1289654:Gift of Galloping(21600m) | Mounted movement speed increased by $s1%.
+  era  228980 Conductive Shield Coating                q1 |  | weapon enchant: While applied to target shield it increases spell damage and healing by up to 24.  Lasts for 30 minu
+  era  232611 Magnificent Trollshine                   q1 |  | weapon enchant: While applied to target shield it increases spell damage and healing by up to 36 and increases Spell
+
+# flask (4)
+  NEW  274273 Flask of Natural Accuracy                q2 | 1293740:Flask of Natural Accuracy(120m) | Stamina increased by $w1.
+
+While in Mount Hyjal, Hyjal Summit, and the Barrow Deeps, you also gain $w2% Hit 
+  NEW  274274 Flask of Natural Aggression              q2 | 1293741:Flask of Natural Aggression(120m) | Stamina increased by $w1.
+
+While in Mount Hyjal, Hyjal Summit, and the Barrow Deeps, you also gain $w2% Crit
+  NEW  274275 Flask of Natural Precision               q2 | 1293742:Flask of Natural Precision(120m) | Stamina increased by $w1.
+
+While in Mount Hyjal, Hyjal Summit, and the Barrow Deeps, you also gain $w2% redu
+  NEW  274276 Flask of Natural Swiftness               q2 | 1293743:Flask of Natural Accuracy(120m) | Stamina increased by $w1.
+
+While in Mount Hyjal, Hyjal Summit, and the Barrow Deeps, you also gain $w2% Hast
+
+# potion (1)
+  NEW  281234 Potion of Winterspring Shrouding         q1 | 1310655:Winterspring Shroud(10m) | Winterspring Shroud

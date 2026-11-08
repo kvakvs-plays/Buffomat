@@ -1,0 +1,18 @@
+Src/Knowledge/AllSpellsDruid.lua:50         16864 Omen of Clarity                    talent+trainable -> trainable+passive
+Src/Knowledge/AllSpellsDruid.lua:64         16689 Nature's Grasp                     talent+trainable -> trainable
+Src/Knowledge/AllSpellsHunter.lua:22        19506 Trueshot Aura                      talent+trainable -> trainable
+Src/Knowledge/AllSpellsPaladin.lua:116      20914 Blessing of Sanctuary                     trainable -> REMOVED
+Src/Knowledge/AllSpellsPaladin.lua:119      20911 Blessing of Sanctuary              talent+trainable -> REMOVED
+Src/Knowledge/AllSpellsPaladin.lua:119      20912 Blessing of Sanctuary                     trainable -> REMOVED
+Src/Knowledge/AllSpellsPaladin.lua:119      20913 Blessing of Sanctuary                     trainable -> REMOVED
+Src/Knowledge/AllSpellsPaladin.lua:141      25890 Greater Blessing of Light                 trainable -> REMOVED
+Src/Knowledge/AllSpellsPaladin.lua:193      25899 Greater Blessing of Sanctuary             trainable -> REMOVED
+Src/Knowledge/AllSpellsPaladin.lua:266      20218 Sanctity Aura                      talent+trainable -> none
+Src/Knowledge/AllSpellsPaladin.lua:28       20217 Blessing of Kings                  talent+trainable -> trainable
+Src/Knowledge/AllSpellsPaladin.lua:49       19979 Blessing of Light                         trainable -> REMOVED
+Src/Knowledge/AllSpellsPaladin.lua:50       19977 Blessing of Light                         trainable -> REMOVED
+Src/Knowledge/AllSpellsPriest.lua:10        14752 Divine Spirit                      talent+trainable -> trainable
+Src/Knowledge/AllSpellsPriest.lua:153       19293 Elune's Grace                             trainable -> REMOVED
+Src/Knowledge/AllSpellsPriest.lua:157       19289 Elune's Grace                             trainable -> REMOVED
+Src/Knowledge/AllSpellsPriest.lua:157       19291 Elune's Grace                             trainable -> REMOVED
+Src/Knowledge/AllSpellsPriest.lua:157       19292 Elune's Grace                             trainable -> REMOVED

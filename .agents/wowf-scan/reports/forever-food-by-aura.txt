@@ -1,0 +1,158 @@
+# Forever food/drink items grouped by the Well Fed (or other) aura they grant
+# build wowf 1.60.1.70862; '*' = item id already referenced by Buffomat; L = required level
+
+## aura 19705 Well Fed (15m) - Stamina and Spirit increased by $w1
+  *   11584 L0  Cactus Apple Surprise
+       7806 L1  Lollipop
+       7807 L1  Candy Bar
+       7808 L1  Chocolate Square
+      17197 L1  Gingerbread Cookie
+      17198 L1  Egg Nog
+## aura 19708 Well Fed (15m) - Stamina and Spirit increased by $w1
+  *    5527 L15 Goblin Deviled Clams
+## aura 19710 Well Fed (15m) - Stamina and Spirit increased by $w1
+  *   16971 L40 Clamlette Surprise
+## aura 1225779 Well Fed (15m) - Your Agility is increased by $w1 and Stamina by $w2
+     238638 L55 Filet o' Flank
+## aura 1248406 Well Fed (15m) - Your Stamina is increased by $w1
+  *    3663 L1  Murloc Fin Soup
+  *    5472 L1  Kaldorei Spider Kabob
+  *    5474 L1  Roasted Kodo Meat
+  *    6888 L1  Herb Baked Egg
+  *    5479 L5  Crispy Lizard Tail
+  *   12213 L5  Carrion Surprise
+     250080 L5  Breakfast Omelette
+     263509 L5  Skywall Souffle
+     268912 L5  Expiring Crab Cake
+     268913 L5  Expiring Crocolisk Steak
+  *    3665 L15 Curiously Tasty Omelet
+  *    3666 L15 Gooey Spider Cake
+  *    3729 L15 Soothing Turtle Bisque
+  *   12214 L15 Mystery Stew
+  *    6038 L25 Giant Clam Scorcho
+  *   12215 L25 Heavy Kodo Stew
+     250078 L25 Giant Scrambled Eggs
+  *   12218 L35 Monster Omelet
+  *   17222 L35 Spider Sausage
+     250068 L45 Savory Turtle Stew
+## aura 1248420 Well Fed (15m) - Your Agility is increased by $w1
+  *    2680 L1  Spiced Wolf Meat
+     287973 L1  Tender Wolf Steak
+  *    2684 L5  Coyote Steak
+  *    3662 L5  Crocolisk Steak
+  *    1017 L15 Seasoned Wolf Kabob
+  *    3664 L15 Crocolisk Gumbo
+  *    3727 L15 Hot Lion Chops
+  *   12209 L15 Lean Wolf Steak
+  *    3728 L25 Tasty Lion Steak
+  *   13851 L25 Hot Wolf Ribs
+  *   20074 L25 Heavy Crocolisk Stew
+  *   12212 L35 Jungle Stew
+  *   18045 L35 Tender Wolf Steak
+     250069 L45 Flank au Poivre
+     250072 L45 Swiftstrike Steak
+## aura 1248421 Well Fed (15m) - Your Intellect is increased by $w1
+       2682 L1  Cooked Crab Claw
+  *    5477 L1  Strider Stew
+  *   12224 L1  Crispy Bat Wing
+     250079 L1  Tasty Raptor Bites
+  *    1082 L5  Redridge Goulash
+  *    2683 L5  Crab Cake
+     250077 L5  Twice-Spiced Raptor Slice
+     263512 L5  Pincer Bites
+  *   12210 L15 Roast Raptor
+       4457 L25 Barbecued Buzzard Wing
+  *   12216 L25 Spiced Chili Crab
+     250073 L25 Raging Raptor Ribs
+  *   18254 L35 Runn Tum Tuber Surprise
+     250076 L35 Raptor Rouladen
+     250066 L45 Soaring Pamplona
+     250067 L45 Bat Hachee
+     250075 L45 Prehistoric Pulled Raptor
+## aura 1248422 Well Fed (15m) - Your Strength is increased by $w1
+       2681 L1  Roasted Boar Meat
+  *    2888 L1  Beer Basted Boar Ribs
+       6890 L1  Smoked Bear Meat
+  *     724 L5  Goretusk Liver Pie
+  *    2687 L5  Dry Pork Ribs
+  *    3220 L5  Blood Sausage
+       3726 L5  Big Bear Steak
+  *    2685 L15 Succulent Pork Ribs
+  *    5480 L15 Lean Venison
+     250074 L25 Bear Brisket
+     274976 L25 Plain Ol' Paletusk
+     250065 L35 Savory Stag Sliders
+  *   20452 L45 Smoked Desert Dumplings
+     250070 L45 Bear Bruscitti
+     250071 L45 Steaming Stag Steak
+## aura 1248688 Well Fed (15m) - Your movement speed is increased by $w2% while in Westfall
+        733 L5  Westfall Stew
+## aura 1249519 Well Fed (15m) - Your Attack Power is increased by $w1
+        787 L1  Slitherskin Mackerel
+       6290 L1  Brilliant Smallfish
+       4592 L5  Longjaw Mud Snapper
+       8364 L25 Mithril Head Trout
+      13927 L35 Cooked Glossy Mightfish
+      13932 L35 Poached Sunscale Salmon
+      13934 L45 Mightfish Steak
+## aura 1249520 Well Fed (15m) - Your Spell Damage is increased by $w1
+       5095 L5  Rainbow Fin Albacore
+  *   21072 L10 Smoked Sagefish
+     274971 L25 Briny Seafood Stew
+  *   21217 L30 Sagefish Delight
+       6887 L35 Spotted Yellowtail
+  *   13931 L35 Nightfin Soup
+      13933 L45 Lobster Stew
+      13935 L45 Baked Salmon
+## aura 1249521 Well Fed (15m) - Your Fishing Skill is increased by $w1
+  *    5476 L5  Fillet of Frenzy
+       6316 L5  Loch Frenzy Delight
+       4593 L15 Bristle Whisker Catfish
+       4594 L25 Rockscale Cod
+      13930 L35 Filet of Redgill
+       8957 L45 Spinefin Halibut
+## aura 1249523 Well Fed (15m) - Your Critical Strike chance is increased by $w1%
+     287974 L1  Grilled Squid
+  *   13928 L35 Grilled Squid
+      13929 L35 Hot Smoked Bass
+## aura 1249907 Well Fed (15m) - Your Herbalism skill is increased by $w2
+      10841 L25 Goldthorn Tea
+## aura 1249926 Well Fed (15m) - Your Spirit is increased by $w1
+     249871 L1  Venomous Smoothie
+     249872 L5  Slimy Smoothie
+     249873 L15 Mrrggl Smrrthle
+     249874 L25 Calcified Smoothie
+     249875 L35 Spicy Smoothie
+     249876 L45 Wicked Smoothie
+## aura 1249927 Well Fed (15m) - Your Healing Power is increased by $w1
+     249865 L1  Peace Tea
+     249866 L5  Royal Tea
+     249867 L15 Root Tea
+     249868 L25 Triage Tea
+     249869 L35 Sunny Tea
+     249870 L45 Sage's Tea
+## aura 1294007 Well Fed (15m) - Your movement speed is increased by $w2% while in Hyjal
+     267341 L55 Sweetpaw Jam
+## aura 1319310 Well Fed (15m) - Your Armor is increased by $w1
+     286152 L35 Plated Armorfish
+## aura 5909 Watered-down Beer (10m) - 
+       5265 L1  Watered-down Beer
+## aura 6114 Raptor Punch (5m) - Increased Intellect and decreased Stamina
+       5342 L0  Raptor Punch
+## aura 8213 Savory Deviate Delight (60m) - You feel funny
+       6657 L1  Savory Deviate Delight
+## aura 15852 Dragonbreath Chili (10m) - You don't feel so well
+      12217 L25 Dragonbreath Chili
+## aura 18125 Blessed Sunfruit (10m) - Strength increased by $m1
+  *   13810 L45 Blessed Sunfruit
+## aura 25037 Rumsey Rum Light (15m) - Stamina increased by $s1
+      20709 L0  Rumsey Rum Light
+## aura 25661 Increased Stamina (15m) - Stamina increased by $s1
+  *   21023 L45 Dirge's Kickin' Chimaerok Chops
+## aura 25722 Rumsey Rum Dark (15m) - Stamina increased by $s1
+      21114 L0  Rumsey Rum Dark
+     287972 L1  Rumsey Rum Dark
+## aura 25804 Rumsey Rum Black Label (15m) - Stamina increased by $s1
+  *   21151 L0  Rumsey Rum Black Label
+## aura 1322587 Yay (20m) - Yay cheesecake!
+     287416 L1  Truskis' Cheesecake Slice

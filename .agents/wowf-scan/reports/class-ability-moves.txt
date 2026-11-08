@@ -1,0 +1,340 @@
+tree 1058 9 [('MAGE', 8), ('?', 1)] ['Arcane Subtlety', 'Arcane Focus', 'Improved Channeling', 'Accelerant', 'Impact', 'Frost Warding']
+tree 1081 16 [('SHAMAN', 14), ('MAGE', 1), ('PRIEST', 1)] ['Lava Burst', 'Lightning Overload', 'Earthbound', 'Elemental Reach', 'Call of Thunder', 'Eye of the Storm']
+tree 1083 34 [('DRUID', 29), ('?', 4), ('MAGE', 1)] ['Furor', "Nature's Focus", 'Leader of the Pack', 'Natural Reaction', 'Rend and Tear', 'King of the Jungle']
+tree 1187 9 [('?', 9)] ['Dedicated Study', 'Bartering', 'Master Chef', 'Working Overtime', 'Bountiful Harvest', 'Performance Bonus']
+tree 1188 13 [('?', 13)] ['Thrill of Adventure', 'Talented', 'Frequent Flier', 'Well Rested', 'Field Medicine', 'Field Guide']
+tree 1189 9 [('?', 9)] ['Reagent Economy', 'Gourmand', 'Diplomat', 'The Quick and the Dead', 'Permanence', 'Reinforce']
+
+# DRUID 35
+  1328621 Bloom                                      absent -> talent+passive   dur=0 lvl=1 | When your Rejuvenation or Regrowth spell expires due to its duration, the target is instantly healed for an amount equal to $s1% of your Spirit. If either spell expires due to being dispelled, the tar
+   408258 Dreamstate                                passive -> talent+passive   dur=0 lvl=1 | Your damaging non-periodic spell critical strikes grant you $m1% of your mana regeneration while casting for $408261d.
+   408248 Eclipse                                   passive -> talent+passive   dur=0 lvl=1 | Your Wrath spell reduces the cast time of your next $s3 Starfire spells by ${$m2/-1000}.2 sec. Stores up to $408255u charges. Lasts $408255d.
+    16858 Feral Aggression                   talent+passive -> baseline+passive dur=0 lvl=0 | Increases the Attack Power reduction of your Demoralizing Roar by $s1% and the damage caused by your Ferocious Bite by $s2%.
+    16859 Feral Aggression                   talent+passive -> baseline+passive dur=0 lvl=0 | Increases the Attack Power reduction of your Demoralizing Roar by $s1% and the damage caused by your Ferocious Bite by $s2%.
+    16860 Feral Aggression                   talent+passive -> baseline+passive dur=0 lvl=0 | Increases the Attack Power reduction of your Demoralizing Roar by $s1% and the damage caused by your Ferocious Bite by $s2%.
+    16861 Feral Aggression                   talent+passive -> baseline+passive dur=0 lvl=0 | Increases the Attack Power reduction of your Demoralizing Roar by $s1% and the damage caused by your Ferocious Bite by $s2%.
+    16862 Feral Aggression                   talent+passive -> baseline+passive dur=0 lvl=0 | Increases the Attack Power reduction of your Demoralizing Roar by $s1% and the damage caused by your Ferocious Bite by $s2%.
+  1223081 Genesis                                    absent -> talent+passive   dur=0 lvl=1 | Increases the periodic damage and healing done by your spells and abilities by $s1%.
+    17079 Improved Enrage                    talent+passive -> baseline+passive dur=0 lvl=0 | $?a436895[The Enrage ability instantly generates an additional $/10;17080s1 Rage.][The Enrage ability now instantly generates $/10;17080s1 Rage.]
+    17082 Improved Enrage                    talent+passive -> baseline+passive dur=0 lvl=0 | $?a436895[The Enrage ability instantly generates an additional $/10;17081s1 Rage.][The Enrage ability now instantly generates $/10;17081s1 Rage.]
+    17050 Improved Mark of the Wild          talent+passive -> baseline+passive dur=0 lvl=0 | Increases the effects of your Mark of the Wild and Gift of the Wild spells by $s1%.
+    17051 Improved Mark of the Wild          talent+passive -> baseline+passive dur=0 lvl=0 | Increases the effects of your Mark of the Wild and Gift of the Wild spells by $s1%.
+    17053 Improved Mark of the Wild          talent+passive -> baseline+passive dur=0 lvl=0 | Increases the effects of your Mark of the Wild and Gift of the Wild spells by $s1%.
+    17054 Improved Mark of the Wild          talent+passive -> baseline+passive dur=0 lvl=0 | Increases the effects of your Mark of the Wild and Gift of the Wild spells by $s1%.
+    17055 Improved Mark of the Wild          talent+passive -> baseline+passive dur=0 lvl=0 | Increases the effects of your Mark of the Wild and Gift of the Wild spells by $s1%.
+    16968 Improved Shred                     talent+passive -> baseline+passive dur=0 lvl=0 | Reduces the Energy cost of your Shred ability by $s1.
+    16836 Improved Thorns                    talent+passive -> baseline+passive dur=0 lvl=0 | Increases damage caused by your Thorns spell by $s1%.
+    16839 Improved Thorns                    talent+passive -> baseline+passive dur=0 lvl=0 | Increases damage caused by your Thorns spell by $s1%.
+    16840 Improved Thorns                    talent+passive -> baseline+passive dur=0 lvl=0 | Increases damage caused by your Thorns spell by $s1%.
+   417046 King of the Jungle                        passive -> talent+passive   dur=0 lvl=1 | Tiger's Fury now instantly grants you $s1 Energy.
+  1309631 Living Spirit                              absent -> talent+passive   dur=0 lvl=0 | Increases your Spirit by $m1%.
+  1223242 Natural Instinct                           absent -> talent+passive   dur=0 lvl=1 | Increases the critical strike damage bonus of your melee abilities by $m1% and increases your spell healing by $s2% of your Intellect.
+   417051 Natural Reaction                          passive -> talent+passive   dur=0 lvl=1 | Increases your dodge chance by $m1%, and gives you a $m2% chance to gain ${$417053m1/10} Rage each time you dodge.
+    16902 Natural Weapons                    talent+passive -> baseline+passive dur=0 lvl=0 | $?s436895[Increases all damage you deal by $s1%.][Increases the damage you deal with physical attacks in all forms by $s1%.]
+    16903 Natural Weapons                    talent+passive -> baseline+passive dur=0 lvl=0 | $?s436895[Increases all damage you deal by $s1%.][Increases the damage you deal with physical attacks in all forms by $s1%.]
+    16904 Natural Weapons                    talent+passive -> baseline+passive dur=0 lvl=0 | $?s436895[Increases all damage you deal by $s1%.][Increases the damage you deal with physical attacks in all forms by $s1%.]
+    16905 Natural Weapons                    talent+passive -> baseline+passive dur=0 lvl=0 | $?s436895[Increases all damage you deal by $s1%.][Increases the damage you deal with physical attacks in all forms by $s1%.]
+    16906 Natural Weapons                    talent+passive -> baseline+passive dur=0 lvl=0 | $?s436895[Increases all damage you deal by $s1%.][Increases the damage you deal with physical attacks in all forms by $s1%.]
+  1223082 Nature's Majesty                           absent -> talent+passive   dur=0 lvl=1 | Increases your critical strike chance with spells and melee attacks by $s1%.
+  1223083 Nature's Splendor                          absent -> talent+passive   dur=0 lvl=1 | Increases the duration of your Moonfire and Rejuvenation spells by ${$m1/1000} sec, your Regrowth spell by ${$m2/1000} sec, and your Insect Swarm spell by ${$m3/1000} sec.
+    16864 Omen of Clarity                            talent -> baseline+passive dur=0 lvl=20 | Your spells and attacks have a chance to grant you Clearcasting, reducing the Mana, Rage, or Energy cost of your next damage or healing spell or offensive ability by $16870s1%. Clearcasting is not con
+  1328829 Poised                                     absent -> baseline+passive dur=0 lvl=32 | While at maximum Energy, and out of combat, reduce the Energy cost of your next ability by $1328827s1.
+   436895 S03 - Tuning and Overrides Passive - Druid baseline+passive -> passive          dur=0 lvl=1 | 
+   453124 S03 - Tuning and Overrides Passive - Druid baseline+passive -> passive          dur=0 lvl=1 | 
+
+# HUNTER 30
+  1299445 Aspect of the Beast                        absent -> baseline         dur=-1 lvl=40 | You take on the aspects of a beast, becoming untrackable and increasing Melee Attack Power by $s2. Only one Aspect can be active at a time.
+  1299446 Aspect of the Beast                        absent -> baseline         dur=-1 lvl=50 | You take on the aspects of a beast, becoming untrackable and increasing Melee Attack Power by $s2. Only one Aspect can be active at a time.
+  1299447 Aspect of the Beast                        absent -> baseline         dur=-1 lvl=60 | You take on the aspects of a beast, becoming untrackable and increasing Melee Attack Power by $s2. Only one Aspect can be active at a time.
+  1223984 Careful Aim                                absent -> talent+passive   dur=0 lvl=1 | Increases your Attack Power by $s1% of your Intellect.
+  1310532 Expose Prey                                absent -> talent+passive   dur=0 lvl=0 | Grants your melee and ranged attacks against enemies afflicted by Hunter's Mark a $s1% chance to allow an activation of Mongoose Bite. Lasts $1310726d.
+  1223755 Focused Fire                               absent -> talent+passive   dur=0 lvl=1 | Increases all damage you and your pet deal by $s1% while your pet is active.
+    19151 Humanoid Slaying                   talent+passive -> baseline+passive dur=-1 lvl=0 | Increases all damage caused against Humanoid targets by $s1% and increases critical damage caused against Humanoid targets by an additional $s2%.
+    19152 Humanoid Slaying                   talent+passive -> baseline+passive dur=-1 lvl=0 | Increases all damage caused against Humanoid targets by $s1% and increases critical damage caused against Humanoid targets by an additional $s2%.
+    19153 Humanoid Slaying                   talent+passive -> baseline+passive dur=-1 lvl=0 | Increases all damage caused against Humanoid targets by $s1% and increases critical damage caused against Humanoid targets by an additional $s2%.
+    19557 Improved Eyes of the Beast         talent+passive -> baseline+passive dur=0 lvl=0 | Increases the duration of your Eyes of the Beast by $/1000;s1 sec.
+    19558 Improved Eyes of the Beast         talent+passive -> baseline+passive dur=0 lvl=0 | Increases the duration of your Eyes of the Beast by $/1000;s1 sec.
+    19286 Improved Feign Death               talent+passive -> baseline+passive dur=0 lvl=0 | Reduces the chance your Feign Death ability will be resisted by $s1%.
+    19287 Improved Feign Death               talent+passive -> baseline+passive dur=0 lvl=0 | Reduces the chance your Feign Death ability will be resisted by $s1%.
+    19421 Improved Hunter's Mark             talent+passive -> baseline+passive dur=0 lvl=0 | Increases the Ranged Attack Power bonus of your Hunter's Mark spell by $s1%.
+  1310661 Improved Stings                            absent -> talent+passive   dur=0 lvl=0 | Increases the damage of your Serpent Sting ability by $s1%, reduces the cooldown of your Viper Sting ability by ${$m2/-1000} sec, and increases the duration of your Scorpid Sting ability by ${$m3/1000
+  1310533 Lacerating Strikes                         absent -> talent+passive   dur=0 lvl=0 | Your Mongoose Bite also causes the target to Bleed for damage equal to $s1% of the damage done by Mongoose Bite over $1310536d
+   415370 Lone Wolf                                 passive -> talent+passive   dur=0 lvl=1 | You deal $s2% increased damage with all attacks while you do not have an active pet.
+    24294 Monster Slaying                    talent+passive -> baseline+passive dur=-1 lvl=0 | Increases all damage caused against Beasts, Giants and Dragonkin targets by $s1% and increases critical damage caused against Beasts, Giants and Dragonkin targets by an additional $s2%.
+    24295 Monster Slaying                    talent+passive -> baseline+passive dur=-1 lvl=0 | Increases all damage caused against Beasts, Giants and Dragonkin targets by $s1% and increases critical damage caused against Beasts, Giants and Dragonkin targets by an additional $s2%.
+  1310627 Predator's Edge                            absent -> talent+passive   dur=0 lvl=0 | Increases your melee ability critical strike damage by $s1% and your Off Hand weapon damage by $s2%.
+   415405 Rapid Killing                             passive -> talent+passive   dur=0 lvl=0 | Reduces the cooldown on your Rapid Fire ability by ${$m1/-60000} min. In addition, when you kill a non-trivial enemy or it dies while afflicted by your Serpent Sting, you gain Rapid Killing, increasin
+  1223987 Rapid Recuperation                         absent -> talent+passive   dur=0 lvl=1 | Afflicting a target with Serpent Sting allows $s1% of your Mana Regeneration to continue while casting for $1242512d, increased to $s2% when Rapid Killing is consumed.
+   440529 Resourcefulness                           passive -> talent+passive   dur=0 lvl=1 | Reduces the Mana cost of your Trap and melee abilities by $s1%, and grants your melee and ranged ability Critical Strikes a $m2% chance to allow $1242688s1% of your Mana Regeneration to continue while
+   462659 S03 - Tuning and Overrides Passive - Hunter baseline+passive -> passive          dur=0 lvl=1 | 
+   446374 S03 - Tuning and Overrides Passive - Hunter baseline+passive -> passive          dur=0 lvl=1 | 
+  1310496 Survivalist's Discipline                   absent -> talent+passive   dur=0 lvl=1 | Reduces the cooldown of your Trap and Deterrence abilities by $m1%.
+    19609 Thick Hide                         talent+passive -> baseline+passive dur=0 lvl=0 | Increases the Armor of your pets by $s1%.
+    19506 Trueshot Aura                              talent -> baseline         dur=1800000 lvl=40 | Increases the Ranged Attack Power of party or raid members within $a1 yards by $s1. Lasts $d.
+  1299346 Trueshot Aura                              absent -> talent           dur=1800000 lvl=25 | Increases the Ranged Attack Power of party or raid members within $a1 yds by $s1.
+  1299348 Trueshot Aura                              absent -> baseline         dur=1800000 lvl=32 | Increases the Ranged Attack Power of party or raid members within $a1 yds by $s1.
+
+# MAGE 9
+  1222988 Earthbound                                 absent -> talent+passive   dur=0 lvl=1 | Your Earthbind Totem Immobilizes nearby targets for $1238289d when cast.
+   400647 Fingers of Frost                          passive -> talent+passive   dur=0 lvl=1 | Gives your Chill effects a $s2% chance to grant you the Fingers of Frost effect, which treats your next $m1 $lspell:spells; cast as if the target were Frozen. Lasts $400669d.
+   400624 Heating Up                                passive -> talent+passive   dur=0 lvl=1 | Non-periodic critical strikes with Fireball, Frostfire Bolt, Fire Blast, and Scorch reduce the cast time of your next Pyroblast cast within $400625d by $400625s1%, stacking up to $400625s2 times. Fire
+    12606 Magic Attunement                   talent+passive -> baseline+passive dur=0 lvl=1 | Increases the effect of your Amplify Magic and Dampen Magic spells by $s1%.
+   400588 Missile Barrage                           passive -> talent+passive   dur=0 lvl=1 | Gives your Arcane Blast spell a $m1% chance, and your Arcane Wrath, Fireball, Frostbolt, and Frostfire Bolt spells a ${$m1/2}% chance to reduce the channeled duration of your next Arcane Missiles spel
+    11151 Piercing Ice                       talent+passive -> baseline+passive dur=0 lvl=1 | Increases the damage done by your Frost spells by $s1%.
+  1328613 Predatory Discipline                       absent -> talent+passive   dur=0 lvl=1 | Your Ferocious Bite ability no longer converts extra Energy into damage, but still deals extra damage based on your excess Energy.
+  1223246 Rend and Tear                              absent -> talent+passive   dur=0 lvl=1 | Increases damage done by your melee abilities on Bleeding targets by $m1%.
+   442543 S03 - Tuning and Overrides Passive - Mage baseline+passive -> passive          dur=0 lvl=1 | 
+
+# PALADIN 52
+   407613 Beacon of Light                          baseline -> absent           dur=3600000 lvl=1 | The target becomes a Beacon of Light to all members of your party or raid within a 40 yard radius.  Any heals you cast on party or raid members will also heal the Beacon for $s1% of the amount healed.
+     1038 Blessing of Salvation                    baseline -> absent           dur=300000 lvl=26 | Places a Blessing on the party member, reducing the amount of all threat generated by $s1% for $d.  Players may only have one Blessing on them per Paladin at any one time.
+    19977 Blessing of Light                        baseline -> absent           dur=300000 lvl=40 | Places a Blessing on the friendly target, increasing the effects of Holy Light spells used on the target by up to $s1 and the effect Flash of Light spells used on the target by up to $s2.  Lasts $d.  
+    19978 Blessing of Light                        baseline -> absent           dur=300000 lvl=50 | Places a Blessing on the friendly target, increasing the effects of Holy Light spells used on the target by up to $s1 and the effect Flash of Light spells used on the target by up to $s2.  Lasts $d.  
+    19979 Blessing of Light                        baseline -> absent           dur=300000 lvl=60 | Places a Blessing on the friendly target, increasing the effects of Holy Light spells used on the target by up to $s1 and the effect Flash of Light spells used on the target by up to $s2.  Lasts $d.  
+    20217 Blessing of Kings                          talent -> baseline         dur=3600000 lvl=20 | Places a Blessing on the friendly target, increasing total stats by $s1% for $d.  Players may only have one Blessing on them per Paladin at any one time.
+    20911 Blessing of Sanctuary                      talent -> absent           dur=300000 lvl=30 | Places a Blessing on the friendly target, reducing damage dealt from all sources by up to $s1 for $d.  In addition, when the target blocks a melee attack the attacker will take $s2 Holy damage.  Playe
+    20912 Blessing of Sanctuary                    baseline -> absent           dur=300000 lvl=40 | Places a Blessing on the friendly target, reducing damage dealt from all sources by up to $s1 for $d.  In addition, when the target blocks a melee attack the attacker will take $s2 Holy damage.  Playe
+    20913 Blessing of Sanctuary                    baseline -> absent           dur=300000 lvl=50 | Places a Blessing on the friendly target, reducing damage dealt from all sources by up to $s1 for $d.  In addition, when the target blocks a melee attack the attacker will take $s2 Holy damage.  Playe
+    20914 Blessing of Sanctuary                    baseline -> absent           dur=300000 lvl=60 | Places a Blessing on the friendly target, reducing damage dealt from all sources by up to $s1 for $d.  In addition, when the target blocks a melee attack the attacker will take $s2 Holy damage.  Playe
+  1328550 Boundless Light                            absent -> talent+passive   dur=0 lvl=1 | Increases the critical strike chance of your Holy Shock spell by $s1% when cast on allies not affected by your Oath of Light.
+  1311084 Champion of the Light                      absent -> talent+passive   dur=0 lvl=0 | Increases your spell damage by up to $m1% of your Intellect, and reduces the cast time of your Hammer of Wrath by ${$m2/-1000}.1 sec.
+  1310905 Consecrated Ground                         absent -> talent+passive   dur=0 lvl=0 | Gives your Holy spells $m1% increased damage against the first $20924s3 enemies that enter your Consecration.
+  1310904 Divine Precision                           absent -> talent+passive   dur=0 lvl=0 | Improves your chance to hit with Holy spells by $s1%, and reduces the duration of Silence effects on you by $s2%.
+    25890 Greater Blessing of Light                baseline -> absent           dur=900000 lvl=60 | Gives all members of the raid or group that share the same class with the target the Greater Blessing of Light, increasing the effects of Holy Light spells used on the target by up to $s1 and the effe
+    25895 Greater Blessing of Salvation            baseline -> absent           dur=900000 lvl=60 | Gives all members of the raid or group that share the same class with the target the Greater Blessing of Salvation, reducing the amount of all threat generated by $s1% for $d.  Players may only have o
+    25899 Greater Blessing of Sanctuary            baseline -> absent           dur=900000 lvl=60 | Gives all members of the raid or group that share the same class with the target the Greater Blessing of Sanctuary, reducing damage dealt from all sources by up to $s1 for $d.  In addition, when the t
+  1237268 Holy Conduit                               absent -> talent+passive   dur=0 lvl=0 | Reduces the mana cost of your Consecration, Holy Wrath, Exorcism, and Hammer of Wrath spells by $m1%.
+    20042 Improved Blessing of Might         talent+passive -> baseline+passive dur=0 lvl=0 | Increases the melee attack power bonus of your Blessing of Might by $s1%.
+    20045 Improved Blessing of Might         talent+passive -> baseline+passive dur=0 lvl=0 | Increases the melee attack power bonus of your Blessing of Might by $s1%.
+    20046 Improved Blessing of Might         talent+passive -> baseline+passive dur=0 lvl=0 | Increases the melee attack power bonus of your Blessing of Might by $s1%.
+    20047 Improved Blessing of Might         talent+passive -> baseline+passive dur=0 lvl=0 | Increases the melee attack power bonus of your Blessing of Might by $s1%.
+    20048 Improved Blessing of Might         talent+passive -> baseline+passive dur=0 lvl=0 | Increases the melee attack power bonus of your Blessing of Might by $s1%.
+    20244 Improved Blessing of Wisdom        talent+passive -> baseline+passive dur=0 lvl=0 | Increases the effect of your Blessing of Wisdom spell by $s1%.
+    20245 Improved Blessing of Wisdom        talent+passive -> baseline+passive dur=0 lvl=0 | Increases the effect of your Blessing of Wisdom spell by $s1%.
+    20254 Improved Concentration Aura        talent+passive -> baseline+passive dur=0 lvl=0 | Increases the effect of your Concentration Aura by an additional $m1%, and your Concentration Aura also reduces the duration of Silence and Interrupt effects on your party members by $m2%.
+    20138 Improved Devotion Aura             talent+passive -> baseline+passive dur=0 lvl=0 | Increases the armor bonus of your Devotion Aura by $s1%, and increases all healing received by party members affected by your Auras by $m2%.
+    20091 Improved Retribution Aura          talent+passive -> baseline+passive dur=0 lvl=0 | Increases the damage done by your Retribution Aura by $s1%.
+    20092 Improved Retribution Aura          talent+passive -> baseline+passive dur=0 lvl=0 | Increases the damage done by your Retribution Aura by $s1%.
+  1314103 Improved Seal of Fury                      absent -> baseline+passive dur=0 lvl=0 | When Seal of Fury's shield is fully absorbed, restore $m1 Mana, increased by $m2% per level the attacker is above you, up to ${$m2*$m3}%.
+    20335 Improved Seal of the Crusader      talent+passive -> baseline+passive dur=0 lvl=0 | Increases the melee attack power bonus of your Seal of the Crusader and the Holy damage increase of your Judgement of the Crusader by $s1%.
+    20336 Improved Seal of the Crusader      talent+passive -> baseline+passive dur=0 lvl=0 | Increases the melee attack power bonus of your Seal of the Crusader and the Holy damage increase of your Judgement of the Crusader by $s1%.
+    20337 Improved Seal of the Crusader      talent+passive -> baseline+passive dur=0 lvl=0 | Increases the melee attack power bonus of your Seal of the Crusader and the Holy damage increase of your Judgement of the Crusader by $s1%.
+   426065 Infusion of Light                         passive -> talent+passive   dur=0 lvl=0 | Your Holy Shock and Flash of Light critical hits reduce the cast time of your next Holy Light cast within $437063d by ${$m1/-1000}.1 sec.
+  1311034 Iron Creed                                 absent -> talent+passive   dur=0 lvl=35 | Increases the threat generated by your Holy Strike ability by $m1%. While Righteous Fury is active, Holy Strike also reduces your damage taken by $m2% for $1311033d.
+    20359 Lasting Judgement                  talent+passive -> baseline+passive dur=0 lvl=0 | Increases the duration of your Judgement of Light and Judgement of Wisdom by $/1000;s1 sec.
+    20360 Lasting Judgement                  talent+passive -> baseline+passive dur=0 lvl=0 | Increases the duration of your Judgement of Light and Judgement of Wisdom by $/1000;s1 sec.
+    20361 Lasting Judgement                  talent+passive -> baseline+passive dur=0 lvl=0 | Increases the duration of your Judgement of Light and Judgement of Wisdom by $/1000;s1 sec.
+  1328548 Oath of Light                              absent -> talent           dur=300000 lvl=0 | Swear an Oath to protect target ally for $d, increasing the healing of your Holy Light on them by up to $s1, your Flash of Light by up to $s2, and your Holy Shock by up to $s3. Only one Oath of Light 
+   429144 Purifying Power                           passive -> talent+passive   dur=0 lvl=0 | Reduces the mana cost of your Cleanse and Purify spells by $m1% and reduces the cooldown of your Exorcism and Holy Wrath spells by $m2%.
+  1310899 Reverence                                  absent -> talent+passive   dur=0 lvl=0 | Allows $s1% of your Mana regeneration to continue while casting.
+   462814 S03 - Tuning and Overrides Passive - Paladin baseline+passive -> passive          dur=0 lvl=1 | 
+   466503 S03 - Tuning and Overrides Passive - Paladin baseline+passive -> passive          dur=0 lvl=1 | 
+  1311087 Sacred Arbiter                             absent -> talent+passive   dur=0 lvl=0 | Increases the damage of your Holy Strike ability by $m1% and causes it to refresh all Judgement effects on the target.
+  1224697 Sacred Duty                                absent -> talent+passive   dur=0 lvl=1 | Reduces the cooldown of your Divine Shield, Divine Protection, and Templar's Bulwark spells by ${$m2/-1000} sec, and reduces the duration of Forbearance by ${$m1/-1000} sec.
+  1311074 Sanctified Judgement                       absent -> talent+passive   dur=0 lvl=0 | Gives your Judgement ability a $m1% chance to return $m2% of the Mana cost of the judged seal.
+    20218 Sanctity Aura                              talent -> other            dur=-1 lvl=30 | Increases Holy damage done by party members within $a1 yards by $s1%.  Players may only have one Aura on them per Paladin at any one time.
+  1328544 Shieldsworn                                absent -> talent+passive   dur=0 lvl=1 | Reduces the cooldown of your Holy Strike ability by ${$m1/-1000} sec. Additionally, Holy Strike now strikes with your shield, triggering your active Holy Shield and Shield Specialization talents witho
+  1328546 Stoicism                                   absent -> talent+passive   dur=0 lvl=1 | Reduces the duration of Stun and Charm effects on you by $s1%.
+  1279399 Summon Warhorse                            absent -> baseline         dur=-1 lvl=40 | Summons a warhorse, which serves as a mount.
+  1328370 Turn Evil                                  absent -> talent+passive   dur=0 lvl=0 | Reduces the cast time of your Turn Undead spell by ${$s1/-1000}.1 sec, its cooldown by ${$s2/-1000} sec, and allows it to affect Demons.
+  1310735 Unsealed Wrath                             absent -> talent+passive   dur=0 lvl=0 | Your melee attacks store a copy of your active Seal for $1311701d, stacking up to $1311701u times. Landing an attack with a different Seal consumes all stacks, giving the stored Seal its normal chance
+
+# PRIEST 28
+    15268 Blackout                           talent+passive -> baseline+passive dur=0 lvl=0 | Gives your Shadow damage spells a $h% chance to stun the target for $15269d.
+    15323 Blackout                           talent+passive -> baseline+passive dur=0 lvl=0 | Gives your Shadow damage spells a $h% chance to stun the target for $15269d.
+    15324 Blackout                           talent+passive -> baseline+passive dur=0 lvl=0 | Gives your Shadow damage spells a $h% chance to stun the target for $15269d.
+    15325 Blackout                           talent+passive -> baseline+passive dur=0 lvl=0 | Gives your Shadow damage spells a $h% chance to stun the target for $15269d.
+  1326159 Dark Inspiration                           absent -> talent+passive   dur=0 lvl=0 | Your Mind Blast and fully channeled Mind Flay causes Dark Inspiration, increasing yours and your party's Spirit by $m1% for $1326168d.
+  1309950 Devouring Contagion                        absent -> talent+passive   dur=0 lvl=0 | Reduces the mana cost of your Devouring Plague by $s1%.  Targets that die while Devouring Plague is active spreads it, jumping to $s3 nearby enemies within $s2 yds for the remaining duration. 
+   431622 Divine Aegis                              passive -> talent+passive   dur=0 lvl=0 | Your non-periodic critical heals create a protective shield on the target, absorbing $s1% of the amount healed. Shields up to ${$s2*$pl} damage and lasts $431624d.
+    14752 Divine Spirit                              talent -> baseline         dur=3600000 lvl=30 | Holy power infuses the target, increasing their Spirit by $s1 for $d.
+  1310076 Early Demise                               absent -> talent+passive   dur=0 lvl=0 | Increases Shadow Word: Death's critical strike chance on targets at or below $s2% health by $s1%.
+    18544 Force of Will                      talent+passive -> baseline+passive dur=0 lvl=0 | Increases your spell damage by $s2% and the critical strike chance of your offensive spells by $s1%.
+    18547 Force of Will                      talent+passive -> baseline+passive dur=0 lvl=0 | Increases your spell damage by $s2% and the critical strike chance of your offensive spells by $s1%.
+    18548 Force of Will                      talent+passive -> baseline+passive dur=0 lvl=0 | Increases your spell damage by $s2% and the critical strike chance of your offensive spells by $s1%.
+    18549 Force of Will                      talent+passive -> baseline+passive dur=0 lvl=0 | Increases your spell damage by $s2% and the critical strike chance of your offensive spells by $s1%.
+    18550 Force of Will                      talent+passive -> baseline+passive dur=0 lvl=0 | Increases your spell damage by $s1% and the critical strike chance of your offensive spells by $s1%.
+  1328569 Holy Binding                               absent -> talent+passive   dur=0 lvl=0 | Each time you heal a target other than yourself with Flash Heal, you are healed for $s1% as much. This healing generates no threat.
+  1309957 Holy Precision                             absent -> talent+passive   dur=0 lvl=1 | Improves your chance to hit with Holy spells by $s1%.
+    15274 Improved Fade                      talent+passive -> baseline+passive dur=0 lvl=0 | Decreases the cooldown of your Fade ability by $/1000;s1 sec.
+  1225139 Improved Mind Flay                         absent -> talent+passive   dur=0 lvl=0 | Each instance of damage of Mind Flay deals $s1% more damage than its previous instance of damage.
+    14749 Improved Power Word: Fortitude     talent+passive -> baseline+passive dur=0 lvl=0 | Increases the effect of your Power Word: Fortitude and Prayer of Fortitude spells by $s1%.
+    14767 Improved Power Word: Fortitude     talent+passive -> baseline+passive dur=0 lvl=0 | Increases the effect of your Power Word: Fortitude and Prayer of Fortitude spells by $s1%.
+    27839 Improved Vampiric Embrace          talent+passive -> baseline+passive dur=0 lvl=0 | Increases the percentage healed by your Vampiric Embrace by an additional $s1%.
+  1317006 Litany of Light                            absent -> talent+passive   dur=0 lvl=0 | When you cast a healing spell, gain Mana equal to $m1% of the base cost of the spell if your previous heal was a different spell.
+  1309969 Power in Light                             absent -> talent+passive   dur=0 lvl=0 | Your Smite and Penance spells deal $m1% increased damage to targets afflicted with your Holy Fire or Shadow Word: Pain.
+   425280 Renewed Hope                              passive -> talent+passive   dur=0 lvl=0 | Your heals from Flash Heal, Lesser Heal, Heal, Greater Heal, and Penance gain $m1% increased critical strike chance when cast on targets with Weakened Soul, and reduce the remaining duration of Weaken
+   440247 S03 - Tuning and Overrides Passive - Priest baseline+passive -> passive          dur=0 lvl=1 | 
+    15318 Shadow Affinity                    talent+passive -> baseline+passive dur=0 lvl=0 | Reduces the threat generated by your Shadow spells by $s1%.
+   402000 Soul Warding                              passive -> talent+passive   dur=0 lvl=0 | Reduces the cooldown on your Power Word: Shield spell by ${$m1/-1000} sec and reduces its mana cost by $s2%.
+  1225132 Twin Disciplines                           absent -> talent+passive   dur=0 lvl=0 | Increases the damage and healing of your instant cast spells by $s1%.
+
+# ROGUE 35
+  1329256 Blood Splatter                             absent -> talent+passive   dur=0 lvl=0 | Increases the duration of your Rupture ability by ${$s1/1000} sec and your Garrote ability by ${$s2/1000} sec.
+  1329286 Boot Knife                                 absent -> talent+passive   dur=0 lvl=0 | Grants your Shank ability a $s1% chance to add $s2 Combo Points to the target.
+  1329265 Composure                                  absent -> talent+passive   dur=0 lvl=0 | Increases the Energy cost reduction of your Poised ability by $s1.
+     3420 Crippling Poison                         baseline -> other            dur=0 lvl=20 | Coats a weapon with poison that lasts for ${$m2/60} minutes. Each strike has a $3408h% chance of poisoning the enemy, slowing their movement speed by $3409s1% for $3409d.
+     3421 Crippling Poison II                      baseline -> other            dur=0 lvl=50 | Coats a weapon with poison that lasts for ${$m2/60} minutes. Each strike has a $11202h% chance of poisoning the enemy, slowing their movement speed by $11201s1% for $11201d.
+     2835 Deadly Poison                            baseline -> other            dur=0 lvl=30 | Coats a weapon with poison that lasts for ${$m2/60} minutes. Each strike has a $2823h% chance of poisoning the enemy for $2818o1 Nature damage over $2818d.  Stacks up to $2818u times on a single targe
+     2837 Deadly Poison II                         baseline -> other            dur=0 lvl=38 | Coats a weapon with poison that lasts for ${$m2/60} minutes. Each strike has a $2824h% chance of poisoning the enemy for $2819o1 Nature damage over $2819d.  Stacks up to $2819u times on a single targe
+    11357 Deadly Poison III                        baseline -> other            dur=0 lvl=46 | Coats a weapon with poison that lasts for ${$m2/60} minutes. Each strike has a $11355h% chance of poisoning the enemy for $11353o1 Nature damage over $11353d.  Stacks up to $11353u times on a single t
+    11358 Deadly Poison IV                         baseline -> other            dur=0 lvl=54 | Coats a weapon with poison that lasts for ${$m2/60} minutes. Each strike has a $11356h% chance of poisoning the enemy for $11354o1 Nature damage over $11354d.  Stacks up to $11354u times on a single t
+    25347 Deadly Poison V                          baseline -> other            dur=0 lvl=60 | Coats a weapon with poison that lasts for ${$m2/60} minutes. Each strike has a $11356h% chance of poisoning the enemy for $25349o1 Nature damage over $25349d.  Stacks up to $25349u times on a single t
+  1224782 Dirty Tricks                               absent -> talent+passive   dur=0 lvl=1 | Reduces the Energy cost of your Sap and Blind abilities by $m1%.
+  1329284 Flash of Steel                             absent -> talent+passive   dur=0 lvl=0 | Increases the Energy generated by your Shank ability by $s1 and reduces its cooldown by ${$s2/-1000}.1 sec.
+  1310711 Flawless Execution                         absent -> talent+passive   dur=0 lvl=0 | Reduces the Energy cost of your Eviscerate ability by $m1.
+    14076 Improved Sap                       talent+passive -> baseline+passive dur=0 lvl=0 | Gives you a $s1% chance to return to stealth mode after using your Sap ability.
+    14094 Improved Sap                       talent+passive -> baseline+passive dur=0 lvl=0 | Gives you a $s1% chance to return to stealth mode after using your Sap ability.
+    14095 Improved Sap                       talent+passive -> baseline+passive dur=0 lvl=0 | Gives you a $s1% chance to return to stealth mode after using your Sap ability.
+     8681 Instant Poison                           baseline -> other            dur=0 lvl=20 | Coats a weapon with poison that lasts for ${$m2/60} minutes. Each strike has a $8679h% chance of poisoning the enemy which instantly inflicts $8680s1 Nature damage.  $m3 charges.
+     8687 Instant Poison II                        baseline -> other            dur=0 lvl=28 | Coats a weapon with poison that lasts for ${$m2/60} minutes. Each strike has a $8686h% chance of poisoning the enemy which instantly inflicts $8685s1 Nature damage.  $m3 charges.
+     8691 Instant Poison III                       baseline -> other            dur=0 lvl=36 | Coats a weapon with poison that lasts for ${$m2/60} minutes. Each strike has a $8688h% chance of poisoning the enemy which instantly inflicts $8689s1 Nature damage.  $m3 charges.
+    11341 Instant Poison IV                        baseline -> other            dur=0 lvl=44 | Coats a weapon with poison that lasts for ${$m2/60}  minutes. Each strike has a $11338h% chance of poisoning the enemy which instantly inflicts $11335s1 Nature damage.  $m2 charges.
+    11342 Instant Poison V                         baseline -> other            dur=0 lvl=52 | Coats a weapon with poison that lasts for ${$m2/60} minutes. Each strike has a $11339h% chance of poisoning the enemy which instantly inflicts $11336s1 Nature damage.  $m3 charges.
+    11343 Instant Poison VI                        baseline -> other            dur=0 lvl=60 | Coats a weapon with poison that lasts for ${$m2/60} minutes. Each strike has a $11340h% chance of poisoning the enemy which instantly inflicts $11337s1 Nature damage.  $m3 charges.
+     5763 Mind-numbing Poison                      baseline -> other            dur=0 lvl=24 | Coats a weapon with poison that lasts for ${$m2/60} minutes. Each strike has a $5761h% chance of poisoning the enemy, increasing their casting time by $5760s1% for $5760d.  $m3 charges.
+     8694 Mind-numbing Poison II                   baseline -> other            dur=0 lvl=38 | Coats a weapon with poison that lasts for ${$m2/60} minutes. Each strike has a $8693h% chance of poisoning the enemy, increasing their casting time by $8692s1% for $8692d.  $m3 charges.
+    11400 Mind-numbing Poison III                  baseline -> other            dur=0 lvl=52 | Coats a weapon with poison that lasts for ${$m2/60} minutes. Each strike has a $11399h% chance of poisoning the enemy, increasing their casting time by $11398s1% for $11398d.  $m3 charges.
+    14158 Murder                             talent+passive -> baseline+passive dur=0 lvl=0 | Increases all damage dealt by $m1% against Humanoid and Giant targets.
+  1328825 Poised                                     absent -> baseline+passive dur=0 lvl=18 | While at maximum Energy, and out of combat, reduce the Energy cost of your next ability by $1328826s1.
+  1224716 Puncturing Wounds                          absent -> talent+passive   dur=0 lvl=1 | Increases the critical strike chance of your Backstab by $m1% and your Mutilate by $m3%, and gives Backstab a $m2% chance to add an additional Combo Point.
+  1310728 Quick Getaway                              absent -> talent+passive   dur=0 lvl=0 | Increases the maximum number of targets you may have Sapped by $s1, and increases your movement speed by $s2% for $1329282d after Sapping a target.
+    30892 Sleight of Hand                    talent+passive -> baseline+passive dur=0 lvl=0 | Reduces the chance you are critically hit by attacks by $m1% and increases the threat reduction of your Feint ability by $m2%.
+  1329328 Venom                                      absent -> talent+passive   dur=0 lvl=30 | Causes your Shank ability to increase your Poison damage by $1310703s1% and your chance to apply Poisons by $1310703s3% for $1310703d.
+    13220 Wound Poison                             baseline -> other            dur=0 lvl=32 | Coats a weapon with poison that lasts for ${$m2/60} minutes. Each strike has a $13219h% chance of poisoning the enemy, reducing all healing effects used on them by $13218s1 for $13218d.  Stacks up to 
+    13228 Wound Poison II                          baseline -> other            dur=0 lvl=40 | Coats a weapon with poison that lasts for ${$m2/60} minutes. Each strike has a $13225h% chance of poisoning the enemy, reducing all healing effects used on them by $13222s1 for $13222d.  Stacks up to 
+    13229 Wound Poison III                         baseline -> other            dur=0 lvl=48 | Coats a weapon with poison that lasts for ${$m2/60} minutes. Each strike has a $13226h% chance of poisoning the enemy, reducing all healing effects used on them by $13223s1 for $13223d.  Stacks up to 
+    13230 Wound Poison IV                          baseline -> other            dur=0 lvl=56 | Coats a weapon with poison that lasts for ${$m2/60} minutes. Each strike has a $13227h% chance of poisoning the enemy, reducing all healing effects used on them by $13224s1 for $13224d.  Stacks up to 
+
+# SHAMAN 37
+    25076 Cobra Reflexes                   baseline+passive -> passive          dur=0 lvl=10 | Attack speed increased by $s1%, but reduces damage.
+    16259 Enhancing Totems                   talent+passive -> baseline+passive dur=0 lvl=0 | Increases the effect of your Strength of Earth and Grace of Air Totems by $s1%.
+    16295 Enhancing Totems                   talent+passive -> baseline+passive dur=0 lvl=0 | Increases the effect of your Strength of Earth and Grace of Air Totems by $s1%.
+     1535 Fire Nova Totem                          baseline -> absent           dur=5000 lvl=12 | Summons a Fire Nova Totem that has $s1 health and lasts $d.  Unless it is destroyed within $8443t1 sec., the totem inflicts $8349s1 fire damage to enemies within $8349a1 yd.
+     8498 Fire Nova Totem                          baseline -> absent           dur=5000 lvl=22 | Summons a Fire Nova Totem that has $s1 health and lasts $d.  Unless it is destroyed within $8504t1 sec., the totem inflicts $8502s1 fire damage to enemies within $8502a1 yd.
+     8499 Fire Nova Totem                          baseline -> absent           dur=5000 lvl=32 | Summons a Fire Nova Totem that has $s1 health and lasts $d.  Unless it is destroyed within $8505t1 sec., the totem inflicts $8503s1 fire damage to enemies within $8503a1 yd.
+    11314 Fire Nova Totem                          baseline -> absent           dur=5000 lvl=42 | Summons a Fire Nova Totem that has $s1 health and lasts $d.  Unless it is destroyed within $11310t1 sec., the totem inflicts $11306s1 fire damage to enemies within $11306a1 yd.
+    11315 Fire Nova Totem                          baseline -> absent           dur=5000 lvl=52 | Summons a Fire Nova Totem that has $s1 health and lasts $d.  Unless it is destroyed within $11311t1 sec., the totem inflicts $11307s1 fire damage to enemies within $11307a1 yd.
+    29189 Healing Grace                      talent+passive -> baseline+passive dur=0 lvl=0 | Reduces the threat generated by your healing spells by $s1%.
+    29191 Healing Grace                      talent+passive -> baseline+passive dur=0 lvl=0 | Reduces the threat generated by your healing spells by $s1%.
+  1223031 Improved Stormstrike                       absent -> talent+passive   dur=0 lvl=1 | When you Stormstrike, you have a $m1% chance to gain $1238931s1% mana regeneration while casting spells for $1238931d, and Stormstrike's cooldown has a $m2% chance to reset each time you Dodge or Parr
+    29192 Improved Weapon Totems             talent+passive -> baseline+passive dur=0 lvl=0 | Increases the melee attack power bonus of your Windfury Totem by $s1% and increases the damage caused by your Flametongue Totem by $s2%.
+    29193 Improved Weapon Totems             talent+passive -> baseline+passive dur=0 lvl=0 | Increases the melee attack power bonus of your Windfury Totem by $s1% and increases the damage caused by your Flametongue Totem by $s2%.
+    16579 Lightning Mastery                  talent+passive -> baseline+passive dur=0 lvl=0 | Reduces the cast time of your Lightning Bolt and Chain Lightning spells by $/1000;S1 sec.
+    16580 Lightning Mastery                  talent+passive -> baseline+passive dur=0 lvl=0 | Reduces the cast time of your Lightning Bolt and Chain Lightning spells by $/1000;S1 sec.
+    16581 Lightning Mastery                  talent+passive -> baseline+passive dur=0 lvl=0 | Reduces the cast time of your Lightning Bolt and Chain Lightning spells by $/1000;S1 sec.
+    16582 Lightning Mastery                  talent+passive -> baseline+passive dur=0 lvl=0 | Reduces the cast time of your Lightning Bolt and Chain Lightning spells by $/1000;S1 sec.
+   408438 Lightning Overload                        passive -> talent+passive   dur=0 lvl=1 | Gives your Lightning Bolt and Chain Lightning spells a $m1% chance to cast a second, similar spell on the same target at no additional cost that causes half damage and no threat. 
+   408498 Maelstrom Weapon                          passive -> talent+passive   dur=0 lvl=1 | When you deal damage with a melee attack, you have a chance to reduce the cast time and Mana cost of your next Lightning Bolt spell by $m1%. Stacks up to $s3 times. Lasts $408505d.
+  1325256 Mana Tide Totem                            absent -> baseline         dur=13000 lvl=58 | Summons a Mana Tide Totem with $s1 health at the feet of the caster for ${$d-1} sec that restores $1325257s1 mana every $1325257t1 seconds to group members within $1325257a1 yards.
+   415140 Mental Dexterity                          passive -> talent+passive   dur=0 lvl=0 | Increases your Attack Power by an amount equal to $m1% of your Intellect.
+    30812 Mental Quickness                          passive -> talent+passive   dur=0 lvl=0 | Increases your spell damage and healing by up to $m2% of your Intellect.
+  1223033 Mindfulness                                absent -> talent+passive   dur=0 lvl=0 | Allows $m1% of your Mana regeneration to continue while casting.
+    16180 Nature's Guidance                  talent+passive -> baseline+passive dur=0 lvl=0 | Improves your chance to hit by $s1%.
+    16196 Nature's Guidance                  talent+passive -> baseline+passive dur=0 lvl=0 | Improves your chance to hit by $m1%.
+    16198 Nature's Guidance                  talent+passive -> baseline+passive dur=0 lvl=0 | Improves your chance to hit by $s1%.
+   435884 S03 - Tuning and Overrides Passive - Shaman baseline+passive -> passive          dur=0 lvl=1 | 
+  1223030 Shamanistic Focus                          absent -> talent+passive   dur=0 lvl=1 | Reduces the mana cost of your Shock and Lightning Shield spells by $s1%.
+    16268 Spirit Weapons                             talent -> talent+passive   dur=0 lvl=1 | Gives a chance to parry enemy melee attacks, reduces all threat generated by your attacks by $s1% while Rockbiter Weapon is not active, and increases all threat generated by $s3% while Rockbiter Weapo
+    16189 Totemic Mastery                    talent+passive -> baseline+passive dur=0 lvl=1 | The radius of your totems that affect friendly targets is increased to 30 yd.
+    25908 Tranquil Air Totem                       baseline -> absent           dur=120000 lvl=50 | Summons a Tranquil Air Totem with $s1 health at the feet of the caster.  The totem reduces the threat caused by all party members within $25909a1 yards by $25909s1%.  Lasts $d.
+   408510 Water Shield                             baseline -> talent           dur=600000 lvl=20 | The caster is surrounded by $n globes of water. When a spell, melee, or ranged attack hits the caster or when one of the caster's spells gets a critical result, $408511s1% of maximum mana is restored 
+    29082 Weapon Mastery                     talent+passive -> baseline+passive dur=-1 lvl=1 | Increases the damage you deal with all weapons by $s1%.
+    29084 Weapon Mastery                     talent+passive -> baseline+passive dur=-1 lvl=1 | Increases the damage you deal with all weapons by $s1%.
+    29086 Weapon Mastery                     talent+passive -> baseline+passive dur=-1 lvl=1 | Increases the damage you deal with all weapons by $s1%.
+    29087 Weapon Mastery                     talent+passive -> baseline+passive dur=-1 lvl=1 | Increases the damage you deal with all weapons by $s1%.
+    29088 Weapon Mastery                     talent+passive -> baseline+passive dur=-1 lvl=1 | Increases the damage you deal with all weapons by $s1%.
+
+# WARLOCK 61
+    18096 Apocalypse                         talent+passive -> baseline+passive dur=0 lvl=0 | Your non-periodic critical strikes with your Fire spells increase your Shadow damage done by $m1% for $18093d, and your non-periodic critical strikes with your Shadow spells increase your Fire damage 
+   440870 Decimation                                passive -> talent+passive   dur=0 lvl=1 | Reduces the cooldown of your Soul Fire spell by $m2%. When you cast Shadow Bolt or Searing Pain on an enemy below $m3% health, they deal $m4% increased damage, and for the next $440873d your Soul Fire
+  1235316 Demonic Aegis                              absent -> talent+passive   dur=0 lvl=0 | Increases the effectiveness of your Demon Skin and Demon Armor spells by $m1%.
+  1293695 Demonic Brand                              absent -> talent+passive   dur=0 lvl=0 | Your Searing Pain generates $s1% less threat and brands the target for $1293696d. Your pet's next $m2 attacks against the target deal $<minDam> to $<maxDam> Fire or Shadow damage based on the pet. If 
+  1225214 Demonic Energies                           absent -> talent+passive   dur=0 lvl=0 | You heal your pet for $s1% of all spell damage you deal. When you gain Mana from Life Tap, your summoned demon gains $m2% of the Mana you gain.
+   412732 Demonic Knowledge                         passive -> talent+passive   dur=0 lvl=0 | Increases your spell damage and your Demon pet's spell damage by up to $s1% of your level while you have a summoned Demon pet active.
+   425464 Demonic Pact                              passive -> talent+passive   dur=0 lvl=0 | Your Demonic Sacrifice effect is no longer cancelled by summoning a different Demon pet. Resummoning the sacrificed pet will still cancel the effect. 
+   425466 Demonic Pact                     baseline+passive -> passive          dur=0 lvl=0 | 
+    18130 Devastation                        talent+passive -> baseline+passive dur=0 lvl=0 | Increases the critical strike chance of your Destruction spells by $s1%.
+    17954 Emberstorm                         talent+passive -> baseline+passive dur=0 lvl=0 | Increases the damage done by your Fire spells by $m1% and reduces the cast time of your Searing Pain spell by ${$m3/-1000}.1 sec.
+   412751 Fire and Brimstone                         absent -> talent+passive   dur=0 lvl=0 | Increases the critical strike chance of your Conflagrate spell by $m2%.
+    18179 Improved Curse of Weakness         talent+passive -> baseline+passive dur=0 lvl=0 | Increases the effect of your Curse of Weakness by $s1%.
+    18180 Improved Curse of Weakness         talent+passive -> baseline+passive dur=0 lvl=0 | Increases the effect of your Curse of Weakness by $s1%.
+    18181 Improved Curse of Weakness         talent+passive -> baseline+passive dur=0 lvl=0 | Increases the effect of your Curse of Weakness by $s1%.
+    18310 Improved Curse of Exhaustion       talent+passive -> baseline+passive dur=0 lvl=0 | Increases the speed reduction of your Curse of Exhaustion by $s1%.
+    18311 Improved Curse of Exhaustion       talent+passive -> baseline+passive dur=0 lvl=0 | Increases the speed reduction of your Curse of Exhaustion by $s1%.
+    18312 Improved Curse of Exhaustion       talent+passive -> baseline+passive dur=0 lvl=0 | Increases the speed reduction of your Curse of Exhaustion by $s1%.
+    18313 Improved Curse of Exhaustion       talent+passive -> baseline+passive dur=0 lvl=0 | Increases the speed reduction of your Curse of Exhaustion by $s1%.
+   403511 Improved Drains                           passive -> talent+passive   dur=0 lvl=0 | Increases Health drained, damage done, or Mana drained by your Drain Life, Drain Soul, and Drain Mana spells by $m1%.
+  1225217 Improved Felhunter                         absent -> talent+passive   dur=0 lvl=0 | Increases the Attack Power reduction of your Felhunter's Tainted Blood, the healing of its Devour Magic, and the detection level of its Paranoia by $s1%, and reduces the cooldown of its Spell Lock by 
+    18126 Improved Firebolt                  talent+passive -> baseline+passive dur=0 lvl=0 | Reduces the casting time of your Imp's Firebolt spell by $/1000;S1 sec.
+    18127 Improved Firebolt                  talent+passive -> baseline+passive dur=0 lvl=0 | Reduces the casting time of your Imp's Firebolt spell by $/1000;S1 sec.
+    18767 Improved Firestone                 talent+passive -> baseline+passive dur=0 lvl=0 | Increases the bonus Fire damage from Firestones and the Firestone effect by $s1%.
+    18768 Improved Firestone                 talent+passive -> baseline+passive dur=0 lvl=0 | Increases the bonus Fire damage from Firestones and the Firestone effect by $s1%.
+    18692 Improved Healthstone               talent+passive -> baseline+passive dur=0 lvl=0 | Increases the amount of Health restored by your Healthstone by $s1%.
+    18693 Improved Healthstone               talent+passive -> baseline+passive dur=0 lvl=0 | Increases the amount of Health restored by your Healthstone by $s1%.
+    17815 Improved Immolate                  talent+passive -> baseline+passive dur=0 lvl=0 | Increases the initial damage of your Immolate spell by $s1%.
+    17833 Improved Immolate                  talent+passive -> baseline+passive dur=0 lvl=0 | Increases the initial damage of your Immolate spell by $s1%.
+    17834 Improved Immolate                  talent+passive -> baseline+passive dur=0 lvl=0 | Increases the initial damage of your Immolate spell by $s1%.
+    17835 Improved Immolate                  talent+passive -> baseline+passive dur=0 lvl=0 | Increases the initial damage of your Immolate spell by $s1%.
+    17836 Improved Immolate                  talent+passive -> baseline+passive dur=0 lvl=0 | Increases the initial damage of your Immolate spell by $s1%.
+    18128 Improved Lash of Pain              talent+passive -> baseline+passive dur=0 lvl=0 | Reduces the cooldown of your Succubus' and Incubus' Lash of Pain spell by $/1000;s1 sec.
+    18129 Improved Lash of Pain              talent+passive -> baseline+passive dur=0 lvl=0 | Reduces the cooldown of your Succubus' and Incubus' Lash of Pain spell by $/1000;s1 sec.
+    18774 Improved Spellstone                talent+passive -> baseline+passive dur=0 lvl=0 | Increases the amount of damage absorbed by your Spellstone by $s1%.
+    18775 Improved Spellstone                talent+passive -> baseline+passive dur=0 lvl=0 | Increases the amount of damage absorbed by your Spellstone by $s1%.
+    18821 Improved Subjugate Demon           talent+passive -> baseline+passive dur=0 lvl=0 | Reduces the Attack Speed and Casting Speed penalty of your Subjugate Demon spell by $s1% and reduces the resist chance by $s3%.
+    18822 Improved Subjugate Demon           talent+passive -> baseline+passive dur=0 lvl=0 | Reduces the Attack Speed and Casting Speed penalty of your Subjugate Demon spell by $s1% and reduces the resist chance by $s3%.
+    18823 Improved Subjugate Demon           talent+passive -> baseline+passive dur=0 lvl=0 | Reduces the Attack Speed and Casting Speed penalty of your Subjugate Demon spell by $s1% and reduces the resist chance by $s3%.
+    18824 Improved Subjugate Demon           talent+passive -> baseline+passive dur=0 lvl=0 | Reduces the Attack Speed and Casting Speed penalty of your Subjugate Demon spell by $s1% and reduces the resist chance by $s3%.
+    18825 Improved Subjugate Demon           talent+passive -> baseline+passive dur=0 lvl=0 | Reduces the Attack Speed and Casting Speed penalty of your Subjugate Demon spell by $s1% and reduces the resist chance by $s3%.
+  1310949 Malevolence                                absent -> talent+passive   dur=0 lvl=0 | Increases the critical effect chance of your Shadow spells by $s1%.
+    23826 Master Demonologist                      baseline -> absent           dur=-1 lvl=0 | 
+    23827 Master Demonologist                      baseline -> absent           dur=-1 lvl=0 | 
+    23828 Master Demonologist                      baseline -> absent           dur=-1 lvl=0 | 
+    23829 Master Demonologist                      baseline -> absent           dur=-1 lvl=0 | 
+    23833 Master Demonologist                      baseline -> absent           dur=-1 lvl=0 | 
+    23834 Master Demonologist                      baseline -> absent           dur=-1 lvl=0 | 
+    23835 Master Demonologist                      baseline -> absent           dur=-1 lvl=0 | 
+    23836 Master Demonologist                      baseline -> absent           dur=-1 lvl=0 | 
+    23837 Master Demonologist                      baseline -> absent           dur=-1 lvl=0 | 
+    23838 Master Demonologist                      baseline -> absent           dur=-1 lvl=0 | 
+    23839 Master Demonologist                      baseline -> absent           dur=-1 lvl=0 | 
+    23840 Master Demonologist                      baseline -> absent           dur=-1 lvl=0 | 
+    23841 Master Demonologist                      baseline -> absent           dur=-1 lvl=0 | 
+    23842 Master Demonologist                      baseline -> absent           dur=-1 lvl=0 | 
+    23843 Master Demonologist                      baseline -> absent           dur=-1 lvl=0 | 
+    23844 Master Demonologist                      baseline -> absent           dur=-1 lvl=0 | 
+  1225220 Molten Skin                                absent -> talent+passive   dur=0 lvl=0 | Reduces all damage taken by $s1%.
+   427712 Pandemic                                  passive -> talent+passive   dur=0 lvl=0 | Increases the critical strike damage bonus of your Corruption, Bane of Agony, Bane of Doom, Drain Soul, Drain Life, Siphon Life, and Wrack spells by $m1%.
+   426316 Shadow and Flame                          passive -> talent+passive   dur=0 lvl=0 | Hitting an enemy with Conflagrate increases all Shadow damage you deal by $m3% for $1293816d, and hitting an enemy with Shadowburn increases all Fire damage you deal by $m4% for $426311d. In addition,
+   437032 Soul Harvest                     baseline+passive -> talent+passive   dur=0 lvl=0 | Killing a non-trivial target afflicted by your Drain Soul increases your Mana regeneration by $m1% for $1242853d and allows $m2% of normal Mana regeneration to continue while casting.
+
+# WARRIOR 29
+  1289682 Bloodthrill                                absent -> talent+passive   dur=0 lvl=1 | Grants your Main Hand melee attacks against enemies afflicted by your Rend a $s1% chance to allow an activation of Overpower.
+    29787 Focused Rage                              passive -> talent+passive   dur=0 lvl=0 | Reduces the Rage cost of your offensive abilities by $/10;s1.
+  1323963 Furious Precision                          absent -> talent+passive   dur=0 lvl=0 | Increases your chance to hit with off-hand attacks by $m1%.
+  1323967 Gore Drinker                               absent -> talent+passive   dur=0 lvl=0 | Your Enrage, Berserker Rage, Bloodrage, Death Wish, Reckless Swings, and Bloodthirst abilities cause your next $m1 melee attacks to restore ${$s2}.1% of your maximum Health.
+    12318 Improved Battle Shout              talent+passive -> baseline+passive dur=0 lvl=1 | Increases the melee attack power bonus of your Battle Shout by $s1%.
+    12857 Improved Battle Shout              talent+passive -> baseline+passive dur=0 lvl=1 | Increases the melee attack power bonus of your Battle Shout by $s1%.
+    12858 Improved Battle Shout              talent+passive -> baseline+passive dur=0 lvl=1 | Increases the melee attack power bonus of your Battle Shout by $s1%.
+    12860 Improved Battle Shout              talent+passive -> baseline+passive dur=0 lvl=1 | Increases the melee attack power bonus of your Battle Shout by $s1%.
+    12861 Improved Battle Shout              talent+passive -> baseline+passive dur=0 lvl=1 | Increases the melee attack power bonus of your Battle Shout by $s1%.
+    12329 Improved Cleave                    talent+passive -> baseline+passive dur=0 lvl=1 | Reduces the Rage cost of your Cleave ability by ${$m1/-10}.
+    12324 Improved Demoralizing Shout        talent+passive -> baseline+passive dur=0 lvl=1 | Increases the melee attack power reduction of your Demoralizing Shout by $s1%.
+    12876 Improved Demoralizing Shout        talent+passive -> baseline+passive dur=0 lvl=1 | Increases the melee attack power reduction of your Demoralizing Shout by $s1%.
+    12877 Improved Demoralizing Shout        talent+passive -> baseline+passive dur=0 lvl=1 | Increases the melee attack power reduction of your Demoralizing Shout by $s1%.
+    12878 Improved Demoralizing Shout        talent+passive -> baseline+passive dur=0 lvl=1 | Increases the melee attack power reduction of your Demoralizing Shout by $s1%.
+    12879 Improved Demoralizing Shout        talent+passive -> baseline+passive dur=0 lvl=1 | Increases the melee attack power reduction of your Demoralizing Shout by $s1%.
+    12963 Improved Overpower                 talent+passive -> baseline+passive dur=0 lvl=1 | Increases the critical strike chance of your Overpower ability by $s1%.
+    12307 Improved Shield Block              talent+passive -> baseline+passive dur=0 lvl=1 | Allows your Shield Block ability to block an additional attack and increases the duration by $/1000;S2 second.
+    12944 Improved Shield Block              talent+passive -> baseline+passive dur=0 lvl=1 | Allows your Shield Block ability to block an additional attack and increases the duration by $/1000;s2 seconds.
+    12945 Improved Shield Block              talent+passive -> baseline+passive dur=0 lvl=1 | Allows your Shield Block ability to block an additional attack and increases the duration by $/1000;S2 second.
+    12302 Improved Taunt                     talent+passive -> baseline+passive dur=0 lvl=1 | Reduces the cooldown of your Taunt ability by $/1000;s1 sec.
+    12765 Improved Taunt                     talent+passive -> baseline+passive dur=0 lvl=1 | Reduces the cooldown of your Taunt ability by $/1000;s1 sec.
+  1310315 Improved Whirlwind                         absent -> talent+passive   dur=0 lvl=0 | Reduces the cooldown of your Whirlwind ability by ${$m1/-1000} sec and increases the damage it deals to the closest enemy by $s2%.
+  1323964 Lingering Rage                             absent -> talent+passive   dur=0 lvl=1 | Increases the time before your Rage begins to decay after leaving combat by ${$s1/1000} sec.
+  1310316 Master of Defense                          absent -> talent+passive   dur=0 lvl=1 | Grants you a $m1% chance to generate ${$23602m1/10} Rage when you Dodge or Parry while a shield is equipped.
+  1322574 Rule of Rage (DND)                         absent -> passive          dur=0 lvl=0 | 
+   446658 S03 - Tuning and Overrides Passive - Warrior baseline+passive -> passive          dur=0 lvl=1 | 
+  1310185 Tactical Mastery                           absent -> baseline+passive dur=0 lvl=14 | You retain up to $?s12295[${$m1+$12295m1}][$m1] Rage when you change Stances.
+  1310317 Vanguard                                   absent -> talent+passive   dur=0 lvl=0 | Your Charge ability is now usable while in Defensive Stance.
+  1290261 Weaponmaster                               absent -> talent+passive   dur=0 lvl=1 | Gives your melee weapon attacks a benefit depending on the weapon.      |CFFFFFFFFAxe/Polearm:|R Increases your     critical strike chance by $s1%.      |CFFFFFFFFMace/Staff:|R Your attacks ignore    

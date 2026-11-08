@@ -1,0 +1,32 @@
+# Open questions from ../wowf-plan.md that the game data could not answer.
+# Format: <tooltip|xml|page> <type> <id>  # note
+# Run: python .agents/wowhead/wowhead.py batch .agents/wowhead/verify-forever.txt
+# About 22 requests at 3 s each, so roughly a minute and a half.
+
+# Can these still be learned? Look for a "taught-by-npc" listview.
+page spell 2651      # Elune's Grace rank 1: learnable on Forever?
+page spell 20218     # Sanctity Aura: taught by anyone or granted by a talent?
+page spell 1237948   # Druid Revive rank 2: trainer and level
+page spell 1311649   # Seal of Fury rank 1: trainer and level
+page spell 1299346   # Trueshot Aura rank 1: talent or trainer
+page spell 1328548   # Oath of Light: talent, duration, targets
+
+# Account-wide Legacy talents: values per rank
+page spell 1225502   # Permanence: % longer party/raid buffs per rank
+page spell 1225499   # Gourmand: % longer food buffs per rank
+page spell 1225503   # Reagent Economy: which reagents it covers
+page spell 1229741   # Camp Benefits aura
+
+# New consumables: real effects and where they come from
+xml item 274273      # Flask of Natural Accuracy: tooltip only says Stamina in game data
+xml item 274274      # Flask of Natural Aggression
+xml item 274275      # Flask of Natural Precision
+xml item 274276      # Flask of Natural Swiftness
+page item 274273     # Natural flask sources (created by, sold by)
+xml item 250337      # Elixir of the Owl: recipe and reagents
+xml item 289082      # Elixir of Endless Intellect: source
+xml item 277497      # Scroll of Imbue Flame: weapon types and duration
+xml item 275069      # Scroll of Rat Familiar
+xml item 21546       # Elixir of Holy Power (was Greater Firepower)
+xml item 13452       # Elixir of the Mongoose: confirm 30 min
+xml item 13457       # Greater Fire Protection Potion: confirm 2 min

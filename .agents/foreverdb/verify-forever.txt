@@ -1,0 +1,19 @@
+# Open questions from ../wowf-plan.md for the ForeverDB API. One API path per line, "# note" allowed.
+# Run: python .agents/foreverdb/foreverdb.py batch .agents/foreverdb/verify-forever.txt
+# 15 requests; the API allows 60 a minute.
+
+meta                                  # build, level cap, counts; also checks the key
+spells/1225502                        # Permanence: % longer party/raid buffs per rank
+spells/1225499                        # Gourmand: % longer food buffs per rank
+spells/1225503                        # Reagent Economy: which reagents
+spells/1229741                        # Camp Benefits aura
+spells/1299346                        # Trueshot Aura rank 1 (talent)
+spells/20906                          # Trueshot Aura rank 5: talent or trainer?
+spells/1328548                        # Oath of Light: duration, targets
+classes/Paladin                       # abilities, ranks, talents (blessings, seals)
+classes/Priest                        # Divine Spirit, Elune's Grace, Fear Ward
+classes/Hunter                        # Trueshot Aura ranks
+classes/Druid                         # Revive, Omen of Clarity
+buffs-nerfs?direction=removed         # removed abilities across classes
+buffs-nerfs?direction=new             # new abilities across classes
+builds/latest?type=ability            # ability changes in the newest build
