@@ -10,6 +10,8 @@ local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
 local enchantmentsModule = LibStub("Buffomat-AllConsumesEnchantments") --[[@as AllConsumesEnchantmentsModule]]
+local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
+local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
 local spellIdsModule = LibStub("Buffomat-SpellIds") --[[@as SpellIdsModule]]
 
 local ICON_FOOD = 134062   -- inv_misc_fork-knife
@@ -348,35 +350,44 @@ function foreverModule:_SetupScrolls(allBuffs)
       :Category("scroll")
 end
 
--- Scroll of Imbue X: a 1-hour weapon enchantment for a staff, dagger or sword.
--- { use spell, items, weapon enchantment id }
+-- Scroll of Imbue X: a 1-hour weapon enchantment for one weapon type (SpellEquippedItems in 70862).
+-- { use spell, items, weapon enchantment id, weapon type (itemIdsModule.WeaponSubclass key) }
 local IMBUE_SCROLLS = {
-  { 1295720, { 274947, 277503 }, 8700 }, -- Lesser Flame (Imbue Spellbreak uses the same spell in 70862)
-  { 1296225, { 275067 }, 8698 },         -- Chillknife (dagger)
-  { 1302283, { 277485 }, 8709 },         -- Frost
-  { 1302217, { 277486 }, 8708 },         -- Striking
-  { 1302219, { 277487 }, 8706 },         -- Baleflame
-  { 1302284, { 277488 }, 8710 },         -- Iceknife (dagger)
-  { 1302227, { 277489 }, 8707 },         -- Spark (sword)
-  { 1302306, { 277494 }, 8711 },         -- Accuracy
-  { 1302307, { 277495 }, 8712 },         -- Quickening
-  { 1302305, { 277496 }, 8714 },         -- Balefrost
-  { 1302304, { 277497 }, 8713 },         -- Flame
-  { 1302308, { 277498 }, 8715 },         -- Manablade (dagger)
-  { 1302311, { 277500 }, 8716 },         -- Greater Flame
-  { 1302312, { 277501 }, 8717 },         -- Greater Frost
-  { 1302310, { 277502 }, 8718 },         -- Precision
+  { 1295720, { 274947, 277503 }, 8700, "Staff" },   -- Lesser Flame (Imbue Spellbreak uses the same spell in 70862)
+  { 1296225, { 275067 }, 8698, "Dagger" },          -- Chillknife
+  { 1302283, { 277485 }, 8709, "Staff" },           -- Frost
+  { 1302217, { 277486 }, 8708, "Staff" },           -- Striking
+  { 1302219, { 277487 }, 8706, "Staff" },           -- Baleflame
+  { 1302284, { 277488 }, 8710, "Dagger" },          -- Iceknife
+  { 1302227, { 277489 }, 8707, "Sword1H" },         -- Spark
+  { 1302306, { 277494 }, 8711, "Staff" },           -- Accuracy
+  { 1302307, { 277495 }, 8712, "Staff" },           -- Quickening
+  { 1302305, { 277496 }, 8714, "Staff" },           -- Balefrost
+  { 1302304, { 277497 }, 8713, "Staff" },           -- Flame
+  { 1302308, { 277498 }, 8715, "Dagger" },          -- Manablade
+  { 1302311, { 277500 }, 8716, "Staff" },           -- Greater Flame
+  { 1302312, { 277501 }, 8717, "Staff" },           -- Greater Frost
+  { 1302310, { 277502 }, 8718, "Staff" },           -- Precision
 }
 
----Imbue scrolls only fit some weapon types, so they stay off by default.
+-- English names for clients without GetItemSubClassInfo
+local WEAPON_TYPE_FALLBACK = { Staff = "Staves", Dagger = "Daggers", Sword1H = "One-Handed Swords" }
+
+---Imbue scrolls fit one weapon type each: the scan asks for them only on a fitting weapon, and the
+---spells dialog names the type. They stay off by default.
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
 function foreverModule:_SetupImbueScrolls(allBuffs, enchantments)
   for _, imbue in ipairs(IMBUE_SCROLLS) do
-    local spellId, itemIds, enchantId = imbue[1], imbue[2], imbue[3]
+    local spellId, itemIds, enchantId, weaponType = imbue[1], imbue[2], imbue[3], imbue[4]
+    local subclass = itemIdsModule.WeaponSubclass[weaponType]
+    local weaponName = envModule.GetItemSubClassName(itemIdsModule.ITEM_CLASS_WEAPON, subclass)
+        or WEAPON_TYPE_FALLBACK[weaponType]
     enchantmentsModule:RegisterEnchantment(allBuffs, spellId)
         :CreatesOrProvidedByItem(itemIds)
         :SingleDuration(allBuffsModule.HOUR)
+        :RequireWeaponType({ subclass })
+        :ExtraText(weaponName)
         :RequirePlayerClass(allBuffsModule.SPELL_CLASSES)
         :RequireForever()
     enchantments[spellId] = { enchantId }

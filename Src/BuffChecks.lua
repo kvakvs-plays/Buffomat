@@ -10,6 +10,7 @@ local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local spellIdsModule = LibStub("Buffomat-SpellIds") --[[@as SpellIdsModule]]
 local unitCacheModule = LibStub("Buffomat-UnitCache") --[[@as UnitCacheModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
+local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 
 ---Checks whether a tracking spell is now active
@@ -138,18 +139,47 @@ function buffChecksModule:HasItem(itemsToCheck, cd)
   return false, nil, nil, nil, nil
 end
 
+---Whether the weapon in an equipment slot can take this weapon enchantment. Buffs without a
+---weapon type limit fit anything; a limited buff needs a weapon of one of its types.
+---@param buff BomBuffDefinition
+---@param slot number 16 main hand, 17 off hand
+---@return boolean
+function buffChecksModule:WeaponFitsBuff(buff, slot)
+  if not buff.weaponSubclasses then
+    return true
+  end
+  local itemId = GetInventoryItemID("player", slot)
+  if itemId == nil then
+    return false
+  end
+  local classID, subclassID = envModule.GetItemClass(itemId)
+  return classID == itemIdsModule.ITEM_CLASS_WEAPON and tContains(buff.weaponSubclasses, subclassID)
+end
+
+---Hands which need this weapon enchantment: enabled in the profile, not enchanted, and the
+---weapon there fits the enchantment.
+---@param buff BomBuffDefinition
+---@param playerUnit BomUnit
+---@return boolean needMainhand
+---@return boolean needOffhand
+function buffChecksModule:WeaponHandsNeedingBuff(buff, playerUnit)
+  local profileBuff = profileModule:GetProfileBuff(buff.buffId, nil)
+  if not profileBuff then
+    return false, false
+  end
+  local needMainhand = profileBuff.MainHandEnable and playerUnit.mainhandEnchantment == nil
+      and self:WeaponFitsBuff(buff, 16)
+  local needOffhand = profileBuff.OffHandEnable and playerUnit.offhandEnchantment == nil
+      and self:WeaponFitsBuff(buff, 17)
+  return needMainhand == true, needOffhand == true
+end
+
 ---@param buff BomBuffDefinition the spell to update
 ---@param playerUnit BomUnit the player
 function buffChecksModule:PlayerNeedsWeaponBuff(buff, playerUnit)
-  local weaponBuff = profileModule:GetProfileBuff(buff.buffId, nil)
-
-  if weaponBuff then
-    local needMainHand = (weaponBuff).MainHandEnable and playerUnit.mainhandEnchantment == nil
-    local needOffhand = (weaponBuff).OffHandEnable and playerUnit.offhandEnchantment == nil
-
-    if needMainHand or needOffhand then
-      table.insert(buff.unitsNeedBuff, playerUnit)
-    end
+  local needMainHand, needOffhand = self:WeaponHandsNeedingBuff(buff, playerUnit)
+  if needMainHand or needOffhand then
+    table.insert(buff.unitsNeedBuff, playerUnit)
   end
 end
 

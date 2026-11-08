@@ -1241,9 +1241,7 @@ end
 function taskScanModule:AddConsumableWeaponBuff_HaveItem(buffDef, bag, slot, count, playerUnit)
   -- Have item, display the cast message and setup the cast button
   local itemInfo = envModule.GetContainerItemInfo(bag, slot)
-  local profileBuff = profileModule:GetProfileBuff(buffDef.buffId, nil)
-  local needOffhand = (profileBuff).OffHandEnable and playerUnit.offhandEnchantment == nil
-  local needMainhand = (profileBuff).MainHandEnable and playerUnit.mainhandEnchantment == nil
+  local needMainhand, needOffhand = buffChecksModule:WeaponHandsNeedingBuff(buffDef, playerUnit)
 
   if not self:CharacterCanEnchantMainhand() and needMainhand then
     self.tasklist:Comment(_t("task.error.missingMainhandWeapon"))
@@ -1254,14 +1252,12 @@ function taskScanModule:AddConsumableWeaponBuff_HaveItem(buffDef, bag, slot, cou
     return
   end
 
-  if profileBuff and needOffhand
-  then
+  if needOffhand then
     self:AddConsumableWeaponBuff_HaveItem_Offhand(buffDef, bag, slot, count, playerUnit,
       itemInfo.iconFileID, itemInfo.hyperlink)
   end
 
-  if profileBuff and needMainhand
-  then
+  if needMainhand then
     self:AddConsumableWeaponBuff_HaveItem_Mainhand(buffDef, bag, slot, count, playerUnit,
       itemInfo.iconFileID, itemInfo.hyperlink)
   end

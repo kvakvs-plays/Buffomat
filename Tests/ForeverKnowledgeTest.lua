@@ -234,6 +234,12 @@ do
   local flame = mage[1302304]
   assert(flame and flame.type == "weapon" and not flame.default, "Imbue Flame scroll is an optional weapon buff")
   equal(enchants[1302304][1], 8713, "Imbue Flame enchant mapped")
+  equal(#flame.weaponSubclasses, 1, "Imbue Flame fits one weapon type")
+  equal(flame.weaponSubclasses[1], 10, "Imbue Flame needs a staff")
+  equal(flame.extraText, "Staves", "spells dialog names the weapon type")
+  equal(mage[1302227].weaponSubclasses[1], 7, "Imbue Spark needs a one-handed sword")
+  equal(mage[1296225].weaponSubclasses[1], 15, "Imbue Chillknife needs a dagger")
+  equal(warrior[16138].weaponSubclasses, nil, "classic sharpening stones keep no weapon limit")
   equal(warrior[1302304], nil, "Imbue scrolls are for casters")
   assert(contains(warrior[16138].items, 287978), "Forever Rough Sharpening Stone item")
 end

@@ -31,6 +31,14 @@ itemIdsModule.Warlock_Firestone7 = 41174
 
 itemIdsModule.Paladin_SymbolOfKings = 21177
 
+itemIdsModule.ITEM_CLASS_WEAPON = 2
+---Weapon item subclasses (Enum.ItemWeaponSubclass), for weapon enchantments limited to some weapons
+---@enum WowWeaponSubclassName
+itemIdsModule.WeaponSubclass = {
+  Axe1H = 0, Axe2H = 1, Bow = 2, Gun = 3, Mace1H = 4, Mace2H = 5, Polearm = 6, Sword1H = 7, Sword2H = 8,
+  Staff = 10, FistWeapon = 13, Misc = 14, Dagger = 15, Thrown = 16, Crossbow = 18, Wand = 19, FishingPole = 20,
+}
+
 ---Class reagents sold by vendors. On WoW: Forever the Legacy talent Reagent Economy removes the
 ---need for these, but not for Soul Shards or other farmed reagents.
 ---@type {[WowItemId]: boolean}

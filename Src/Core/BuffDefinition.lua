@@ -3,6 +3,7 @@ local BuffomatAddon = BuffomatAddon
 ---@alias BomElixirType "battle"|"guardian"|"both"
 ---@alias WowSpellId number
 ---@alias WowItemId number
+---@alias WowWeaponSubclass number Item subclass of a weapon (item class 2), as Enum.ItemWeaponSubclass
 ---@alias WowZoneId number
 ---@alias WowShapeshiftFormId number
 ---@alias WowIconId number|string
@@ -125,6 +126,7 @@ end
 ---@field petBuff boolean True for hunter/warlock pet consumable which places aura on the pet
 ---@field trackingIconId WowIconId Numeric id for the tracking texture icon
 ---@field trackingSpellName string For tracking spells, contains string name for the spell
+---@field weaponSubclasses WowWeaponSubclass[]|nil Weapon enchantment fits only these weapon types
 ---@field type BomBuffType Defines type: "aura", "consumable", "weapon" for Enchant Consumables, "seal", "tracking", "resurrection"
 ---@field unitsHaveBetterBuff BomUnit[] List of group members who might need this buff but won't get it because they have better
 ---@field unitsNeedBuff BomUnit[] List of group members who might need this buff
@@ -598,6 +600,14 @@ end
 ---@return BomBuffDefinition
 function buffDefClass:RequireTBC()
   (self.limitations).requireTBC = true
+  return self
+end
+
+---The weapon enchantment fits only these weapon types; other weapons are not asked for it.
+---@param subclasses WowWeaponSubclass[] Weapon item subclasses, see `itemIdsModule.WeaponSubclass`
+---@return BomBuffDefinition
+function buffDefClass:RequireWeaponType(subclasses)
+  self.weaponSubclasses = subclasses
   return self
 end
 

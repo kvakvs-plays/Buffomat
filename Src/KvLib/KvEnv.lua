@@ -522,6 +522,31 @@ function envModule.IsEventValid(event)
   return true
 end
 
+local getItemInfoInstant = (C_Item and C_Item.GetItemInfoInstant) or _G["GetItemInfoInstant"]
+local getItemSubClassInfo = (C_Item and C_Item.GetItemSubClassInfo) or _G["GetItemSubClassInfo"]
+
+---Item class and subclass from static data, without waiting for the item cache.
+---@param item number|string Item ID, name or link
+---@return number? classID 2 for weapons
+---@return number? subclassID Enum.ItemWeaponSubclass value for weapons
+function envModule.GetItemClass(item)
+  if item == nil or not getItemInfoInstant then
+    return nil
+  end
+  local _, _, _, _, _, classID, subclassID = getItemInfoInstant(item)
+  return classID, subclassID
+end
+
+---Localized name of an item subclass, such as "Staves" for weapon subclass 10.
+---@param classID number
+---@param subclassID number
+---@return string?
+function envModule.GetItemSubClassName(classID, subclassID)
+  if getItemSubClassInfo then
+    return (getItemSubClassInfo(classID, subclassID))
+  end
+end
+
 local isPlayerSpell = _G["IsPlayerSpell"]
 
 ---True when the player has the spell from any source, including talents and passive

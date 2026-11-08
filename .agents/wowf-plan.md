@@ -450,4 +450,6 @@ Still open:
 - Not done on purpose: removed reputation/riding trinkets stay in their lists (absent items are never
   in bags, so they are harmless); `AllDrink` keeps the classic Drink auras, which Nutritious Drink
   still applies.
-- Imbue scrolls fit only some weapon types; they are off by default and limited to caster classes.
+- Imbue scrolls: each fits one weapon type (staff, dagger or one-handed sword, from `SpellEquippedItems`);
+  `RequireWeaponType` makes the scan ask for them only on a fitting weapon. Off by default, caster classes only.
+  The same limit could be applied to sharpening stones and weightstones later.

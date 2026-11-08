@@ -15,6 +15,8 @@
     Imbue scrolls; Elixir of Greater Firepower became Elixir of Holy Power; Greater Protection Potions are
     no longer treated as long buffs.
   - With the Legacy talent Reagent Economy the reagent count is hidden for vendor reagents.
+  - Imbue scrolls are suggested only for a weapon they fit (staff, dagger or one-handed sword), and the
+    spells dialog shows the weapon type.
 
 ## Buffomat Classic 2026.10.5
 
