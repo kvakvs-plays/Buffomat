@@ -24,6 +24,10 @@
 - A raid contains up to 8 parties, for a maximum of 40 players.
 - "Group Buffs" are mass versions of regular single-target buffs. They apply to the target player's party.
 - Paladin mass buffs are different: they apply to all players of the targeted class. For example, mass buffing a warrior blesses all warriors.
+- On WotLK and WoW: Forever, group buffs (Prayers, Gift of the Wild, Arcane Brilliance, Battle Shout) cover the
+  whole raid; check `envModule.groupBuffsRaidWide`, not the expansion. On Forever all blessings last 60 minutes.
+- Forever-only or Forever-hidden buff definitions use `:RequireForever()` / `:HideInForever()`; scalar differences
+  use `allBuffsModule.ForeverOr(foreverValue, otherValue)`. See `.agents/wowf-plan.md`.
 
 ## Target Runtime
 

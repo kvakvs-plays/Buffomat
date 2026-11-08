@@ -17,9 +17,11 @@ function paladinModule:SetupPaladinSpells(allBuffs, _enchants)
       :IsDefault(false)
       :Category("class")
 
-  local blessingDuration = allBuffsModule.TbcOrClassic(allBuffsModule.TEN_MINUTES, allBuffsModule.FIVE_MINUTES)
-  local greaterBlessingDuration = allBuffsModule.TbcOrClassic(allBuffsModule.FIFTEEN_MINUTES, allBuffsModule
-    .HALF_AN_HOUR)
+  -- Forever: every blessing, lesser or greater, lasts an hour
+  local blessingDuration = allBuffsModule.ForeverOr(allBuffsModule.HOUR,
+    allBuffsModule.TbcOrClassic(allBuffsModule.TEN_MINUTES, allBuffsModule.FIVE_MINUTES))
+  local greaterBlessingDuration = allBuffsModule.ForeverOr(allBuffsModule.HOUR,
+    allBuffsModule.TbcOrClassic(allBuffsModule.FIFTEEN_MINUTES, allBuffsModule.HALF_AN_HOUR))
 
   --
   -- LESSER BLESSINGS
@@ -58,6 +60,7 @@ function paladinModule:SetupPaladinSpells(allBuffs, _enchants)
       :DefaultTargetClasses(allBuffsModule.BOM_NO_CLASSES)
       :IgnoreIfHaveBuff(21177) -- Greater Light
       :Category("blessing")
+      :HideInForever() -- removed; Oath of Light (talent) replaces it
 
   -- Blessing of Might
   buffDefModule:createAndRegisterBuff(allBuffs, 25291, nil)
@@ -97,6 +100,7 @@ function paladinModule:SetupPaladinSpells(allBuffs, _enchants)
       :IgnoreIfHaveBuff(25895) -- Greater Salv
       :Category("blessing")
       :HideInCata()
+      :HideInForever() -- removed
 
   -- Blessing of Wisdom
   buffDefModule:createAndRegisterBuff(allBuffs, 25290, nil)
@@ -123,6 +127,7 @@ function paladinModule:SetupPaladinSpells(allBuffs, _enchants)
       :RequirePlayerClass("PALADIN")
       :DefaultTargetClasses(allBuffsModule.BOM_NO_CLASSES)
       :Category("blessing")
+      :HideInForever() -- removed
   --
   -- GREATER BLESSINGS
   --
@@ -149,6 +154,7 @@ function paladinModule:SetupPaladinSpells(allBuffs, _enchants)
       :HideInWotLK()
       :DefaultTargetClasses(allBuffsModule.BOM_NO_CLASSES)
       :Category("blessing")
+      :HideInForever() -- removed
 
   --Greater Blessing of Might
   buffDefModule:createAndRegisterBuff(allBuffs, 25916, nil)
@@ -174,6 +180,7 @@ function paladinModule:SetupPaladinSpells(allBuffs, _enchants)
       :DefaultTargetClasses(allBuffsModule.BOM_NO_CLASSES)
       :Category("blessing")
       :HideInCata()
+      :HideInForever() -- removed
 
   --Greater Blessing of Wisdom
   buffDefModule:createAndRegisterBuff(allBuffs, 25918, nil)
@@ -200,6 +207,17 @@ function paladinModule:SetupPaladinSpells(allBuffs, _enchants)
       :RequirePlayerClass("PALADIN")
       :DefaultTargetClasses(allBuffsModule.BOM_NO_CLASSES)
       :Category("blessing")
+      :HideInForever() -- removed
+
+  -- [Forever] Oath of Light (Holy talent): 5 minutes on one ally, more healing from your
+  -- Holy Light, Flash of Light and Holy Shock on it. Takes the place of Blessing of Light.
+  buffDefModule:createAndRegisterBuff(allBuffs, 1328548, nil)
+      :IsDefault(false)
+      :SingleDuration(allBuffsModule.FIVE_MINUTES)
+      :RequirePlayerClass("PALADIN")
+      :DefaultTargetClasses(allBuffsModule.BOM_NO_CLASSES)
+      :Category("class")
+      :RequireForever()
 
   -- END blessings ------
   --
@@ -262,12 +280,13 @@ function paladinModule:SetupPaladinSpells(allBuffs, _enchants)
       :RequirePlayerClass("PALADIN")
       :Category("aura")
 
-  --Sanctity Aura (classic and TBC only)
+  --Sanctity Aura (classic and TBC only; cannot be learned on Forever)
   buffDefModule:createAndRegisterBuff(allBuffs, 20218, nil)
       :BuffType("aura")
       :IsDefault(false)
       :RequirePlayerClass("PALADIN")
       :HideInWotLK()
+      :HideInForever()
       :Category("aura")
 
   --TBC: Crusader Aura
@@ -360,6 +379,16 @@ function paladinModule:SetupPaladinSpells(allBuffs, _enchants)
       :IsDefault(false)
       :RequirePlayerClass("PALADIN")
       :Category("seal")
+
+  -- [Forever] Seal of Fury (Protection seal: Holy damage, absorb shield while a shield is equipped)
+  buffDefModule:createAndRegisterBuff(allBuffs, 20423, nil)
+      :BuffType("seal")
+      :IsDefault(false)
+      :SingleFamily({ 1311649, 1311656,             -- Forever: Seal of Fury 1-2 (new IDs)
+        20163, 20419, 20421, 20422, 20423 })        -- Forever: Seal of Fury 3-7
+      :RequirePlayerClass("PALADIN")
+      :Category("seal")
+      :RequireForever()
 
   -- TBC: Seal of Vengeance
   buffDefModule:createAndRegisterBuff(allBuffs, 348704, nil)

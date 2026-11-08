@@ -23,7 +23,7 @@ function druidModule:SetupDruidSpells(allBuffs, enchantments)
         26991,                                                  -- TBC: Gift of the Wild 3
         48470,                                                  -- WotLK: Gift of the Wild 4
         79061 })                                                -- Cataclysm: Mark of the Wild
-      :SingleDuration(allBuffsModule.HALF_AN_HOUR)
+      :SingleDuration(allBuffsModule.ForeverOr(allBuffsModule.HOUR, allBuffsModule.HALF_AN_HOUR))
       :GroupDuration(allBuffsModule.HOUR)
       :ReagentRequired(buffDefModule:PerExpansionChoice(
         {
@@ -46,13 +46,14 @@ function druidModule:SetupDruidSpells(allBuffs, enchantments)
       :RequirePlayerClass("DRUID")
       :Category("class")
 
-  --Omen of Clarity
+  --Omen of Clarity (a passive talent on Forever, nothing to cast)
   buffDefModule:createAndRegisterBuff(allBuffs, 16864, nil)
       :IsOwn(true)
       :RequiresCancelForm(true)
       :IsDefault(true)
       :RequirePlayerClass("DRUID")
       :Category("class")
+      :HideInForever()
 
   -- Nature's Grasp | Griff der Natur
   buffDefModule:createAndRegisterBuff(allBuffs, 17329, nil)
@@ -93,6 +94,16 @@ function druidModule:SetupDruidSpells(allBuffs, enchantments)
       :IsDefault(true)
       :SingleFamily({ 50769, 50768, 50767, 50766, 50765, 50764, 50763 }) -- WotLK: Revive 1-7
       :RequireWotLK()
+      :RequirePlayerClass("DRUID")
+      :Category("class")
+
+  -- [Forever] Revive: out-of-combat resurrection, new for Classic-era druids
+  buffDefModule:createAndRegisterBuff(allBuffs, 1237951, nil)
+      :RequiresCancelForm(true)
+      :BuffType("resurrection")
+      :IsDefault(true)
+      :SingleFamily({ 437138, 1237948, 1237949, 1237950, 1237951 }) -- Forever: Revive 1-5
+      :RequireForever()
       :RequirePlayerClass("DRUID")
       :Category("class")
 end

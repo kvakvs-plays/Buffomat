@@ -41,6 +41,7 @@ Src/Knowledge/AllConsumesElixirs.lua
 Src/Knowledge/AllConsumesFlasks.lua
 Src/Knowledge/AllConsumesFood.lua
 Src/Knowledge/AllConsumesOther.lua
+Src/Knowledge/AllConsumesForever.lua
 Src/Const/SpellIds.lua
 Src/Const/ItemIds.lua
 

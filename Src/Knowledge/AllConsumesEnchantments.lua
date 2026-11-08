@@ -99,7 +99,7 @@ function enchantmentsModule:_SetupPhysicalEnchantments(allBuffs, enchantments)
   --
   --Sharpening Stone
   self:RegisterEnchantment(allBuffs, 16138)
-      :CreatesOrProvidedByItem({ 12404, 7964, 2871, 2863, 2862 })
+      :CreatesOrProvidedByItem({ 12404, 7964, 2871, 2863, 2862, 287978 }) -- Forever: Rough Sharpening Stone 287978
       :RequirePlayerClass(allBuffsModule.PHYSICAL_CLASSES)
   enchantments[16138] = { 1643, 483, 14, 13, 40 }   --Sharpening Stone
 
@@ -111,7 +111,7 @@ function enchantmentsModule:_SetupPhysicalEnchantments(allBuffs, enchantments)
 
   --Elemental Sharpening Stone
   self:RegisterEnchantment(allBuffs, 22756)
-      :CreatesOrProvidedByItem({ 18262 })
+      :CreatesOrProvidedByItem({ 18262, 287980 }) -- Forever: 287980
       :RequirePlayerClass(allBuffsModule.PHYSICAL_CLASSES)
   enchantments[22756] = { 2506 }   --Elemental Sharpening Stone
 

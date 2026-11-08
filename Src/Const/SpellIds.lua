@@ -14,6 +14,17 @@ spellIdsModule.ClassicFood = --[[@as WowSpellId[] ]] {
   1131, 10257, 18234, 22731, 24005, 24704, 24800, 25695, 26260, 26401, 28616, 29073, -- Level 55 food
   25660,                                                                             -- 55 Dirge's kickin' chimaerok chops
 }
+---WoW: Forever "Nutritious Food" and "Nutritious Drink" auras while eating or drinking
+spellIdsModule.ForeverFood = --[[@as WowSpellId[] ]] {
+  1248377, 1248378, 1248379, 1248380, 1248381, 1248382, 1248383, 1248384,
+  1248386, 1248387, 1248388, 1248389, 1248390, 1248391, 1248392, 1248393,
+  1248394, 1248395, 1248396, 1248397, 1248398, 1248399, 1248400, 1248401,
+  1248687, 1249500, 1249501, 1249502, 1249503, 1249504, 1249505, 1249506,
+  1249507, 1249508, 1249509, 1249510, 1249511, 1249512, 1249513, 1249514,
+  1249515, 1249516, 1249517, 1249522, 1249906, 1249914, 1249915, 1249916,
+  1249917, 1249918, 1249919, 1249920, 1249921, 1249922, 1249923, 1249924,
+  1249925, 1255415, 1294006, 1302066, 1319311,
+}
 spellIdsModule.TBCFood = --[[@as WowSpellId[] ]] {
   28616, 29073, 33253, 33260, 33266, 33269, 43777, 46898,                                    -- Level 65 eating
   33255, 33258, 33262, 33264, 33725, 35270, 35271, 40745, 40768, 41030, 43763, 45618, 46812, -- Level 75 eating
@@ -77,3 +88,8 @@ spellIdsModule.FindTreasure = 2481
 spellIdsModule.FindFish = 43308
 
 spellIdsModule.Shaman_Flametongue6 = 16342
+
+-- WoW: Forever account-wide Legacy talents
+spellIdsModule.Forever_ReagentEconomy = 1225503 -- class abilities need no vendor reagents
+spellIdsModule.Forever_Permanence = 1225502     -- party/raid stat buffs last longer
+spellIdsModule.Forever_Gourmand = 1225499       -- food buffs last longer

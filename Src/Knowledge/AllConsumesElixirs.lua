@@ -100,6 +100,12 @@ function elixirsModule:_SetupBattleCasterElixirsClassic(allBuffs, enchantments)
       :RequirePlayerClass(allBuffsModule.FIRE_CLASSES)
       :Category("classicSpellElixir")
       :ElixirType("battle")
+      :HideInForever() -- became Elixir of Holy Power, see below
+
+  --[Forever] Elixir of Holy Power (was Elixir of Greater Firepower): +40 Holy spell damage, new aura
+  buffDefModule:foreverConsumable(allBuffs, 1310077, 21546)
+      :RequirePlayerClass({ "PALADIN", "PRIEST" })
+      :Category("classicSpellElixir")
 
   --Elixir of Frost Power
   buffDefModule:genericConsumable(allBuffs, 21920, 17708)
@@ -357,33 +363,38 @@ function elixirsModule:_SetupGuardianElixirsClassic(allBuffs, enchantments)
       :Category("classicElixir")
       :ElixirType("guardian")
 
-  --Greater Arcane Protection Potion
+  --Greater Arcane Protection Potion (a 2-minute potion on Forever and in TBC+)
   buffDefModule:genericConsumable(allBuffs, 17549, 13461)
       :HideInTBC()   -- Becomes a 2-min potion buff
+      :HideInForever()
       :Category("classicElixir")
       :ElixirType("guardian")
 
-  --Greater Fire Protection Potion
+  --Greater Fire Protection Potion (a 2-minute potion on Forever and in TBC+)
   buffDefModule:genericConsumable(allBuffs, 17543, 13457)
       :HideInTBC()   -- Becomes a 2-min potion buff
+      :HideInForever()
       :Category("classicElixir")
       :ElixirType("guardian")
 
-  --Greater Frost Protection Potion
+  --Greater Frost Protection Potion (a 2-minute potion on Forever and in TBC+)
   buffDefModule:genericConsumable(allBuffs, 17544, 13456)
       :HideInTBC()   -- Becomes a 2-min potion buff
+      :HideInForever()
       :Category("classicElixir")
       :ElixirType("guardian")
 
-  --Greater Nature Protection Potion
+  --Greater Nature Protection Potion (a 2-minute potion on Forever and in TBC+)
   buffDefModule:genericConsumable(allBuffs, 17546, 13458)
       :HideInTBC()   -- Becomes a 2-min potion buff
+      :HideInForever()
       :Category("classicElixir")
       :ElixirType("guardian")
 
-  --Greater Shadow Protection Potion
+  --Greater Shadow Protection Potion (a 2-minute potion on Forever and in TBC+)
   buffDefModule:genericConsumable(allBuffs, 17548, 13459)
       :HideInTBC()   -- Becomes a 2-min potion buff
+      :HideInForever()
       :Category("classicElixir")
       :ElixirType("guardian")
 

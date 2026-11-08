@@ -390,9 +390,15 @@ function eventsModule:InitEvents()
   BuffomatAddon:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED", Event_UNIT_SPELLCAST_errors)
   BuffomatAddon:RegisterEvent("UNIT_SPELLCAST_FAILED", Event_UNIT_SPELLCAST_errors)
 
-  -- Dualspec talent switch
-  if envModule.haveWotLK then
+  -- Dualspec talent switch (WotLK+, Forever). Modern clients throw on unknown events.
+  if envModule.hasDualSpec and envModule.IsEventValid("ACTIVE_TALENT_GROUP_CHANGED") then
     BuffomatAddon:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED", Event_TALENT_GROUP_CHANGED)
+  end
+
+  -- Forever talents are trait nodes, and some grant buff spells (Oath of Light, Trueshot Aura).
+  -- Rebuild the spell list when the talent loadout changes, in case SPELLS_CHANGED does not fire.
+  if envModule.isForever and envModule.IsEventValid("TRAIT_CONFIG_UPDATED") then
+    BuffomatAddon:RegisterEvent("TRAIT_CONFIG_UPDATED", eventsModule.Event_SpellsChanged)
   end
 
   if envModule.supportsAuraRestrictions then

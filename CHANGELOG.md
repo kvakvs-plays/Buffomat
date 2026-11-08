@@ -3,6 +3,18 @@
 ## Buffomat Classic 2026.11.0
 
 - Hunter tracking is using correct API in TBC
+- WoW: Forever buff and consumable update (client build 1.60.1.70862):
+  - Group buffs cover the whole raid, like WotLK; dual specialization profiles work.
+  - Blessings last 60 minutes; Fortitude, Mark of the Wild, Arcane Intellect and Divine Spirit 60 minutes;
+    Fear Ward 3 minutes.
+  - Removed spells are hidden: Blessing of Light, Salvation and Sanctuary (and Greater), Sanctity Aura,
+    Omen of Clarity (now passive), Elune's Grace ranks 2-5 (rank 1 stays for Night Elf priests).
+  - New: druid Revive, paladin Seal of Fury and Oath of Light, new ranks of Trueshot Aura and Aspect of the Beast.
+  - Firestone and Spellstone are tracked as 2-hour weapon enchantments.
+  - Food is grouped by the single stat its Well Fed buff gives; new elixirs, Natural flasks, Familiar and
+    Imbue scrolls; Elixir of Greater Firepower became Elixir of Holy Power; Greater Protection Potions are
+    no longer treated as long buffs.
+  - With the Legacy talent Reagent Economy the reagent count is hidden for vendor reagents.
 
 ## Buffomat Classic 2026.10.5
 

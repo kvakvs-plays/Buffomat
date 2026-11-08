@@ -24,6 +24,7 @@ local buffTargetModule = LibStub("Buffomat-UnitBuffTarget") --[[@as BomUnitBuffT
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local groupBuffTargetModule = LibStub("Buffomat-GroupBuffTarget") --[[@as BomGroupBuffTargetModule]]
+local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
 local itemListCacheModule = LibStub("Buffomat-ItemListCache") --[[@as BomItemListCacheModule]]
 local macroModule = LibStub("Buffomat-Macro") --[[@as MacroModule]]
 local ngStringsModule = LibStub("Buffomat-NgStrings") --[[@as NgStringsModule]]
@@ -618,11 +619,26 @@ function taskScanModule:FormatItemBuffText(bag, slot, count)
   return string.format(" %s %s (x%d)", picture, itemInfo.hyperlink, count)
 end
 
+---On WoW: Forever the Legacy talent Reagent Economy waives vendor-sold class reagents.
+---@param buffDef BomBuffDefinition
+---@return boolean True when every reagent of the buff is waived
+function taskScanModule:IsReagentWaived(buffDef)
+  if not envModule.isForever or not envModule.IsPlayerSpell(spellIdsModule.Forever_ReagentEconomy) then
+    return false
+  end
+  for _, itemId in ipairs(buffDef.reagentRequired) do
+    if not itemIdsModule.VendorReagents[itemId] then
+      return false
+    end
+  end
+  return true
+end
+
 ---Reagents left for a group buff, shown after the task text: "x12", or "x0" when out.
 ---@param buffDef BomBuffDefinition
 ---@return string Empty when the buff needs no reagent
 function taskScanModule:FormatReagentCount(buffDef)
-  if not buffDef.reagentRequired then
+  if not buffDef.reagentRequired or self:IsReagentWaived(buffDef) then
     return ""
   end
   local _, _, _, count = buffChecksModule:HasItem(buffDef.reagentRequired, true)
@@ -785,8 +801,8 @@ end
 ---@param minBuff number Option for minimum players with missing buffs to choose group buff
 ---@param buffCtx BomBuffScanContext
 function taskScanModule:AddBuff_GroupBuff(buffDef, party, minBuff, buffCtx)
-  if envModule.haveWotLK then
-    -- For WotLK: Scan entire party as one
+  if envModule.groupBuffsRaidWide then
+    -- WotLK and Forever: one group buff covers the whole raid; scan it as one
     --inRange = self:FindAnyPartyTargetForGroupBuff(buffDef, party, minBuff, inRange)
     -- Text: Group 5 [Spell Name]
     self.tasklist:Add(
@@ -881,8 +897,8 @@ function taskScanModule:AddBuff(buffDef, party, buffCtx)
   -- Check if any group qualifies for group buffing
   local shouldUseGroupBuff = false
   if buffDef.groupMana ~= nil and not BuffomatShared.NoGroupBuff then
-    if envModule.haveWotLK then
-      -- WotLK: Group buff covers entire party, so check total
+    if envModule.groupBuffsRaidWide then
+      -- WotLK and Forever: a group buff covers the whole raid, so check the total
       shouldUseGroupBuff = #buffDef.unitsNeedBuff >= minBuff
     else
       -- Pre-WotLK: Group buff works per 5-man group, check each group

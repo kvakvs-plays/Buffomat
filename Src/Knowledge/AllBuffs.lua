@@ -38,6 +38,7 @@ local enchantmentsModule = LibStub("Buffomat-AllConsumesEnchantments") --[[@as A
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local flasksModule = LibStub("Buffomat-AllConsumesFlasks") --[[@as AllConsumesFlasksModule]]
 local foodModule = LibStub("Buffomat-AllConsumesFood") --[[@as AllConsumesFoodModule]]
+local foreverConsumesModule = LibStub("Buffomat-AllConsumesForever") --[[@as AllConsumesForeverModule]]
 local otherModule = LibStub("Buffomat-AllConsumesOther") --[[@as AllConsumesOtherModule]]
 local scrollsModule = LibStub("Buffomat-AllConsumesScrolls") --[[@as AllConsumesScrollsModule]]
 local spellIdsModule = LibStub("Buffomat-SpellIds") --[[@as SpellIdsModule]]
@@ -107,12 +108,14 @@ allBuffsModule.PHYSICAL_CLASSES = { "HUNTER", "ROGUE", "SHAMAN", "WARRIOR", "DRU
 
 allBuffsModule.MINUTE = 60
 allBuffsModule.TWO_MINUTES = allBuffsModule.MINUTE * 2
+allBuffsModule.THREE_MINUTES = allBuffsModule.MINUTE * 3
 allBuffsModule.FIVE_MINUTES = allBuffsModule.MINUTE * 5
 allBuffsModule.TEN_MINUTES = allBuffsModule.MINUTE * 10
 allBuffsModule.FIFTEEN_MINUTES = allBuffsModule.MINUTE * 15
 allBuffsModule.TWENTY_MINUTES = allBuffsModule.MINUTE * 20
 allBuffsModule.HALF_AN_HOUR = allBuffsModule.MINUTE * 30
 allBuffsModule.HOUR = allBuffsModule.MINUTE * 60
+allBuffsModule.TWO_HOURS = allBuffsModule.HOUR * 2
 
 --- From 2 choices return TBC if BOM.IsTBC is true, otherwise return classic
 local function tbcOrClassic(tbc, classic)
@@ -122,6 +125,18 @@ local function tbcOrClassic(tbc, classic)
   return classic
 end
 allBuffsModule.TbcOrClassic = tbcOrClassic
+
+---Pick a value which differs on WoW: Forever, such as a buff duration.
+---@generic T
+---@param forever T Value on WoW: Forever
+---@param other T Value on every other client
+---@return T
+function allBuffsModule.ForeverOr(forever, other)
+  if envModule.isForever then
+    return forever
+  end
+  return other
+end
 
 --- From 2 choices return TBC if BOM.IsTBC is true, otherwise return classic
 function allBuffsModule.ExpansionChoice(classic, tbc, wotlk)
@@ -279,6 +294,9 @@ function allBuffsModule:SetupSpells()
   flasksModule:SetupFlasks(allBuffs, enchantments)
   foodModule:SetupFood(allBuffs, enchantments)
   otherModule:SetupOtherConsumables(allBuffs, enchantments)
+  if envModule.isForever then
+    foreverConsumesModule:SetupForeverConsumables(allBuffs, enchantments)
+  end
 
   allBuffs = self:ApplyPostLimitations(allBuffs) --filter the list and make new shorter list
 
@@ -400,7 +418,8 @@ function allBuffsModule:SetupCancelBuffs()
       table.insert(s, buff)
     end
 
-    if (UnitFactionGroup("player")) ~= "Horde" or envModule.haveTBC or envModule.isForever then
+    -- Blessing of Salvation does not exist on Forever
+    if not envModule.isForever and ((UnitFactionGroup("player")) ~= "Horde" or envModule.haveTBC) then
       local buff = buffDefModule:New(1038) --Blessing of Salvation
           :IsDefault(false)
           :SingleFamily({ 1038, 25895 })

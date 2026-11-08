@@ -37,6 +37,8 @@ local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 ---@field hideInWotLK boolean
 ---@field requireCata boolean
 ---@field hideInCata boolean
+---@field requireForever boolean Only on WoW: Forever
+---@field hideInForever boolean Not on WoW: Forever (spell removed or replaced there)
 ---@field playerRace BomPlayerRace
 ---@field playerClass ClassName|ClassName[] Collection of classes for this spell, or classname
 ---@field maxLevel number Hide the spell if player is above this level (to deprecate old spells)
@@ -170,6 +172,16 @@ function buffDefModule:cataConsumable(dst, singleId, itemId)
       :RequireCata()
 end
 
+---A consumable which exists only on WoW: Forever.
+---@param dst BomBuffDefinition[]
+---@param singleId WowSpellId Aura the consumable gives
+---@param itemId WowItemId|WowItemId[]
+---@return BomBuffDefinition
+function buffDefModule:foreverConsumable(dst, singleId, itemId)
+  return self:genericConsumable(dst, singleId, itemId)
+      :RequireForever()
+end
+
 ---@param allBuffs BomBuffDefinition[]
 ---@param singleId WowSpellId
 ---@param providedByItem WowItemId|WowItemId[] Item or multiple items giving this buff
@@ -224,6 +236,12 @@ function buffDefModule:CheckStaticLimitations(_spell, limitations)
     return false
   end
   if limitations.hideInCata == true and envModule.haveCata then
+    return false
+  end
+  if limitations.requireForever == true and not envModule.isForever then
+    return false
+  end
+  if limitations.hideInForever == true and envModule.isForever then
     return false
   end
 
@@ -623,6 +641,20 @@ function buffDefClass:RequireCata()
   return self
 end
 
+---Show only on WoW: Forever. Use for Forever-only spells and for Forever twins of changed buffs.
+---@return BomBuffDefinition
+function buffDefClass:RequireForever()
+  (self.limitations).requireForever = true
+  return self
+end
+
+---Hide on WoW: Forever, where the spell was removed or a RequireForever twin replaces it.
+---@return BomBuffDefinition
+function buffDefClass:HideInForever()
+  (self.limitations).hideInForever = true
+  return self
+end
+
 ---@return BomBuffDefinition
 function buffDefClass:PetFood()
   self.petBuff = true
@@ -909,13 +941,18 @@ end
 ---@field onlyWotlk number[]|nil
 ---@field cataclysm number[]|nil
 ---@field onlyCataclysm number[]|nil
+---@field forever number[]|nil Appended to `classic` on WoW: Forever
+---@field onlyForever number[]|nil Replaces everything on WoW: Forever
 
 ---Construct a joined list of number for Classic, TBC, WotLK and Cataclysm based on version detected
 ---If any of the "onlyXXX" keys are present, those will be returned without any extra merging of other expansion data
 ---@param conditions BomNumbersPerExpansion
 ---@return number[]
 function buffDefModule:PerExpansionChoice(conditions)
-  if envModule.isClassic and conditions.onlyClassic then
+  -- isClassic is also true on Forever, so the Forever choice must be checked first
+  if envModule.isForever and conditions.onlyForever then
+    return conditions.onlyForever
+  elseif envModule.isClassic and conditions.onlyClassic then
     return conditions.onlyClassic
   elseif envModule.isTBC and conditions.onlyTbc then
     return conditions.onlyTbc
@@ -944,6 +981,12 @@ function buffDefModule:PerExpansionChoice(conditions)
 
   if envModule.haveCata then
     for _, val in ipairs(conditions.cataclysm or {}) do
+      table.insert(result, val)
+    end
+  end
+
+  if envModule.isForever then
+    for _, val in ipairs(conditions.forever or {}) do
       table.insert(result, val)
     end
   end

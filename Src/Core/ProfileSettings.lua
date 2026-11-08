@@ -87,7 +87,7 @@ function profileModule:New()
 end
 
 function profileModule:Setup()
-  if envModule.haveWotLK or GetActiveTalentGroup ~= nil then
+  if envModule.hasDualSpec or GetActiveTalentGroup ~= nil then
     self.ALL_PROFILES = {
       "solo", "solo_spec2",
       "group", "group_spec2",
@@ -100,7 +100,7 @@ function profileModule:Setup()
 end
 
 local function bomGetActiveTalentGroup()
-  if envModule.haveWotLK then
+  if envModule.hasDualSpec then
     return envModule.GetActiveTalentGroup()
   else
     return nil

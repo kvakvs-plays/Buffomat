@@ -50,7 +50,7 @@ function characterSettingsModule:NewDefaultCharacterSettings(init)
   tab.raid = tab.raid or profileModule:New()
   tab.battleground = tab.battleground or profileModule:New()
 
-  if envModule.haveWotLK then
+  if envModule.hasDualSpec then
     tab.solo_spec2 = tab.solo_spec2 or profileModule:New()
     tab.group_spec2 = tab.group_spec2 or profileModule:New()
     tab.raid_spec2 = tab.raid_spec2 or profileModule:New()

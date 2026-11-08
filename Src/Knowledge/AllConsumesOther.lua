@@ -24,8 +24,8 @@ end
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
 function otherModule:_SetupPhysicalConsumablesClassic(allBuffs, enchantments)
-  --Winterfall Firewater
-  buffDefModule:genericConsumable(allBuffs, 17038, 12820)
+  --Winterfall Firewater; Forever adds Distilled Firewater (246948) with the same aura
+  buffDefModule:genericConsumable(allBuffs, 17038, { 12820, 246948 })
       :RequirePlayerClass(allBuffsModule.PHYSICAL_CLASSES)
       :Category("classicPhysBuff")
 

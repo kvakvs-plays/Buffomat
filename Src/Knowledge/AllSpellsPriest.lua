@@ -13,7 +13,7 @@ function priestModule:CreatePrayerOfSpiritBuff()
       :GroupFamily({ 27681,                       -- Prayer of Spirit 1
         32999,                                    --- TBC: Prayer of Spirit 2
         48074 })                                  -- WotLK: Prayer of Spirit 3
-      :SingleDuration(allBuffsModule.HALF_AN_HOUR)
+      :SingleDuration(allBuffsModule.ForeverOr(allBuffsModule.HOUR, allBuffsModule.HALF_AN_HOUR))
       :GroupDuration(allBuffsModule.HOUR)
       :ReagentRequired({ 17028, 17029,
         44615 }) -- WotLK: Devout Candle
@@ -54,7 +54,7 @@ function priestModule:SetupPriestSpells(allBuffs, _enchants)
       :GroupFamily({ 21562, 21564,                          -- Prayer of Fortitude 1-2
         25392,                                              -- TBC: Prayer of Fortitude 3
         48162 })                                            -- WotLK: Prayer of Fortitude 4
-      :SingleDuration(allBuffsModule.HALF_AN_HOUR)
+      :SingleDuration(allBuffsModule.ForeverOr(allBuffsModule.HOUR, allBuffsModule.HALF_AN_HOUR))
       :GroupDuration(allBuffsModule.HOUR)
       :ReagentRequired({ 17028, 17029, -- Candle
         44615 })                       -- WotLK: Devout Candle
@@ -113,7 +113,7 @@ function priestModule:SetupPriestSpells(allBuffs, _enchants)
   -- Fear Ward
   buffDefModule:createAndRegisterBuff(allBuffs, 6346, nil)
       :IsDefault(false)
-      :SingleDuration(allBuffsModule.TEN_MINUTES)
+      :SingleDuration(allBuffsModule.ForeverOr(allBuffsModule.THREE_MINUTES, allBuffsModule.TEN_MINUTES))
       :HasCooldown(true)
       :DefaultTargetClasses(allBuffsModule.ALL_CLASSES)
       :Category("class")
@@ -157,6 +157,17 @@ function priestModule:SetupPriestSpells(allBuffs, _enchants)
         19289, 19291, 19292, 19293 }) -- Ranks 2-5 (non-TBC)
       :RequirePlayerClass("PRIEST")
       :Category("class")
+      :HideInForever()
+
+  -- [Forever] Elune's Grace: only rank 1 is left, for Night Elf priests (from a quest)
+  buffDefModule:createAndRegisterBuff(allBuffs, 19293, nil)
+      :IsDefault(true)
+      :IsOwn(true)
+      :SingleFamily({ 2651 })
+      :RequirePlayerClass("PRIEST")
+      :RequirePlayerRace("NightElf")
+      :Category("class")
+      :RequireForever()
   -- Shadow Form
   buffDefModule:createAndRegisterBuff(allBuffs, 15473, nil)
       :IsDefault(false)

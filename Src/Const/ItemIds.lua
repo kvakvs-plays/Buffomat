@@ -31,6 +31,18 @@ itemIdsModule.Warlock_Firestone7 = 41174
 
 itemIdsModule.Paladin_SymbolOfKings = 21177
 
+---Class reagents sold by vendors. On WoW: Forever the Legacy talent Reagent Economy removes the
+---need for these, but not for Soul Shards or other farmed reagents.
+---@type {[WowItemId]: boolean}
+itemIdsModule.VendorReagents = {
+  [17020] = true, -- Arcane Powder
+  [17021] = true, -- Wild Berries
+  [17026] = true, -- Wild Thornroot
+  [17028] = true, -- Holy Candle
+  [17029] = true, -- Sacred Candle
+  [21177] = true, -- Symbol of Kings
+}
+
 itemIdsModule.Classic_BigmouthClam = 7973
 itemIdsModule.TBC_JaggalClam = 24476
 itemIdsModule.WotLK_DarkwaterClam = 36781

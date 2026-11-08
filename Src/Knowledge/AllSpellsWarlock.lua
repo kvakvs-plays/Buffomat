@@ -114,6 +114,20 @@ function warlockModule:SetupWarlockSpells(allBuffs, enchantments)
         :Category("class")
   end
 
+  if envModule.isForever then
+    -- [Forever] A Firestone is used on the weapon for 2 hours, like the WotLK model.
+    -- The conjure spell above stays; this tracks the weapon enchantment.
+    buffDefModule:createAndRegisterBuff(allBuffs, 17949, nil)
+        :CreatesOrProvidedByItem({ 1254, 13699, 13700, 13701 }) -- Lesser, (normal), Greater, Major Firestone
+        :IsConsumable(true)
+        :BuffType("weapon")
+        :IsDefault(false)
+        :SingleDuration(allBuffsModule.TWO_HOURS)
+        :RequirePlayerClass("WARLOCK")
+        :Category("classWeaponEnchantment")
+    enchantments[17949] = { 1803, 1823, 1824, 1825 } -- Forever: Firestone 1-4
+  end
+
   if envModule.haveWotLK then
     -- Conjure Mana Stone (Max Rank)
     buffDefModule:createAndRegisterBuff(allBuffs, spellIdsModule.Warlock_CreateSpellstone6, nil)
@@ -164,6 +178,19 @@ function warlockModule:SetupWarlockSpells(allBuffs, enchantments)
           28172 })                            -- TBC: Rank 4
         :RequirePlayerClass("WARLOCK")
         :Category("class")
+  end
+
+  if envModule.isForever then
+    -- [Forever] A Spellstone is used on the weapon for 2 hours (spell haste, Shadow damage)
+    buffDefModule:createAndRegisterBuff(allBuffs, 1237159, nil)
+        :CreatesOrProvidedByItem({ 5522, 13602, 13603 }) -- Spellstone, Greater, Major Spellstone
+        :IsConsumable(true)
+        :BuffType("weapon")
+        :IsDefault(false)
+        :SingleDuration(allBuffsModule.TWO_HOURS)
+        :RequirePlayerClass("WARLOCK")
+        :Category("classWeaponEnchantment")
+    enchantments[1237159] = { 8059, 8060, 8061 } -- Forever: Spellstone 1-3
   end
 
   -- Healthstone

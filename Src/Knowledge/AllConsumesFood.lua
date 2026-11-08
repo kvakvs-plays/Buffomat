@@ -199,6 +199,7 @@ function foodModule:_SetupCasterFoodClassic(allBuffs, enchantments)
       :IgnoreIfHaveBuff(spellIdsModule.ClassicFood)
       :ConsumeGroupTitle("food", ITEM_MOD_STAMINA_SHORT .. " " .. ITEM_MOD_SPIRIT_SHORT, 134062) -- "inv_misc_fork-knife"
       :ExtraText(_t("tooltip.food.bestInBag"))
+      :HideInForever() -- these foods give one-stat Well Fed auras there (AllConsumesForever)
 
   -- MP5 Food
   -- Smoked Sagefish - level 10, 3 mana/5 seconds for 15 minutes.
@@ -220,6 +221,7 @@ function foodModule:_SetupCasterFoodClassic(allBuffs, enchantments)
       :IgnoreIfHaveBuff(spellIdsModule.ClassicFood)
       :ConsumeGroupTitle("food", ITEM_MOD_MANA_REGENERATION_SHORT, 134062) -- "inv_misc_fork-knife"
       :ExtraText(_t("tooltip.food.bestInBag"))
+      :HideInForever() -- Spell Damage food there
 
   --Blessed Sunfruit Juice +10 SPIRIT
   buffDefModule:genericConsumable(allBuffs, 18141, 13813)
@@ -232,6 +234,7 @@ function foodModule:_SetupCasterFoodClassic(allBuffs, enchantments)
   buffDefModule:genericConsumable(allBuffs, 22730, 18254)
       :IgnoreIfHaveBuff(spellIdsModule.ClassicFood)
       :Category("classicSpellFood")
+      :HideInForever() -- Intellect food there
 end
 
 ---@param allBuffs BomBuffDefinition[]
@@ -250,12 +253,14 @@ function foodModule:_SetupPhysicalFoodClassic(allBuffs, enchantments)
       :IgnoreIfHaveBuff(spellIdsModule.ClassicFood)
       :RequirePlayerClass(allBuffsModule.PHYSICAL_CLASSES)
       :Category("classicPhysFood")
+      :HideInForever() -- Crit food there
 
   --Smoked Desert Dumplings +Strength
   buffDefModule:genericConsumable(allBuffs, 24799, 20452)
       :IgnoreIfHaveBuff(spellIdsModule.ClassicFood)
       :RequirePlayerClass(allBuffsModule.PHYSICAL_CLASSES)
       :Category("classicPhysFood")
+      :HideInForever() -- Strength food there
 
   --Blessed Sunfruit +STR
   buffDefModule:genericConsumable(allBuffs, 18125, 13810)

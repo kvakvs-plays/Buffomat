@@ -17,7 +17,7 @@ function mageModule:CreateIntelligenceBuff()
         43002, 61316,                                 -- WotLK: Arcane Brilliance Rank 3; Dalaran Brilliance
         79058 })                                      -- Cataclysm: Arcane Brilliance
       :IsDefault(true)
-      :SingleDuration(allBuffsModule.HALF_AN_HOUR)
+      :SingleDuration(allBuffsModule.ForeverOr(allBuffsModule.HOUR, allBuffsModule.HALF_AN_HOUR))
       :GroupDuration(allBuffsModule.HOUR)
       :ReagentRequired({ 17020 }) -- Arcane Powder
       :DefaultTargetClasses(allBuffsModule.MANA_CLASSES)

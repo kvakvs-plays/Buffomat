@@ -9,6 +9,8 @@ local addonName, ns = ...
 ---@field isCata boolean
 ---@field haveCata boolean
 ---@field isForever boolean
+---@field groupBuffsRaidWide boolean Group buffs cover the whole raid (WotLK+, Forever)
+---@field hasDualSpec boolean Two talent groups with separate profiles (WotLK+, Forever)
 ---@field supportsAuraRestrictions boolean
 ---@field CAT_FORM number?
 ---@field usesTrackingSettings boolean
@@ -500,6 +502,42 @@ envModule.GetInventorySlotInfo = (C_PaperDollInfo and C_PaperDollInfo.GetInvento
 ---@type fun(): number
 envModule.GetActiveTalentGroup = (C_SpecializationInfo and C_SpecializationInfo.GetActiveSpecGroup)
     or GetActiveTalentGroup
+
+-- Capabilities which do not follow the expansion order. Forever has Classic content (haveTBC is
+-- false: no flying, no TBC pet or imbue rules) but casts the "group" buffs (Prayer, Gift,
+-- Brilliance, Battle Shout) on the whole raid like WotLK, and has dual specialization.
+envModule.groupBuffsRaidWide = envModule.haveWotLK or envModule.isForever
+envModule.hasDualSpec = envModule.haveWotLK or (envModule.isForever and envModule.GetActiveTalentGroup ~= nil)
+
+local C_EventUtils = _G["C_EventUtils"]
+
+---Modern clients throw when an unknown event is registered; older ones have no way to ask,
+---so callers there must already gate the event by expansion.
+---@param event string
+---@return boolean
+function envModule.IsEventValid(event)
+  if C_EventUtils and C_EventUtils.IsEventValid then
+    return C_EventUtils.IsEventValid(event) == true
+  end
+  return true
+end
+
+local isPlayerSpell = _G["IsPlayerSpell"]
+
+---True when the player has the spell from any source, including talents and passive
+---account (Legacy) talents, which may not be in the spellbook.
+---@param spellID number
+---@return boolean
+function envModule.IsPlayerSpell(spellID)
+  if spellID == nil then
+    return false
+  end
+  if isPlayerSpell then
+    local known = isPlayerSpell(spellID)
+    return not envModule.IsSecretValue(known) and known == true
+  end
+  return envModule.IsSpellKnown(spellID)
+end
 
 ---@param frame Frame
 ---@return boolean

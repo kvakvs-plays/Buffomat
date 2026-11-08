@@ -42,8 +42,8 @@ function groupBuffTargetClass:GetDistanceRaid()
 end
 
 function groupBuffTargetClass:GetDistanceParty()
-  if envModule.haveWotLK then
-    -- in WotLK group buffs are cast on the whole group
+  if envModule.groupBuffsRaidWide then
+    -- WotLK and Forever cast group buffs on the whole raid
     return 0 -- self always in range
   end
 

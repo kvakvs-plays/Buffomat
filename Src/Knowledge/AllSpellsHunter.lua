@@ -19,7 +19,8 @@ function hunterModule:_SetupHunterSpellsTBC(allBuffs, enchantments)
   buffDefModule:createAndRegisterBuff(allBuffs, 20906, nil)
       :IsOwn(true)
       :IsDefault(true)
-      :SingleFamily({ 19506, 20905, 20906,   -- Trueshot Aura 1-3, WotLK: Trueshot Aura
+      :SingleFamily({ 1299346, 1299348,      -- Forever: Trueshot Aura 1-2 (lower ranks are new IDs)
+        19506, 20905, 20906,                 -- Trueshot Aura 1-3 (Forever: 3-5), WotLK: Trueshot Aura
         27066 })                             -- TBC: Trueshot Aura 4
       :RequirePlayerClass("HUNTER")
       :Category("aura")
@@ -74,6 +75,8 @@ function hunterModule:_SetupHunterSpellsTBC(allBuffs, enchantments)
   -- Aspect of the Beast
   buffDefModule:createAndRegisterBuff(allBuffs, 13161, nil)
       :BuffType("aura")
+      :SingleFamily({ 13161,                -- Aspect of the Beast
+        1299445, 1299446, 1299447 })        -- Forever: Aspect of the Beast 2-4 (also melee attack power)
       :IsDefault(false)
       :RequirePlayerClass("HUNTER")
       :Category("class")
