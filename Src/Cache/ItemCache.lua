@@ -115,7 +115,15 @@ function itemCacheModule:LoadItem(itemId, onLoaded)
     end
   end
 
-  if C_Item.DoesItemExistByID(itemId) then
+  if self:ItemExists(itemId) then
     itemMixin:ContinueOnItemLoad(itemLoaded)
   end
+end
+
+---Whether this client knows the item at all. Item lists hold ids from several game versions, and an
+---unknown item never finishes loading.
+---@param itemId WowItemId
+---@return boolean
+function itemCacheModule:ItemExists(itemId)
+  return C_Item.DoesItemExistByID(itemId) == true
 end

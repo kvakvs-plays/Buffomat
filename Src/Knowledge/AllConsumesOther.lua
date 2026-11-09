@@ -1,13 +1,13 @@
 ---@class AllConsumesOtherModule
 
-local otherModule = LibStub("Buffomat-AllConsumesOther") --[[@as AllConsumesOtherModule]]
+local module = LibStub("Buffomat-AllConsumesOther") --[[@as AllConsumesOtherModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
 
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function otherModule:SetupOtherConsumables(allBuffs, enchantments)
+function module:SetupOtherConsumables(allBuffs, enchantments)
   self:_SetupPhysicalConsumablesClassic(allBuffs, enchantments)
   --self:_SetupPhysicalConsumablesTBC(buffs, enchantments)
   --self:_SetupPhysicalConsumablesWotLK(buffs, enchantments)
@@ -23,7 +23,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function otherModule:_SetupPhysicalConsumablesClassic(allBuffs, enchantments)
+function module:_SetupPhysicalConsumablesClassic(allBuffs, enchantments)
   --Winterfall Firewater; Forever adds Distilled Firewater (246948) with the same aura
   buffDefModule:genericConsumable(allBuffs, 17038, { 12820, 246948 })
       :RequirePlayerClass(allBuffsModule.PHYSICAL_CLASSES)
@@ -42,7 +42,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function otherModule:_SetupCasterConsumablesTBC(allBuffs, enchantments)
+function module:_SetupCasterConsumablesTBC(allBuffs, enchantments)
   -- Not visible in Classic
   --TBC: Bloodthistle (Belf only)
   buffDefModule:tbcConsumable(allBuffs, 28273, 22710)
@@ -54,7 +54,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function otherModule:_SetupMiscConsumablesClassic(allBuffs, enchantments)
+function module:_SetupMiscConsumablesClassic(allBuffs, enchantments)
   --Juju Ember +15FR
   buffDefModule:genericConsumable(allBuffs, 16326, 12455)
       :ExtraText(_t("tooltip.buff.fireResist"))

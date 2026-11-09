@@ -7,7 +7,7 @@
 BINDING_HEADER_BUFFOMATHEADER = "Buffomat"
 BINDING_NAME_BUFFOMAT_WINDOW = "Toggle Window"
 
-local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
+local module = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local languagesModule = _t
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
@@ -29,7 +29,7 @@ local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPa
 local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
 local ngStringsModule = LibStub("Buffomat-NgStrings") --[[@as NgStringsModule]]
 
-buffomatModule.libIcon = LibStub("LibDBIcon-1.0")
+module.libIcon = LibStub("LibDBIcon-1.0")
 
 ---@alias CastingState "cast"|"channel"|nil
 
@@ -105,11 +105,11 @@ BuffomatAddon.cachedPlayerBag = {}
 ---@param t string
 function BuffomatAddon:Debug(t)
   if BuffomatShared.DebugLogging then
-    DEFAULT_CHAT_FRAME:AddMessage(tostring(GetTime()) .. " " .. buffomatModule:Color("883030", "BOM ") .. t)
+    DEFAULT_CHAT_FRAME:AddMessage(tostring(GetTime()) .. " " .. module:Color("883030", "BOM ") .. t)
   end
 end
 
-function buffomatModule:Color(hex, text)
+function module:Color(hex, text)
   return "|cff" .. hex .. text .. "|r"
 end
 
@@ -119,7 +119,7 @@ function BuffomatAddon.ScrollMessage(self, delta)
 end
 
 -- Something changed (buff gained possibly?) update all spells and spell tabs
-function buffomatModule.OptionsUpdate()
+function module.OptionsUpdate()
   throttleModule:RequestTaskRescan("optionsUpdate")
   taskScanModule:ScanTasks("OptionsUpdate")
 
@@ -128,7 +128,7 @@ function buffomatModule.OptionsUpdate()
   --BOM.legacyOptions.DoCancel()
 end
 
-function buffomatModule:OptionsInit()
+function module:OptionsInit()
   LibStub("AceConfig-3.0"):RegisterOptionsTable(
     constModule.SHORT_TITLE, optionsModule:CreateOptionsTable(), {})
 
@@ -144,7 +144,7 @@ end
 ---ChooseProfile
 ---BOM profile selection, using 'auto' by default
 ---@param profile ProfileName
-function buffomatModule.ChooseProfile(profile)
+function module.ChooseProfile(profile)
   if profile == nil or profile == "" or profile == "auto" then
     BuffomatAddon.forceProfile = nil
   elseif BuffomatCharacter.profiles[profile] then
@@ -159,19 +159,19 @@ function buffomatModule.ChooseProfile(profile)
   throttleModule:RequestTaskRescan("profileSelected")
   taskScanModule:ScanTasks("profileSelected")
 
-  buffomatModule:UseProfile(profile)
+  module:UseProfile(profile)
 end
 
 ---@param profileName ProfileName
-function buffomatModule:UseProfile(profileName)
-  if buffomatModule.currentProfileName == profileName then
+function module:UseProfile(profileName)
+  if module.currentProfileName == profileName then
     return
   end
 
-  buffomatModule.currentProfileName = profileName
+  module.currentProfileName = profileName
 
   local selectedProfile = characterSettingsModule:GetProfile(profileName)
-  buffomatModule.currentProfile = selectedProfile
+  module.currentProfile = selectedProfile
 
   taskListPanelModule.titleProfile = ngStringsModule:FormatTexture(constModule.BOM_BEAR_ICON_FULLPATH) ..
       " " .. characterSettingsModule:LocalizedProfileName(profileName)
@@ -182,7 +182,7 @@ end
 
 ---When BomCharacterState.WatchGroup has changed, update the buff tab text to show what's
 ---being buffed. Example: "Buff All", "Buff G3,5-7"...
-function buffomatModule:UpdateBuffTabText()
+function module:UpdateBuffTabText()
   local selectedGroups = 0
 
   for i = 1, 8 do
@@ -244,7 +244,7 @@ function buffomatModule:UpdateBuffTabText()
   -- PanelTemplates_TabResize(t, 0)
 end
 
-function buffomatModule:ScheduleUpdateTimer()
+function module:ScheduleUpdateTimer()
   -- Cancel timer if exists
   if self.throttleUpdateTimer then
     BuffomatAddon:CancelTimer(BuffomatAddon.throttleUpdateTimer)
@@ -259,12 +259,12 @@ function buffomatModule:ScheduleUpdateTimer()
   self.throttleUpdateTimer = BuffomatAddon:ScheduleRepeatingTimer(throttleModule.UpdateTimer, interval)
 end
 
-function buffomatModule:InitUI()
+function module:InitUI()
   taskListPanelModule:ShowWindow("buffomat:InitUI")
   taskListPanelModule:CheckWindowBounds()
   self:ScheduleUpdateTimer()
 
-  BuffomatAddon.popupMenuDynamic = popupModule:CreatePopup(buffomatModule.OptionsUpdate)
+  BuffomatAddon.popupMenuDynamic = popupModule:CreatePopup(module.OptionsUpdate)
 
   local function onMinimapClick(_self1, button)
     if button == "LeftButton" then
@@ -282,12 +282,12 @@ function buffomatModule:InitUI()
   })
   libIcon:Register("BuffomatIcon", buffomatLDB, BuffomatShared.Minimap)
 
-  buffomatModule:OptionsInit()
+  module:OptionsInit()
   partyModule:InvalidatePartyCache()
   BuffomatAddon.repeatUpdate = false
 end
 
-function buffomatModule:InitGlobalStates()
+function module:InitGlobalStates()
   --BuffomatShared = BuffomatShared --[[@as SharedSettings]]
   --BuffomatCharacter = BuffomatCharacter --[[@as CharacterSettings]]
   if not BuffomatShared then
@@ -331,7 +331,7 @@ function BuffomatAddon:MakeSlashCommand()
         {
           command = "%",
           description = _t("SlashProfile"),
-          handler = buffomatModule.ChooseProfile
+          handler = module.ChooseProfile
         }
       },
     },
@@ -394,7 +394,7 @@ function BuffomatAddon:Init()
 
   languagesModule:LocalizationInit()
   slashModule:RegisterSlashCommandHandler({ "/bom", "/buffomat" }, self:MakeSlashCommand())
-  buffomatModule:InitUI()
+  module:InitUI()
 
   -- Which groups are watched by the buff scanner - save in character state
   if not BuffomatCharacter.WatchGroup then
@@ -404,12 +404,12 @@ function BuffomatAddon:Init()
     end
   end
 
-  buffomatModule:UpdateBuffTabText()
-  buffomatModule:RegisterBindings()
+  module:UpdateBuffTabText()
+  module:RegisterBindings()
 end
 
 -- Key Binding section header and key translations (see Bindings.XML)
-function buffomatModule:RegisterBindings()
+function module:RegisterBindings()
   _G["BINDING_HEADER_BUFFOMATHEADER"] = "Buffomat Classic"
   _G["BINDING_NAME_MACRO Buffomat Classic"] = _t("ButtonCastBuff")
   _G["BINDING_NAME_BUFFOMAT_WINDOW"] = _t("ButtonBuffomatWindow")
@@ -420,7 +420,7 @@ function BuffomatAddon:OnInitialize()
   -- do init tasks here, like loading the Saved Variables,
   -- or setting up slash commands.
   profileModule:Setup()
-  buffomatModule:InitGlobalStates()
+  module:InitGlobalStates()
 end
 
 ---AceAddon handler
@@ -440,7 +440,7 @@ function BuffomatAddon:OnEnable()
   end
 
   toolboxModule:AddDataBroker(constModule.BOM_BEAR_ICON_FULLPATH, onClick, nil, nil)
-  buffomatModule:UseProfile(profileModule:SoloProfile())
+  module:UseProfile(profileModule:SoloProfile())
 end
 
 ---AceAddon handler
@@ -450,7 +450,7 @@ end
 ---This is called from an Error Handler on UI_ERROR_MESSAGE event, when a casted spell
 ---fails due to the target level being too low. There is no other way to know the minimum level
 ---for a spell target, so we have to learn it from our failures.
-function buffomatModule:OnFailedCast_LearnedDownrank()
+function module:OnFailedCast_LearnedDownrank()
   local failedBuff = BuffomatAddon.castFailedBuff
   local failedTarget = BuffomatAddon.castFailedBuffTarget
 
@@ -494,7 +494,7 @@ partyModule.unitAurasLastUpdated = --[[@as BomBuffUpdatesPerUnit]] {}
 ---@field castByPlayer boolean
 ---@field nameplateShowAll boolean
 
-function buffomatModule:PrintCallers(prefix, callersCollection)
+function module:PrintCallers(prefix, callersCollection)
   if next(callersCollection) then
     local callers = ""
     for caller, count in pairs(callersCollection) do
@@ -558,5 +558,5 @@ function BuffomatAddon.ClickHyperlink(_self, link)
 end
 
 function BuffomatAddon.MyButtonOnClick(_self)
-  buffomatModule:OptionsUpdate()
+  module:OptionsUpdate()
 end

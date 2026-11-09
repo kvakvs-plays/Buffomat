@@ -1,6 +1,6 @@
 ---@class AllConsumesElixirsModule
 
-local elixirsModule = LibStub("Buffomat-AllConsumesElixirs") --[[@as AllConsumesElixirsModule]]
+local module = LibStub("Buffomat-AllConsumesElixirs") --[[@as AllConsumesElixirsModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
@@ -8,7 +8,7 @@ local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionM
 ---ELIXIRS
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function elixirsModule:SetupElixirs(allBuffs, enchantments)
+function module:SetupElixirs(allBuffs, enchantments)
   self:_SetupBattleCasterElixirsClassic(allBuffs, enchantments)
   self:_SetupBattlePhysicalElixirsClassic(allBuffs, enchantments)
   self:_SetupGuardianElixirsClassic(allBuffs, enchantments)
@@ -27,7 +27,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function elixirsModule:_SetupBattleCasterElixirsTBC(allBuffs, enchantments)
+function module:_SetupBattleCasterElixirsTBC(allBuffs, enchantments)
   --TBC: Elixir of Major Mageblood +16 mp5
   buffDefModule:genericConsumable(allBuffs, 28509, 22840)
       :RequireTBC()
@@ -72,7 +72,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function elixirsModule:_SetupBattleCasterElixirsClassic(allBuffs, enchantments)
+function module:_SetupBattleCasterElixirsClassic(allBuffs, enchantments)
   --All Spell Power elixirs
   local spellPowerItemIds = {
     9155,      -- Arcane Elixir +20
@@ -116,7 +116,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function elixirsModule:_SetupBattlePhysicalElixirsClassic(allBuffs, enchantments)
+function module:_SetupBattlePhysicalElixirsClassic(allBuffs, enchantments)
   --Elixir of the Mongoose
   buffDefModule:genericConsumable(allBuffs, 17538, 13452)
       :RequirePlayerClass(allBuffsModule.PHYSICAL_CLASSES)
@@ -166,7 +166,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function elixirsModule:_SetupBattlePhysicalElixirsTBC(allBuffs, enchantments)
+function module:_SetupBattlePhysicalElixirsTBC(allBuffs, enchantments)
   --TBC: Elixir of Major Agility +35 AGI +20 CRIT
   buffDefModule:genericConsumable(allBuffs, 54494, 22831)   -- old TBC spell id 28497
       :RequireTBC()
@@ -198,7 +198,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function elixirsModule:_SetupBattleCasterElixirsWotLK(allBuffs, enchantments)
+function module:_SetupBattleCasterElixirsWotLK(allBuffs, enchantments)
   -- WotLK: Spellpower Elixir +58 SPELL
   buffDefModule:genericConsumable(allBuffs, 33721, 40070)
       :RequireWotLK()
@@ -209,7 +209,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function elixirsModule:_SetupBattlePhysicalElixirsWotLK(allBuffs, enchantments)
+function module:_SetupBattlePhysicalElixirsWotLK(allBuffs, enchantments)
   -- WotLK: Elixir of Expertise +45
   buffDefModule:genericConsumable(allBuffs, 60344, 44329)
       :RequireWotLK()
@@ -255,7 +255,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function elixirsModule:_SetupGuardianElixirsTBC(allBuffs, enchantments)
+function module:_SetupGuardianElixirsTBC(allBuffs, enchantments)
   --TBC: Elixir of Draenic Wisdom +30 SPI
   buffDefModule:genericConsumable(allBuffs, 39627, 32067)
       :RequireTBC()
@@ -310,7 +310,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function elixirsModule:_SetupGuardianElixirsClassic(allBuffs, enchantments)
+function module:_SetupGuardianElixirsClassic(allBuffs, enchantments)
   -- Mageblood Potion
   buffDefModule:genericConsumable(allBuffs, 24363, 20007)
       :RequirePlayerClass(allBuffsModule.MANA_CLASSES)
@@ -454,7 +454,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function elixirsModule:_SetupGuardianElixirsWotLK(allBuffs, enchantments)
+function module:_SetupGuardianElixirsWotLK(allBuffs, enchantments)
   --WotLK: Elixir of Spirit +50
   buffDefModule:wotlkConsumable(allBuffs, 53747, 40072)
       :RequirePlayerClass(allBuffsModule.MANA_CLASSES)
@@ -490,7 +490,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function elixirsModule:_SetupBattleElixirsWotLK(allBuffs, enchantments)
+function module:_SetupBattleElixirsWotLK(allBuffs, enchantments)
   --WotLK: Guru's Elixir +20 All Stats
   buffDefModule:wotlkConsumable(allBuffs, 53749, 40076)
       :Category("wotlkElixir")
@@ -509,7 +509,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function elixirsModule:_SetupElixirsCata(allBuffs, enchantments)
+function module:_SetupElixirsCata(allBuffs, enchantments)
   -- Cata: Elixir of the Naga; +225 Expertise
   buffDefModule:cataConsumable(allBuffs, 79474, 58089)
       :Category("cataElixir")

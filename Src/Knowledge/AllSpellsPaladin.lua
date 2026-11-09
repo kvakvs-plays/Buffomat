@@ -1,6 +1,6 @@
 ---@class PaladinModule
 
-local paladinModule = LibStub("Buffomat-AllSpellsPaladin") --[[@as PaladinModule]]
+local module = LibStub("Buffomat-AllSpellsPaladin") --[[@as PaladinModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
@@ -10,7 +10,7 @@ local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
 ---Add PALADIN spells
 ---@param allBuffs BomBuffDefinition[]
 ---@param _enchants BomEnchantmentsMapping
-function paladinModule:SetupPaladinSpells(allBuffs, _enchants)
+function module:SetupPaladinSpells(allBuffs, _enchants)
   --Righteous Fury, same in TBC
   buffDefModule:createAndRegisterBuff(allBuffs, 25780, nil)
       :IsOwn(true)

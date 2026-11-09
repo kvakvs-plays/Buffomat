@@ -5,7 +5,7 @@ local addonName, ns = ...
 
 ---@class AllConsumesForeverModule
 
-local foreverModule = LibStub("Buffomat-AllConsumesForever") --[[@as AllConsumesForeverModule]]
+local module = LibStub("Buffomat-AllConsumesForever") --[[@as AllConsumesForeverModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
@@ -75,7 +75,7 @@ end
 ---the other AllConsumes modules as usual.
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function foreverModule:SetupForeverConsumables(allBuffs, enchantments)
+function module:SetupForeverConsumables(allBuffs, enchantments)
   self:_SetupFood(allBuffs)
   self:_SetupElixirs(allBuffs)
   self:_SetupFlasks(allBuffs)
@@ -85,7 +85,7 @@ end
 
 ---Forever food gives one stat per Well Fed aura, with values that grow with the food's level.
 ---@param allBuffs BomBuffDefinition[]
-function foreverModule:_SetupFood(allBuffs)
+function module:_SetupFood(allBuffs)
   -- Well Fed: Stamina
   addFoodGroup(allBuffs, { 1248406 }, {
     3663, -- L1 Murloc Fin Soup
@@ -251,7 +251,7 @@ function foreverModule:_SetupFood(allBuffs)
 end
 
 ---@param allBuffs BomBuffDefinition[]
-function foreverModule:_SetupElixirs(allBuffs)
+function module:_SetupElixirs(allBuffs)
   local mana = allBuffsModule.MANA_CLASSES
   local melee = allBuffsModule.MELEE_CLASSES
 
@@ -304,29 +304,10 @@ function foreverModule:_SetupElixirs(allBuffs)
   buffDefModule:foreverConsumable(allBuffs, 1250972, 250343) -- Elixir of Nature Power
       :RequirePlayerClass({ "DRUID", "SHAMAN" })
       :Category("classicSpellElixir")
-
-  -- "Endless" elixirs: percent bonuses for 60 minutes
-  buffDefModule:foreverConsumable(allBuffs, 1327736, 289082) -- Elixir of Endless Intellect
-      :RequirePlayerClass(mana)
-      :Category("classicSpellElixir")
-  buffDefModule:foreverConsumable(allBuffs, 1328032, 289321) -- Elixir of Endless Mana
-      :RequirePlayerClass(mana)
-      :Category("classicSpellElixir")
-  buffDefModule:foreverConsumable(allBuffs, 1327738, 289084) -- Elixir of Endless Healing
-      :RequirePlayerClass(HEALER_CLASSES)
-      :Category("classicSpellElixir")
-  buffDefModule:foreverConsumable(allBuffs, 1327737, 289083) -- Elixir of Endless Power: damage
-      :Category("classicElixir")
-  buffDefModule:foreverConsumable(allBuffs, 1327751, 289086) -- Elixir of Endless Rapidity: haste
-      :Category("classicElixir")
-  buffDefModule:foreverConsumable(allBuffs, 1327753, 289087) -- Elixir of Endless Opportunity: crit
-      :Category("classicElixir")
-  buffDefModule:foreverConsumable(allBuffs, 1328127, 289334) -- Elixir of Endless Experience
-      :Category("classicElixir")
 end
 
 ---@param allBuffs BomBuffDefinition[]
-function foreverModule:_SetupFlasks(allBuffs)
+function module:_SetupFlasks(allBuffs)
   -- Flasks of Natural Accuracy, Aggression, Precision, Swiftness: +30 Stamina for 2 hours (level 55)
   buffDefModule:consumableGroup(allBuffs, "", { 1293740, 1293741, 1293742, 1293743 },
         { 274273, 274274, 274275, 274276 })
@@ -337,7 +318,7 @@ function foreverModule:_SetupFlasks(allBuffs)
 end
 
 ---@param allBuffs BomBuffDefinition[]
-function foreverModule:_SetupScrolls(allBuffs)
+function module:_SetupScrolls(allBuffs)
   -- Rat, Frog and Cat Familiar scrolls: an Intellect familiar for 60 minutes
   buffDefModule:consumableGroup(allBuffs, "", { 1296202, 1302285, 1302303 }, { 275069, 277483, 277493 })
       :RequirePlayerClass(allBuffsModule.MANA_CLASSES)
@@ -345,9 +326,6 @@ function foreverModule:_SetupScrolls(allBuffs)
       :Category("scroll")
       :ExtraText(_t("tooltip.scroll.bestInBag"))
       :RequireForever()
-
-  buffDefModule:foreverConsumable(allBuffs, 1327754, 289088) -- Scroll of Endless Fortitude: % Stamina
-      :Category("scroll")
 end
 
 -- Scroll of Imbue X: a 1-hour weapon enchantment for one weapon type (SpellEquippedItems in 70862).
@@ -373,11 +351,11 @@ local IMBUE_SCROLLS = {
 -- English names for clients without GetItemSubClassInfo
 local WEAPON_TYPE_FALLBACK = { Staff = "Staves", Dagger = "Daggers", Sword1H = "One-Handed Swords" }
 
----Imbue scrolls fit one weapon type each: the scan asks for them only on a fitting weapon, and the
+---Imbue scrolls are Mage only and fit one weapon type each: the scan asks for them only on a fitting weapon, and the
 ---spells dialog names the type. They stay off by default.
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function foreverModule:_SetupImbueScrolls(allBuffs, enchantments)
+function module:_SetupImbueScrolls(allBuffs, enchantments)
   for _, imbue in ipairs(IMBUE_SCROLLS) do
     local spellId, itemIds, enchantId, weaponType = imbue[1], imbue[2], imbue[3], imbue[4]
     local subclass = itemIdsModule.WeaponSubclass[weaponType]
@@ -388,7 +366,7 @@ function foreverModule:_SetupImbueScrolls(allBuffs, enchantments)
         :SingleDuration(allBuffsModule.HOUR)
         :RequireWeaponType({ subclass })
         :ExtraText(weaponName)
-        :RequirePlayerClass(allBuffsModule.SPELL_CLASSES)
+        :RequirePlayerClass("MAGE") -- the scroll items are Mage only (AllowableClass)
         :RequireForever()
     enchantments[spellId] = { enchantId }
   end

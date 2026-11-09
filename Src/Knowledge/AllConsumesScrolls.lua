@@ -1,6 +1,6 @@
 ---@class AllConsumesScrollsModule
 
-local scrollsModule = LibStub("Buffomat-AllConsumesScrolls") --[[@as AllConsumesScrollsModule]]
+local module = LibStub("Buffomat-AllConsumesScrolls") --[[@as AllConsumesScrollsModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
@@ -9,7 +9,7 @@ local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 ---SCROLLS
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function scrollsModule:SetupScrolls(allBuffs, enchantments)
+function module:SetupScrolls(allBuffs, enchantments)
   self:_SetupScrollsAgility(allBuffs, enchantments)
   self:_SetupScrollsStrength(allBuffs, enchantments)
   self:_SetupScrollsProtection(allBuffs, enchantments)
@@ -18,7 +18,7 @@ function scrollsModule:SetupScrolls(allBuffs, enchantments)
   self:_SetupInscriptionScrolls(allBuffs, enchantments)
 end
 
-function scrollsModule:AddScroll(buffs, buffSpellId, itemId)
+function module:AddScroll(buffs, buffSpellId, itemId)
   return buffDefModule:genericConsumable(buffs, buffSpellId, itemId)
       :ConsumableTarget("player")
       :SingleDuration(allBuffsModule.HALF_AN_HOUR)
@@ -27,7 +27,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function scrollsModule:_SetupScrollsAgility(allBuffs, enchantments)
+function module:_SetupScrollsAgility(allBuffs, enchantments)
   local scrollItemIds = {
     4425,  -- Scroll of Agility 3
     10309, -- Scroll of Agility 4
@@ -69,7 +69,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function scrollsModule:_SetupScrollsStrength(allBuffs, enchantments)
+function module:_SetupScrollsStrength(allBuffs, enchantments)
   local scrollItemIds = {
     4426,  -- Scroll of Strength 3
     10310, -- Scroll of Strength 4
@@ -111,7 +111,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function scrollsModule:_SetupScrollsProtection(allBuffs, enchantments)
+function module:_SetupScrollsProtection(allBuffs, enchantments)
   local scrollItemIds = {
     3013,  -- Scroll of Protection 1
     1478,  -- Scroll of Protection 2
@@ -156,7 +156,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function scrollsModule:_SetupScrollsSpirit(allBuffs, enchantments)
+function module:_SetupScrollsSpirit(allBuffs, enchantments)
   local scrollItemIds = {
     1181,  -- Scroll of Spirit 1
     1712,  -- Scroll of Spirit 2
@@ -202,7 +202,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function scrollsModule:_SetupScrollsIntellect(allBuffs, enchantments)
+function module:_SetupScrollsIntellect(allBuffs, enchantments)
   local scrollItemIds = {
     955,   -- Scroll of Intellect 1
     2290,  -- Scroll of Intellect 2
@@ -250,7 +250,7 @@ end
 
 ---@param _allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function scrollsModule:_SetupInscriptionScrolls(_allBuffs, enchantments)
+function module:_SetupInscriptionScrolls(_allBuffs, enchantments)
   -- TODO: Brilliance scroll
   -- TODO: Fortitude scroll
   -- TODO: Cataclysm - Runescroll of Fort & Might

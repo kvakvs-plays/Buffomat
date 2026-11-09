@@ -3,6 +3,8 @@
 ## Buffomat Classic 2026.11.0
 
 - Hunter tracking is using correct API in TBC
+- Consumables are hidden until the player reaches the required level of at least one of their items
+  (the check now takes the lowest item level and updates when item data loads or the player levels up).
 - Sharpening stones are suggested only for bladed weapons and weightstones only for blunt weapons
   (maces, staves, fist weapons); Elemental and Consecrated stones only for melee weapons, not fishing poles.
 - WoW: Forever buff and consumable update (client build 1.60.1.70862):
@@ -17,6 +19,7 @@
     Imbue scrolls; Elixir of Greater Firepower became Elixir of Holy Power; Greater Protection Potions are
     no longer treated as long buffs.
   - With the Legacy talent Reagent Economy the reagent count is hidden for vendor reagents.
+  - Imbue scrolls are for mages only. The beta-only Endless elixirs and scroll are not included.
   - Imbue scrolls are suggested only for a weapon they fit (staff, dagger or one-handed sword), and the
     spells dialog shows the weapon type.
 

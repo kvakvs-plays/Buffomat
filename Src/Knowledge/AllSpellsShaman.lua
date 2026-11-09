@@ -1,6 +1,6 @@
 ---@class ShamanModule
 
-local shamanModule = LibStub("Buffomat-AllSpellsShaman") --[[@as ShamanModule]]
+local module = LibStub("Buffomat-AllSpellsShaman") --[[@as ShamanModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
 local spellIdsModule = LibStub("Buffomat-SpellIds") --[[@as SpellIdsModule]]
@@ -8,7 +8,7 @@ local spellIdsModule = LibStub("Buffomat-SpellIds") --[[@as SpellIdsModule]]
 ---Add SHAMAN spells
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchants BomEnchantmentsMapping
-function shamanModule:SetupShamanSpells(allBuffs, enchants)
+function module:SetupShamanSpells(allBuffs, enchants)
   local duration = allBuffsModule.TbcOrClassic(allBuffsModule.TWENTY_MINUTES, allBuffsModule.TEN_MINUTES)
   local enchantmentDuration = allBuffsModule.TbcOrClassic(allBuffsModule.HALF_AN_HOUR, allBuffsModule.FIVE_MINUTES) -- TBC: Shaman enchants become 30min
 

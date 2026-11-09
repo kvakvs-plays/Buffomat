@@ -1,10 +1,10 @@
 ---@class PriestModule
 
-local priestModule = LibStub("Buffomat-AllSpellsPriest") --[[@as PriestModule]]
+local module = LibStub("Buffomat-AllSpellsPriest") --[[@as PriestModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
 
-function priestModule:CreatePrayerOfSpiritBuff()
+function module:CreatePrayerOfSpiritBuff()
   local b = buffDefModule:New(14819)              -- Divine Spirit / Prayer of Spirit / Willenstärke
   b:IsDefault(true)
       :SingleFamily({ 14752, 14818, 14819, 27841, -- Divine Spirit 1-4
@@ -28,7 +28,7 @@ function priestModule:CreatePrayerOfSpiritBuff()
   return b
 end
 
-function priestModule:CreatePowerWordShieldBuff()
+function module:CreatePowerWordShieldBuff()
   local b = buffDefModule:New(10901)                                              -- Power Word: Shield / Powerword:Shild
   b:IsDefault(false)
       :SingleFamily({ 17, 592, 600, 3747, 6065, 6066, 10898, 10899, 10900, 10901, -- Power Word: Shield 1-10
@@ -44,7 +44,7 @@ end
 ---Add PRIEST spells
 ---@param allBuffs BomBuffDefinition[]
 ---@param _enchants BomEnchantmentsMapping
-function priestModule:SetupPriestSpells(allBuffs, _enchants)
+function module:SetupPriestSpells(allBuffs, _enchants)
   -- Fortitude / Seelenstärke
   buffDefModule:createAndRegisterBuff(allBuffs, 10938, nil)
       :IsDefault(true)
@@ -77,7 +77,7 @@ function priestModule:SetupPriestSpells(allBuffs, _enchants)
       :RequirePlayerClass("PRIEST")
       :RequireCata()
 
-  table.insert(allBuffs, priestModule:CreatePrayerOfSpiritBuff())
+  table.insert(allBuffs, module:CreatePrayerOfSpiritBuff())
 
   -- Shadow Protection / Prayer of Shadow / Schattenschutz
   buffDefModule:createAndRegisterBuff(allBuffs, 10958, nil)

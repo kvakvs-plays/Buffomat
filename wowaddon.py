@@ -12,17 +12,17 @@ import zipfile
 from typing import Iterator, Tuple
 
 # Version bumping rules: Begin each new month with <year>.<month>.0 and increase by 1 with every new bump.
-VERSION = "2026.11.0"  # year.month.build_num
+VERSION = "2026.11.1"  # year.month.build_num
 
 ADDON_NAME_CLASSIC = "BuffomatClassic"  # Directory and zip name
 ADDON_TITLE_CLASSIC = "Buffomat Classic"  # Title field in TOC
-ADDON_TITLE_FOREVER = "Buffomat Classic - WoW: Forever (experimental)"
+ADDON_TITLE_FOREVER = "Buffomat - WoW: Forever"
 
 UI_VERSION_CLASSIC = "11508"
 UI_VERSION_CLASSIC_TBC = "20506"  # The Burning Crusade
 UI_VERSION_CLASSIC_WOTLK = "30402"  # WotLK
 UI_VERSION_CLASSIC_CATA = "40402"  # Cataclysm
-UI_VERSION_FOREVER = "16001"  # Forever beta; Mainline architecture, level-60 content
+UI_VERSION_FOREVER = "16001"  # Forever; Mainline architecture, level-60 content
 
 COPY_DIRS = ["Src", "Ace3", "Sounds", "Icons", "Textures"]
 COPY_FILES = [

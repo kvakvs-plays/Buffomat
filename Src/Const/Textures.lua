@@ -34,67 +34,67 @@
 ---@field ICON_COORD_09 WowTexCoord
 ---@field ICON_COORD_08 WowTexCoord
 
-local texturesModule = LibStub("Buffomat-Textures") --[[@as TexturesModule]]
+local module = LibStub("Buffomat-Textures") --[[@as TexturesModule]]
 
-texturesModule.ICON_COORD_09 = { 0.1, 0.9, 0.1, 0.9 }
-texturesModule.ICON_COORD_08 = { 0.2, 0.8, 0.2, 0.8 }
+module.ICON_COORD_09 = { 0.1, 0.9, 0.1, 0.9 }
+module.ICON_COORD_08 = { 0.2, 0.8, 0.2, 0.8 }
 
-texturesModule.ICON_OPT_ENABLED = "Interface\\Buttons\\UI-CheckBox-Check"
-texturesModule.ICON_OPT_DISABLED = "Interface\\Buttons\\UI-CheckBox-Up"
+module.ICON_OPT_ENABLED = "Interface\\Buttons\\UI-CheckBox-Check"
+module.ICON_OPT_DISABLED = "Interface\\Buttons\\UI-CheckBox-Up"
 
-texturesModule.ICON_SELF_CAST_ON = "Interface\\FriendsFrame\\UI-Toast-FriendOnlineIcon"
-texturesModule.ICON_SELF_CAST_OFF = "Interface\\FriendsFrame\\UI-Toast-ChatInviteIcon"
+module.ICON_SELF_CAST_ON = "Interface\\FriendsFrame\\UI-Toast-FriendOnlineIcon"
+module.ICON_SELF_CAST_OFF = "Interface\\FriendsFrame\\UI-Toast-ChatInviteIcon"
 
-texturesModule.CLASS_ICONS_ATLAS = "Interface\\WorldStateFrame\\ICONS-CLASSES"
-texturesModule.CLASS_ICONS_ATLAS_TEX_COORD = CLASS_ICON_TCOORDS --[[@as {[ClassName]: WowTexCoord} ]]
-texturesModule.ICON_EMPTY = "Interface\\Buttons\\UI-MultiCheck-Disabled"
+module.CLASS_ICONS_ATLAS = "Interface\\WorldStateFrame\\ICONS-CLASSES"
+module.CLASS_ICONS_ATLAS_TEX_COORD = CLASS_ICON_TCOORDS --[[@as {[ClassName]: WowTexCoord} ]]
+module.ICON_EMPTY = "Interface\\Buttons\\UI-MultiCheck-Disabled"
 
 ---@deprecated Unused
-texturesModule.ICON_SETTING_ON = "Interface\\RAIDFRAME\\ReadyCheck-Ready"
+module.ICON_SETTING_ON = "Interface\\RAIDFRAME\\ReadyCheck-Ready"
 ---@deprecated Unused
-texturesModule.ICON_SETTING_OFF = texturesModule.ICON_EMPTY
+module.ICON_SETTING_OFF = module.ICON_EMPTY
 
-texturesModule.ICON_WHISPER_ON = "Interface\\Buttons\\UI-GuildButton-MOTD-Up"
-texturesModule.ICON_WHISPER_OFF = "Interface\\Buttons\\UI-GuildButton-MOTD-Disabled"
+module.ICON_WHISPER_ON = "Interface\\Buttons\\UI-GuildButton-MOTD-Up"
+module.ICON_WHISPER_OFF = "Interface\\Buttons\\UI-GuildButton-MOTD-Disabled"
 
-texturesModule.ICON_BUFF_ON = "Interface\\Buttons\\UI-GroupLoot-Pass-Up"
-texturesModule.ICON_BUFF_OFF = texturesModule.ICON_EMPTY
+module.ICON_BUFF_ON = "Interface\\Buttons\\UI-GroupLoot-Pass-Up"
+module.ICON_BUFF_OFF = module.ICON_EMPTY
 
 --Icon for when self cast is enabled
-texturesModule.ICON_DISABLED = "Interface\\FriendsFrame\\StatusIcon-Offline" --grey circle
+module.ICON_DISABLED = "Interface\\FriendsFrame\\StatusIcon-Offline" --grey circle
 
 --"Interface\\COMMON\\VOICECHAT-MUTED"
-texturesModule.ICON_TARGET_ON = "Interface\\CURSOR\\Crosshairs"
-texturesModule.ICON_TARGET_EXCLUDE = "Interface\\Buttons\\UI-GroupLoot-Pass-Up"
-texturesModule.ICON_TARGET_OFF = texturesModule.ICON_EMPTY
+module.ICON_TARGET_ON = "Interface\\CURSOR\\Crosshairs"
+module.ICON_TARGET_EXCLUDE = "Interface\\Buttons\\UI-GroupLoot-Pass-Up"
+module.ICON_TARGET_OFF = module.ICON_EMPTY
 
-texturesModule.ICON_CHECKED = "Interface\\Buttons\\UI-CheckBox-Check"
-texturesModule.ICON_CHECKED_OFF = texturesModule.ICON_EMPTY
+module.ICON_CHECKED = "Interface\\Buttons\\UI-CheckBox-Check"
+module.ICON_CHECKED_OFF = module.ICON_EMPTY
 
-texturesModule.ICON_GROUP = "Interface\\ICONS\\Achievement_GuildPerk_EverybodysFriend"
-texturesModule.ICON_GROUP_ITEM = "Interface\\Buttons\\UI-PageButton-Background"
-texturesModule.ICON_GROUP_NONE = texturesModule.ICON_EMPTY
-texturesModule.ICON_GEAR = "Interface\\ICONS\\INV_Misc_Gear_01"
+module.ICON_GROUP = "Interface\\ICONS\\Achievement_GuildPerk_EverybodysFriend"
+module.ICON_GROUP_ITEM = "Interface\\Buttons\\UI-PageButton-Background"
+module.ICON_GROUP_NONE = module.ICON_EMPTY
+module.ICON_GEAR = "Interface\\ICONS\\INV_Misc_Gear_01"
 
-texturesModule.ICON_MAINHAND_OFF = texturesModule.ICON_EMPTY
-texturesModule.ICON_MAINHAND_ON = "Interface\\ICONS\\INV_Weapon_ShortBlade_03"
-texturesModule.ICON_MAINHAND_COORD = texturesModule.ICON_COORD_09
+module.ICON_MAINHAND_OFF = module.ICON_EMPTY
+module.ICON_MAINHAND_ON = "Interface\\ICONS\\INV_Weapon_ShortBlade_03"
+module.ICON_MAINHAND_COORD = module.ICON_COORD_09
 
-texturesModule.ICON_OFFHAND_OFF = texturesModule.ICON_EMPTY
-texturesModule.ICON_OFFHAND_ON = "Interface\\ICONS\\INV_Weapon_Halberd_12"
-texturesModule.ICON_OFFHAND_COORD = texturesModule.ICON_COORD_09
+module.ICON_OFFHAND_OFF = module.ICON_EMPTY
+module.ICON_OFFHAND_ON = "Interface\\ICONS\\INV_Weapon_Halberd_12"
+module.ICON_OFFHAND_COORD = module.ICON_COORD_09
 
-texturesModule.ICON_TANK = "Interface\\RAIDFRAME\\UI-RAIDFRAME-MAINTANK"
-texturesModule.ICON_TANK_COORD = texturesModule.ICON_COORD_09
+module.ICON_TANK = "Interface\\RAIDFRAME\\UI-RAIDFRAME-MAINTANK"
+module.ICON_TANK_COORD = module.ICON_COORD_09
 
-texturesModule.ICON_PET = "Interface\\ICONS\\Ability_Mount_JungleTiger"
-texturesModule.ICON_PET_COORD = texturesModule.ICON_COORD_09
+module.ICON_PET = "Interface\\ICONS\\Ability_Mount_JungleTiger"
+module.ICON_PET_COORD = module.ICON_COORD_09
 
-texturesModule.ON_ICON = "|TInterface\\RAIDFRAME\\ReadyCheck-Ready:0:0:0:0:64:64:4:60:4:60|t"
-texturesModule.OFF_ICON = "|TInterface\\RAIDFRAME\\ReadyCheck-NotReady:0:0:0:0:64:64:4:60:4:60|t"
+module.ON_ICON = "|TInterface\\RAIDFRAME\\ReadyCheck-Ready:0:0:0:0:64:64:4:60:4:60|t"
+module.OFF_ICON = "|TInterface\\RAIDFRAME\\ReadyCheck-NotReady:0:0:0:0:64:64:4:60:4:60|t"
 
 ---@type {[ClassName]: string}
-texturesModule.CLASS_ICONS_BUNDLED = {
+module.CLASS_ICONS_BUNDLED = {
   ["WARRIOR"] = "Interface\\Addons\\BuffomatClassic\\Textures\\classicon_warrior",
   ["MAGE"] = "Interface\\Addons\\BuffomatClassic\\Textures\\classicon_mage",
   ["PALADIN"] = "Interface\\Addons\\BuffomatClassic\\Textures\\classicon_paladin",

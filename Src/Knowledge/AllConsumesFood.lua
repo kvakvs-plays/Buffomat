@@ -2,7 +2,7 @@
 
 ---@class AllConsumesFoodModule
 
-local foodModule = LibStub("Buffomat-AllConsumesFood") --[[@as AllConsumesFoodModule]]
+local module = LibStub("Buffomat-AllConsumesFood") --[[@as AllConsumesFoodModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
@@ -10,7 +10,7 @@ local spellIdsModule = LibStub("Buffomat-SpellIds") --[[@as SpellIdsModule]]
 
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function foodModule:SetupFood(allBuffs, enchantments)
+function module:SetupFood(allBuffs, enchantments)
   self:_SetupCasterFoodClassic(allBuffs, enchantments)
   self:_SetupPhysicalFoodClassic(allBuffs, enchantments)
   self:_SetupMiscFoodClassic(allBuffs, enchantments)
@@ -28,7 +28,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function foodModule:_SetupMiscFoodTBC(allBuffs, enchantments)
+function module:_SetupMiscFoodTBC(allBuffs, enchantments)
   --Well Fed +30 STA +20 SPI
   buffDefModule:tbcConsumable(allBuffs, 33257, { 33052, 27667 })
       :ExtraText(_t("tooltip.buff.stamina"))
@@ -51,7 +51,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function foodModule:_SetupPhysicalFoodTBC(allBuffs, enchantments)
+function module:_SetupPhysicalFoodTBC(allBuffs, enchantments)
   --All Well Fed providers for +20 AGI +20 SPI
   local agiFoodItemIds = {
     27659, -- Warp Burger +20 AGI/SPI
@@ -109,7 +109,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function foodModule:_SetupCasterFoodTBC(allBuffs, enchantments)
+function module:_SetupCasterFoodTBC(allBuffs, enchantments)
   -- All Well Fed providers +23 SPELL +20 SPI
   local spellFoodItemIds = {
     27657, -- Blackened Basilisk
@@ -162,7 +162,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function foodModule:_SetupCasterFoodClassic(allBuffs, enchantments)
+function module:_SetupCasterFoodClassic(allBuffs, enchantments)
   -- STAM/SPIRIT
   local stamSpiritFoodIds = {
     -- Level 1: 2 STA/2 SPI - Trainer: Herb Baked Egg, Spiced Wolf Meat, Cactus Apple Surprise (Quest)
@@ -239,7 +239,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function foodModule:_SetupMiscFoodClassic(allBuffs, enchantments)
+function module:_SetupMiscFoodClassic(allBuffs, enchantments)
   buffDefModule:genericConsumable(allBuffs, 25661, 21023) -- Dirge's Kickin' Chimaerok Chops x
       :IgnoreIfHaveBuff(spellIdsModule.ClassicFood)
       :Category("classicFood")
@@ -247,7 +247,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function foodModule:_SetupPhysicalFoodClassic(allBuffs, enchantments)
+function module:_SetupPhysicalFoodClassic(allBuffs, enchantments)
   --Grilled Squid +10 Agility
   buffDefModule:genericConsumable(allBuffs, 18192, 13928)
       :IgnoreIfHaveBuff(spellIdsModule.ClassicFood)
@@ -271,7 +271,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function foodModule:_SetupCasterFoodWotLK(allBuffs, enchantments)
+function module:_SetupCasterFoodWotLK(allBuffs, enchantments)
   -- All Spirit food buff providers
   local spiFoodItemIds = {
     42779, -- Steaming Chicken Soup +25 Stam/25 Spi
@@ -329,7 +329,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function foodModule:_SetupPhysicalFoodWotLK(allBuffs, enchantments)
+function module:_SetupPhysicalFoodWotLK(allBuffs, enchantments)
   --
   -- Strength Food
   --
@@ -390,7 +390,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function foodModule:_SetupMiscFoodWotLK(allBuffs, enchantments)
+function module:_SetupMiscFoodWotLK(allBuffs, enchantments)
   -- All Haste Food buff providers
   --
   local hasteFoodItemIds = {
@@ -462,7 +462,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function foodModule:_SetupMiscFoodCata(allBuffs, enchantments)
+function module:_SetupMiscFoodCata(allBuffs, enchantments)
   -- All Food buff providers
   local intFoodItemIds = {
     62671, -- Severed Sagefish Head +90 Int & Stam

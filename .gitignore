@@ -12,3 +12,4 @@
 
 # Generated files, do not add
 BuffomatClassic*.toc
+/.env

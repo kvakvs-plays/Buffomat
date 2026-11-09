@@ -4,14 +4,14 @@ local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 ---@class ThrottleModule
 ---@field taskRescanRequestedBy {[string]: number} Reasons for force update, with count
 
-local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
+local module = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local eventsModule = LibStub("Buffomat-Events") --[[@as EventsModule]]
 local taskScanModule = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
 
-throttleModule.taskRescanRequestedBy = {}
+module.taskRescanRequestedBy = {}
 
 ---@class BomThrottleState
 ---@field lastUpdateTimestamp number
@@ -41,12 +41,12 @@ local throttleState = {
   lastSpellsTabUpdate = 0,
 }
 
-function throttleModule:FastUpdateTimer()
+function module:FastUpdateTimer()
   throttleState.lastUpdateTimestamp = 0
 end
 
 ---This runs every frame, do not do any excessive work here
-function throttleModule.UpdateTimer()
+function module.UpdateTimer()
   local inCombat = InCombatLockdown()
 
   if inCombat then
@@ -76,34 +76,34 @@ function throttleModule.UpdateTimer()
   end
 
   if BuffomatAddon.nextCooldownDue and BuffomatAddon.nextCooldownDue <= now then
-    throttleModule:RequestTaskRescan("cdDue")
+    module:RequestTaskRescan("cdDue")
   end
 
   if BuffomatAddon.checkCooldown then
     local cdtest = envModule.GetSpellCooldown(BuffomatAddon.checkCooldown)
     if cdtest == nil or cdtest == 0 then
       BuffomatAddon.checkCooldown = nil
-      throttleModule:RequestTaskRescan("checkCd")
+      module:RequestTaskRescan("checkCd")
     end
   end
 
   if BuffomatAddon.scanModifierKeyDown and throttleState.lastModifierKeyState ~= IsModifierKeyDown() then
     throttleState.lastModifierKeyState = IsModifierKeyDown()
-    throttleModule:RequestTaskRescan("ModifierKeyDown")
+    module:RequestTaskRescan("ModifierKeyDown")
   end
 
   taskListPanelModule:WindowCommand() -- open and close window as requested
 
   -- This will trigger update on timer, regardless of other conditions
-  local needForceUpdate = next(throttleModule.taskRescanRequestedBy) ~= nil
+  local needForceUpdate = next(module.taskRescanRequestedBy) ~= nil
   -- TODO: If need slower update, need to cancel the timer in Buffomat.lua and start with a different interval
-  throttleModule:Update(now, needForceUpdate)
+  module:Update(now, needForceUpdate)
 end
 
 ---Update timers, slow hardware and auto-throttling
 ---@param now number
 ---@param needForceUpdate boolean
-function throttleModule:Update(now, needForceUpdate)
+function module:Update(now, needForceUpdate)
 
   if (needForceUpdate or BuffomatAddon.repeatUpdate)
   --and timeSinceLastUpdate > throttleState.updateTimerLimit
@@ -130,7 +130,7 @@ function throttleModule:Update(now, needForceUpdate)
   end
 end
 
-function throttleModule:ClearForceUpdate(debugCallerLocation)
+function module:ClearForceUpdate(debugCallerLocation)
   if debugCallerLocation then
     BuffomatAddon:Debug("clearForceUpdate from " .. debugCallerLocation)
   end
@@ -138,6 +138,6 @@ function throttleModule:ClearForceUpdate(debugCallerLocation)
 end
 
 ---@param reason string
-function throttleModule:RequestTaskRescan(reason)
+function module:RequestTaskRescan(reason)
   self.taskRescanRequestedBy[reason] = (self.taskRescanRequestedBy[reason] or 0) + 1
 end

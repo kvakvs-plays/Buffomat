@@ -2,7 +2,7 @@ local BuffomatAddon = BuffomatAddon
 
 ---@class BuffChecksModule
 
-local buffChecksModule = LibStub("Buffomat-BuffChecks") --[[@as BuffChecksModule]]
+local module = LibStub("Buffomat-BuffChecks") --[[@as BuffChecksModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
@@ -15,7 +15,7 @@ local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 
 ---Checks whether a tracking spell is now active
 ---@param spell BomBuffDefinition The tracking spell which might have tracking enabled
-function buffChecksModule:IsTrackingActive(spell)
+function module:IsTrackingActive(spell)
   if envModule.usesTrackingSettings then
     for i = 1, envModule.GetNumTrackingTypes() do
       local _name, _texture, active, _category, _nesting, spellId = envModule.GetTrackingInfo(i)
@@ -32,7 +32,7 @@ end
 
 ---@param expirationTime number Buff expiration time
 ---@param maxDuration number Max buff duration
-function buffChecksModule:TimeCheck(expirationTime, maxDuration)
+function module:TimeCheck(expirationTime, maxDuration)
   if expirationTime == nil
       or maxDuration == nil
       or expirationTime == 0
@@ -68,7 +68,7 @@ end
 ---@param itemToCheck WowItemId
 ---@param cd boolean respect the cooldown?
 ---@return boolean, number|nil, number|nil, number|nil {HasItem, Bag, Slot, Count}
-function buffChecksModule:HasOneItem(itemToCheck, cd)
+function module:HasOneItem(itemToCheck, cd)
   if itemToCheck == nil then
     return true, nil, nil, 1 -- spell.items is nil, no items required
   end
@@ -113,7 +113,7 @@ function buffChecksModule:HasOneItem(itemToCheck, cd)
 end
 
 --- Check item min level
-function buffChecksModule:IsUsableItem(itemId)
+function module:IsUsableItem(itemId)
   local itemInfo = BuffomatAddon.GetItemInfo(itemId)
   if itemInfo then
     return (itemInfo).itemMinLevel <= UnitLevel("player")
@@ -126,7 +126,7 @@ end
 ---@param itemsToCheck WowItemId[]
 ---@param cd boolean respect the cooldown?
 ---@return boolean, number|nil, number|nil, number|nil, WowItemId|nil {HasItem, Bag, Slot, Count, ItemIdAvailable}
-function buffChecksModule:HasItem(itemsToCheck, cd)
+function module:HasItem(itemsToCheck, cd)
   for _, itemId in pairs(itemsToCheck) do
     if self:IsUsableItem(itemId) then
       local okEach, bagEach, slotEach, countEach = self:HasOneItem(itemId, cd)
@@ -144,7 +144,7 @@ end
 ---@param buff BomBuffDefinition
 ---@param slot number 16 main hand, 17 off hand
 ---@return boolean
-function buffChecksModule:WeaponFitsBuff(buff, slot)
+function module:WeaponFitsBuff(buff, slot)
   if not buff.weaponSubclasses then
     return true
   end
@@ -162,7 +162,7 @@ end
 ---@param playerUnit BomUnit
 ---@return boolean needMainhand
 ---@return boolean needOffhand
-function buffChecksModule:WeaponHandsNeedingBuff(buff, playerUnit)
+function module:WeaponHandsNeedingBuff(buff, playerUnit)
   local profileBuff = profileModule:GetProfileBuff(buff.buffId, nil)
   if not profileBuff then
     return false, false
@@ -176,7 +176,7 @@ end
 
 ---@param buff BomBuffDefinition the spell to update
 ---@param playerUnit BomUnit the player
-function buffChecksModule:PlayerNeedsWeaponBuff(buff, playerUnit)
+function module:PlayerNeedsWeaponBuff(buff, playerUnit)
   local needMainHand, needOffhand = self:WeaponHandsNeedingBuff(buff, playerUnit)
   if needMainHand or needOffhand then
     table.insert(buff.unitsNeedBuff, playerUnit)
@@ -185,7 +185,7 @@ end
 
 ---@param buff BomBuffDefinition
 ---@param playerUnit BomUnit
-function buffChecksModule:HunterPetNeedsBuff(buff, playerUnit)
+function module:HunterPetNeedsBuff(buff, playerUnit)
   if not envModule.haveTBC then
     return -- pre-TBC this did not exist
   end
@@ -205,7 +205,7 @@ end
 
 ---@param buff BomBuffDefinition
 ---@param playerUnit BomUnit
-function buffChecksModule:PlayerNeedsConsumable(buff, playerUnit)
+function module:PlayerNeedsConsumable(buff, playerUnit)
   if buff.providesAuras then
     for _, aura in pairs(buff.providesAuras) do
       if playerUnit.allBuffs[aura] then
@@ -221,7 +221,7 @@ end
 
 ---@param buff BomBuffDefinition
 ---@param party BomParty
-function buffChecksModule:PartyNeedsInfoBuff(buff, party)
+function module:PartyNeedsInfoBuff(buff, party)
   for _i, partyMember in pairs(party.byUnitId) do
     local partyMemberBuff = partyMember.knownBuffs[buff.buffId]
 
@@ -242,7 +242,7 @@ end
 --- Checks if the player needs some buff that is in the buffs knowledge database. Must be a spell/aura that is stored in playerUnit.knownBuffs
 ---@param buff BomBuffDefinition
 ---@param playerUnit BomUnit
-function buffChecksModule:PlayerNeedsSelfBuff(buff, playerUnit)
+function module:PlayerNeedsSelfBuff(buff, playerUnit)
   if not playerUnit.isDead then
     local thisBuffOnPlayer = playerUnit.knownBuffs[buff.buffId]
 
@@ -263,7 +263,7 @@ end
 
 ---@param buff BomBuffDefinition
 ---@param party BomParty
-function buffChecksModule:DeadNeedsResurrection(buff, party)
+function module:DeadNeedsResurrection(buff, party)
   for _i, member in pairs(party.byUnitId) do
     if member.isDead
         and not member.hasResurrection
@@ -277,7 +277,7 @@ end
 
 ---@param buff BomBuffDefinition
 ---@param playerUnit BomUnit
-function buffChecksModule:PlayerNeedsTracking(buff, playerUnit)
+function module:PlayerNeedsTracking(buff, playerUnit)
   -- Special handling: Having find herbs and find ore will be ignored if
   -- in cat form and track humanoids is enabled
   if (buff.highestRankSingleId == spellIdsModule.FindHerbs or
@@ -294,7 +294,7 @@ end
 
 ---@param buff BomBuffDefinition
 ---@param playerUnit BomUnit
-function buffChecksModule:PaladinNeedsAura(buff, playerUnit)
+function module:PaladinNeedsAura(buff, playerUnit)
   if BuffomatAddon.activePaladinAura ~= buff.buffId
       and (buffomatModule.currentProfile.LastAura == nil
         or buffomatModule.currentProfile.LastAura == buff.buffId)
@@ -305,7 +305,7 @@ end
 
 ---@param spell BomBuffDefinition
 ---@param playerUnit BomUnit
-function buffChecksModule:PaladinNeedsSeal(spell, playerUnit)
+function module:PaladinNeedsSeal(spell, playerUnit)
   if BuffomatAddon.activePaladinSeal ~= spell.buffId
       and (buffomatModule.currentProfile.LastSeal == nil
         or buffomatModule.currentProfile.LastSeal == spell.buffId)
@@ -317,7 +317,7 @@ end
 ---@param buffDef BomBuffDefinition
 ---@param party BomParty
 ---@param buffCtx BomBuffScanContext
-function buffChecksModule:PartyNeedsPaladinBlessing(buffDef, party, buffCtx)
+function module:PartyNeedsPaladinBlessing(buffDef, party, buffCtx)
   -- Blessing user settings (regardless of the current buff)
   local currentBlessing = buffDefModule:GetProfileBlessingState(nil)
   -- Current user settings for the selected buff
@@ -386,7 +386,7 @@ end
 ---@param buffDef BomBuffDefinition
 ---@param party BomParty
 ---@param buffCtx BomBuffScanContext
-function buffChecksModule:PartyNeedsBuff(buffDef, party, buffCtx)
+function module:PartyNeedsBuff(buffDef, party, buffCtx)
   --spells
   for _, partyMember in pairs(party.byUnitId) do
     local ok = false

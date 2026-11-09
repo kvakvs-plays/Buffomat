@@ -240,12 +240,21 @@ do
 
   ---@param window NgTaskListWindow
   local function ConstructTopButtons(window)
-    --local extraButtonCount = 4
-    local buttonWidthExtra = 20 -- `extraButtonCount` extra buttons 20px each left from the X button
+    local buttonWidthExtra = 20 -- extra buttons are 20px apart, left from the X button
+
+    -- Anchor by the centre, not the corner: UIPanelCloseButton is 32x32 on Classic but 24x24 on
+    -- WoW: Forever (Mainline templates), and corner anchors moved the buttons 4px right and up there.
+    -- The centre point is where a 32x32 button anchored TOPRIGHT at (2, 1) has always been.
+    ---@param button Button
+    ---@param index number 0 for the X button, counting left
+    local function placeTopButton(button, index)
+      button:ClearAllPoints()
+      button:SetPoint("CENTER", window.frame, "TOPRIGHT", -14 - buttonWidthExtra * index, -15)
+    end
 
     -- [🐰🐑] button top right for all spell settings
     local spellsButton = CreateFrame("Button", nil, window.frame, "UIPanelCloseButton")
-    spellsButton:SetPoint("TOPRIGHT", 2 - buttonWidthExtra * 4, 1)
+    placeTopButton(spellsButton, 4)
     SetButtonTexture(spellsButton, constModule.BOM_SPELL_SETTINGS_ICON_FULLPATH)
     spellsButton:SetScript("OnClick", function() spellsDialogModule:Show() end)
     toolboxModule:Tooltip(spellsButton, _t("tooltip.button.AllBuffs"))
@@ -254,7 +263,7 @@ do
 
     -- [📜] button top right
     local quickPopupButton = CreateFrame("Button", nil, window.frame, "UIPanelCloseButton")
-    quickPopupButton:SetPoint("TOPRIGHT", 2 - buttonWidthExtra * 3, 1)
+    placeTopButton(quickPopupButton, 3)
     SetButtonTexture(quickPopupButton, constModule.BOM_OPTIONS_ICON_FULLPATH)
     quickPopupButton:SetScript("OnClick", function()
       optionsPopupModule:Setup(quickPopupButton, false)
@@ -265,7 +274,7 @@ do
 
     -- [⚙️] Settings button top right
     local settingsButton = CreateFrame("Button", nil, window.frame, "UIPanelCloseButton")
-    settingsButton:SetPoint("TOPRIGHT", 2 - buttonWidthExtra * 2, 1)
+    placeTopButton(settingsButton, 2)
     SetButtonTexture(settingsButton, texturesModule.ICON_GEAR)
     settingsButton:SetScript("OnClick", function()
       optionsPopupModule:OpenOptions()
@@ -276,7 +285,7 @@ do
 
     -- [🧙‍♂️] button top right, draggable macro
     local macroButton = CreateFrame("Button", nil, window.frame, "UIPanelCloseButton")
-    macroButton:SetPoint("TOPRIGHT", 2 - buttonWidthExtra, 1)
+    placeTopButton(macroButton, 1)
     SetButtonTexture(macroButton, constModule.BOM_BEAR_ICON_FULLPATH)
     macroButton:SetScript("OnClick", function()
       PickupMacro(constModule.MACRO_NAME)
@@ -287,7 +296,7 @@ do
 
     -- [❌] button top right
     local close = CreateFrame("Button", nil, window.frame, "UIPanelCloseButton")
-    close:SetPoint("TOPRIGHT", 2, 1)
+    placeTopButton(close, 0)
     close:SetScript("OnClick", closeOnClick)
     toolboxModule:Tooltip(
       close,

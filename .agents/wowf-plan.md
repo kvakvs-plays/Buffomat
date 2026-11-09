@@ -201,7 +201,8 @@ changes the text. No class buff reagent changed in the data itself.
   | 250339 | Minor Mageblood Elixir | 1250942 | | 250340 | Lesser Mageblood Elixir | 1250944 |
   | 250341 | Greater Mageblood Elixir | 1250948 | | | | |
 
-  "Endless" elixirs (60 minutes, percent based): Intellect 289082 → 1327736, Power 289083 → 1327737,
+  Not supported: "Endless" elixirs are beta-only fun items, not expected in the Forever release
+  (decision 2026-11-08). For reference, 60 minutes, percent based: Intellect 289082 → 1327736, Power 289083 → 1327737,
   Healing 289084 → 1327738, Rapidity 289086 → 1327751, Opportunity 289087 → 1327753,
   Mana 289321 → 1328032, Experience 289334 → 1328127. Elixir of Endless Growth 289329 is cosmetic.
 
@@ -210,11 +211,11 @@ changes the text. No class buff reagent changed in the data itself.
 as +30 Stamina, level 55, made by Alchemy. Classic flasks are unchanged.
 
 **Scrolls.**
-- 19 "Scroll of Imbue X" weapon enchants (1 hour, staff/dagger/sword only): 274947, 275067,
+- 19 "Scroll of Imbue X" weapon enchants (1 hour, Mage only, staff/dagger/sword only, required level 5-46): 274947, 275067,
   277485-277489, 277494-277498, 277500-277503. Enchant IDs still need a lookup in `SpellEffect`.
 - Familiar scrolls (60 minutes, Intellect): Rat 275069 → 1296202, Frog 277483 → 1302285,
   Cat 277493 → 1302303.
-- Scroll of Endless Fortitude 289088 → 1327754 (60 minutes, % Stamina).
+- Not supported, beta-only like the Endless elixirs: Scroll of Endless Fortitude 289088 → 1327754.
 
 **Weapon stones and bait.** Rough Sharpening Stone 287978 and Elemental Sharpening Stone 287980
 are new item IDs for the same spells and enchants as the classic 2862 (enchant 40) and 18262

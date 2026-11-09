@@ -5,40 +5,40 @@ local TOCNAME, _ = ...
 ---@field NAME_TO_CLASS {[string]: ClassName}
 ---@field CLASS_COLOR {[ClassName]: BomColor}
 ---@
-local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
+local module = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local kvEnvModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 
-constModule.TASKCOLOR_GRAY = "777777"
-constModule.TASKCOLOR_RED = "cc4444"
-constModule.TASKCOLOR_BLEAK_RED = "bb5555"
+module.TASKCOLOR_GRAY = "777777"
+module.TASKCOLOR_RED = "cc4444"
+module.TASKCOLOR_BLEAK_RED = "bb5555"
 
 -- Version used for display in options
-constModule.TOC_VERSION = kvEnvModule.GetAddOnMetadata(TOCNAME, "Version")
+module.TOC_VERSION = kvEnvModule.GetAddOnMetadata(TOCNAME, "Version")
 -- Longer title like "Buffomat Classic TBC"
-constModule.TOC_TITLE = kvEnvModule.GetAddOnMetadata(TOCNAME, "Title")
+module.TOC_TITLE = kvEnvModule.GetAddOnMetadata(TOCNAME, "Title")
 
-constModule.SHORT_TITLE = "Buffomat"
-constModule.MACRO_ICON = "INV_MISC_QUESTIONMARK"
-constModule.MACRO_ICON_DISABLED = "INV_MISC_QUESTIONMARK"
-constModule.BOM_BEAR_ICON_FULLPATH = "Interface\\AddOns\\BuffomatClassic\\Icons\\Buffomat.png"
-constModule.BOM_OPTIONS_ICON_FULLPATH = "Interface\\ICONS\\INV_Misc_ScrollUnrolled01"
+module.SHORT_TITLE = "Buffomat"
+module.MACRO_ICON = "INV_MISC_QUESTIONMARK"
+module.MACRO_ICON_DISABLED = "INV_MISC_QUESTIONMARK"
+module.BOM_BEAR_ICON_FULLPATH = "Interface\\AddOns\\BuffomatClassic\\Icons\\Buffomat.png"
+module.BOM_OPTIONS_ICON_FULLPATH = "Interface\\ICONS\\INV_Misc_ScrollUnrolled01"
 
 if WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC then
-  constModule.BOM_SPELL_SETTINGS_ICON_FULLPATH = "Interface\\ICONS\\Spell_Magic_PolymorphChicken"
+  module.BOM_SPELL_SETTINGS_ICON_FULLPATH = "Interface\\ICONS\\Spell_Magic_PolymorphChicken"
 else
-  constModule.BOM_SPELL_SETTINGS_ICON_FULLPATH = "Interface\\ICONS\\Spell_Magic_PolymorphRabbit"
+  module.BOM_SPELL_SETTINGS_ICON_FULLPATH = "Interface\\ICONS\\Spell_Magic_PolymorphRabbit"
 end
 
-constModule.ICON_FORMAT = "|T%s:0:0:0:0:64:64:4:60:4:60|t"
-constModule.PICTURE_FORMAT = "|T%s:0|t"
+module.ICON_FORMAT = "|T%s:0:0:0:0:64:64:4:60:4:60|t"
+module.PICTURE_FORMAT = "|T%s:0|t"
 
-constModule.MACRO_NAME = "Buff'o'mat"
+module.MACRO_NAME = "Buff'o'mat"
 --constModule.BLESSING_ID = "blessing"
-constModule.LOADING_SCREEN_TIMEOUT = 2
+module.LOADING_SCREEN_TIMEOUT = 2
 
 -- Play MP3 from Sounds/ directory when task list is not empty
-constModule.TASK_NOTIFICATION_SOUNDS = --[[@as string[] ]] {
+module.TASK_NOTIFICATION_SOUNDS = --[[@as string[] ]] {
   "bubble-pop-up-alert",
   "computer-processing-short-click",
   "correct-answer-tone",
@@ -55,7 +55,7 @@ constModule.TASK_NOTIFICATION_SOUNDS = --[[@as string[] ]] {
 
 -- The texture is square 4x in a row, 64 px per icon
 -- https://github.com/Gethe/wow-ui-textures/blob/live/WorldStateFrame/ICONS-CLASSES.PNG
-constModule.CLASS_ICONS = {
+module.CLASS_ICONS = {
   ["WARRIOR"]     = "|TInterface\\WorldStateFrame\\ICONS-CLASSES:0:0:0:0:256:256:0:64:0:64|t",
   ["MAGE"]        = "|TInterface\\WorldStateFrame\\ICONS-CLASSES:0:0:0:0:256:256:64:128:0:64|t",
   ["ROGUE"]       = "|TInterface\\WorldStateFrame\\ICONS-CLASSES:0:0:0:0:256:256:128:192:0:64|t",
@@ -74,7 +74,7 @@ constModule.CLASS_ICONS = {
 
 -- The texture is square 4x in a row, 64 px per icon
 -- https://github.com/Gethe/wow-ui-textures/blob/live/WorldStateFrame/ICONS-CLASSES.PNG
-constModule.CLASS_ICONS_BIG = {
+module.CLASS_ICONS_BIG = {
   ["WARRIOR"]     = "|TInterface\\WorldStateFrame\\ICONS-CLASSES:18:18:-4:4:256:256:0:64:0:64|t",
   ["MAGE"]        = "|TInterface\\WorldStateFrame\\ICONS-CLASSES:18:18:-4:4:256:256:64:128:0:64|t",
   ["ROGUE"]       = "|TInterface\\WorldStateFrame\\ICONS-CLASSES:18:18:-4:4:256:256:128:192:0:64|t",
@@ -89,8 +89,8 @@ constModule.CLASS_ICONS_BIG = {
   ["DEATHKNIGHT"] = "|TInterface\\WorldStateFrame\\ICONS-CLASSES:18:18:-4:4:256:256:64:128:128:192|t",
 }
 
-constModule.RAID_ICON_NAMES = ICON_TAG_LIST
-constModule.RAID_ICON = {
+module.RAID_ICON_NAMES = ICON_TAG_LIST
+module.RAID_ICON = {
   "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_1:0|t", -- [1]
   "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_2:0|t", -- [2]
   "|TInterface\\TargetingFrame\\UI-RaidTargetingIcon_3:0|t", -- [3]
@@ -103,12 +103,12 @@ constModule.RAID_ICON = {
 
 ---@alias BomColor number[] RGB or RGBA color
 
-constModule.CLASSES = CLASS_SORT_ORDER ---@type ClassName[]
-constModule.CLASS_NAME = {}
-constModule.CLASS_COLOR = RAID_CLASS_COLORS
-constModule.NAME_TO_CLASS = {} --[[@as {[string]: string}]]
+module.CLASSES = CLASS_SORT_ORDER ---@type ClassName[]
+module.CLASS_NAME = {}
+module.CLASS_COLOR = RAID_CLASS_COLORS
+module.NAME_TO_CLASS = {} --[[@as {[string]: string}]]
 
-function constModule:Init()
+function module:Init()
   for english, localized in pairs(LOCALIZED_CLASS_NAMES_MALE) do
     self.NAME_TO_CLASS[localized] = english
     self.NAME_TO_CLASS[english] = english

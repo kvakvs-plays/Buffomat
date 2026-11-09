@@ -1,6 +1,6 @@
 ---@class DruidModule
 
-local druidModule = LibStub("Buffomat-AllSpellsDruid") --[[@as DruidModule]]
+local module = LibStub("Buffomat-AllSpellsDruid") --[[@as DruidModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
@@ -10,7 +10,7 @@ local spellIdsModule = LibStub("Buffomat-SpellIds") --[[@as SpellIdsModule]]
 ---Add DRUID spells
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function druidModule:SetupDruidSpells(allBuffs, enchantments)
+function module:SetupDruidSpells(allBuffs, enchantments)
   --Gift/Mark of the Wild | Gabe/Mal der Wildniss
   buffDefModule:createAndRegisterBuff(allBuffs, 9885, nil)
       :RequiresCancelForm(true)

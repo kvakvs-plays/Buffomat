@@ -3,7 +3,7 @@ local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 
 ---@class BomSpellSetupModule
 
-local spellSetupModule = LibStub("Buffomat-SpellSetup") --[[@as BomSpellSetupModule]]
+local module = LibStub("Buffomat-SpellSetup") --[[@as BomSpellSetupModule]]
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local itemCacheModule = LibStub("Buffomat-ItemCache") --[[@as BomItemCacheModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
@@ -11,11 +11,12 @@ local buffDefinitionModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefi
 local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 local ngStringsModule = LibStub("Buffomat-NgStrings") --[[@as NgStringsModule]]
+local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
 
 ---Formats a spell icon + spell name as a link
 -- TODO: Move to SpellDef class
 ---@param spellInfo BomSpellCacheElement spell info from the cache via BOM.GetSpellInfo
-function spellSetupModule:FormatSpellLink(spellInfo)
+function module:FormatSpellLink(spellInfo)
   if spellInfo == nil then
     return "NIL SPELL"
   end
@@ -30,7 +31,7 @@ function spellSetupModule:FormatSpellLink(spellInfo)
       .. "|r|h"
 end
 
-function spellSetupModule:Setup_ResetCaches()
+function module:Setup_ResetCaches()
   wipe(allBuffsModule.selectedBuffs)
   wipe(allBuffsModule.selectedBuffsSpellIds)
   wipe(allBuffsModule.spellIdtoBuffId)
@@ -43,7 +44,7 @@ function spellSetupModule:Setup_ResetCaches()
   BuffomatShared.Cache.Item2 = BuffomatShared.Cache.Item2 or {}
 end
 
-function spellSetupModule:Setup_CancelBuffs()
+function module:Setup_CancelBuffs()
   for _, cancelBuff in ipairs(BuffomatAddon.cancelBuffs) do
     -- save "buffId"
     --spell.buffId = spell.buffId or spell.singleId
@@ -79,7 +80,7 @@ end
 
 ---@param buffDef BomBuffDefinition
 ---@param add boolean
-function spellSetupModule:Setup_EachSpell_Consumable(add, buffDef)
+function module:Setup_EachSpell_Consumable(add, buffDef)
   for _i, eachItem in pairs(buffDef.items or {}) do
     -- call results are cached if they are successful, should not be a performance hit
     local itemInfo = BuffomatAddon.GetItemInfo(eachItem)
@@ -137,7 +138,7 @@ function spellSetupModule:Setup_EachSpell_Consumable(add, buffDef)
 end
 
 ---@param spell BomBuffDefinition
-function spellSetupModule:Setup_EachSpell_CacheUpdate(spell)
+function module:Setup_EachSpell_CacheUpdate(spell)
   -- get highest rank and store SpellID=buffId
   if spell.singleFamily then
     for _, eachSingleId in ipairs(spell.singleFamily) do
@@ -175,7 +176,7 @@ function spellSetupModule:Setup_EachSpell_CacheUpdate(spell)
 end
 
 ---@param buffDef BomBuffDefinition
-function spellSetupModule:Setup_EachSpell_SetupNonConsumable(buffDef)
+function module:Setup_EachSpell_SetupNonConsumable(buffDef)
   -- Load spell info and save some good fields for later use
   local spellInfo = BuffomatAddon.GetSpellInfo(buffDef.highestRankSingleId)
 
@@ -203,7 +204,7 @@ function spellSetupModule:Setup_EachSpell_SetupNonConsumable(buffDef)
 end
 
 ---@param spell BomBuffDefinition
-function spellSetupModule:Setup_EachSpell_SetupGroupBuff(spell)
+function module:Setup_EachSpell_SetupGroupBuff(spell)
   local spellInfo = BuffomatAddon.GetSpellInfo(spell.highestRankGroupId)
 
   if spellInfo ~= nil then
@@ -224,7 +225,7 @@ end
 
 ---Adds a spell to the palette of spells to configure and use, for each profile
 ---@param buffDef BomBuffDefinition
-function spellSetupModule:Setup_EachBuff_AddKnown(buffDef)
+function module:Setup_EachBuff_AddKnown(buffDef)
   tinsert(allBuffsModule.selectedBuffs, buffDef)
 
   for _, spellId in ipairs(buffDef.singleFamily) do
@@ -284,7 +285,7 @@ end
 ---For each spell known to Buffomat check whether the player can use it and the
 ---category where it will go. Build mapping tables to quickly find spells
 ---@param buff BomBuffDefinition
-function spellSetupModule:Setup_EachBuff(buff)
+function module:Setup_EachBuff(buff)
   allBuffsModule.buffFromSpellIdLookup[buff.buffId] = buff
 
   self:Setup_EachSpell_CacheUpdate(buff)
@@ -358,8 +359,22 @@ function spellSetupModule:Setup_EachBuff(buff)
   end -- if spell is OK to be added
 end
 
+---Rebuild the spell list once, a second after the first request. Used when item data finishes loading
+---and after a level up, when UnitLevel can still return the old level during the event.
+function module:RequestSetup()
+  if self.setupRequested then
+    return
+  end
+  self.setupRequested = true
+  C_Timer.After(1, function()
+    self.setupRequested = false
+    self:SetupAvailableSpells()
+    throttleModule:RequestTaskRescan("spellSetup")
+  end)
+end
+
 ---Scan all spells known to Buffomat and see if they are available to the player
-function spellSetupModule:SetupAvailableSpells()
+function module:SetupAvailableSpells()
   local character = BuffomatCharacter
   for _, profileName in ipairs(profileModule.ALL_PROFILES) do
     character.profiles[profileName].Spell = character.profiles[profileName].Spell or {}

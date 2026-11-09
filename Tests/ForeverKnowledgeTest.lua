@@ -248,7 +248,11 @@ do
   local _, eraWarrior = setup("era", "WARRIOR", "Human")
   assert(contains(eraWarrior[16138].weaponSubclasses, 7), "Era sharpening stones carry the same limit")
   equal(mage[25122].weaponSubclasses, nil, "wizard oil fits any weapon")
-  equal(warrior[1302304], nil, "Imbue scrolls are for casters")
+  equal(warrior[1302304], nil, "Imbue scrolls are not for warriors")
+  equal(paladin[1302304], nil, "Imbue scrolls are Mage only")
+  equal(mage[1327736], nil, "beta-only Elixir of Endless Intellect is gone")
+  equal(warrior[1327737], nil, "beta-only Elixir of Endless Power is gone")
+  equal(mage[1327754], nil, "beta-only Scroll of Endless Fortitude is gone")
   assert(contains(warrior[16138].items, 287978), "Forever Rough Sharpening Stone item")
 end
 

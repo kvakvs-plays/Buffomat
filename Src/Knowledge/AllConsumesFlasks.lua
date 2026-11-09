@@ -1,6 +1,6 @@
 ---@class AllConsumesFlasksModule
 
-local flasksModule = LibStub("Buffomat-AllConsumesFlasks") --[[@as AllConsumesFlasksModule]]
+local module = LibStub("Buffomat-AllConsumesFlasks") --[[@as AllConsumesFlasksModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
@@ -8,7 +8,7 @@ local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionM
 ---FLASKS
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function flasksModule:SetupFlasks(allBuffs, enchantments)
+function module:SetupFlasks(allBuffs, enchantments)
   self:_SetupFlasksClassic(allBuffs, enchantments)
   self:_SetupFlasksTBC(allBuffs, enchantments)
   self:_SetupFlasksWotLK(allBuffs, enchantments)
@@ -17,7 +17,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function flasksModule:_SetupFlasksClassic(allBuffs, enchantments)
+function module:_SetupFlasksClassic(allBuffs, enchantments)
   buffDefModule:genericConsumable(allBuffs, 17628, 13512)   --Flask of Supreme Power +70 SPELL
       :RequirePlayerClass(allBuffsModule.SPELL_CLASSES)
       :ExtraText(_t("tooltip.buff.spellPower"))
@@ -43,7 +43,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function flasksModule:_SetupFlasksTBC(allBuffs, enchantments)
+function module:_SetupFlasksTBC(allBuffs, enchantments)
   --TBC: Flask of Pure Death +80 SHADOW +80 FIRE +80 FROST
   buffDefModule:tbcConsumable(allBuffs, 28540, 22866)
       :ExtraText(_t("tooltip.buff.spellPower"))
@@ -129,7 +129,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function flasksModule:_SetupFlasksWotLK(allBuffs, enchantments)
+function module:_SetupFlasksWotLK(allBuffs, enchantments)
   buffDefModule:genericConsumable(allBuffs, 53760, 46377)   --WotLK: Flask of Endless Rage +180 AP
       :RequirePlayerClass(allBuffsModule.PHYSICAL_CLASSES)
       :ExtraText(_t("tooltip.buff.attackPower"))
@@ -179,7 +179,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function flasksModule:_SetupFlasksCata(allBuffs, enchantments)
+function module:_SetupFlasksCata(allBuffs, enchantments)
   -- TODO: Cata Flask of Battle
   --Cata: Flask of Steelskin; +Stamina
   buffDefModule:genericConsumable(allBuffs, 79469, 58085)

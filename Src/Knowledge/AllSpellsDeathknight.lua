@@ -1,6 +1,6 @@
 ---@class DeathknightModule
 
-local deathknightModule = LibStub("Buffomat-AllSpellsDeathknight") --[[@as DeathknightModule]]
+local module = LibStub("Buffomat-AllSpellsDeathknight") --[[@as DeathknightModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
 local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
@@ -8,7 +8,7 @@ local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
 ---Add DEATH KNIGHT spells
 ---@param allBuffs BomBuffDefinition[]
 ---@param _enchants BomEnchantmentsMapping
-function deathknightModule:SetupDeathknightSpells(allBuffs, _enchants)
+function module:SetupDeathknightSpells(allBuffs, _enchants)
   -- TODO: Tag presence buffs and exclude other buffs from the same family when clicking the UI
   -- Blood Presence
   buffDefModule:createAndRegisterBuff(allBuffs, 48266, nil)

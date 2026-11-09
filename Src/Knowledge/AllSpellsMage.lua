@@ -1,12 +1,12 @@
 ---@class MageModule
 
-local mageModule = LibStub("Buffomat-AllSpellsMage") --[[@as MageModule]]
+local module = LibStub("Buffomat-AllSpellsMage") --[[@as MageModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
 local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
 local spellIdsModule = LibStub("Buffomat-SpellIds") --[[@as SpellIdsModule]]
 
-function mageModule:CreateIntelligenceBuff()
+function module:CreateIntelligenceBuff()
   return buffDefModule:New(10157)                     --Arcane Intellect | Brilliance
       :SingleFamily({ 1459, 1460, 1461, 10156, 10157, -- Ranks 1-5
         27126,                                        -- TBC: Rank 6
@@ -28,7 +28,7 @@ end
 ---Add MAGE spells
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function mageModule:SetupMageSpells(allBuffs, enchantments)
+function module:SetupMageSpells(allBuffs, enchantments)
   table.insert(allBuffs, self:CreateIntelligenceBuff())
 
   --Dampen Magic

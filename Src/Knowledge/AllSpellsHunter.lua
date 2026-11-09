@@ -1,20 +1,20 @@
 ---@class HunterModule
 
-local hunterModule = LibStub("Buffomat-AllSpellsHunter") --[[@as HunterModule]]
+local module = LibStub("Buffomat-AllSpellsHunter") --[[@as HunterModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
 
 ---Add HUNTER spells
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function hunterModule:SetupHunterSpells(allBuffs, enchantments)
+function module:SetupHunterSpells(allBuffs, enchantments)
   self:_SetupHunterSpellsTBC(allBuffs, enchantments)
   self:_SetupPetBuffs(allBuffs, enchantments)
 end
 
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function hunterModule:_SetupHunterSpellsTBC(allBuffs, enchantments)
+function module:_SetupHunterSpellsTBC(allBuffs, enchantments)
   -- Trueshot Aura
   buffDefModule:createAndRegisterBuff(allBuffs, 20906, nil)
       :IsOwn(true)
@@ -148,7 +148,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function hunterModule:_SetupPetBuffs(allBuffs, enchantments)
+function module:_SetupPetBuffs(allBuffs, enchantments)
   -- Kibler's Bits (TBC)
   buffDefModule:genericConsumable(allBuffs, 65247, 33874)
       :RequireTBC()

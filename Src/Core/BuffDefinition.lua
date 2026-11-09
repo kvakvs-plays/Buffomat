@@ -16,6 +16,7 @@ local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local spellCacheModule = LibStub("Buffomat-SpellCache") --[[@as BomSpellCacheModule]]
 local itemCacheModule = LibStub("Buffomat-ItemCache") --[[@as BomItemCacheModule]]
+local spellSetupModule = LibStub("Buffomat-SpellSetup") --[[@as BomSpellSetupModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 
@@ -99,6 +100,7 @@ end
 ---@field isOwn boolean Spell only casts on self
 ---@field isScanned boolean
 ---@field itemIcon string|number
+---@field itemMinLevels {[WowItemId]: number}|nil Required player level of each item in `items`, filled as item data loads
 ---@field items WowItemId[]|nil Conjuration spells create these items. Or buff is granted by an item in user's bag. Number is item id shows as the icon.
 ---@field limitations BomSpellLimitations|nil [Temporary] field for post-filtering on spell list creation, later zeroed
 ---@field lockIfHaveItem WowItemId[] Item ids which prevent this buff (unique conjured items for example)
@@ -377,40 +379,54 @@ function buffDefClass:CreatesOrProvidedByItem(itemId)
   return self
 end
 
+---Reads the required level of every item giving this consumable into `itemMinLevels` and sets the
+---lowest one as `limitations.minLevel`, so the buff and its reminders stay hidden until the player can
+---use at least one of the items. Item data can load later: the level is set once every item that exists
+---in this client has loaded, and the spell list is rebuilt then. Until that, the buff is not hidden.
+---A minLevel written in the buff definition is kept.
 function buffDefClass:EnsureDynamicMinLevelSet()
-  -- No need to update
+  if self.itemMinLevels then
+    return -- already requested
+  end
   if self.limitations and type(self.limitations.minLevel) == "number" then
-    return
+    return -- set in the definition
+  end
+  self.itemMinLevels = {}
+
+  ---@type WowItemId[]
+  local existing = {}
+  for _, itemId in ipairs(self.items or {}) do
+    if itemCacheModule:ItemExists(itemId) then
+      table.insert(existing, itemId)
+    end
   end
 
-  -- Set minLevel if item has minLevel, for multiple items in the array - pick lowest requirement
-  -- If any of the requirements are nil, means the item cannot have the level requirement at all, reset and break loop
-  for _, eachItemId in ipairs(self.items) do
-    if eachItemId == nil then
-      self:MinLevel(0)
-      break
-    end
+  local pending = #existing
+  local settingUp = true -- true while still inside this call: cached items answer synchronously
 
-    local onItemLoaded = function(itemInfo)
-      local minLvl = 999
-
-      if itemInfo and (itemInfo.itemMinLevel == nil or itemInfo.itemMinLevel <= 1) then
-        minLvl = 0
+  for _, itemId in ipairs(existing) do
+    itemCacheModule:LoadItem(itemId, function(itemInfo)
+      self.itemMinLevels[itemId] = (itemInfo and itemInfo.itemMinLevel) or 0
+      pending = pending - 1
+      if pending > 0 then
+        return
       end
 
-      if itemInfo and itemInfo.itemMinLevel > 1 then
-        --local lim = (self.limitations)
-        -- Pick lowest itemlevel of the item ids to show the buff
-        if itemInfo.itemMinLevel < minLvl then
-          minLvl = itemInfo.itemMinLevel
+      local lowest = 0
+      for _, level in pairs(self.itemMinLevels) do
+        if lowest == 0 or level < lowest then
+          lowest = level
         end
       end
-
-      self:MinLevel(minLvl)
-    end
-
-    itemCacheModule:LoadItem(eachItemId, onItemLoaded)
+      if lowest > 1 then
+        self:MinLevel(lowest)
+        if not settingUp then
+          spellSetupModule:RequestSetup()
+        end
+      end
+    end)
   end
+  settingUp = false
 end
 
 ---@param auraIds WowSpellId[]

@@ -6,7 +6,7 @@ local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
-local eventsModule = LibStub("Buffomat-Events") --[[@as EventsModule]]
+local module = LibStub("Buffomat-Events") --[[@as EventsModule]]
 local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 local spellSetupModule = LibStub("Buffomat-SpellSetup") --[[@as BomSpellSetupModule]]
@@ -16,13 +16,13 @@ local taskScanModule = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
 local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
 
 --"UNIT_POWER_UPDATE","UNIT_SPELLCAST_START","UNIT_SPELLCAST_STOP","PLAYER_STARTED_MOVING","PLAYER_STOPPED_MOVING"
-eventsModule.EVT_COMBAT_STOP = { "PLAYER_REGEN_ENABLED" }
-eventsModule.EVT_COMBAT_START = { "PLAYER_REGEN_DISABLED" }
-eventsModule.EVT_LOADING_SCREEN_START = { "LOADING_SCREEN_ENABLED", "PLAYER_LEAVING_WORLD" }
-eventsModule.EVT_LOADING_SCREEN_END = { "PLAYER_ENTERING_WORLD", "LOADING_SCREEN_DISABLED" }
+module.EVT_COMBAT_STOP = { "PLAYER_REGEN_ENABLED" }
+module.EVT_COMBAT_START = { "PLAYER_REGEN_DISABLED" }
+module.EVT_LOADING_SCREEN_START = { "LOADING_SCREEN_ENABLED", "PLAYER_LEAVING_WORLD" }
+module.EVT_LOADING_SCREEN_END = { "PLAYER_ENTERING_WORLD", "LOADING_SCREEN_DISABLED" }
 
 ---@enum GenericUpdateEvent
-eventsModule.GENERIC_UPDATE_EVENTS = {
+module.GENERIC_UPDATE_EVENTS = {
   "UPDATE_SHAPESHIFT_FORM", "UNIT_AURA", "READY_CHECK",
   "PLAYER_ALIVE", "PLAYER_UNGHOST", "INCOMING_RESURRECT_CHANGED",
   "UNIT_INVENTORY_CHANGED" }
@@ -40,28 +40,28 @@ local function bagChangedEvents()
 end
 
 -- It seems that WotLK 3.4.1 update dropped event "BAG_UPDATE_DELAYED", so use "BAG_UPDATE" instead
-eventsModule.EVT_BAG_CHANGED = bagChangedEvents()
+module.EVT_BAG_CHANGED = bagChangedEvents()
 
-eventsModule.EVT_PARTY_CHANGED = { "GROUP_JOINED", "GROUP_ROSTER_UPDATE",
+module.EVT_PARTY_CHANGED = { "GROUP_JOINED", "GROUP_ROSTER_UPDATE",
   "RAID_ROSTER_UPDATE", "GROUP_LEFT" }
 
-eventsModule.EVT_SPELLBOOK_CHANGED = { "SPELLS_CHANGED", } -- "LEARNED_SPELL_IN_TAB" stopped working in TBC anniversary
+module.EVT_SPELLBOOK_CHANGED = { "SPELLS_CHANGED", } -- "LEARNED_SPELL_IN_TAB" stopped working in TBC anniversary
 
 --- Error messages which will make player stand if sitting.
 ---@enum ErrorNotStanding
-eventsModule.ERR_NOT_STANDING = {
+module.ERR_NOT_STANDING = {
   ERR_CANTATTACK_NOTSTANDING, SPELL_FAILED_NOT_STANDING,
   ERR_LOOT_NOTSTANDING, ERR_TAXINOTSTANDING }
 
 --- Error messages which will make player dismount if mounted.
 ---@enum ErrorIsMounted
-eventsModule.ERR_IS_MOUNTED = {
+module.ERR_IS_MOUNTED = {
   ERR_NOT_WHILE_MOUNTED, ERR_ATTACK_MOUNTED,
   ERR_TAXIPLAYERALREADYMOUNTED, SPELL_FAILED_NOT_MOUNTED }
 
 --- Error messages which will make player cancel shapeshift.
 ---@enum ErrorIsShapeshift
-eventsModule.ERR_IS_SHAPESHIFT = {
+module.ERR_IS_SHAPESHIFT = {
   ERR_EMBLEMERROR_NOTABARDGEOSET, ERR_CANT_INTERACT_SHAPESHIFTED,
   ERR_MOUNT_SHAPESHIFTED, ERR_NO_ITEMS_WHILE_SHAPESHIFTED,
   ERR_NOT_WHILE_SHAPESHIFTED, ERR_TAXIPLAYERSHAPESHIFTED,
@@ -119,7 +119,7 @@ local function Event_CombatStop()
   taskListPanelModule:OnCombatStop()
 end
 
-function eventsModule:OnCombatStop()
+function module:OnCombatStop()
   return Event_CombatStop()
 end
 
@@ -235,12 +235,12 @@ end
 ---@param _errorType table
 ---@param message table
 local function Event_UI_ERROR_MESSAGE(_, _errorType, message)
-  if tContains(eventsModule.ERR_NOT_STANDING, message) then
+  if tContains(module.ERR_NOT_STANDING, message) then
     if BuffomatShared.AutoStand then
       UIErrorsFrame:Clear()
       DoEmote("STAND")
     end
-  elseif tContains(eventsModule.ERR_IS_MOUNTED, message) then
+  elseif tContains(module.ERR_IS_MOUNTED, message) then
     local flying = false -- prevent dismount in flight, OUCH!
     if envModule.haveTBC then
       flying = IsFlying() and not BuffomatShared.AutoDismountFlying
@@ -252,7 +252,7 @@ local function Event_UI_ERROR_MESSAGE(_, _errorType, message)
       end
     end
   elseif BuffomatShared.AutoDisTravel
-      and tContains(eventsModule.ERR_IS_SHAPESHIFT, message)
+      and tContains(module.ERR_IS_SHAPESHIFT, message)
       and BuffomatAddon.CancelShapeShift() then
     UIErrorsFrame:Clear()
   elseif not InCombatLockdown() then
@@ -268,13 +268,12 @@ local function Event_UI_ERROR_MESSAGE(_, _errorType, message)
   BuffomatAddon.checkForError = false
 end
 
------PLAYER_LEVEL_UP Event
---- Should also fire spellbook change event and we handle there
---local function Event_PLAYER_LEVEL_UP(level)
---  -- TODO: Rebuild the UI buttons for new spells which appeared due to level up
---end
+---Consumables with a required item level appear at that level, even when no spell was learned
+local function Event_PLAYER_LEVEL_UP()
+  spellSetupModule:RequestSetup()
+end
 
-eventsModule.isPlayerInParty = IsInRaid() or IsInGroup()
+module.isPlayerInParty = IsInRaid() or IsInGroup()
 
 local function Event_PartyChanged()
   partyModule:InvalidatePartyCache()
@@ -284,11 +283,11 @@ local function Event_PartyChanged()
 
   -- if in_party changed from true to false, clear the watch groups
   local inParty = IsInRaid() or IsInGroup()
-  if eventsModule.isPlayerInParty ~= inParty then
+  if module.isPlayerInParty ~= inParty then
     if not inParty then
       taskScanModule:MaybeResetWatchGroups()
     end
-    eventsModule.isPlayerInParty = inParty
+    module.isPlayerInParty = inParty
   end
 end
 
@@ -303,7 +302,7 @@ local function Event_UNIT_SPELLCAST_errors(unit)
   end
 end
 
-function eventsModule:SafeWipeMacro()
+function module:SafeWipeMacro()
   if not InCombatLockdown() then
     -- To prevent same macro being recast when player quickly mashes the shortcut key
     taskListModule:WipeMacro(nil)
@@ -313,7 +312,7 @@ end
 local function Event_UNIT_SPELLCAST_START(_eventType, unit)
   if envModule.UnitIsUnit(unit, "player") then
     BuffomatAddon.isPlayerCasting = "cast"
-    eventsModule:SafeWipeMacro() -- not sure if this has any effect
+    module:SafeWipeMacro() -- not sure if this has any effect
     throttleModule:RequestTaskRescan("castStart")
   end
 end
@@ -329,7 +328,7 @@ end
 local function Event_UNIT_SPELLCHANNEL_START(_eventType, unit)
   if envModule.UnitIsUnit(unit, "player") then
     BuffomatAddon.isPlayerCasting = "channel"
-    eventsModule:SafeWipeMacro() -- not sure if this has any effect
+    module:SafeWipeMacro() -- not sure if this has any effect
     throttleModule:RequestTaskRescan("channelStart")
   end
 end
@@ -342,7 +341,7 @@ local function Event_UNIT_SPELLCHANNEL_STOP(_eventType, unit)
   end
 end
 
-function eventsModule.Event_SpellsChanged()
+function module.Event_SpellsChanged()
   spellSetupModule:SetupAvailableSpells()
   throttleModule:RequestTaskRescan("spellsChanged")
   --spellButtonsTabModule:UpdateSpellsTab("spellsChanged")
@@ -357,9 +356,8 @@ local function Event_Bag()
   end
 end
 
-function eventsModule:InitEvents()
-  -- Should also fire spellbook change event and we handle there
-  --BuffomatAddon:RegisterEvent("PLAYER_LEVEL_UP", Event_PLAYER_LEVEL_UP)
+function module:InitEvents()
+  BuffomatAddon:RegisterEvent("PLAYER_LEVEL_UP", Event_PLAYER_LEVEL_UP)
 
   -- Events which might change active state of Buffomat
   BuffomatAddon:RegisterEvent("ZONE_CHANGED", function()
@@ -398,7 +396,7 @@ function eventsModule:InitEvents()
   -- Forever talents are trait nodes, and some grant buff spells (Oath of Light, Trueshot Aura).
   -- Rebuild the spell list when the talent loadout changes, in case SPELLS_CHANGED does not fire.
   if envModule.isForever and envModule.IsEventValid("TRAIT_CONFIG_UPDATED") then
-    BuffomatAddon:RegisterEvent("TRAIT_CONFIG_UPDATED", eventsModule.Event_SpellsChanged)
+    BuffomatAddon:RegisterEvent("TRAIT_CONFIG_UPDATED", module.Event_SpellsChanged)
   end
 
   if envModule.supportsAuraRestrictions then
@@ -413,32 +411,32 @@ function eventsModule:InitEvents()
 
   -- TODO for TBC: PLAYER_REGEN_DISABLED / ENABLED is sent before/after the combat and protected frames lock up
 
-  for _, event in ipairs(eventsModule.EVT_COMBAT_START) do
+  for _, event in ipairs(module.EVT_COMBAT_START) do
     BuffomatAddon:RegisterEvent(event, Event_CombatStart)
   end
-  for _, event in ipairs(eventsModule.EVT_COMBAT_STOP) do
+  for _, event in ipairs(module.EVT_COMBAT_STOP) do
     BuffomatAddon:RegisterEvent(event, Event_CombatStop)
   end
-  for _, event in ipairs(eventsModule.EVT_LOADING_SCREEN_START) do
+  for _, event in ipairs(module.EVT_LOADING_SCREEN_START) do
     BuffomatAddon:RegisterEvent(event, Event_LoadingStart)
   end
-  for _, event in ipairs(eventsModule.EVT_LOADING_SCREEN_END) do
+  for _, event in ipairs(module.EVT_LOADING_SCREEN_END) do
     BuffomatAddon:RegisterEvent(event, Event_LoadingStop)
   end
 
-  for _, event in ipairs(eventsModule.EVT_SPELLBOOK_CHANGED) do
-    BuffomatAddon:RegisterEvent(event, eventsModule.Event_SpellsChanged)
+  for _, event in ipairs(module.EVT_SPELLBOOK_CHANGED) do
+    BuffomatAddon:RegisterEvent(event, module.Event_SpellsChanged)
   end
-  for _, event in ipairs(eventsModule.EVT_PARTY_CHANGED) do
+  for _, event in ipairs(module.EVT_PARTY_CHANGED) do
     BuffomatAddon:RegisterEvent(event, Event_PartyChanged)
   end
-  for _, event in ipairs(eventsModule.GENERIC_UPDATE_EVENTS) do
+  for _, event in ipairs(module.GENERIC_UPDATE_EVENTS) do
     local e = event .. ""
     BuffomatAddon:RegisterEvent(event, function()
       throttleModule:RequestTaskRescan(e)
     end)
   end
-  for _, event in ipairs(eventsModule.EVT_BAG_CHANGED) do
+  for _, event in ipairs(module.EVT_BAG_CHANGED) do
     BuffomatAddon:RegisterEvent(event, Event_Bag)
   end
 end

@@ -21,15 +21,15 @@ local BuffomatAddon = BuffomatAddon
 ---@field spellToSpellLookup {[WowSpellId]: WowSpellId} Maps spells ids to other spell ids
 ---@field cancelForm WowSpellId[] Spell ids which cancel shapeshift form
 
-local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
+local module = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 
-allBuffsModule.cancelForm = {}
-allBuffsModule.spellIdtoBuffId = {}
-allBuffsModule.selectedBuffs = {}
-allBuffsModule.selectedBuffsSpellIds = --[[@as BomBuffBySpellId]] {}
-allBuffsModule.spellIdIsSingleLookup = {}
-allBuffsModule.buffFromSpellIdLookup = --[[@as {[WowSpellId]: BomBuffDefinition}]] {}
-allBuffsModule.enchantToSpellLookup = --[[@as BomEnchantToSpellLookup]] {}
+module.cancelForm = {}
+module.spellIdtoBuffId = {}
+module.selectedBuffs = {}
+module.selectedBuffsSpellIds = --[[@as BomBuffBySpellId]] {}
+module.spellIdIsSingleLookup = {}
+module.buffFromSpellIdLookup = --[[@as {[WowSpellId]: BomBuffDefinition}]] {}
+module.enchantToSpellLookup = --[[@as BomEnchantToSpellLookup]] {}
 
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
@@ -57,65 +57,65 @@ local warriorModule = LibStub("Buffomat-AllSpellsWarrior") --[[@as WarriorModule
 ---@alias ClassName "WARRIOR"|"MAGE"|"ROGUE"|"DRUID"|"HUNTER"|"PRIEST"|"WARLOCK"|"SHAMAN"|"PALADIN"|"DEATHKNIGHT"|"tank"|"pet"
 
 ---@type ClassName[]
-allBuffsModule.ALL_CLASSES = {
+module.ALL_CLASSES = {
   "WARRIOR", "MAGE", "ROGUE", "DRUID", "HUNTER", "PRIEST", "WARLOCK",
   "SHAMAN", "PALADIN", "DEATHKNIGHT"
 }
-allBuffsModule.BOM_NO_CLASSES = {} ---@type ClassName[]
+module.BOM_NO_CLASSES = {} ---@type ClassName[]
 
 ---TODO: Move to constModule
 ---Classes which have a resurrection ability
 ---@type ClassName[]
-local RESURRECT_CLASSES = { "SHAMAN", "PRIEST", "PALADIN", "DRUID" } -- Druid in WotLK
-allBuffsModule.RESURRECT_CLASSES = RESURRECT_CLASSES
+local RESURRECT_CLASSES = { "SHAMAN", "PRIEST", "PALADIN", "DRUID" } -- Druid in WotLK and Forever
+module.RESURRECT_CLASSES = RESURRECT_CLASSES
 
 ---TODO: Move to constModule
 --- Classes which have mana bar and benefit from mp/5 and spirit
 ---@type ClassName[]
 local MANA_CLASSES = { "HUNTER", "WARLOCK", "MAGE", "DRUID", "SHAMAN", "PRIEST", "PALADIN" }
 BuffomatAddon.MANA_CLASSES = MANA_CLASSES --used in TaskScan.lua
-allBuffsModule.MANA_CLASSES = MANA_CLASSES
+module.MANA_CLASSES = MANA_CLASSES
 
 ---TODO: Move to constModule
 --- Classes which deal spell damage
 ---@type ClassName[]
-allBuffsModule.SPELL_CLASSES = { "WARLOCK", "MAGE", "DRUID", "SHAMAN", "PRIEST", "PALADIN", "DEATHKNIGHT", "HUNTER" }
+module.SPELL_CLASSES = { "WARLOCK", "MAGE", "DRUID", "SHAMAN", "PRIEST", "PALADIN", "DEATHKNIGHT", "HUNTER" }
 
 ---TODO: Move to constModule
 --- Classes which hit with weapons or claws
 ---@type ClassName[]
-allBuffsModule.MELEE_CLASSES = { "WARRIOR", "ROGUE", "DRUID", "SHAMAN", "PALADIN", "DEATHKNIGHT" }
+module.MELEE_CLASSES = { "WARRIOR", "ROGUE", "DRUID", "SHAMAN", "PALADIN", "DEATHKNIGHT" }
 
 ---TODO: Move to constModule
 --- Classes capable of dealing shadow damage
 ---@type ClassName[]
-allBuffsModule.SHADOW_CLASSES = { "PRIEST", "WARLOCK", "DEATHKNIGHT" }
+module.SHADOW_CLASSES = { "PRIEST", "WARLOCK", "DEATHKNIGHT" }
 
 ---TODO: Move to constModule
 --- Classes capable of dealing fire damage
 ---@type ClassName[]
-allBuffsModule.FIRE_CLASSES = { "MAGE", "WARLOCK", "SHAMAN", "HUNTER" }
+module.FIRE_CLASSES = { "MAGE", "WARLOCK", "SHAMAN", "HUNTER" }
 
 ---TODO: Move to constModule
 --- Classes capable of dealing frost damage
 ---@type ClassName[]
-allBuffsModule.FROST_CLASSES = { "MAGE", "SHAMAN", "DEATHKNIGHT" }
+module.FROST_CLASSES = { "MAGE", "SHAMAN", "DEATHKNIGHT" }
 
 ---TODO: Move to constModule
 --- Classes dealing physical ranged or melee damage
 ---@type ClassName[]
-allBuffsModule.PHYSICAL_CLASSES = { "HUNTER", "ROGUE", "SHAMAN", "WARRIOR", "DRUID", "PALADIN", "DEATHKNIGHT" }
+module.PHYSICAL_CLASSES = { "HUNTER", "ROGUE", "SHAMAN", "WARRIOR", "DRUID", "PALADIN", "DEATHKNIGHT" }
 
-allBuffsModule.MINUTE = 60
-allBuffsModule.TWO_MINUTES = allBuffsModule.MINUTE * 2
-allBuffsModule.THREE_MINUTES = allBuffsModule.MINUTE * 3
-allBuffsModule.FIVE_MINUTES = allBuffsModule.MINUTE * 5
-allBuffsModule.TEN_MINUTES = allBuffsModule.MINUTE * 10
-allBuffsModule.FIFTEEN_MINUTES = allBuffsModule.MINUTE * 15
-allBuffsModule.TWENTY_MINUTES = allBuffsModule.MINUTE * 20
-allBuffsModule.HALF_AN_HOUR = allBuffsModule.MINUTE * 30
-allBuffsModule.HOUR = allBuffsModule.MINUTE * 60
-allBuffsModule.TWO_HOURS = allBuffsModule.HOUR * 2
+module.MINUTE = 60
+module.TWO_MINUTES = module.MINUTE * 2
+module.THREE_MINUTES = module.MINUTE * 3
+module.FIVE_MINUTES = module.MINUTE * 5
+module.TEN_MINUTES = module.MINUTE * 10
+module.FIFTEEN_MINUTES = module.MINUTE * 15
+module.TWENTY_MINUTES = module.MINUTE * 20
+module.HALF_AN_HOUR = module.MINUTE * 30
+module.HOUR = module.MINUTE * 60
+module.TWO_HOURS = module.HOUR * 2
 
 --- From 2 choices return TBC if BOM.IsTBC is true, otherwise return classic
 local function tbcOrClassic(tbc, classic)
@@ -124,14 +124,14 @@ local function tbcOrClassic(tbc, classic)
   end
   return classic
 end
-allBuffsModule.TbcOrClassic = tbcOrClassic
+module.TbcOrClassic = tbcOrClassic
 
 ---Pick a value which differs on WoW: Forever, such as a buff duration.
 ---@generic T
 ---@param forever T Value on WoW: Forever
 ---@param other T Value on every other client
 ---@return T
-function allBuffsModule.ForeverOr(forever, other)
+function module.ForeverOr(forever, other)
   if envModule.isForever then
     return forever
   end
@@ -139,7 +139,7 @@ function allBuffsModule.ForeverOr(forever, other)
 end
 
 --- From 2 choices return TBC if BOM.IsTBC is true, otherwise return classic
-function allBuffsModule.ExpansionChoice(classic, tbc, wotlk)
+function module.ExpansionChoice(classic, tbc, wotlk)
   if envModule.haveWotLK then
     return wotlk
   end
@@ -152,7 +152,7 @@ end
 ---Add RESOURCE TRACKING spells
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function allBuffsModule:SetupTrackingSpells(allBuffs, enchantments)
+function module:SetupTrackingSpells(allBuffs, enchantments)
   -- Find Herbs / kräuter
   buffDefModule:createAndRegisterBuff(allBuffs, spellIdsModule.FindHerbs, nil)
       :BuffType("tracking")
@@ -187,7 +187,7 @@ local function Append(A, B)
   end
 end
 
-function allBuffsModule:SetupConstantsCategories()
+function module:SetupConstantsCategories()
   --self.CLASSIC_PHYS_FOOD = "classicPhysFood"
   --self.CLASSIC_SPELL_FOOD = "classicSpellFood"
   --self.CLASSIC_FOOD = "classicFood"
@@ -225,13 +225,13 @@ function allBuffsModule:SetupConstantsCategories()
   Append(self.buffCategories, { "scroll", "weaponEnchantment", "" })
 end
 
-function allBuffsModule:SetupConstants()
+function module:SetupConstants()
   self:SetupConstantsCategories()
 end
 
 --- Filter away the 'false' element and return only keys, values become the translation strings
 ---@return {[string]: string}
-function allBuffsModule:GetBuffCategories()
+function module:GetBuffCategories()
   local result = {}
   for _i, cat in ipairs(self.buffCategories) do
     if type(cat) == "string" and cat ~= "" then
@@ -244,7 +244,7 @@ end
 ---Filter the input `allbuffs` if the limitations check returns true
 ---@param allBuffs BomBuffDefinition[] Input list of all buffs
 ---@return BomBuffDefinition[] Filtered list
-function allBuffsModule:ApplyPostLimitations(allBuffs)
+function module:ApplyPostLimitations(allBuffs)
   -- Apply post-limitations (added with :Limitation() functions on spell construction)
   local result = {}
 
@@ -270,7 +270,7 @@ end
 ---All spells known to Buffomat
 ---Note: you can add your own spell in the "WTF\Account\<accountname>\SavedVariables\buffOmat.lua"
 ---table CustomSpells
-function allBuffsModule:SetupSpells()
+function module:SetupSpells()
   local allBuffs = {} --[[@as BomBuffDefinition[] ]]
   local enchantments = {} --[[@as BomEnchantmentsMapping]]
   self:SetupConstants()
@@ -309,10 +309,10 @@ function allBuffsModule:SetupSpells()
     end
   end
 
-  allBuffsModule.enchantToSpellLookup = {}
+  module.enchantToSpellLookup = {}
   for dest, list in pairs(enchantments) do
     for _, id in ipairs(list) do
-      allBuffsModule.enchantToSpellLookup[id] = dest
+      module.enchantToSpellLookup[id] = dest
     end
   end
 
@@ -368,10 +368,10 @@ BuffomatAddon.buffExchangeId = {            -- combine-spell-ids to new one
   [16591] = { 16591, 16589, 16595, 16593 }, -- noggenfoger
 }
 
-allBuffsModule.spellToSpellLookup = {}
+module.spellToSpellLookup = {}
 for dest, list in pairs(BuffomatAddon.buffExchangeId) do
   for _, id in ipairs(list) do
-    allBuffsModule.spellToSpellLookup[id] = dest
+    module.spellToSpellLookup[id] = dest
   end
 end
 
@@ -383,7 +383,7 @@ BuffomatAddon.itemList = {
   { 5232, 16892, 16893, 16895, -- Soulstone | Seelenstein
     16896 },                   -- TBC: Major Soulstone
 }
-allBuffsModule.itemListSpellLookup = {
+module.itemListSpellLookup = {
   [8079]  = 432, -- Water | Wasser
   [5232]  = 20762,
   [16892] = 20762,
@@ -393,7 +393,7 @@ allBuffsModule.itemListSpellLookup = {
 }
 
 -- -@return table<number, BomBuffDefinition>
-function allBuffsModule:SetupCancelBuffs()
+function module:SetupCancelBuffs()
   -- Note: you can add your own spell in the "WTF\Account\<accountname>\SavedVariables\buffOmat.lua"
   -- table CustomCancelBuff
   local spirit = priestModule:CreatePrayerOfSpiritBuff()
@@ -450,7 +450,7 @@ BuffomatAddon.AllDrink = {
 }
 
 ---For all spells database load data for spellids and items
-function allBuffsModule:LoadItemsAndSpells()
+function module:LoadItemsAndSpells()
   for _index, buffDef in pairs(self.allBuffs) do
     buffDef:Preload()
   end

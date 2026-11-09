@@ -1,10 +1,10 @@
 ---@class WarriorModule
 
-local warriorModule = LibStub("Buffomat-AllSpellsWarrior") --[[@as WarriorModule]]
+local module = LibStub("Buffomat-AllSpellsWarrior") --[[@as WarriorModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
 
 ---Add WARRIOR spells
-function warriorModule:SetupWarriorSpells(spells, enchantments)
+function module:SetupWarriorSpells(spells, enchantments)
   --Battle Shout
   buffDefModule:createAndRegisterBuff(spells, 25289, nil)
       :IsOwn(true)

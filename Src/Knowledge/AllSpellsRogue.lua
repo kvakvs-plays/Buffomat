@@ -1,13 +1,13 @@
 ---@class RogueModule
 
-local rogueModule = LibStub("Buffomat-AllSpellsRogue") --[[@as RogueModule]]
+local module = LibStub("Buffomat-AllSpellsRogue") --[[@as RogueModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
 
 ---Add ROGUE spells
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchants BomEnchantmentsMapping
-function rogueModule:SetupRogueSpells(allBuffs, enchants)
+function module:SetupRogueSpells(allBuffs, enchants)
   local duration = allBuffsModule.TbcOrClassic(allBuffsModule.HOUR, allBuffsModule.HALF_AN_HOUR) -- TBC: Poisons become 1 hour
 
   --Deadly Poison

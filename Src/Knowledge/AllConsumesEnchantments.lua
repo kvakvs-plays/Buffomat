@@ -1,6 +1,6 @@
 ---@class AllConsumesEnchantmentsModule
 
-local enchantmentsModule = LibStub("Buffomat-AllConsumesEnchantments") --[[@as AllConsumesEnchantmentsModule]]
+local module = LibStub("Buffomat-AllConsumesEnchantments") --[[@as AllConsumesEnchantmentsModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
 local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
@@ -8,7 +8,7 @@ local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
 ---SCROLLS
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function enchantmentsModule:SetupEnchantments(allBuffs, enchantments)
+function module:SetupEnchantments(allBuffs, enchantments)
   self:_SetupPhysicalEnchantments(allBuffs, enchantments)
   self:_SetupCasterEnchantments(allBuffs, enchantments)
   self:_SetupOtherEnchantments(allBuffs, enchantments)
@@ -17,7 +17,7 @@ end
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param spellId WowSpellId
 ---@return BomBuffDefinition
-function enchantmentsModule:RegisterEnchantment(allBuffs, spellId)
+function module:RegisterEnchantment(allBuffs, spellId)
   return buffDefModule:createAndRegisterBuff(allBuffs, spellId, nil)
       :IsConsumable(true)
       :SingleDuration(allBuffsModule.HALF_AN_HOUR)
@@ -28,7 +28,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function enchantmentsModule:_SetupCasterEnchantments(allBuffs, enchantments)
+function module:_SetupCasterEnchantments(allBuffs, enchantments)
   --if BOM.HaveTBC then
   --  buffDefModule:createAndRegisterBuff(buffs, 28017, --Superior Wizard Oil +42 SPELL
   --          { item = 22522, items = { 22522 }, isConsumable = true,
@@ -71,7 +71,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function enchantmentsModule:_SetupPhysicalEnchantments(allBuffs, enchantments)
+function module:_SetupPhysicalEnchantments(allBuffs, enchantments)
   -- Read here, not at file scope: ItemIds loads after the Knowledge files
   local blunt, bladed, melee = itemIdsModule.BluntWeapons, itemIdsModule.BladedWeapons, itemIdsModule.MeleeWeapons
   --
@@ -143,7 +143,7 @@ end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
-function enchantmentsModule:_SetupOtherEnchantments(allBuffs, enchantments)
+function module:_SetupOtherEnchantments(allBuffs, enchantments)
   -- Rune of Warding
   --
   --TBC: Greater Rune of Warding

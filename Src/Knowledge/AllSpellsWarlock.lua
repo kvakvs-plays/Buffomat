@@ -1,6 +1,6 @@
 ---@class WarlockModule
 
-local warlockModule = LibStub("Buffomat-AllSpellsWarlock") --[[@as WarlockModule]]
+local module = LibStub("Buffomat-AllSpellsWarlock") --[[@as WarlockModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
 local spellIdsModule = LibStub("Buffomat-SpellIds") --[[@as SpellIdsModule]]
@@ -11,7 +11,7 @@ local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 ---Add WARLOCK spells
 ---@param allBuffs BomBuffDefinition[]
 ---@param enchantments BomEnchantmentsMapping
-function warlockModule:SetupWarlockSpells(allBuffs, enchantments)
+function module:SetupWarlockSpells(allBuffs, enchantments)
   -- Unending Breath
   buffDefModule:createAndRegisterBuff(allBuffs, 5697, nil)
       :IsDefault(false)
