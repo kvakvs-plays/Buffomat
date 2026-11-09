@@ -1,6 +1,6 @@
----@class BomTaskModule
+---@class TaskModule
+local module = LibStub("Buffomat-Task") --[[@as TaskModule]]
 
-local taskModule = LibStub("Buffomat-Task") --[[@as BomTaskModule]]
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 
@@ -28,18 +28,18 @@ local taskClass = {}
 taskClass.__index = taskClass
 
 -- Priorities, lower = first
-taskModule.PRIO_RESURRECTION = 100
-taskModule.PRIO_RESURRECTION_FIRST = 50 -- resurrecter-classes get a higher prio
-taskModule.PRIO_DEFAULT = 500
-taskModule.PRIO_ENCHANTMENT = 600
-taskModule.PRIO_CONSUMABLE = 700
-taskModule.PRIO_OPEN_CONTAINER = 1000
+module.PRIO_RESURRECTION = 100
+module.PRIO_RESURRECTION_FIRST = 50 -- resurrecter-classes get a higher prio
+module.PRIO_DEFAULT = 500
+module.PRIO_ENCHANTMENT = 600
+module.PRIO_CONSUMABLE = 700
+module.PRIO_OPEN_CONTAINER = 1000
 
 --Creates a new TaskListItem
 ---@param actionText string|nil
 ---@param actionLink string
 ---@return BomTask
-function taskModule:Create(actionLink, actionText)
+function module:Create(actionLink, actionText)
   local fields = --[[@as BomTask]] {
     actionLink = actionLink or "",
     actionText = actionText or actionLink,
@@ -47,7 +47,7 @@ function taskModule:Create(actionLink, actionText)
     extraText = "",
     target = nil,
     distance = 0,
-    priority = taskModule.PRIO_DEFAULT,
+    priority = module.PRIO_DEFAULT,
     isInfo = false,
     customSort = '5',
   }
@@ -57,20 +57,20 @@ function taskModule:Create(actionLink, actionText)
 end
 
 ---@alias BomCanCastResult number
-taskModule.CAN_CAST_OK = 1        -- ready to cast
-taskModule.CAN_CAST_NO_ACTION = 2 -- task doesn't have an action
-taskModule.CAN_CAST_OOM = 3       -- not enough mana for this buff
-taskModule.CAN_CAST_IS_DEAD = 3   -- target is dead and the spell is not a resurrection
-taskModule.CAN_CAST_ON_CD = 4     -- spell not ready yet
-taskModule.CAN_CAST_IS_INFO = 5   -- isInfo is true, not a real action
+module.CAN_CAST_OK = 1        -- ready to cast
+module.CAN_CAST_NO_ACTION = 2 -- task doesn't have an action
+module.CAN_CAST_OOM = 3       -- not enough mana for this buff
+module.CAN_CAST_IS_DEAD = 3   -- target is dead and the spell is not a resurrection
+module.CAN_CAST_ON_CD = 4     -- spell not ready yet
+module.CAN_CAST_IS_INFO = 5   -- isInfo is true, not a real action
 
 function taskClass:CanCast()
   if not self.action then
-    return taskModule.CAN_CAST_NO_ACTION
+    return module.CAN_CAST_NO_ACTION
   end
 
   if self.isInfo then
-    return taskModule.CAN_CAST_IS_INFO
+    return module.CAN_CAST_IS_INFO
   end
 
   return (self.action):CanCast()

@@ -1,11 +1,11 @@
 local BuffomatAddon = BuffomatAddon
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 
----@class BomUnitModule
+---@class UnitModule
+local module = LibStub("Buffomat-Unit") --[[@as UnitModule]]
 
-local unitModule = LibStub("Buffomat-Unit") --[[@as BomUnitModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
-local buffModule = LibStub("Buffomat-Buff") --[[@as BomBuffModule]]
+local buffModule = LibStub("Buffomat-Buff") --[[@as BuffModule]]
 local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxModule]]
 
@@ -39,7 +39,7 @@ local unitClass = {}
 unitClass.__index = unitClass
 
 ---@return BomUnit
-function unitModule:New(fields)
+function module:New(fields)
   fields = fields or {}
   setmetatable(fields, unitClass)
   return fields
@@ -52,7 +52,7 @@ end
 ---@param filter string Filter string like "HELPFUL", "PLAYER", "RAID"... etc
 ---@return BomUnitAuraResult?
 ---@return boolean readable
-function unitModule:UnitAura(unitId, buffIndex, filter)
+function module:UnitAura(unitId, buffIndex, filter)
   local aura, readable = envModule.GetUnitAura(unitId, buffIndex, filter)
   if not readable or aura == nil then
     return nil, readable
@@ -147,7 +147,7 @@ function unitClass:ForceUpdateBuffs(playerUnit)
   repeat
     buffIndex = buffIndex + 1
 
-    local unitAura, readable = unitModule:UnitAura(self.unitId, buffIndex, "HELPFUL")
+    local unitAura, readable = module:UnitAura(self.unitId, buffIndex, "HELPFUL")
     if not readable then
       self.auraDataUnavailable = true
       self.NeedBuff = false

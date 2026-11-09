@@ -1,6 +1,6 @@
 ---@class BomUnitBuffTargetModule
+local module = LibStub("Buffomat-UnitBuffTarget") --[[@as BomUnitBuffTargetModule]]
 
-local buffTargetModule = LibStub("Buffomat-UnitBuffTarget") --[[@as BomUnitBuffTargetModule]]
 local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 
@@ -11,7 +11,7 @@ local buffTargetClass = {}
 buffTargetClass.__index = buffTargetClass
 
 ---@return BomUnitBuffTarget
-function buffTargetModule:New(unitName, link)
+function module:New(unitName, link)
   local fields = {} --[[@as BomUnitBuffTarget]]
   fields.unitName = unitName
   fields.link = link
@@ -22,13 +22,13 @@ end
 
 ---@param m BomUnit
 ---@return BomUnitBuffTarget
-function buffTargetModule:FromUnit(m)
+function module:FromUnit(m)
   return self:New(m.unitId, m.link)
 end
 
 ---@param m BomUnit
 ---@return BomUnitBuffTarget
-function buffTargetModule:FromSelf(m)
+function module:FromSelf(m)
   return self:New("player", m.link)
 end
 

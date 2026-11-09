@@ -1,14 +1,14 @@
 local BuffomatAddon = BuffomatAddon
 
----@class BomActionCastModule
+---@class ActionCastModule
+local module = LibStub("Buffomat-ActionCast") --[[@as ActionCastModule]]
 
-local actionCastModule = LibStub("Buffomat-ActionCast") --[[@as BomActionCastModule]]
-local taskModule = LibStub("Buffomat-Task") --[[@as BomTaskModule]]
+local taskModule = LibStub("Buffomat-Task") --[[@as TaskModule]]
 local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 
----@class BomTaskActionCast: BomTaskAction Casts a spell with a power (mana) cost on a target
+---@class TaskActionCast: BomTaskAction Casts a spell with a power (mana) cost on a target
 ---@field buffDef BomBuffDefinition|nil
 ---@field spellLink string|nil
 ---@field spellId number|nil
@@ -24,9 +24,9 @@ actionCastClass.__index = actionCastClass
 ---@param targetUnit BomUnit player to benefit from the spell
 ---@param buffDef BomBuffDefinition the spell to be added
 ---@param temporaryDownrank boolean Pick previous rank for certain spells, like Flametongue 10
----@return BomTaskActionCast
-function actionCastModule:New(cost, spellId, link, targetUnit, buffDef, temporaryDownrank)
-  local a = --[[@as BomTaskActionCast]] {}
+---@return TaskActionCast
+function module:New(cost, spellId, link, targetUnit, buffDef, temporaryDownrank)
+  local a = --[[@as TaskActionCast]] {}
   setmetatable(a, actionCastClass)
   a.temporaryDownrank = temporaryDownrank
   a.manaCost = cost

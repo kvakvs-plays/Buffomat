@@ -2,13 +2,13 @@
 
 ---@class UnitCacheModule
 ---@field unitCache table<string, BomUnit>
+local module = LibStub("Buffomat-UnitCache") --[[@as UnitCacheModule]]
+module.unitCache = {}
 
-local unitCacheModule = LibStub("Buffomat-UnitCache") --[[@as UnitCacheModule]]
-unitCacheModule.unitCache = {}
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local texturesModule = LibStub("Buffomat-Textures") --[[@as TexturesModule]]
-local unitModule = LibStub("Buffomat-Unit") --[[@as BomUnitModule]]
+local unitModule = LibStub("Buffomat-Unit") --[[@as UnitModule]]
 local ngStringsModule = LibStub("Buffomat-NgStrings") --[[@as NgStringsModule]]
 
 ---@alias BomRaidRole "MAINTANK"|"MAINASSIST"|"NONE"|"TANK"|"HEALER"|"DAMAGER"
@@ -41,7 +41,7 @@ end
 ---@param specialName boolean|nil
 ---@return BomUnit|nil
 ---@nodiscard
-function unitCacheModule:GetUnit(unitid, nameGroupMap, nameRoleMap, specialName)
+function module:GetUnit(unitid, nameGroupMap, nameRoleMap, specialName)
   local name, _unitRealm = UnitFullName(unitid) ---@type string, string?
   if name == nil then
     return nil
@@ -80,13 +80,13 @@ function unitCacheModule:GetUnit(unitid, nameGroupMap, nameRoleMap, specialName)
     return unit1
   else
     -- store in cache
-    unitCacheModule.unitCache[unitid] = unitCacheModule.unitCache[unitid] or unitModule:New({})
-    local unit2 = unitCacheModule.unitCache[unitid]
+    module.unitCache[unitid] = module.unitCache[unitid] or unitModule:New({})
+    local unit2 = module.unitCache[unitid]
     unit2:Construct(unitid, name, group, class, link or "", isTank)
     return unit2
   end
 end
 
-function unitCacheModule:ClearCache()
+function module:ClearCache()
   self.partyCache = partyModule:New()
 end

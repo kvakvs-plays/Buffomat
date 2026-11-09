@@ -9,13 +9,13 @@ local BuffomatAddon = BuffomatAddon
 ---@alias WowIconId number|string
 
 ---@class BuffDefinitionModule
+local module = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
 
-local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
-local spellCacheModule = LibStub("Buffomat-SpellCache") --[[@as BomSpellCacheModule]]
-local itemCacheModule = LibStub("Buffomat-ItemCache") --[[@as BomItemCacheModule]]
+local spellCacheModule = LibStub("Buffomat-SpellCache") --[[@as SpellCacheModule]]
+local itemCacheModule = LibStub("Buffomat-ItemCache") --[[@as ItemCacheModule]]
 local spellSetupModule = LibStub("Buffomat-SpellSetup") --[[@as BomSpellSetupModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
@@ -140,7 +140,7 @@ buffDefClass.__index = buffDefClass
 ---Creates a new SpellDef
 ---@param singleId WowSpellId Spell id also serving as buffId key
 ---@return BomBuffDefinition
-function buffDefModule:New(singleId)
+function module:New(singleId)
   local buff = {} --[[@as BomBuffDefinition]]
   buff.category = "" -- special value no category
   --buff.frames = buffRowModule:New(tostring(singleId)) -- spell buttons from the UI go here
@@ -161,17 +161,17 @@ function buffDefModule:New(singleId)
   return buff
 end
 
-function buffDefModule:tbcConsumable(dst, singleId, itemId)
+function module:tbcConsumable(dst, singleId, itemId)
   return self:genericConsumable(dst, singleId, itemId)
       :RequireTBC()
 end
 
-function buffDefModule:wotlkConsumable(dst, singleId, itemId)
+function module:wotlkConsumable(dst, singleId, itemId)
   return self:genericConsumable(dst, singleId, itemId)
       :RequireWotLK()
 end
 
-function buffDefModule:cataConsumable(dst, singleId, itemId)
+function module:cataConsumable(dst, singleId, itemId)
   return self:genericConsumable(dst, singleId, itemId)
       :RequireCata()
 end
@@ -181,7 +181,7 @@ end
 ---@param singleId WowSpellId Aura the consumable gives
 ---@param itemId WowItemId|WowItemId[]
 ---@return BomBuffDefinition
-function buffDefModule:foreverConsumable(dst, singleId, itemId)
+function module:foreverConsumable(dst, singleId, itemId)
   return self:genericConsumable(dst, singleId, itemId)
       :RequireForever()
 end
@@ -190,8 +190,8 @@ end
 ---@param singleId WowSpellId
 ---@param providedByItem WowItemId|WowItemId[] Item or multiple items giving this buff
 ---@return BomBuffDefinition
-function buffDefModule:genericConsumable(allBuffs, singleId, providedByItem)
-  local b = buffDefModule:createAndRegisterBuff(allBuffs, singleId, nil)
+function module:genericConsumable(allBuffs, singleId, providedByItem)
+  local b = module:createAndRegisterBuff(allBuffs, singleId, nil)
       :IsConsumable(true)
       :IsDefault(false)
       :CreatesOrProvidedByItem(providedByItem)
@@ -203,8 +203,8 @@ end
 ---@param providesAuras WowSpellId[] Auras from the food
 ---@param providedByItems WowItemId[] Item or multiple items giving this buff
 ---@return BomBuffDefinition
-function buffDefModule:consumableGroup(allBuffs, _buffId, providesAuras, providedByItems)
-  local b = buffDefModule:createAndRegisterBuff(allBuffs, providesAuras[1], nil)
+function module:consumableGroup(allBuffs, _buffId, providesAuras, providedByItems)
+  local b = module:createAndRegisterBuff(allBuffs, providesAuras[1], nil)
       :IsConsumable(true)
       :IsDefault(false)
       :ProvidesAuras(providesAuras)
@@ -217,7 +217,7 @@ local playerClass = envModule.playerClass
 --TODO: Belongs to `BomBuffDefinition`
 ---Check the static limitations, which cannot change after the player logs in
 ---@param limitations BomSpellLimitations
-function buffDefModule:CheckStaticLimitations(_spell, limitations)
+function module:CheckStaticLimitations(_spell, limitations)
   -- empty limitations return true
   if next(limitations) == nil then
     return true
@@ -274,7 +274,7 @@ end
 
 ---Checks dynamic buff limitations, which can change in the game
 ---@param limitations BomSpellLimitations|nil
-function buffDefModule:CheckDynamicLimitations(limitations)
+function module:CheckDynamicLimitations(limitations)
   -- empty limitations return true
   if not limitations or next(limitations) == nil then
     return true
@@ -304,27 +304,27 @@ end
 ---@param buffSpellId number The buff spell ID is key in the AllSpells table
 ---@param limitations BomSpellLimitations|nil Check these conditions to skip adding the spell. Permanent conditions only like minlevel or class
 ---@return BomBuffDefinition
-function buffDefModule:createAndRegisterBuff(allBuffs, buffSpellId, limitations)
+function module:createAndRegisterBuff(allBuffs, buffSpellId, limitations)
   local spell = self:New(buffSpellId)
 
   if self:CheckStaticLimitations(spell, limitations or {}) then
     return self:registerBuff(allBuffs, spell)
   end
 
-  return buffDefModule:New(0) -- limitations check failed
+  return module:New(0) -- limitations check failed
 end
 
 ---@param dst BomBuffDefinition[]
 ---@return BomBuffDefinition
-function buffDefModule:registerBuff(dst, spell)
+function module:registerBuff(dst, spell)
   table.insert(dst, spell)
   return spell
 end
 
 ---@param spellId number
 ---@param itemId number
-function buffDefModule:conjureItem(spellId, itemId)
-  return buffDefModule:New(spellId)
+function module:conjureItem(spellId, itemId)
+  return module:New(spellId)
       :IsOwn(true)
       :IsDefault(true)
       :LockIfHaveItem({ itemId })
@@ -778,7 +778,7 @@ end
 
 ---@param profileName ProfileName|nil
 ---@return BlessingState
-function buffDefModule:GetProfileBlessingState(profileName)
+function module:GetProfileBlessingState(profileName)
   if profileName == nil then
     return buffomatModule.currentProfile.CurrentBlessing
     --return allBuffsModule.allBuffs[spellId]
@@ -796,7 +796,7 @@ end
 ---@param buffId number The key to the allSpells dictionary
 ---@param profileName ProfileName|nil
 ---@return boolean
-function buffDefModule:IsBuffEnabled(buffId, profileName)
+function module:IsBuffEnabled(buffId, profileName)
   local spell = profileModule:GetProfileBuff(buffId, profileName)
   if spell == nil then
     return false
@@ -974,7 +974,7 @@ end
 ---If any of the "onlyXXX" keys are present, those will be returned without any extra merging of other expansion data
 ---@param conditions BomNumbersPerExpansion
 ---@return number[]
-function buffDefModule:PerExpansionChoice(conditions)
+function module:PerExpansionChoice(conditions)
   -- isClassic is also true on Forever, so the Forever choice must be checked first
   if envModule.isForever and conditions.onlyForever then
     return conditions.onlyForever

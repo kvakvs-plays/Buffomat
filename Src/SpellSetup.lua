@@ -5,7 +5,7 @@ local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 
 local module = LibStub("Buffomat-SpellSetup") --[[@as BomSpellSetupModule]]
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
-local itemCacheModule = LibStub("Buffomat-ItemCache") --[[@as BomItemCacheModule]]
+local itemCacheModule = LibStub("Buffomat-ItemCache") --[[@as ItemCacheModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefinitionModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
 local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxModule]]

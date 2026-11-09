@@ -1,10 +1,9 @@
 ---@class KvOptionsModule
 ---@field optionsOrder number
+local module = --[[@as KvOptionsModule]] LibStub("KvLibShared-Options")
+module.optionsOrder = 0
 
-local kvOptionsModule = --[[@as KvOptionsModule]] LibStub("KvLibShared-Options")
-kvOptionsModule.optionsOrder = 0
-
-function kvOptionsModule:ValueToText(type, value)
+function module:ValueToText(type, value)
   if type == "string" then
     return value
   elseif type == "float" then
@@ -14,7 +13,7 @@ function kvOptionsModule:ValueToText(type, value)
   end
 end
 
-function kvOptionsModule:TextToValue(type, editFieldText)
+function module:TextToValue(type, editFieldText)
   if type == "string" then
     return editFieldText
   elseif type == "float" then
@@ -28,7 +27,7 @@ end
 ---@param key string
 ---@param notify function|nil Call this with (key, value) on option change
 ---@param translate fun(key:string):string Translation callable
-function kvOptionsModule:TemplateCheckbox(name, dict, key, notify, translate)
+function module:TemplateCheckbox(name, dict, key, notify, translate)
   self.optionsOrder = self.optionsOrder + 1
 
   return {
@@ -59,7 +58,7 @@ end
 ---@param name string
 ---@param onClick function Call this when button is pressed
 ---@param translate fun(key:string):string Translation callable
-function kvOptionsModule:TemplateButton(name, onClick, translate)
+function module:TemplateButton(name, onClick, translate)
   self.optionsOrder = self.optionsOrder + 1
 
   return {
@@ -76,7 +75,7 @@ end
 ---@param dict table|nil
 ---@param notifyFn function|nil Call this with (key, value) on option change
 ---@param translate fun(key:string):string Translation callable
-function kvOptionsModule:TemplateMultiselect(name, values, dict, notifyFn, setFn, getFn, translate)
+function module:TemplateMultiselect(name, values, dict, notifyFn, setFn, getFn, translate)
   self.optionsOrder = self.optionsOrder + 1
 
   return {
@@ -110,7 +109,7 @@ end
 ---@param style string|nil "dropdown" or "radio"
 ---@param notifyFn function|nil Call this with (key, value) on option change
 ---@param translate fun(key:string):string Translation callable
-function kvOptionsModule:TemplateSelect(name, values, style, dict, notifyFn, setFn, getFn, translate)
+function module:TemplateSelect(name, values, style, dict, notifyFn, setFn, getFn, translate)
   self.optionsOrder = self.optionsOrder + 1
 
   return {
@@ -147,7 +146,7 @@ end
 ---@param key string
 ---@param notify function|nil Call this with (key, value) on option change
 ---@param translate fun(key:string):string Translation callable
-function kvOptionsModule:TemplateInput(type, name, dict, key, notify, translate)
+function module:TemplateInput(type, name, dict, key, notify, translate)
   self.optionsOrder = self.optionsOrder + 1
 
   return {
@@ -180,7 +179,7 @@ end
 ---@param key string
 ---@param notify function|nil Call this with (key, value) on option change
 ---@param translate fun(key:string):string Translation callable
-function kvOptionsModule:TemplateRange(name, rangeFrom, rangeTo, step, dict, key, notify, translate)
+function module:TemplateRange(name, rangeFrom, rangeTo, step, dict, key, notify, translate)
   self.optionsOrder = self.optionsOrder + 1
 
   return {

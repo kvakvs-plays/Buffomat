@@ -1,8 +1,8 @@
 local TOCNAME, _ = ...
 
 ---@class SlashCommandsModule
+local module = LibStub("Buffomat-SlashCommands") --[[@as SlashCommandsModule]]
 
-local slashModule = LibStub("Buffomat-SlashCommands") --[[@as SlashCommandsModule]]
 local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxModule]]
 local kvEnvModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 
@@ -17,7 +17,7 @@ local slashCommandStrings ---@type string[]
 
 ---@param slashStrings string[]
 ---@param sep string|nil
-function slashModule:SlashUnpack(slashStrings, sep)
+function module:SlashUnpack(slashStrings, sep)
   local ret = ""
   sep = sep or ", "
 
@@ -33,7 +33,7 @@ end
 ---@param prefix string|nil
 ---@param conf BomSlashCommand[]|nil
 ---@param printFn nil|fun(text: string)
-function slashModule:PrintSlashCommand(prefix, conf, printFn)
+function module:PrintSlashCommand(prefix, conf, printFn)
   printFn = printFn or print
   prefix = prefix or ""
   conf = conf or slashCommandConf
@@ -46,7 +46,7 @@ end
 ---@param prefix string
 ---@param conf BomSlashCommand[]
 ---@param printFn fun(text: string)
-function slashModule:PrintSlashCommand_1(prefix, conf, printFn)
+function module:PrintSlashCommand_1(prefix, conf, printFn)
   local colCmd = "|cFFFF9C00"
 
   ---@diagnostic disable-next-line: unused-local
@@ -69,21 +69,21 @@ function slashModule:PrintSlashCommand_1(prefix, conf, printFn)
     end
 
     if type(subcmd.handler) == "table" then
-      slashModule:PrintSlashCommand(prefix .. words .. " ",
+      module:PrintSlashCommand(prefix .. words .. " ",
       --[[@as BomSlashCommand[] ]] subcmd.handler, printFn)
     end
   end
 end
 
 ---@param c BomSlashCommand
-function slashModule:UnpackCommand(c)
+function module:UnpackCommand(c)
   return c.command, c.description, c.handler, c.target
 end
 
 ---@param nestingLevel number
 ---@param msg string[]
 ---@param conf BomSlashCommand[]
-function slashModule:ParseAndExecute(nestingLevel, msg, conf)
+function module:ParseAndExecute(nestingLevel, msg, conf)
   ---@diagnostic disable-next-line: unused-local
   for _, subcmd in ipairs(conf) do
     local ok = (
@@ -118,7 +118,7 @@ end
 ---@param msg string
 ---@param _editBox WowControl UI control, the user input box, can :Show, :SetText etc
 ---@diagnostic disable-next-line: unused-local
-function slashModule.HandleSlashCommand(msg, _editBox)
+function module.HandleSlashCommand(msg, _editBox)
   if msg == "help" then
     local color = "|cFFFF9C00"
     print("|cFFFF1C1C" .. kvEnvModule.GetAddOnMetadata(TOCNAME, "Title")
@@ -126,12 +126,12 @@ function slashModule.HandleSlashCommand(msg, _editBox)
       .. " by " .. kvEnvModule.GetAddOnMetadata(TOCNAME, "Author"))
     print(kvEnvModule.GetAddOnMetadata(TOCNAME, "Notes"))
     if type(slashCommandStrings) == "table" then
-      print("SlashCommand:", color, slashModule:SlashUnpack(slashCommandStrings, "|r, " .. color), "|r")
+      print("SlashCommand:", color, module:SlashUnpack(slashCommandStrings, "|r, " .. color), "|r")
     end
 
-    slashModule:PrintSlashCommand(nil, nil, nil)
+    module:PrintSlashCommand(nil, nil, nil)
   else
-    slashModule:ParseAndExecute(1, toolboxModule:Split(msg, " "), slashCommandConf)
+    module:ParseAndExecute(1, toolboxModule:Split(msg, " "), slashCommandConf)
   end
 end
 
@@ -139,7 +139,7 @@ end
 ---See https://wowwiki-archive.fandom.com/wiki/Creating_a_slash_command
 ---@param cmds string[] The commands as strings
 ---@param subcommand BomSlashCommand[] The describing structure for slash commands
-function slashModule:RegisterSlashCommandHandler(cmds, subcommand)
+function module:RegisterSlashCommandHandler(cmds, subcommand)
   slashCommandConf = subcommand
   slashCommandStrings = cmds
 
@@ -151,5 +151,5 @@ function slashModule:RegisterSlashCommandHandler(cmds, subcommand)
     _G["SLASH_" .. TOCNAME .. "1"] = cmds
   end
 
-  SlashCmdList[TOCNAME] = slashModule.HandleSlashCommand
+  SlashCmdList[TOCNAME] = module.HandleSlashCommand
 end

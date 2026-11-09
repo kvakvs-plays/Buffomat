@@ -1,6 +1,6 @@
 ---@class OptionsModule
+local module = LibStub("Buffomat-Options") --[[@as OptionsModule]]
 
-local optionsModule = LibStub("Buffomat-Options") --[[@as OptionsModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local languagesModule = _t
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
@@ -15,20 +15,20 @@ local libIcon = LibStub("LibDBIcon-1.0")
 ---@param dict table|nil
 ---@param key string|nil
 ---@param notify function|nil Call this with (key, value) on option change
-function optionsModule:TemplateCheckbox(name, dict, key, notify)
+function module:TemplateCheckbox(name, dict, key, notify)
   return kvOptionsModule:TemplateCheckbox(name, dict or BuffomatShared, key or name, notify, _t)
 end
 
 ---@param name string
 ---@param onClick function Call this when button is pressed
-function optionsModule:TemplateButton(name, onClick)
+function module:TemplateButton(name, onClick)
   return kvOptionsModule:TemplateButton(name, onClick, _t)
 end
 
 ---@param values table|function Key is sent to the setter, value is the string displayed
 ---@param dict table|nil
 ---@param notifyFn function|nil Call this with (key, value) on option change
-function optionsModule:TemplateMultiselect(name, values, dict, notifyFn, setFn, getFn)
+function module:TemplateMultiselect(name, values, dict, notifyFn, setFn, getFn)
   return kvOptionsModule:TemplateMultiselect(name, values, dict or BuffomatShared, notifyFn, setFn, getFn, _t)
 end
 
@@ -36,26 +36,26 @@ end
 ---@param dict table|nil
 ---@param style string|nil "dropdown" or "radio"
 ---@param notifyFn function|nil Call this with (key, value) on option change
-function optionsModule:TemplateSelect(name, values, style, dict, notifyFn, setFn, getFn)
+function module:TemplateSelect(name, values, style, dict, notifyFn, setFn, getFn)
   return kvOptionsModule:TemplateSelect(name, values, style, dict or BuffomatShared, notifyFn, setFn, getFn, _t)
 end
 
 ---@param dict table|nil
 ---@param key string|nil
 ---@param notify function|nil Call this with (key, value) on option change
-function optionsModule:TemplateInput(type, name, dict, key, notify)
+function module:TemplateInput(type, name, dict, key, notify)
   return kvOptionsModule:TemplateInput(type, name, dict or BuffomatShared, key or name, notify, _t)
 end
 
 ---@param dict table|nil
 ---@param key string|nil
 ---@param notify function|nil Call this with (key, value) on option change
-function optionsModule:TemplateRange(name, rangeFrom, rangeTo, step, dict, key, notify)
+function module:TemplateRange(name, rangeFrom, rangeTo, step, dict, key, notify)
   return kvOptionsModule:TemplateRange(name, rangeFrom, rangeTo, step, dict or BuffomatShared, key or name, notify,
     _t)
 end
 
-function optionsModule:CreateGeneralOptionsTable()
+function module:CreateGeneralOptionsTable()
   local sounds = --[[@as {[string]: string} ]] {}
   sounds[_t("task.notifications.no-sound")] = "-"
 
@@ -125,12 +125,12 @@ function optionsModule:CreateGeneralOptionsTable()
   }
 end
 
-function optionsModule:NextOptionsOrder()
+function module:NextOptionsOrder()
   kvOptionsModule.optionsOrder = kvOptionsModule.optionsOrder + 1
   return kvOptionsModule.optionsOrder
 end
 
-function optionsModule:CreateLanguageOption()
+function module:CreateLanguageOption()
   return {
     desc = _t("options.long.Language"),
     name = _t("options.short.Language"),
@@ -150,7 +150,7 @@ function optionsModule:CreateLanguageOption()
   }
 end
 
-function optionsModule:CreateScanOptionsTable()
+function module:CreateScanOptionsTable()
   return {
     type = "group",
     name = "2. " .. _t("options.general.group.Scan"),
@@ -167,7 +167,7 @@ function optionsModule:CreateScanOptionsTable()
   }
 end
 
-function optionsModule:CreateAutoActionOptionsTable()
+function module:CreateAutoActionOptionsTable()
   return {
     type = "group",
     name = "3. " .. _t("options.general.group.AutoActions"),
@@ -181,7 +181,7 @@ function optionsModule:CreateAutoActionOptionsTable()
   }
 end
 
-function optionsModule:CreateConvenienceOptionsTable()
+function module:CreateConvenienceOptionsTable()
   return {
     type = "group",
     name = "4. " .. _t("options.general.group.Convenience"),
@@ -214,7 +214,7 @@ function optionsModule:CreateConvenienceOptionsTable()
   }
 end
 
-function optionsModule:CreateBuffingOptionsTable()
+function module:CreateBuffingOptionsTable()
   return {
     type = "group",
     name = "5. " .. _t("options.general.group.Buffing"),
@@ -230,7 +230,7 @@ function optionsModule:CreateBuffingOptionsTable()
   }
 end
 
-function optionsModule:CreateVisibilityOptionsTable()
+function module:CreateVisibilityOptionsTable()
   return {
     type = "group",
     name = "6. " .. _t("options.general.group.Visibility"),
@@ -254,7 +254,7 @@ function optionsModule:CreateVisibilityOptionsTable()
   }
 end
 
-function optionsModule:CreateClassOptionsTable()
+function module:CreateClassOptionsTable()
   return {
     type = "group",
     name = "9. " .. _t("options.general.group.Class"),
@@ -269,7 +269,7 @@ local FOREVERDB_URL = "https://foreverdb.net"
 ---About page: what Buffomat does, how to use it, and credits. ForeverDB asks for a visible link
 ---wherever its data is used; the game cannot open links, so the URL is in a box to copy from.
 ---@return table AceConfig group
-function optionsModule:CreateAboutOptionsTable()
+function module:CreateAboutOptionsTable()
   return {
     type = "group",
     name = "10. " .. _t("PanelAbout"),
@@ -294,7 +294,7 @@ function optionsModule:CreateAboutOptionsTable()
   }
 end
 
-function optionsModule:CreateOptionsTable()
+function module:CreateOptionsTable()
   kvOptionsModule.optionsOrder = 0
 
   return {
@@ -313,5 +313,5 @@ function optionsModule:CreateOptionsTable()
 end
 
 ---Called from options' Default button
-function optionsModule:ResetDefaultOptions()
+function module:ResetDefaultOptions()
 end

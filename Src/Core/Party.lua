@@ -11,21 +11,21 @@ local BuffomatAddon = BuffomatAddon
 ---@field itemListTarget table<number, string> Remember who casted item buff on you?
 ---@field playerManaLimit number Player max mana
 ---@field playerMana number Player current mana
+local module = LibStub("Buffomat-Party") --[[@as PartyModule]]
 
-local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
 
 ---@type BomBuffUpdatesPerUnit
-partyModule.unitAurasLastUpdated = {}
+module.unitAurasLastUpdated = {}
 
 ---@type {[number]: boolean}
-partyModule.partyCacheInvalidation = {}
-partyModule.itemListTarget = {}
-partyModule.playerMana = 0
-partyModule.playerManaLimit = 0
+module.partyCacheInvalidation = {}
+module.itemListTarget = {}
+module.playerMana = 0
+module.playerManaLimit = 0
 
 ---@type BomPartyCacheInvalidation
-partyModule.ALL_INVALID_GROUPS = {
+module.ALL_INVALID_GROUPS = {
   [1] = true,
   [2] = true,
   [3] = true,
@@ -56,7 +56,7 @@ local partyClass = {}
 partyClass.__index = partyClass
 
 ---@return BomParty
-function partyModule:New()
+function module:New()
   local p = {
     byGroup = {},
     byUnitId = {},
@@ -69,7 +69,7 @@ end
 
 ---@param unitName string
 ---@param _evType string
-function partyModule:OnBuffsChangedEvent(unitName, _spellId, _evType)
+function module:OnBuffsChangedEvent(unitName, _spellId, _evType)
   if self.theParty
       and not (self.theParty):IsNameInParty(unitName) then
     return
@@ -96,7 +96,7 @@ end
 
 ---Drop buffs for names which aren't in our party
 ---@param party BomParty
-function partyModule:CleanUpBuffs(party)
+function module:CleanUpBuffs(party)
   -- Clean partyModule.buffs up
   for name, _ in pairs(self.unitAurasLastUpdated) do
     if not party:IsNameInParty(name) then
@@ -107,7 +107,7 @@ end
 
 ---@return number count Party size including pets
 ---@nodiscard
-function partyModule:GetPartySize()
+function module:GetPartySize()
   local countTo
   local prefix
   local count
@@ -140,7 +140,7 @@ function partyModule:GetPartySize()
   return count
 end
 
-function partyModule:InvalidatePartyCache()
+function module:InvalidatePartyCache()
   self.partyCacheInvalidation[1] = true
   self.partyCacheInvalidation[2] = true
   self.partyCacheInvalidation[3] = true
@@ -152,17 +152,17 @@ function partyModule:InvalidatePartyCache()
 end
 
 ---@param group number
-function partyModule:InvalidatePartyGroup(group)
+function module:InvalidatePartyGroup(group)
   self.partyCacheInvalidation[group] = true
 end
 
-function partyModule:ValidatePartyCache()
+function module:ValidatePartyCache()
   wipe(self.partyCacheInvalidation)
 end
 
 ---@param party BomParty
 ---@param invalidGroups BomPartyCacheInvalidation
-function partyModule:RefreshParty(party, invalidGroups)
+function module:RefreshParty(party, invalidGroups)
   if IsInRaid() then
     party:GetRaidMembers(invalidGroups)
   else
@@ -190,7 +190,7 @@ function partyModule:RefreshParty(party, invalidGroups)
   end
 
   unitCacheModule.partyCache = party
-  partyModule:CleanUpBuffs(party)
+  module:CleanUpBuffs(party)
   throttleModule:RequestTaskRescan("reloadParty") -- always read all buffs on new party!
   return party
 end
@@ -322,7 +322,7 @@ end
 -- end
 
 ---@return BomParty
-function partyModule:GetParty()
+function module:GetParty()
   -- and buffs
   local party ---@type BomParty
 
@@ -338,10 +338,10 @@ function partyModule:GetParty()
 
   if party then
     -- Partial refresh of existing raid or full party refresh
-    party = partyModule:RefreshParty(party, self.partyCacheInvalidation)
+    party = module:RefreshParty(party, self.partyCacheInvalidation)
   else
     -- If previous cached party failed, do full refresh
-    party = partyModule:RefreshParty(partyModule:New(), self.ALL_INVALID_GROUPS)
+    party = module:RefreshParty(module:New(), self.ALL_INVALID_GROUPS)
   end
 
   BuffomatAddon.somebodyIsGhost = false
@@ -370,7 +370,7 @@ function partyModule:GetParty()
   end
 
   BuffomatAddon.declineHasResurrection = false
-  partyModule:ValidatePartyCache()
+  module:ValidatePartyCache()
   self.theParty = party
   return party
 end

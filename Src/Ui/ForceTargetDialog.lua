@@ -1,6 +1,6 @@
 ---@class ForceTargetDialogModule
+local module = LibStub("Buffomat-ForceTargetDialog") --[[@as ForceTargetDialogModule]]
 
-local forceTargetDialogModule = LibStub("Buffomat-ForceTargetDialog") --[[@as ForceTargetDialogModule]]
 local libGUI = LibStub("AceGUI-3.0")
 local ngToolboxModule = LibStub("Buffomat-NgToolbox") --[[@as NgToolboxModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
@@ -24,7 +24,7 @@ local function targetsDictFromString(string)
   return result
 end
 
-function forceTargetDialogModule:Hide()
+function module:Hide()
   if self.dialog then
     self.dialog:Hide()
     -- self.dialog:Release()
@@ -37,7 +37,7 @@ end
 ---@param setValue fun(dictionary: {[string]: boolean})
 ---@param title string
 ---@param _spellsDialog AceGUIWidget Parent dialog that we want to position against
-function forceTargetDialogModule:Show(buffDef, getValue, setValue, title, _spellsDialog)
+function module:Show(buffDef, getValue, setValue, title, _spellsDialog)
   self:Hide()
   local dialog = libGUI:Create("Window")
   self.dialog = dialog
@@ -64,7 +64,7 @@ function forceTargetDialogModule:Show(buffDef, getValue, setValue, title, _spell
   editBox:SetText(targetsDictToString(getValue()))
   editBox:SetCallback("OnEnterPressed", function(_widget, _event, text)
     setValue(targetsDictFromString(text))
-    forceTargetDialogModule:Hide()
+    module:Hide()
   end)
 
   local addButton = ngToolboxModule:CreateButton(

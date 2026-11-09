@@ -2,14 +2,14 @@
 -- New Generation GUI Toolbox using WowAce (AceGUI-3.0)
 
 ---@class NgToolboxModule
+local module = LibStub("Buffomat-NgToolbox") --[[@as NgToolboxModule]]
 
-local ngToolboxModule = LibStub("Buffomat-NgToolbox") --[[@as NgToolboxModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local libGUI = LibStub("AceGUI-3.0")
 
 ---@param widget AceGUIWidget
 ---@param text string The key to translation
-function ngToolboxModule:SetTooltip(widget, text)
+function module:SetTooltip(widget, text)
   widget:SetCallback("OnEnter", function()
     GameTooltip:SetOwner(widget.frame, "ANCHOR_RIGHT")
     GameTooltip:AddLine(text)
@@ -22,7 +22,7 @@ end
 
 ---@param widget AceGUIWidget
 ---@param translationKey string The key to translation
-function ngToolboxModule:TooltipWithTranslationKey(widget, translationKey)
+function module:TooltipWithTranslationKey(widget, translationKey)
   widget:SetCallback("OnEnter", function()
     GameTooltip:SetOwner(widget.frame, "ANCHOR_RIGHT")
     GameTooltip:AddLine(_t(translationKey))
@@ -36,7 +36,7 @@ end
 ---Add onenter/onleave scripts to show the tooltip with spell
 ---@param widget AceGUIWidget
 ---@param link string The string in format "spell:<id>" or "item:<id>"
-function ngToolboxModule:TooltipLink(widget, link)
+function module:TooltipLink(widget, link)
   widget:SetCallback("OnEnter", function()
     GameTooltip:SetOwner(widget.frame, "ANCHOR_RIGHT")
     GameTooltip:SetHyperlink(link)
@@ -48,7 +48,7 @@ function ngToolboxModule:TooltipLink(widget, link)
 end
 
 ---@param frame Frame
-function ngToolboxModule:SetButtonTextures(frame, normalTexture, selectedTexture, disabledTexture)
+function module:SetButtonTextures(frame, normalTexture, selectedTexture, disabledTexture)
   if not normalTexture then
     frame:ClearNormalTexture()
     frame:ClearPushedTexture()
@@ -81,17 +81,17 @@ end
 ---@param getValue fun(): boolean
 ---@param setValue fun(value: boolean)
 ---@return AceGUIWidget
-function ngToolboxModule:CreateToggle(tooltip, width, height, textureOn, textureOff, getValue, setValue)
+function module:CreateToggle(tooltip, width, height, textureOn, textureOff, getValue, setValue)
   local button = libGUI:Create("Button")
   button:SetWidth(width)
   button:SetHeight(height)
 
   local valueOnCreation = getValue()
   local setTextureOn = function()
-    ngToolboxModule:SetButtonTextures(button.frame, textureOn)
+    module:SetButtonTextures(button.frame, textureOn)
   end
   local setTextureOff = function()
-    ngToolboxModule:SetButtonTextures(button.frame, textureOff)
+    module:SetButtonTextures(button.frame, textureOff)
   end
   if valueOnCreation then setTextureOn() else setTextureOff() end
 
@@ -112,13 +112,13 @@ end
 ---@param texture string
 ---@param onClick fun()
 ---@return AceGUIWidget
-function ngToolboxModule:CreateButton(text, tooltip, width, height, texture, onClick)
+function module:CreateButton(text, tooltip, width, height, texture, onClick)
   local button = libGUI:Create("Button")
   button:SetWidth(width)
   button:SetHeight(height)
 
   if text then button:SetText(text) end
-  ngToolboxModule:SetButtonTextures(button.frame, texture)
+  module:SetButtonTextures(button.frame, texture)
   if tooltip then self:SetTooltip(button, tooltip) end
 
   ---@diagnostic disable-next-line: unused-local

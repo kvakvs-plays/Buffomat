@@ -1,8 +1,8 @@
 local BuffomatAddon = BuffomatAddon
 
----@class BomItemListCacheModule
+---@class ItemListCacheModule
+local module = LibStub("Buffomat-ItemListCache") --[[@as ItemListCacheModule]]
 
-local itemListCacheModule = LibStub("Buffomat-ItemListCache") --[[@as BomItemListCacheModule]]
 local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
 local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
@@ -27,7 +27,7 @@ local itemListCache = --[[@as BomInventory]] {}
 
 ---@return boolean
 ---@nodiscard
-function itemListCacheModule:IsOpenable(itemInfo)
+function module:IsOpenable(itemInfo)
   return itemInfo and (
     itemInfo.hasLoot
     -- Since Cataclysm, clams seem to not be "lootable" but they have an "open" spell attached.
@@ -40,7 +40,7 @@ end
 
 ---@return BomInventory
 ---@nodiscard
-function itemListCacheModule:GetItemList()
+function module:GetItemList()
   if BuffomatAddon.wipeCachedItems then
     wipe(itemListCache)
     BuffomatAddon.wipeCachedItems = false

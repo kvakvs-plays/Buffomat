@@ -14,6 +14,8 @@
 ---@field scrollFrame AceGUIWidget AceGUI scroll frame containing the spells list
 ---@field context SpellsDialogContext
 
+local module = LibStub("Buffomat-SpellsDialog") --[[@as SpellsDialogModule]]
+
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
@@ -24,12 +26,11 @@ local libGUI = LibStub("AceGUI-3.0")
 local ngStringsModule = LibStub("Buffomat-NgStrings") --[[@as NgStringsModule]]
 local ngToolboxModule = LibStub("Buffomat-NgToolbox") --[[@as NgToolboxModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
-local spellsDialogModule = LibStub("Buffomat-SpellsDialog") --[[@as SpellsDialogModule]]
 local texturesModule = LibStub("Buffomat-Textures") --[[@as TexturesModule]]
 local characterSettingsModule = LibStub("Buffomat-CharacterSettings") --[[@as CharacterSettingsModule]]
 
 ---@param preselectCategory BuffCategoryName|nil
-function spellsDialogModule:Show(preselectCategory)
+function module:Show(preselectCategory)
   -- InCombat Protection is checked by the caller (Update***Tab)
   if allBuffsModule.selectedBuffs == nil then
     return false
@@ -73,7 +74,7 @@ function spellsDialogModule:Show(preselectCategory)
   self:FillBuffsList()
 end
 
-function spellsDialogModule:AddProfileSelector()
+function module:AddProfileSelector()
   local profileSelector = libGUI:Create("Dropdown")
   profileSelector:SetWidth(250)
   profileSelector:SetLabel(_t("label.SpellsDialog.ProfileSelector"))
@@ -85,14 +86,14 @@ function spellsDialogModule:AddProfileSelector()
   profileSelector:SetValue(self.useProfileName)
 
   profileSelector:SetCallback("OnValueChanged", function(_control, _callbackName, value)
-    spellsDialogModule:Hide()
-    spellsDialogModule:Show(value)
+    module:Hide()
+    module:Show(value)
   end)
 
   self.scrollFrame:AddChild(profileSelector)
 end
 
-function spellsDialogModule:FillBuffsList()
+function module:FillBuffsList()
   self.context = {
     playerIsHorde = UnitFactionGroup("player") == "Horde",
     categoryFrames = {},
@@ -116,7 +117,7 @@ function spellsDialogModule:FillBuffsList()
   self.scrollFrame:DoLayout()
 end
 
-function spellsDialogModule:CategoryLabel(catId)
+function module:CategoryLabel(catId)
   if not catId then
     return _t("Category_none")
   end
@@ -125,13 +126,13 @@ end
 
 ---@param category BuffCategoryName
 ---@return boolean
-function spellsDialogModule:CategoryIsHidden(category)
+function module:CategoryIsHidden(category)
   return BuffomatCharacter.BuffCategoriesHidden[category] == true
 end
 
 -- Pre-create category frames
 ---@param context SpellsDialogContext
-function spellsDialogModule:CreateCategoryFrames(context)
+function module:CreateCategoryFrames(context)
   for _, cat in ipairs(allBuffsModule.buffCategories) do
     -- Count known buffs in this category
     local count = 0
@@ -150,7 +151,7 @@ end
 ---Contains the text heading and checkbox to show/hide the category
 ---@param context SpellsDialogContext
 ---@param cat BuffCategoryName
-function spellsDialogModule:CreateCategoryFrame(context, cat)
+function module:CreateCategoryFrame(context, cat)
   local categoryFrame = libGUI:Create("SimpleGroup")
   context.categoryFrames[cat] = categoryFrame
   categoryFrame:SetLayout("List")
@@ -176,8 +177,8 @@ function spellsDialogModule:CreateCategoryFrame(context, cat)
   showCategoryCheckbox:SetLabel("")
   showCategoryCheckbox:SetCallback("OnValueChanged", function(_control, _callbackName, value)
     BuffomatCharacter.BuffCategoriesHidden[cat] = not value
-    spellsDialogModule:Hide()
-    spellsDialogModule:Show(spellsDialogModule.useProfileName)
+    module:Hide()
+    module:Show(module.useProfileName)
   end)
   headingPanel:AddChild(showCategoryCheckbox)
 end
@@ -187,7 +188,7 @@ end
 -- provide this buff from the smallest to largest value.
 ---@param buffDef BomBuffDefinition
 ---@return AceGUIWidget
-function spellsDialogModule:CreateInfoIcon(buffDef)
+function module:CreateInfoIcon(buffDef)
   local iconButton = libGUI:Create("Button")
   -- iconButton:SetImage(buffDef.icon)
   iconButton:SetWidth(20)
@@ -224,7 +225,7 @@ end
 -- Player choices are stored separately in their profile
 ---@param buffDef BomBuffDefinition
 ---@param _context SpellsDialogContext
-function spellsDialogModule:CreateBuffRow(buffDef, profileBuff, _context)
+function module:CreateBuffRow(buffDef, profileBuff, _context)
   local row = libGUI:Create("SimpleGroup")
   row:SetLayout("Flow")
   row:SetFullWidth(true)
@@ -299,7 +300,7 @@ function spellsDialogModule:CreateBuffRow(buffDef, profileBuff, _context)
   return row
 end
 
-function spellsDialogModule:AddMainhandToggle(row, profileBuff)
+function module:AddMainhandToggle(row, profileBuff)
   local mainhandToggle = ngToolboxModule:CreateToggle(
     _t("tooltip.mainhand"),
     24, 20, texturesModule.ICON_MAINHAND_ON, texturesModule.ICON_MAINHAND_OFF,
@@ -309,7 +310,7 @@ function spellsDialogModule:AddMainhandToggle(row, profileBuff)
   row:AddChild(mainhandToggle)
 end
 
-function spellsDialogModule:AddOffhandToggle(row, profileBuff)
+function module:AddOffhandToggle(row, profileBuff)
   local offhandToggle = ngToolboxModule:CreateToggle(
     _t("tooltip.offhand"),
     24, 20, texturesModule.ICON_OFFHAND_ON, texturesModule.ICON_OFFHAND_OFF,
@@ -322,7 +323,7 @@ end
 ---Add class selector for buff which makes sense to differentiate per class.
 ---@param row AceGUIWidget The GUI panel where controls are added
 ---@param profileBuff PlayerBuffChoice The profile buff currently being displayed
-function spellsDialogModule:AddSelfCastToggle(row, profileBuff)
+function module:AddSelfCastToggle(row, profileBuff)
   local selfCastTooltip = ngStringsModule:FormatTexture(texturesModule.ICON_SELF_CAST_ON)
       .. " - " .. _t("TooltipSelfCastCheckbox_Self") .. "|n"
       .. ngStringsModule:FormatTexture(texturesModule.ICON_SELF_CAST_OFF)
@@ -345,7 +346,7 @@ end
 ---Add Cast-on-class checkboxes one per class, and for 2 extra roles (tank, pet)
 ---@param row AceGUIWidget The GUI panel where controls are added
 ---@param profileBuff PlayerBuffChoice The profile buff currently being displayed
-function spellsDialogModule:AddClassRoleToggles(row, profileBuff)
+function module:AddClassRoleToggles(row, profileBuff)
   for _, class in ipairs(constModule.CLASSES) do
     self:AddClassRoleToggle(row, profileBuff, class)
   end -- for each class in class_sort_orderend
@@ -358,7 +359,7 @@ end
 ---@param row AceGUIWidget The GUI panel where controls are added
 ---@param profileBuff PlayerBuffChoice The profile buff currently being displayed
 ---@param classOrRole ClassName
-function spellsDialogModule:AddClassRoleToggle(row, profileBuff, classOrRole)
+function module:AddClassRoleToggle(row, profileBuff, classOrRole)
   local skip = false
   local hordePaladin = self.context.playerIsHorde and classOrRole == "PALADIN"
   local allianceShaman = not self.context.playerIsHorde and classOrRole == "SHAMAN"
@@ -394,7 +395,7 @@ end
 ---@param row AceGUIWidget The GUI panel where controls are added
 ---@param buffDef BomBuffDefinition
 ---@param profileBuff PlayerBuffChoice The profile buff currently being displayed
-function spellsDialogModule:AddForceTargets(row, buffDef, profileBuff)
+function module:AddForceTargets(row, buffDef, profileBuff)
   -- Force Cast Button (+)
   local forceToggle = ngToolboxModule:CreateButton(
     nil,
@@ -408,7 +409,7 @@ function spellsDialogModule:AddForceTargets(row, buffDef, profileBuff)
         _t("title.ForceTarget"),
         self.dialog
       )
-      spellsDialogModule:AttachDialog(dialog)
+      module:AttachDialog(dialog)
     end)
   row:AddChild(forceToggle)
 
@@ -425,13 +426,13 @@ function spellsDialogModule:AddForceTargets(row, buffDef, profileBuff)
         _t("title.ExcludeTarget"),
         self.dialog
       )
-      spellsDialogModule:AttachDialog(dialog)
+      module:AttachDialog(dialog)
     end)
   row:AddChild(excludeToggle)
 end
 
 ---Attach the floating dialog 'dialog' to our main 'self.dialog' right side.
-function spellsDialogModule:AttachDialog(attachDialog)
+function module:AttachDialog(attachDialog)
   -- Instead of adding as a child, set the parent directly
   attachDialog.frame:SetParent(self.dialog.frame)
 
@@ -444,7 +445,7 @@ function spellsDialogModule:AttachDialog(attachDialog)
   attachDialog.frame:SetResizable(false)
 end
 
-function spellsDialogModule:Hide()
+function module:Hide()
   forceTargetDialogModule:Hide()
 
   if self.dialog then
@@ -462,7 +463,7 @@ function spellsDialogModule:Hide()
   end
 end
 
-function spellsDialogModule:AddGroupScanSelector()
+function module:AddGroupScanSelector()
   -- Add settings frame with icon, icon is not clickable
   local frame = libGUI:Create("SimpleGroup")
   frame:SetLayout("Flow")

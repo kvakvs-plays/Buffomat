@@ -16,8 +16,8 @@ local addonName, ns = ...
 ---@field usesTrackingSettings boolean
 ---@field playerBagIds number[]
 ---@field playerClass ClassName
+local module = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 
-local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local C_AddOns = _G["C_AddOns"]
 local C_Container = _G["C_Container"]
 local C_Item = _G["C_Item"]
@@ -31,33 +31,33 @@ local C_UnitAuras = _G["C_UnitAuras"]
 local issecretvalue = _G["issecretvalue"]
 
 -- local _, _, _, tocversion = GetBuildInfo()
-envModule.isMistsOfPandaria = WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC
-envModule.haveMistsOfPandaria = envModule.isMistsOfPandaria
+module.isMistsOfPandaria = WOW_PROJECT_ID == WOW_PROJECT_MISTS_CLASSIC
+module.haveMistsOfPandaria = module.isMistsOfPandaria
 
-envModule.isCata = WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
-envModule.haveCata = envModule.isCata
+module.isCata = WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC
+module.haveCata = module.isCata
 
-envModule.isWotLK = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
-envModule.haveWotLK = envModule.isWotLK or envModule.isCata
+module.isWotLK = WOW_PROJECT_ID == WOW_PROJECT_WRATH_CLASSIC
+module.haveWotLK = module.isWotLK or module.isCata
 
-envModule.isTBC = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
-envModule.haveTBC = envModule.isWotLK or envModule.isTBC or envModule.isCata
+module.isTBC = WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC
+module.haveTBC = module.isWotLK or module.isTBC or module.isCata
 
 -- Forever runs the Mainline client with Classic content. Its WOW_PROJECT_ID
 -- changed between builds (1 = Mainline on beta 69913, 18 on 1.60.1.70205),
 -- so detect it by the 1.60 interface range, which no other client uses.
 -- Do not enable Classic spell definitions on ordinary Retail.
 local interfaceVersion = GetBuildInfo and select(4, GetBuildInfo()) or 0
-envModule.isForever = interfaceVersion >= 16000 and interfaceVersion < 17000
+module.isForever = interfaceVersion >= 16000 and interfaceVersion < 17000
     and (LE_EXPANSION_LEVEL_CURRENT == nil or LE_EXPANSION_LEVEL_CURRENT == 0)
-envModule.isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC or envModule.isForever
-envModule.CAT_FORM = CAT_FORM or (envModule.isForever and 1 or nil)
+module.isClassic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC or module.isForever
+module.CAT_FORM = CAT_FORM or (module.isForever and 1 or nil)
 
 -- Select APIs by capability, not expansion: Forever has Classic content but a
 -- Mainline API. Keep legacy return shapes where existing callers expect them.
 ---@param value any
 ---@return boolean
-function envModule.IsSecretValue(value)
+function module.IsSecretValue(value)
   return issecretvalue ~= nil and issecretvalue(value)
 end
 
@@ -67,10 +67,10 @@ local restrictionTypes = Enum and Enum.AddOnRestrictionType
 local restrictionStates = Enum and Enum.AddOnRestrictionState
 local isRestrictionActive = C_RestrictedActions and C_RestrictedActions.IsAddOnRestrictionActive
 local getRestrictionState = C_RestrictedActions and C_RestrictedActions.GetAddOnRestrictionState
-envModule.supportsAuraRestrictions = isRestrictionActive ~= nil and restrictionTypes ~= nil
+module.supportsAuraRestrictions = isRestrictionActive ~= nil and restrictionTypes ~= nil
 -- PvPMatch goes last so it is reported only when no stricter restriction is also active.
 local auraRestrictions = {} ---@type {name: KvAuraRestrictionName, value: number}[]
-if envModule.supportsAuraRestrictions then
+if module.supportsAuraRestrictions then
   for _, name in ipairs({ "Combat", "Encounter", "ChallengeMode", "PvPMatch" }) do
     if restrictionTypes[name] ~= nil then
       auraRestrictions[#auraRestrictions + 1] = { name = name, value = restrictionTypes[name] }
@@ -86,21 +86,21 @@ end
 local function isRestrictionOn(restriction)
   if getRestrictionState and restrictionStates and restrictionStates.Inactive ~= nil then
     local state = getRestrictionState(restriction)
-    if envModule.IsSecretValue(state) then
+    if module.IsSecretValue(state) then
       return true
     elseif state ~= nil then
       return state ~= restrictionStates.Inactive
     end
   end
   local active = isRestrictionActive(restriction)
-  return envModule.IsSecretValue(active) or active == true
+  return module.IsSecretValue(active) or active == true
 end
 
 ---Name the active restriction which hides aura data, or nil when auras are readable.
 ---"PvPMatch" means it is the only one: auras stay secret for the whole match, even
 ---out of combat, while bags and protected actions remain usable.
 ---@return KvAuraRestrictionName?
-function envModule.GetAuraRestriction()
+function module.GetAuraRestriction()
   for _, restriction in ipairs(auraRestrictions) do
     if isRestrictionOn(restriction.value) then
       return restriction.name
@@ -111,19 +111,19 @@ end
 
 ---Restrictions may outlast combat; never query auras while any is active.
 ---@return boolean
-function envModule.IsAuraRestricted()
-  return envModule.GetAuraRestriction() ~= nil
+function module.IsAuraRestricted()
+  return module.GetAuraRestriction() ~= nil
 end
 
 ---@type fun(addon: string|number, field: string): string?
-envModule.GetAddOnMetadata = (C_AddOns and C_AddOns.GetAddOnMetadata) or GetAddOnMetadata or GetAddonMetadata
-envModule.GetAddonMetadata = envModule.GetAddOnMetadata -- Compatibility with existing KvLib callers.
+module.GetAddOnMetadata = (C_AddOns and C_AddOns.GetAddOnMetadata) or GetAddOnMetadata or GetAddonMetadata
+module.GetAddonMetadata = module.GetAddOnMetadata -- Compatibility with existing KvLib callers.
 
 ---Modern clients moved macro limits into Constants.MacroConsts.
 ---Read on demand so optional UI loading cannot leave cached nil limits.
 ---@return number? accountLimit
 ---@return number? characterLimit
-function envModule.GetMacroLimits()
+function module.GetMacroLimits()
   local macroConsts = Constants and Constants.MacroConsts
   return (macroConsts and macroConsts.MAX_ACCOUNT_MACROS) or MAX_ACCOUNT_MACROS,
       (macroConsts and macroConsts.MAX_CHARACTER_MACROS) or MAX_CHARACTER_MACROS
@@ -134,14 +134,14 @@ local getItemInfo = (C_Item and C_Item.GetItemInfo) or GetItemInfo
 local getSpellPowerCost = (C_Spell and C_Spell.GetSpellPowerCost) or GetSpellPowerCost
 
 ---@type fun(item: number|string): string?, string?, number?, number?, number?, string?, string?, number?, string?, number|string|nil, number?, number?, number?, number?, number?, number?, boolean?
-function envModule.GetItemInfo(item)
+function module.GetItemInfo(item)
   if item ~= nil and getItemInfo then
     return getItemInfo(item)
   end
 end
 
 ---@type fun(spell: number|string): {name: string, cost: number, type: number}[]?
-function envModule.GetSpellPowerCost(spell)
+function module.GetSpellPowerCost(spell)
   if spell ~= nil and getSpellPowerCost then
     return getSpellPowerCost(spell)
   end
@@ -153,7 +153,7 @@ local getSpellSubtext = (C_Spell and C_Spell.GetSpellSubtext) or GetSpellSubtext
 
 ---@param spell number|string|nil Spell ID, name, or link (not a spellbook slot).
 ---@return string? rank
-function envModule.GetSpellSubtext(spell)
+function module.GetSpellSubtext(spell)
   if spell == nil then
     return nil
   end
@@ -175,7 +175,7 @@ end
 ---@return number? maxRange
 ---@return number? spellID
 ---@return number|string? originalIcon
-function envModule.GetSpellInfo(spell)
+function module.GetSpellInfo(spell)
   -- Optional spell references can be absent; C_Spell rejects nil identifiers.
   if spell == nil then
     return nil
@@ -185,7 +185,7 @@ function envModule.GetSpellInfo(spell)
     if info == nil then
       return nil
     end
-    return info.name, envModule.GetSpellSubtext(spell), info.iconID, info.castTime,
+    return info.name, module.GetSpellSubtext(spell), info.iconID, info.castTime,
         info.minRange, info.maxRange, info.spellID, info.originalIconID
   elseif legacyGetSpellInfo then
     return legacyGetSpellInfo(spell)
@@ -201,15 +201,15 @@ local legacyGetSpellCooldown = GetSpellCooldown
 ---@return number? duration
 ---@return number? enabled Legacy 0/1 value.
 ---@return number? modRate
-function envModule.GetSpellCooldown(spell)
+function module.GetSpellCooldown(spell)
   if spell == nil then
     return nil
   end
   if getSpellCooldown then
     local info = getSpellCooldown(spell)
-    if envModule.IsSecretValue(info) or info == nil
-        or envModule.IsSecretValue(info.startTime) or envModule.IsSecretValue(info.duration)
-        or envModule.IsSecretValue(info.isEnabled) or envModule.IsSecretValue(info.modRate) then
+    if module.IsSecretValue(info) or info == nil
+        or module.IsSecretValue(info.startTime) or module.IsSecretValue(info.duration)
+        or module.IsSecretValue(info.isEnabled) or module.IsSecretValue(info.modRate) then
       return nil
     end
     return info.startTime, info.duration, info.isEnabled and 1 or 0, info.modRate
@@ -225,13 +225,13 @@ local legacyIsSpellInRange = IsSpellInRange
 ---@param spell number|string
 ---@param unit string?
 ---@return number? inRange Unknown or restricted range returns nil.
-function envModule.IsSpellInRange(spell, unit)
+function module.IsSpellInRange(spell, unit)
   if spell == nil then
     return nil
   end
   if isSpellInRange then
     local inRange = isSpellInRange(spell, unit)
-    if envModule.IsSecretValue(inRange) or inRange == nil then
+    if module.IsSecretValue(inRange) or inRange == nil then
       return nil
     end
     return inRange and 1 or 0
@@ -248,13 +248,13 @@ local legacyIsSpellKnown = IsSpellKnown
 ---@param spellID number
 ---@param isPet boolean?
 ---@return boolean
-function envModule.IsSpellKnown(spellID, isPet)
+function module.IsSpellKnown(spellID, isPet)
   if spellID == nil then
     return false
   end
   if isSpellKnown and spellBanks then
     local known = isSpellKnown(spellID, isPet and spellBanks.Pet or spellBanks.Player)
-    if envModule.IsSecretValue(known) then
+    if module.IsSecretValue(known) then
       return false
     end
     return known
@@ -265,7 +265,7 @@ function envModule.IsSpellKnown(spellID, isPet)
 end
 
 ---@type fun(bag: number): number
-envModule.GetContainerNumSlots = (C_Container and C_Container.GetContainerNumSlots) or GetContainerNumSlots
+module.GetContainerNumSlots = (C_Container and C_Container.GetContainerNumSlots) or GetContainerNumSlots
 local getContainerItemCooldown = (C_Container and C_Container.GetContainerItemCooldown) or GetContainerItemCooldown
 
 ---Cooldowns can be secret during a restriction (e.g. a PvP match); callers compare
@@ -275,9 +275,9 @@ local getContainerItemCooldown = (C_Container and C_Container.GetContainerItemCo
 ---@return number? startTime
 ---@return number? duration
 ---@return number|boolean|nil enable
-function envModule.GetContainerItemCooldown(bag, slot)
+function module.GetContainerItemCooldown(bag, slot)
   local startTime, duration, enable = getContainerItemCooldown(bag, slot)
-  if envModule.IsSecretValue(startTime) or envModule.IsSecretValue(duration) or envModule.IsSecretValue(enable) then
+  if module.IsSecretValue(startTime) or module.IsSecretValue(duration) or module.IsSecretValue(enable) then
     return nil
   end
   return startTime, duration, enable
@@ -301,7 +301,7 @@ local getContainerItemInfo = (C_Container and C_Container.GetContainerItemInfo) 
 ---@param bag number
 ---@param slot number
 ---@return KvContainerItemInfo? info
-function envModule.GetContainerItemInfo(bag, slot)
+function module.GetContainerItemInfo(bag, slot)
   local icon, count, locked, quality, readable, lootable, link, filtered, noValue, itemID, bound =
       getContainerItemInfo(bag, slot)
   if icon == nil or type(icon) == "table" then
@@ -317,9 +317,9 @@ end
 ---Backpack, equipped bags, and the reagent bag where one exists. Built once
 ---because bag scans run often; iterate with ipairs and do not modify.
 ---@type number[]
-envModule.playerBagIds = { BACKPACK_CONTAINER or 0 }
+module.playerBagIds = { BACKPACK_CONTAINER or 0 }
 for bag = 1, tonumber(NUM_BAG_SLOTS) or 4 do
-  table.insert(envModule.playerBagIds, bag)
+  table.insert(module.playerBagIds, bag)
 end
 -- Classic clients carry the shared ReagentBag enum too, but their bag 5 is the
 -- first bank bag. Only clients that declare reagent bag slots (Mainline and
@@ -327,18 +327,18 @@ end
 local inventoryConstants = Constants and Constants.InventoryConstants
 local numReagentBags = inventoryConstants and tonumber(inventoryConstants.NumReagentBagSlots) or 0
 if numReagentBags > 0 and Enum and Enum.BagIndex and Enum.BagIndex.ReagentBag then
-  table.insert(envModule.playerBagIds, Enum.BagIndex.ReagentBag)
+  table.insert(module.playerBagIds, Enum.BagIndex.ReagentBag)
 end
 
 ---@type fun(): number
-envModule.GetNumTrackingTypes = (C_Minimap and C_Minimap.GetNumTrackingTypes) or GetNumTrackingTypes
+module.GetNumTrackingTypes = (C_Minimap and C_Minimap.GetNumTrackingTypes) or GetNumTrackingTypes
 ---@type fun(index: number, enabled: boolean)
-envModule.SetTracking = (C_Minimap and C_Minimap.SetTracking) or SetTracking
+module.SetTracking = (C_Minimap and C_Minimap.SetTracking) or SetTracking
 ---@type fun(): number|string|nil
-envModule.GetTrackingTexture = GetTrackingTexture
+module.GetTrackingTexture = GetTrackingTexture
 local getTrackingInfo = (C_Minimap and C_Minimap.GetTrackingInfo) or GetTrackingInfo
-envModule.usesTrackingSettings = (envModule.haveTBC or envModule.isForever or GetTrackingTexture == nil)
-    and envModule.GetNumTrackingTypes ~= nil and getTrackingInfo ~= nil and envModule.SetTracking ~= nil
+module.usesTrackingSettings = (module.haveTBC or module.isForever or GetTrackingTexture == nil)
+    and module.GetNumTrackingTypes ~= nil and getTrackingInfo ~= nil and module.SetTracking ~= nil
 
 ---Normalize both the Mainline tracking table and Classic tracking tuples.
 ---@param index number
@@ -348,7 +348,7 @@ envModule.usesTrackingSettings = (envModule.haveTBC or envModule.isForever or Ge
 ---@return string? category
 ---@return number? nesting
 ---@return number? spellID
-function envModule.GetTrackingInfo(index)
+function module.GetTrackingInfo(index)
   if not getTrackingInfo then
     return nil
   end
@@ -386,15 +386,15 @@ local legacyUnitAura = UnitAura
 ---@param filter string?
 ---@return BomUnitAuraResult? aura
 ---@return boolean readable False for combat, missing API, or secret aura fields.
-function envModule.GetUnitAura(unit, index, filter)
-  if InCombatLockdown() or envModule.IsAuraRestricted() then
+function module.GetUnitAura(unit, index, filter)
+  if InCombatLockdown() or module.IsAuraRestricted() then
     return nil, false
   end
 
   local aura ---@type BomUnitAuraResult
   if getAuraDataByIndex then
     local data = getAuraDataByIndex(unit, index, filter)
-    if envModule.IsSecretValue(data) then
+    if module.IsSecretValue(data) then
       return nil, false
     elseif data == nil then
       return nil, true
@@ -410,7 +410,7 @@ function envModule.GetUnitAura(unit, index, filter)
     local name, icon, count, debuffType, duration, expirationTime, source, isStealable,
         nameplateShowPersonal, spellId, canApplyAura, isBossDebuff, castByPlayer, nameplateShowAll, timeMod =
         legacyUnitAura(unit, index, filter)
-    if envModule.IsSecretValue(name) then
+    if module.IsSecretValue(name) then
       return nil, false
     elseif name == nil then
       return nil, true
@@ -427,7 +427,7 @@ function envModule.GetUnitAura(unit, index, filter)
 
   -- Consumers use these values as keys, conditions, and arithmetic operands.
   for _, value in pairs(aura) do
-    if envModule.IsSecretValue(value) then
+    if module.IsSecretValue(value) then
       return nil, false
     end
   end
@@ -441,12 +441,12 @@ local unitPower, unitPowerMax, unitInRange, unitIsUnit = UnitPower, UnitPowerMax
 ---@param unit1 string
 ---@param unit2 string
 ---@return boolean
-function envModule.UnitIsUnit(unit1, unit2)
+function module.UnitIsUnit(unit1, unit2)
   if unit1 == unit2 then
     return true
   end
   local same = unitIsUnit(unit1, unit2)
-  if envModule.IsSecretValue(same) then
+  if module.IsSecretValue(same) then
     return false
   end
   return same == true
@@ -457,9 +457,9 @@ local isItemInRange = (C_Item and C_Item.IsItemInRange) or IsItemInRange
 ---@param unit string
 ---@param powerType number?
 ---@return number?
-function envModule.UnitPower(unit, powerType)
+function module.UnitPower(unit, powerType)
   local value = unitPower(unit, powerType)
-  if not envModule.IsSecretValue(value) then
+  if not module.IsSecretValue(value) then
     return value
   end
 end
@@ -467,9 +467,9 @@ end
 ---@param unit string
 ---@param powerType number?
 ---@return number?
-function envModule.UnitPowerMax(unit, powerType)
+function module.UnitPowerMax(unit, powerType)
   local value = unitPowerMax(unit, powerType)
-  if not envModule.IsSecretValue(value) then
+  if not module.IsSecretValue(value) then
     return value
   end
 end
@@ -477,9 +477,9 @@ end
 ---@param unit string
 ---@return boolean? inRange
 ---@return boolean? checkedRange
-function envModule.UnitInRange(unit)
+function module.UnitInRange(unit)
   local inRange, checkedRange = unitInRange(unit)
-  if not envModule.IsSecretValue(inRange) and not envModule.IsSecretValue(checkedRange) then
+  if not module.IsSecretValue(inRange) and not module.IsSecretValue(checkedRange) then
     return inRange, checkedRange
   end
 end
@@ -487,27 +487,27 @@ end
 ---@param item number|string
 ---@param unit string
 ---@return boolean?
-function envModule.IsItemInRange(item, unit)
+function module.IsItemInRange(item, unit)
   if item == nil or not isItemInRange then
     return nil
   end
   local inRange = isItemInRange(item, unit)
-  if not envModule.IsSecretValue(inRange) then
+  if not module.IsSecretValue(inRange) then
     return inRange
   end
 end
 
 ---@type fun(slotName: string): number
-envModule.GetInventorySlotInfo = (C_PaperDollInfo and C_PaperDollInfo.GetInventorySlotInfo) or GetInventorySlotInfo
+module.GetInventorySlotInfo = (C_PaperDollInfo and C_PaperDollInfo.GetInventorySlotInfo) or GetInventorySlotInfo
 ---@type fun(): number
-envModule.GetActiveTalentGroup = (C_SpecializationInfo and C_SpecializationInfo.GetActiveSpecGroup)
+module.GetActiveTalentGroup = (C_SpecializationInfo and C_SpecializationInfo.GetActiveSpecGroup)
     or GetActiveTalentGroup
 
 -- Capabilities which do not follow the expansion order. Forever has Classic content (haveTBC is
 -- false: no flying, no TBC pet or imbue rules) but casts the "group" buffs (Prayer, Gift,
 -- Brilliance, Battle Shout) on the whole raid like WotLK, and has dual specialization.
-envModule.groupBuffsRaidWide = envModule.haveWotLK or envModule.isForever
-envModule.hasDualSpec = envModule.haveWotLK or (envModule.isForever and envModule.GetActiveTalentGroup ~= nil)
+module.groupBuffsRaidWide = module.haveWotLK or module.isForever
+module.hasDualSpec = module.haveWotLK or (module.isForever and module.GetActiveTalentGroup ~= nil)
 
 local C_EventUtils = _G["C_EventUtils"]
 
@@ -515,7 +515,7 @@ local C_EventUtils = _G["C_EventUtils"]
 ---so callers there must already gate the event by expansion.
 ---@param event string
 ---@return boolean
-function envModule.IsEventValid(event)
+function module.IsEventValid(event)
   if C_EventUtils and C_EventUtils.IsEventValid then
     return C_EventUtils.IsEventValid(event) == true
   end
@@ -529,7 +529,7 @@ local getItemSubClassInfo = (C_Item and C_Item.GetItemSubClassInfo) or _G["GetIt
 ---@param item number|string Item ID, name or link
 ---@return number? classID 2 for weapons
 ---@return number? subclassID Enum.ItemWeaponSubclass value for weapons
-function envModule.GetItemClass(item)
+function module.GetItemClass(item)
   if item == nil or not getItemInfoInstant then
     return nil
   end
@@ -541,7 +541,7 @@ end
 ---@param classID number
 ---@param subclassID number
 ---@return string?
-function envModule.GetItemSubClassName(classID, subclassID)
+function module.GetItemSubClassName(classID, subclassID)
   if getItemSubClassInfo then
     return (getItemSubClassInfo(classID, subclassID))
   end
@@ -553,20 +553,20 @@ local isPlayerSpell = _G["IsPlayerSpell"]
 ---account (Legacy) talents, which may not be in the spellbook.
 ---@param spellID number
 ---@return boolean
-function envModule.IsPlayerSpell(spellID)
+function module.IsPlayerSpell(spellID)
   if spellID == nil then
     return false
   end
   if isPlayerSpell then
     local known = isPlayerSpell(spellID)
-    return not envModule.IsSecretValue(known) and known == true
+    return not module.IsSecretValue(known) and known == true
   end
-  return envModule.IsSpellKnown(spellID)
+  return module.IsSpellKnown(spellID)
 end
 
 ---@param frame Frame
 ---@return boolean
-function envModule.MouseIsOver(frame)
+function module.MouseIsOver(frame)
   if frame.IsMouseOver then
     return frame:IsMouseOver()
   end
@@ -576,8 +576,8 @@ end
 ---Chat activation is restricted on Forever; callers can display the command instead.
 ---@param text string
 ---@return boolean opened
-function envModule.ChatFrame_OpenChat(text)
-  if not envModule.isForever and ChatFrame_OpenChat then
+function module.ChatFrame_OpenChat(text)
+  if not module.isForever and ChatFrame_OpenChat then
     ChatFrame_OpenChat(text)
     return true
   end
@@ -587,8 +587,8 @@ end
 ---Use the edit-box method on clients that moved the global chat helper.
 ---@param editBox table
 ---@return boolean sent
-function envModule.ChatEdit_SendText(editBox)
-  if envModule.isForever then
+function module.ChatEdit_SendText(editBox)
+  if module.isForever then
     return false
   elseif editBox.SendText then
     editBox:SendText()
@@ -612,16 +612,16 @@ local legacyGetWeaponEnchantInfo = GetWeaponEnchantInfo
 ---@return number? enchantID
 local function getWeaponEnchant(weaponSlot)
   local enchants = getWeaponEnchants(weaponSlot)
-  if envModule.IsSecretValue(enchants) or enchants == nil then
+  if module.IsSecretValue(enchants) or enchants == nil then
     return nil
   end
   for _, enchant in pairs(enchants) do
-    if envModule.IsSecretValue(enchant.hasEnchant) then
+    if module.IsSecretValue(enchant.hasEnchant) then
       return nil
     end
     if enchant.hasEnchant then
-      if envModule.IsSecretValue(enchant.timeLeft) or envModule.IsSecretValue(enchant.charges)
-          or envModule.IsSecretValue(enchant.enchantID) or enchant.timeLeft == nil or enchant.enchantID == nil then
+      if module.IsSecretValue(enchant.timeLeft) or module.IsSecretValue(enchant.charges)
+          or module.IsSecretValue(enchant.enchantID) or enchant.timeLeft == nil or enchant.enchantID == nil then
         return nil
       end
       return true, enchant.timeLeft, enchant.charges, enchant.enchantID
@@ -632,7 +632,7 @@ end
 
 ---Both weapon slots use the same contract on Classic and Forever.
 ---@return boolean?, number?, number?, number?, boolean?, number?, number?, number?
-function envModule.GetWeaponEnchantInfo()
+function module.GetWeaponEnchantInfo()
   if getWeaponEnchants and weaponSlots then
     local main, mainTime, mainCharges, mainID = getWeaponEnchant(weaponSlots.MainHand)
     local off, offTime, offCharges, offID = getWeaponEnchant(weaponSlots.OffHand)
@@ -642,4 +642,4 @@ function envModule.GetWeaponEnchantInfo()
   end
 end
 
-envModule.playerClass = select(2, UnitClass("player"))
+module.playerClass = select(2, UnitClass("player"))

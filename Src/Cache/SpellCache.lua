@@ -6,11 +6,11 @@ local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 ---@class BomSpellCache
 ---@field [BomSpellCacheKey] BomSpellCacheElement
 
----@class BomSpellCacheModule
+---@class SpellCacheModule
 ---@field cache BomSpellCache Stores arg to results mapping for GetItemInfo
 
-local spellCacheModule = LibStub("Buffomat-SpellCache") --[[@as BomSpellCacheModule]]
-spellCacheModule.cache = --[[@as BomSpellCache]] {}
+local module = LibStub("Buffomat-SpellCache") --[[@as SpellCacheModule]]
+module.cache = --[[@as BomSpellCache]] {}
 
 local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
 
@@ -28,8 +28,8 @@ local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
 ---@return BomSpellCacheElement?
 ---@nodiscard
 function BuffomatAddon.GetSpellInfo(arg)
-  if spellCacheModule.cache[arg] ~= nil then
-    return spellCacheModule.cache[arg]
+  if module.cache[arg] ~= nil then
+    return module.cache[arg]
   end
 
   local name, rank, icon, castTime, minRange, maxRange, spellId = envModule.GetSpellInfo(arg)
@@ -51,22 +51,22 @@ function BuffomatAddon.GetSpellInfo(arg)
     spellId  = spellId
   }
 
-  spellCacheModule.cache[arg] = cacheSpell
+  module.cache[arg] = cacheSpell
   return cacheSpell
 end
 
 ---@param arg BomSpellCacheKey
 ---@nodiscard
-function spellCacheModule:HasSpellCached(arg)
+function module:HasSpellCached(arg)
   return self.cache[arg] ~= nil
 end
 
 ---Precache spell and store it
 ---@param spellId number
 ---@param onLoaded function Called with loaded BomSpellCacheElement
-function spellCacheModule:LoadSpell(spellId, onLoaded)
-  if spellCacheModule.cache[spellId] ~= nil then
-    onLoaded(spellCacheModule.cache[spellId])
+function module:LoadSpell(spellId, onLoaded)
+  if module.cache[spellId] ~= nil then
+    onLoaded(module.cache[spellId])
     return
   end
 

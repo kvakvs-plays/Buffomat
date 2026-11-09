@@ -5,9 +5,8 @@ local BuffomatAddon = BuffomatAddon
 ---@field value boolean
 
 ---@class OptionsPopupModule
--- -@field behaviourSettings BomBehaviourSetting[]
+local module = LibStub("Buffomat-OptionsPopup") --[[@as OptionsPopupModule]]
 
-local optionsPopupModule = LibStub("Buffomat-OptionsPopup") --[[@as OptionsPopupModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
@@ -20,17 +19,17 @@ local characterSettingsModule = LibStub("Buffomat-CharacterSettings") --[[@as Ch
 ---Makes a tuple to pass to the menubuilder to display a settings checkbox in popup menu
 ---@param db table - BuffomatShared reference to read settings from it
 ---@param var string Variable name from optionsPopupModule.BehaviourSettings
-function optionsPopupModule:MakeSettingsRow(db, var)
+function module:MakeSettingsRow(db, var)
   return _t("options.short." .. var), false, db, var
 end
 
-function optionsPopupModule.OpenOptions()
+function module.OpenOptions()
   LibStub("AceConfigDialog-3.0"):Open(constModule.SHORT_TITLE)
 end
 
 ---Populate the [⚙] popup menu
 ---@param minimap boolean
-function optionsPopupModule:Setup(control, minimap)
+function module:Setup(control, minimap)
   local name = (control:GetName() or "nil") .. (minimap and "Minimap" or "Normal")
   local dyn = BuffomatAddon.popupMenuDynamic ---@type GPIPopupDynamic
   local menuItems = {} --[[@as BomMenuItemDef[] ]]
@@ -116,7 +115,7 @@ function optionsPopupModule:Setup(control, minimap)
   --self:PopupQuickOptions()
 
   table.insert(menuItems, popupModule:Clickable(_t("optionsMenu.Settings"),
-    optionsPopupModule.OpenOptions, 1, nil))
+    module.OpenOptions, 1, nil))
 
   dyn:SetMenuItems(menuItems)
   dyn:Show(control or "cursor", 0, 0)

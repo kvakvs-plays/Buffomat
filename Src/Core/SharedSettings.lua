@@ -1,9 +1,8 @@
 ---@class SharedSettingsModule
-
-local sharedSettingsModule = LibStub("Buffomat-SharedSettings") --[[@as SharedSettingsModule]]
+local module = LibStub("Buffomat-SharedSettings") --[[@as SharedSettingsModule]]
 
 --- Values to use when the saved data is evolving with an update, and the key doesn't exist
-sharedSettingsModule.defaults = {
+module.defaults = {
   SomeoneIsDrinking = "low-prio",
   Language = "auto",
 }
@@ -88,7 +87,7 @@ local supportedLanguageSettings = {
 
 ---@param init SharedSettings
 ---@return SharedSettings
-function sharedSettingsModule:NewDefaultSharedSettings(init)
+function module:NewDefaultSharedSettings(init)
   local tab = init or self:Defaults()
   tab.Minimap = tab.Minimap or {}
   tab.TargetTooLowLevel = tab.TargetTooLowLevel or {}
@@ -104,7 +103,7 @@ function sharedSettingsModule:NewDefaultSharedSettings(init)
 end
 
 ---@return SharedSettings
-function sharedSettingsModule:Defaults()
+function module:Defaults()
   ---@type SharedSettings
   return {
     Duration = {},

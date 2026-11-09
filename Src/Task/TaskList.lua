@@ -1,10 +1,10 @@
 local BuffomatAddon = BuffomatAddon
 
 ---@class TaskListModule
+local module = LibStub("Buffomat-TaskList") --[[@as TaskListModule]]
 
-local taskListModule = LibStub("Buffomat-TaskList") --[[@as TaskListModule]]
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
-local taskModule = LibStub("Buffomat-Task") --[[@as BomTaskModule]]
+local taskModule = LibStub("Buffomat-Task") --[[@as TaskModule]]
 local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
@@ -30,7 +30,7 @@ function taskListClass:SelectTask()
 end
 
 ---@return BomTaskList
-function taskListModule:New()
+function module:New()
   local fields = --[[@as BomTaskList]] {
     tasks           = {},
     comments        = {},
@@ -68,7 +68,7 @@ end
 
 ---@param a BomTask
 ---@param b BomTask
-function taskListModule.OrderTasksByDistance(a, b)
+function module.OrderTasksByDistance(a, b)
   if not b then
     return false
   end
@@ -80,7 +80,7 @@ end
 
 ---@param a BomTask
 ---@param b BomTask
-function taskListModule.OrderTasksByPriority(a, b)
+function module.OrderTasksByPriority(a, b)
   if not b then
     return false
   end
@@ -92,7 +92,7 @@ end
 
 ---@param a BomTask
 ---@param b BomTask
-function taskListModule.OrderTasksByCustomOrderThenPriority(a, b)
+function module.OrderTasksByCustomOrderThenPriority(a, b)
   if not b then
     return false
   end
@@ -117,9 +117,9 @@ function taskListClass:Sort()
         task.customSort = nil
       end
     end
-    table.sort(self.tasks, taskListModule.OrderTasksByCustomOrderThenPriority)
+    table.sort(self.tasks, module.OrderTasksByCustomOrderThenPriority)
   else
-    table.sort(self.tasks, taskListModule.OrderTasksByPriority)
+    table.sort(self.tasks, module.OrderTasksByPriority)
   end
 end
 
@@ -178,7 +178,7 @@ function taskListClass:CastButtonText(t, enable)
   if enable then
     BomC_ListTab_Button:Enable()
   else
-    taskListModule:WipeMacro(nil)
+    module:WipeMacro(nil)
     BomC_ListTab_Button:Disable()
   end
 end
@@ -188,7 +188,7 @@ function taskListClass:CastButton_Busy()
   --removeme
   --Print player is busy (casting normal spell)
   self:CastButtonText(_t("castButton.Busy"), false)
-  taskListModule:WipeMacro(nil)
+  module:WipeMacro(nil)
 end
 
 function taskListClass:CastButton_BusyChanneling()
@@ -196,7 +196,7 @@ function taskListClass:CastButton_BusyChanneling()
   --removeme
   --Print player is busy (casting channeled spell)
   self:CastButtonText(_t("castButton.BusyChanneling"), false)
-  taskListModule:WipeMacro(nil)
+  module:WipeMacro(nil)
 end
 
 ---Success case, cast is allowed, macro will be set and button will be enabled
@@ -252,7 +252,7 @@ end -- if inrange
 --removeme
 --- Clears the Buffomat macro
 ---@param command string|nil
-function taskListModule:WipeMacro(command)
+function module:WipeMacro(command)
   local macro = BuffomatAddon.theMacro
 
   if not macro:EnsureExists() then

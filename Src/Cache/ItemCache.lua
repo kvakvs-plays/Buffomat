@@ -7,11 +7,11 @@ local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 ---@field [BomItemCacheKey] BomItemCacheElement
 ---@field Item2 table
 
----@class BomItemCacheModule
+---@class ItemCacheModule
 ---@field cache BomItemCache Stores arg to results mapping for GetItemInfo
+local module = LibStub("Buffomat-ItemCache") --[[@as ItemCacheModule]]
+module.cache = {}
 
-local itemCacheModule = LibStub("Buffomat-ItemCache") --[[@as BomItemCacheModule]]
-itemCacheModule.cache = {}
 local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
 
 ---@class BomItemCacheElement
@@ -34,8 +34,8 @@ local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
 ---@param arg number|string|WowItemId
 ---@return BomItemCacheElement|nil
 function BuffomatAddon.GetItemInfo(arg)
-  if itemCacheModule.cache[arg] ~= nil then
-    return itemCacheModule.cache[arg]
+  if module.cache[arg] ~= nil then
+    return module.cache[arg]
   end
 
   local itemName, itemLink, itemRarity, itemLevel, itemMinLevel, itemType
@@ -62,12 +62,12 @@ function BuffomatAddon.GetItemInfo(arg)
   }
 
   --print("Added to cache item info for ", arg)
-  itemCacheModule.cache[arg] = cacheItem
+  module.cache[arg] = cacheItem
   return cacheItem
 end
 
 ---@param arg BomItemCacheKey
-function itemCacheModule:HasItemCached(arg)
+function module:HasItemCached(arg)
   return self.cache[arg] ~= nil
 end
 
@@ -75,9 +75,9 @@ end
 ---Delayed result, suitable for querying large quantities of items (like on addon startup).
 ---@param itemId number
 ---@param onLoaded function Called with loaded BomItemCacheElement
-function itemCacheModule:LoadItem(itemId, onLoaded)
-  if itemCacheModule.cache[itemId] ~= nil then
-    onLoaded(itemCacheModule.cache[itemId])
+function module:LoadItem(itemId, onLoaded)
+  if module.cache[itemId] ~= nil then
+    onLoaded(module.cache[itemId])
     return
   end
 
@@ -107,7 +107,7 @@ function itemCacheModule:LoadItem(itemId, onLoaded)
       itemSubClassID = itemSubClassID
     }
 
-    itemCacheModule.cache[itemId] = cacheItem
+    module.cache[itemId] = cacheItem
     throttleModule:RequestTaskRescan(string.format("item%d", itemId))
 
     if onLoaded ~= nil then
@@ -124,6 +124,6 @@ end
 ---unknown item never finishes loading.
 ---@param itemId WowItemId
 ---@return boolean
-function itemCacheModule:ItemExists(itemId)
+function module:ItemExists(itemId)
   return C_Item.DoesItemExistByID(itemId) == true
 end

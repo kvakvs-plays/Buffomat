@@ -3,9 +3,9 @@ local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 
 ---@class MacroModule
 ---@field lastMacroSet string A cached value of the last macro set
+local module = LibStub("Buffomat-Macro") --[[@as MacroModule]]
 
-local macroModule = LibStub("Buffomat-Macro") --[[@as MacroModule]]
-macroModule.lastMacroSet = ''
+module.lastMacroSet = ''
 
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
@@ -21,7 +21,7 @@ macroClass.__index = macroClass
 ---@param name string
 ---@param lines string[]|nil
 ---@return BomMacro
-function macroModule:NewMacro(name, lines)
+function module:NewMacro(name, lines)
   local fields = --[[@as BomMacro]] {}
   fields.name  = name
   fields.lines = lines or {}
@@ -30,7 +30,7 @@ function macroModule:NewMacro(name, lines)
   return fields
 end
 
-function macroModule:IsMacroFrameOpen()
+function module:IsMacroFrameOpen()
   return MacroFrame and MacroFrame:IsShown()
 end
 
@@ -38,7 +38,7 @@ function macroClass:Clear()
   if InCombatLockdown() then
     return
   end
-  if macroModule:IsMacroFrameOpen() then
+  if module:IsMacroFrameOpen() then
     -- Fixes the bug when macro editor was constantly reset by Buffomat
     return
   end
@@ -50,9 +50,9 @@ function macroClass:Clear()
   self.icon = constModule.MACRO_ICON_DISABLED
 
   -- Prevent resetting to empty multiple times
-  if macroModule.lastMacroSet ~= "" then
+  if module.lastMacroSet ~= "" then
     EditMacro(self.name, nil, self.icon, "")
-    macroModule.lastMacroSet = ""
+    module.lastMacroSet = ""
   end
 end
 
@@ -74,10 +74,10 @@ function macroClass:UpdateMacro()
   local newText = self:GetText()
 
   -- Prevent multiple times setting macro to the same value
-  if macroModule.lastMacroSet ~= newText then
+  if module.lastMacroSet ~= newText then
     EditMacro(self.name, nil, icon, newText)
     --BOM.minimapButton:SetTexture("Interface\\ICONS\\" .. icon)
-    macroModule.lastMacroSet = newText
+    module.lastMacroSet = newText
   end
 end
 
@@ -110,6 +110,6 @@ function macroClass:EnsureExists()
     return false
   end
   -- Creation invalidates the cached body even if the old macro had the same text.
-  macroModule.lastMacroSet = ""
+  module.lastMacroSet = ""
   return true
 end

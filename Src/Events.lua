@@ -1,12 +1,12 @@
 local BuffomatAddon = BuffomatAddon
 
 ---@class EventsModule
+local module = LibStub("Buffomat-Events") --[[@as EventsModule]]
 
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
-local module = LibStub("Buffomat-Events") --[[@as EventsModule]]
 local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 local spellSetupModule = LibStub("Buffomat-SpellSetup") --[[@as BomSpellSetupModule]]

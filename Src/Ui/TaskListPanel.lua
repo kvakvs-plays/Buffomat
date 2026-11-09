@@ -20,16 +20,16 @@ local BuffomatAddon = BuffomatAddon
 ---@field windowCommandForceHide? boolean Force the next autohide command to hide regardless of AutoClose
 ---@field lastUserWindowCommand? ShowHideCommand Last user operation on window (not auto)
 
-local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
-taskListPanelModule.titleProfile = ""
-taskListPanelModule.titleBuffGroups = ""
+local module = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
+module.titleProfile = ""
+module.titleBuffGroups = ""
 
 -- Tracks whether last bounds check found the window off-screen, so the warning
 -- is printed only once per transition into/out of the bad state.
 local flagIsOutofBounds = false
 
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
-local actionMacroModule = LibStub("Buffomat-ActionMacro") --[[@as BomActionMacroModule]]
+local actionMacroModule = LibStub("Buffomat-ActionMacro") --[[@as ActionMacroModule]]
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local libGUI = LibStub("AceGUI-3.0")
 local ngToolboxModule = LibStub("Buffomat-NgToolbox") --[[@as NgToolboxModule]]
@@ -37,7 +37,7 @@ local taskScanModule = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
 local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
 
 --- Constructs the window. Only called from one location - WindowCommand()
-function taskListPanelModule:ConstructWindow()
+function module:ConstructWindow()
   local taskFrame = libGUI:Create("NgTaskListWindow")
   self.taskFrame = taskFrame
 
@@ -51,7 +51,7 @@ function taskListPanelModule:ConstructWindow()
   taskFrame:SetWidth(BuffomatShared.Width or 300)
   taskFrame:SetHeight(BuffomatShared.Height or 200)
   taskFrame:SetCallback("OnClose", function()
-    taskListPanelModule:HideWindow("tlp:closeButtonClick")
+    module:HideWindow("tlp:closeButtonClick")
   end)
   self:SetWindowScale(tonumber(BuffomatShared.UIWindowScale) or 1.0)
 
@@ -64,14 +64,14 @@ function taskListPanelModule:ConstructWindow()
   self:SetTitle()
 end
 
-function taskListPanelModule:SetTitle()
+function module:SetTitle()
   if self.taskFrame ~= nil then
     self.taskFrame:SetTitle(self.titleProfile .. ' ' .. self.titleBuffGroups)
   end
 end
 
 ---@param _holdOpen boolean
-function taskListPanelModule:ToggleWindow(_holdOpen)
+function module:ToggleWindow(_holdOpen)
   self.windowCommandCallLocation = "tlp:toggleWindow"
 
   if self:IsWindowVisible() then
@@ -82,18 +82,18 @@ function taskListPanelModule:ToggleWindow(_holdOpen)
   end
 end
 
-function taskListPanelModule:IsWindowVisible()
+function module:IsWindowVisible()
   return self.taskFrame ~= nil and self.taskFrame:IsVisible()
 end
 
 local function doShow()
-  if taskListPanelModule.taskFrame == nil then
-    taskListPanelModule:ConstructWindow()
-    taskListPanelModule:SetWindowScale(tonumber(BuffomatShared.UIWindowScale) or 1.0)
+  if module.taskFrame == nil then
+    module:ConstructWindow()
+    module:SetWindowScale(tonumber(BuffomatShared.UIWindowScale) or 1.0)
   else
-    taskListPanelModule.taskFrame:Show()
+    module.taskFrame:Show()
   end
-  taskListPanelModule:SetAlpha(1.0)
+  module:SetAlpha(1.0)
 
   -- Show all messages if they were added while the window was hidden
   -- for _, message in pairs(self.messages or {}) do
@@ -104,8 +104,8 @@ local function doShow()
 end
 
 local function doHide()
-  if taskListPanelModule.taskFrame ~= nil then
-    taskListPanelModule.taskFrame:Hide()
+  if module.taskFrame ~= nil then
+    module.taskFrame:Hide()
   end
 
   throttleModule:RequestTaskRescan("hideWindow")
@@ -113,7 +113,7 @@ end
 
 --- Do not call this directly. Called from the throttle module on timed updates.
 ---@param _command WindowCommand
-function taskListPanelModule:WindowCommand(_command)
+function module:WindowCommand(_command)
   if not self.windowCommand then
     return
   end
@@ -151,7 +151,7 @@ function taskListPanelModule:WindowCommand(_command)
 end
 
 ---@param callLocation string The location where this is called from
-function taskListPanelModule:HideWindow(callLocation)
+function module:HideWindow(callLocation)
   self.windowCommand = "hide"
   self.windowCommandCallLocation = callLocation
   self.windowCommandForceHide = nil
@@ -160,7 +160,7 @@ end
 ---Attempt to close if holdOpen is false (holds open if user manually called up the window)
 ---@param callLocation string The location where this is called from
 ---@param forceHide boolean|nil Hide even when AutoClose is disabled
-function taskListPanelModule:AutoHide(callLocation, forceHide)
+function module:AutoHide(callLocation, forceHide)
   -- If the window is not hold open and the buff button exists and is disabled, attempt to close the window
   self.windowCommand = "autohide"
   self.windowCommandCallLocation = callLocation
@@ -168,7 +168,7 @@ function taskListPanelModule:AutoHide(callLocation, forceHide)
 end
 
 ---@param callLocation string The location where this is called from
-function taskListPanelModule:AutoShow(callLocation)
+function module:AutoShow(callLocation)
   if not BuffomatShared.AutoOpen then
     return
   end
@@ -178,14 +178,14 @@ function taskListPanelModule:AutoShow(callLocation)
 end
 
 ---@param callLocation string The location where this is called from
-function taskListPanelModule:ShowWindow(callLocation)
+function module:ShowWindow(callLocation)
   self.windowCommand = "show"
   self.windowCommandCallLocation = callLocation
   self.windowCommandForceHide = nil
 end
 
 -- Reset the window to the default position and size, save the default position and size
-function taskListPanelModule:ResetWindow()
+function module:ResetWindow()
   self.taskFrame:ClearAllPoints()
   self.taskFrame:SetPoint("Center", UIParent, "Center", 0, 0)
   self.taskFrame:SetWidth(200)
@@ -196,7 +196,7 @@ function taskListPanelModule:ResetWindow()
 end
 
 -- Add a message to the scroll panel (stacking down)
-function taskListPanelModule:AddMessage(text)
+function module:AddMessage(text)
   self.messages = {}
   tinsert(self.messages, text)
 
@@ -206,7 +206,7 @@ function taskListPanelModule:AddMessage(text)
 end
 
 ---Only call this if the window is visible
-function taskListPanelModule:AddMessageLabel(text)
+function module:AddMessageLabel(text)
   local message = libGUI:Create("Label")
   message:SetText(text)
   message:SetFullWidth(true)
@@ -214,7 +214,7 @@ function taskListPanelModule:AddMessageLabel(text)
 end
 
 -- Clear the scroll panel and create a new row with a buff button and menu
-function taskListPanelModule:Clear()
+function module:Clear()
   self.buffButton = nil
   self.messages = {}
 
@@ -225,7 +225,7 @@ function taskListPanelModule:Clear()
 end
 
 -- For a fresh emptied scroll panel, create a row with a buff button and menu
-function taskListPanelModule:CreateUIRow()
+function module:CreateUIRow()
   local topUiPanel = libGUI:Create("SimpleGroup")
   self.topUiPanel = topUiPanel
   topUiPanel:SetLayout("Flow")
@@ -253,7 +253,7 @@ end
 ---Set text and enable the cast button (or disable)
 ---@param text string - text for the cast button
 ---@param enable boolean - whether to enable the button or not
-function taskListPanelModule:CastButtonText(text, enable)
+function module:CastButtonText(text, enable)
   -- not really a necessary check but for safety
   if InCombatLockdown()
       or self.buffButton == nil
@@ -271,23 +271,23 @@ function taskListPanelModule:CastButtonText(text, enable)
   end
 end
 
-function taskListPanelModule:SetAlpha(alpha)
+function module:SetAlpha(alpha)
   if self.taskFrame ~= nil then
     self.taskFrame.frame:SetAlpha(alpha)
   end
 end
 
-function taskListPanelModule:SetWindowScale(scale)
+function module:SetWindowScale(scale)
   if self.taskFrame ~= nil then
     self.taskFrame.frame:SetScale(scale)
   end
 end
 
-function taskListPanelModule:IsBuffButtonEnabled()
+function module:IsBuffButtonEnabled()
   return self.buffButton ~= nil and not self.buffButton.disabled
 end
 
-function taskListPanelModule:SavePosition()
+function module:SavePosition()
   if self.taskFrame ~= nil then
     BuffomatShared.X = self.taskFrame.frame:GetLeft()
     BuffomatShared.Y = self.taskFrame.frame:GetTop()
@@ -299,7 +299,7 @@ end
 
 ---Warn once when the task list window is dragged off-screen so the user knows
 ---to run /bom reset. Resets the latch when the window returns on-screen.
-function taskListPanelModule:CheckWindowBounds()
+function module:CheckWindowBounds()
   if self.taskFrame == nil or self.taskFrame.isWindowOutOfBounds == nil then
     return
   end
@@ -312,7 +312,7 @@ function taskListPanelModule:CheckWindowBounds()
   end
 end
 
-function taskListPanelModule:OnCombatStart()
+function module:OnCombatStart()
   self:AutoHide("tlp:combatStart")
 
   if self.buffButton then
@@ -321,7 +321,7 @@ function taskListPanelModule:OnCombatStart()
   end
 end
 
-function taskListPanelModule:OnCombatStop()
+function module:OnCombatStop()
   if self.buffButton and self.buffButton.label:GetText() == _t("castButton.InCombat") then
     self.buffButton:SetText(self.saveBuffButtonText)
     self.saveBuffButtonText = ''

@@ -1,13 +1,13 @@
 ---@class CharacterSettingsModule
 ---@field profileNames ProfileName[]
+local module = LibStub("Buffomat-CharacterSettings") --[[@as CharacterSettingsModule]]
 
-local characterSettingsModule = LibStub("Buffomat-CharacterSettings") --[[@as CharacterSettingsModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 
 ---@alias ProfileName "auto"|"solo"|"group"|"raid"|"battleground"|"solo_spec2"|"group_spec2"|"raid_spec2"|"battleground_spec2"
-characterSettingsModule.profileNames = {
+module.profileNames = {
   -- "auto", -- auto is a special profile name meaning "pick from the environment" and not a real profile
   "solo",
   "group",
@@ -33,13 +33,13 @@ characterSettingsModule.profileNames = {
 ---@field LastSeal number|nil
 ---@field LastAura number|nil
 
-function characterSettingsModule:LocalizedProfileName(profileName)
+function module:LocalizedProfileName(profileName)
   return _t("profileName." .. profileName)
 end
 
 ---@param init CharacterSettings|nil
 ---@return CharacterSettings
-function characterSettingsModule:NewDefaultCharacterSettings(init)
+function module:NewDefaultCharacterSettings(init)
   local tab = init or self:Defaults()
   tab.Spell = tab.Spell or {}
   tab.remainingDurations = tab.remainingDurations or {}
@@ -62,11 +62,11 @@ function characterSettingsModule:NewDefaultCharacterSettings(init)
 end
 
 ---@return CharacterSettings
-function characterSettingsModule:Defaults()
+function module:Defaults()
   return {}
 end
 
-function characterSettingsModule:GetProfile(profileName)
+function module:GetProfile(profileName)
   if BuffomatCharacter.profiles == nil then
     BuffomatCharacter.profiles = {}
   end

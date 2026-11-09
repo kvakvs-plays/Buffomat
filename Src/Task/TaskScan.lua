@@ -5,17 +5,17 @@ local BuffomatAddon = BuffomatAddon
 ---@field roundRobinGroup number Group number to refresh, rotates from 1 to 8 in raid, or stays always 1 otherwise
 ---@field saveSomeoneIsDead boolean
 ---@field pvpMatchNoticeShown boolean? The PvP match chat notice was printed this session
+local module = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
 
-local taskScanModule = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
-taskScanModule.taskListSizeBeforeScan = 0
-taskScanModule.roundRobinGroup = 0
-taskScanModule.saveSomeoneIsDead = false
-taskScanModule.tasklist = nil
+module.taskListSizeBeforeScan = 0
+module.roundRobinGroup = 0
+module.saveSomeoneIsDead = false
+module.tasklist = nil
 
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
-local actionCastModule = LibStub("Buffomat-ActionCast") --[[@as BomActionCastModule]]
-local actionMacroModule = LibStub("Buffomat-ActionMacro") --[[@as BomActionMacroModule]]
-local actionUseModule = LibStub("Buffomat-ActionUse") --[[@as BomActionUseModule]]
+local actionCastModule = LibStub("Buffomat-ActionCast") --[[@as ActionCastModule]]
+local actionMacroModule = LibStub("Buffomat-ActionMacro") --[[@as ActionMacroModule]]
+local actionUseModule = LibStub("Buffomat-ActionUse") --[[@as ActionUseModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffChecksModule = LibStub("Buffomat-BuffChecks") --[[@as BuffChecksModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
@@ -25,14 +25,14 @@ local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local groupBuffTargetModule = LibStub("Buffomat-GroupBuffTarget") --[[@as BomGroupBuffTargetModule]]
 local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
-local itemListCacheModule = LibStub("Buffomat-ItemListCache") --[[@as BomItemListCacheModule]]
+local itemListCacheModule = LibStub("Buffomat-ItemListCache") --[[@as ItemListCacheModule]]
 local macroModule = LibStub("Buffomat-Macro") --[[@as MacroModule]]
 local ngStringsModule = LibStub("Buffomat-NgStrings") --[[@as NgStringsModule]]
 local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 local spellIdsModule = LibStub("Buffomat-SpellIds") --[[@as SpellIdsModule]]
 local taskListModule = LibStub("Buffomat-TaskList") --[[@as TaskListModule]]
-local taskModule = LibStub("Buffomat-Task") --[[@as BomTaskModule]]
+local taskModule = LibStub("Buffomat-Task") --[[@as TaskModule]]
 local texturesModule = LibStub("Buffomat-Textures") --[[@as TexturesModule]]
 local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
 local unitCacheModule = LibStub("Buffomat-UnitCache") --[[@as UnitCacheModule]]
@@ -50,7 +50,7 @@ local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPa
 ---@field temporaryDownrank boolean Pick previous rank for certain spells, like Flametongue 10
 --local nextCastSpell = {}
 
-function taskScanModule:IsFlying()
+function module:IsFlying()
   if envModule.haveTBC then
     return IsFlying() and not BuffomatShared.AutoDismountFlying
   end
@@ -60,7 +60,7 @@ end
 ---Only pause the scan for a confirmed, unexpired global cooldown.
 ---@return boolean isInGlobalCooldown
 ---@return number|nil cooldownEndTime
-function taskScanModule:IsInGlobalCooldown()
+function module:IsInGlobalCooldown()
   local spellID = 61304
   local start, cdDuration = envModule.GetSpellCooldown(spellID)
   if start == nil or cdDuration == nil then
@@ -90,12 +90,12 @@ function taskScanModule:IsInGlobalCooldown()
   return true, cooldownEndTime
 end
 
-function taskScanModule:IsInVehicle()
+function module:IsInVehicle()
   return type(UnitInVehicle) == "function" and UnitInVehicle("player")
 end
 
 ---@return boolean
-function taskScanModule:IsMountedAndCrusaderAuraRequired()
+function module:IsMountedAndCrusaderAuraRequired()
   if UnitOnTaxi("player") or self:IsInVehicle()
   then
     return false
@@ -107,7 +107,7 @@ function taskScanModule:IsMountedAndCrusaderAuraRequired()
       and GetShapeshiftForm() ~= crusaderAuraShapeshiftForm -- and not crusader aura
 end
 
-function taskScanModule:CancelBuff(list)
+function module:CancelBuff(list)
   local ret = false
   if not InCombatLockdown() and not envModule.IsAuraRestricted() and list then
     for i = 1, 40 do
@@ -128,11 +128,11 @@ function taskScanModule:CancelBuff(list)
 end
 
 function BuffomatAddon.CancelShapeShift()
-  return taskScanModule:CancelBuff(spellIdsModule.TravelShapeshiftForms)
+  return module:CancelBuff(spellIdsModule.TravelShapeshiftForms)
 end
 
 ---If player just left the raid or party, reset watched frames to "watch all 8"
-function taskScanModule:MaybeResetWatchGroups()
+function module:MaybeResetWatchGroups()
   if UnitPlayerOrPetInParty("player") == false then
     -- We have left the party - can clear monitored groups
     local need_to_report = false
@@ -156,7 +156,7 @@ end
 ---Tries to activate tracking described by `spell`
 ---@param spell BomBuffDefinition The tracking spell to activate
 ---@param value boolean Whether tracking should be enabled
-function taskScanModule:SetTracking(spell, value)
+function module:SetTracking(spell, value)
   -- Mainline-based clients also use tracking settings, independent of content era.
   if envModule.usesTrackingSettings then
     for i = 1, envModule.GetNumTrackingTypes() do
@@ -179,7 +179,7 @@ end
 ---@param party BomParty - the party
 ---@param buffDef BomBuffDefinition the spell to update
 ---@param buffCtx BomBuffScanContext
-function taskScanModule:UpdateMissingBuffs_EachBuff(party, buffDef, buffCtx)
+function module:UpdateMissingBuffs_EachBuff(party, buffDef, buffCtx)
   buffCtx.someoneIsDead = false
 
   --local thisBuffOnPlayer = playerUnit.knownBuffs[spell.buffId]
@@ -244,7 +244,7 @@ end
 ---@param units BomUnit[]
 ---@param groupIndex number|nil
 ---@param spell BomBuffDefinition
-function taskScanModule:GetGroupInRange(spellName, units, groupIndex, spell)
+function module:GetGroupInRange(spellName, units, groupIndex, spell)
   local minDist
   local ret
   for _, member in pairs(units) do
@@ -268,7 +268,7 @@ end
 ---@param _party BomParty
 ---@param buffDef BomBuffDefinition
 ---@param playerUnit BomUnit Default if no party
-function taskScanModule:GetAnyPartyMemberInRange(spellName, buffDef, _party, playerUnit)
+function module:GetAnyPartyMemberInRange(spellName, buffDef, _party, playerUnit)
   local minDist
   local ret
 
@@ -303,7 +303,7 @@ end
 ---@param party BomParty
 ---@param class string
 ---@param spell BomBuffDefinition
-function taskScanModule:GetClassInRange(spellName, party, class, spell)
+function module:GetClassInRange(spellName, party, class, spell)
   local minDist
   local ret
 
@@ -331,7 +331,7 @@ end
 ---@param inactiveText string Spell name as text
 ---@param targetUnit BomUnit
 ---@return boolean True if spell cast is prevented by PvP guard, false if spell can be casted
-function taskScanModule:PreventPvpTagging(link, inactiveText, targetUnit)
+function module:PreventPvpTagging(link, inactiveText, targetUnit)
   if BuffomatShared.PreventPVPTag then
     -- TODO: Move Player PVP check and instance check outside
     local _inInstance, instance_type = IsInInstance()
@@ -353,7 +353,7 @@ end
 ---Run checks to see if BOM should not be scanning buffs
 ---@param playerUnit BomUnit
 ---@return boolean, string {Active, WhyNotActive: string}
-function taskScanModule:IsActive(playerUnit)
+function module:IsActive(playerUnit)
   local _inInstance, instanceType = IsInInstance()
 
   -- Cancel buff tasks if in combat (ALWAYS FIRST CHECK)
@@ -427,7 +427,7 @@ function taskScanModule:IsActive(playerUnit)
 end
 
 ---Activate tracking spells
-function taskScanModule:ActivateSelectedTracking()
+function module:ActivateSelectedTracking()
   --reset tracking
   BuffomatAddon.forceTracking = nil
 
@@ -461,7 +461,7 @@ function taskScanModule:ActivateSelectedTracking()
 end
 
 ---@param playerUnit BomUnit
-function taskScanModule:GetActiveAuraAndSeal(playerUnit)
+function module:GetActiveAuraAndSeal(playerUnit)
   --find activ aura / seal
   BuffomatAddon.activePaladinAura = nil
   BuffomatAddon.activePaladinSeal = nil
@@ -491,7 +491,7 @@ function taskScanModule:GetActiveAuraAndSeal(playerUnit)
   end     -- for all spells
 end
 
-function taskScanModule:CheckChangesAndUpdateSpelltab()
+function module:CheckChangesAndUpdateSpelltab()
   -- Hunter tracks used to be "aura" buffs; a profile which saved one as LastAura would otherwise
   -- block aspects forever, because tracks no longer go through the aura code.
   local lastAuraDef = allBuffsModule.allBuffs and allBuffsModule.allBuffs[buffomatModule.currentProfile.LastAura]
@@ -537,7 +537,7 @@ end
 -- TODO: Only scan missing buffs on current roundRobinGroup while in raid
 ---@param party BomParty - the party
 ---@param buffCtx BomBuffScanContext
-function taskScanModule:UpdateMissingBuffs(party, buffCtx)
+function module:UpdateMissingBuffs(party, buffCtx)
   -- Tracking is not a spell so it can be applied immediately
   self:ActivateSelectedTracking()
 
@@ -558,11 +558,11 @@ function taskScanModule:UpdateMissingBuffs(party, buffCtx)
     self:UpdateMissingBuffs_EachBuff(party, selectedBuff, buffCtx)
   end
 
-  taskScanModule.saveSomeoneIsDead = buffCtx.someoneIsDead
+  module.saveSomeoneIsDead = buffCtx.someoneIsDead
 end
 
 ---@param playerUnit BomUnit
-function taskScanModule:CancelBuffs(playerUnit)
+function module:CancelBuffs(playerUnit)
   for _, spell in ipairs(BuffomatAddon.cancelBuffs or {}) do
     if buffomatModule.currentProfile
         and buffomatModule.currentProfile.CancelBuff[spell.buffId].Enable
@@ -581,7 +581,7 @@ function taskScanModule:CancelBuffs(playerUnit)
 end
 
 ---Whisper to the spell caster when the buff expired on yourself
-function taskScanModule:WhisperExpired(spell)
+function module:WhisperExpired(spell)
   if spell.wasPlayerActiv and not spell.playerActiv then
     spell.wasPlayerActiv = false
 
@@ -598,7 +598,7 @@ end
 
 ---@param name string Consumable name to show
 ---@param count number How many of that consumable is available
-function taskScanModule:FormatItemBuffInactiveText(name, count)
+function module:FormatItemBuffInactiveText(name, count)
   if count == 0 then
     return string.format("%s (%s)", tostring(name), _t("task.hint.DontHaveItem"))
   end
@@ -607,7 +607,7 @@ function taskScanModule:FormatItemBuffInactiveText(name, count)
 end
 
 ---@return string
-function taskScanModule:FormatItemBuffText(bag, slot, count)
+function module:FormatItemBuffText(bag, slot, count)
   local itemInfo = envModule.GetContainerItemInfo(bag, slot)
   local picture = ""
 
@@ -622,7 +622,7 @@ end
 ---On WoW: Forever the Legacy talent Reagent Economy waives vendor-sold class reagents.
 ---@param buffDef BomBuffDefinition
 ---@return boolean True when every reagent of the buff is waived
-function taskScanModule:IsReagentWaived(buffDef)
+function module:IsReagentWaived(buffDef)
   if not envModule.isForever or not envModule.IsPlayerSpell(spellIdsModule.Forever_ReagentEconomy) then
     return false
   end
@@ -637,7 +637,7 @@ end
 ---Reagents left for a group buff, shown after the task text: "x12", or "x0" when out.
 ---@param buffDef BomBuffDefinition
 ---@return string Empty when the buff needs no reagent
-function taskScanModule:FormatReagentCount(buffDef)
+function module:FormatReagentCount(buffDef)
   if not buffDef.reagentRequired or self:IsReagentWaived(buffDef) then
     return ""
   end
@@ -649,7 +649,7 @@ end
 ---@param buffDef BomBuffDefinition - spell to cast
 ---@param party BomParty - the party
 ---@param _buffCtx BomBuffScanContext
-function taskScanModule:AddBlessing(buffDef, party, _buffCtx)
+function module:AddBlessing(buffDef, party, _buffCtx)
   if buffDef.groupMana ~= nil
       and not BuffomatShared.NoGroupBuff
   then
@@ -766,7 +766,7 @@ end
 ---@param party BomParty The party
 ---@param minBuff number How many missing buffs mandate the group buff
 ---@param _buffCtx BomBuffScanContext
-function taskScanModule:FindTargetForGroupBuff(groupIndex, buffDef, party, minBuff, _buffCtx)
+function module:FindTargetForGroupBuff(groupIndex, buffDef, party, minBuff, _buffCtx)
   if buffDef.groupsNeedBuff[groupIndex]
       and buffDef.groupsNeedBuff[groupIndex] >= minBuff
   then
@@ -800,7 +800,7 @@ end
 ---@param party BomParty The party
 ---@param minBuff number Option for minimum players with missing buffs to choose group buff
 ---@param buffCtx BomBuffScanContext
-function taskScanModule:AddBuff_GroupBuff(buffDef, party, minBuff, buffCtx)
+function module:AddBuff_GroupBuff(buffDef, party, minBuff, buffCtx)
   if envModule.groupBuffsRaidWide then
     -- WotLK and Forever: one group buff covers the whole raid; scan it as one
     --inRange = self:FindAnyPartyTargetForGroupBuff(buffDef, party, minBuff, inRange)
@@ -828,7 +828,7 @@ end
 ---@param buffDef BomBuffDefinition The spell to cast
 ---@param minBuff number Option for minimum players with missing buffs to choose group buff
 ---@param _buffCtx BomBuffScanContext
-function taskScanModule:AddBuff_SingleBuff(buffDef, minBuff, _buffCtx)
+function module:AddBuff_SingleBuff(buffDef, minBuff, _buffCtx)
   for _i, needBuff in pairs(buffDef.unitsNeedBuff) do
     if not needBuff.isDead
         and buffDef.singleMana ~= nil
@@ -891,7 +891,7 @@ end
 ---@param buffDef BomBuffDefinition The spell to cast
 ---@param party BomParty The party
 ---@param buffCtx BomBuffScanContext
-function taskScanModule:AddBuff(buffDef, party, buffCtx)
+function module:AddBuff(buffDef, party, buffCtx)
   local minBuff = BuffomatShared.MinBuff or 3
 
   -- Check if any group qualifies for group buffing
@@ -926,7 +926,7 @@ end
 ---@param spell BomBuffDefinition the spell to cast
 ---@param _playerUnit BomUnit the player
 ---@param _buffCtx BomBuffScanContext
-function taskScanModule:AddResurrection(spell, _playerUnit, _buffCtx)
+function module:AddResurrection(spell, _playerUnit, _buffCtx)
   local clearskip = true
 
   for _, member in ipairs(spell.unitsNeedBuff) do
@@ -991,7 +991,7 @@ end
 ---Adds a display text for a self buff or tracking or seal/weapon self-enchant
 ---@param buffDef BomBuffDefinition - the spell to cast
 ---@param playerMember BomUnit - the player
-function taskScanModule:AddSelfbuff(buffDef, playerMember)
+function module:AddSelfbuff(buffDef, playerMember)
   if buffDef.requireWarlockPet then
     if not UnitExists("pet") then
       return -- No pet - buff can not be cast
@@ -1028,7 +1028,7 @@ end
 ---Adds a summon spell to the tasks
 ---@param buffDef BomBuffDefinition - the spell to cast
 ---@param playerMember BomUnit
-function taskScanModule:AddSummonSpell(buffDef, playerMember)
+function module:AddSummonSpell(buffDef, playerMember)
   if buffDef.sacrificeAuraIds then
     for _, id in ipairs(buffDef.sacrificeAuraIds) do
       if playerMember.allBuffs[id] then
@@ -1068,7 +1068,7 @@ end
 ---@param buffDef BomBuffDefinition - the spell to cast
 ---@param count number
 ---@param playerUnit BomUnit the player
-function taskScanModule:AddConsumableSelfbuff_NoItem(buffDef, count, playerUnit)
+function module:AddConsumableSelfbuff_NoItem(buffDef, count, playerUnit)
   -- Text: "ConsumableName" x Count
   local task = taskModule:Create(
         self:FormatItemBuffInactiveText(buffDef.consumeGroupTitle or buffDef.singleText, count),
@@ -1088,7 +1088,7 @@ end
 ---@param count number
 ---@param _playerUnit BomUnit the player
 ---@param target string
-function taskScanModule:AddConsumableSelfbuff_HaveItemReady(buffDef, bestItemIdAvailable, bag, slot, count, _playerUnit,
+function module:AddConsumableSelfbuff_HaveItemReady(buffDef, bestItemIdAvailable, bag, slot, count, _playerUnit,
                                                             target)
   local taskText = _t("task.type.Consume")
   if buffDef.petBuff then
@@ -1124,7 +1124,7 @@ end
 ---@param playerUnit BomUnit the player
 ---@param target string Insert this text into macro where [@player] target text would go
 ---@param _buffCtx BomBuffScanContext
-function taskScanModule:AddConsumableSelfbuff(buffDef, playerUnit, target, _buffCtx)
+function module:AddConsumableSelfbuff(buffDef, playerUnit, target, _buffCtx)
   -- Setting to choose best or worst. Worst useful for leveling to eat old stuff first.
   local itemsProvidingBuff = buffDef.itemsReverse
   if not BuffomatShared.BestAvailableConsume then
@@ -1150,7 +1150,7 @@ end
 ---@param playerUnit BomUnit
 ---@param texture WowIconId
 ---@param itemLink string
-function taskScanModule:AddConsumableWeaponBuff_HaveItem_Mainhand(buffDef, bag, slot, count, playerUnit, texture,
+function module:AddConsumableWeaponBuff_HaveItem_Mainhand(buffDef, bag, slot, count, playerUnit, texture,
                                                                   itemLink)
   local mainhandMessage = ngStringsModule:FormatTexture( --[[@as string]] texture) .. itemLink .. "x" .. count
 
@@ -1186,7 +1186,7 @@ end
 ---@param playerUnit BomUnit
 ---@param texture WowIconId
 ---@param itemLink string
-function taskScanModule:AddConsumableWeaponBuff_HaveItem_Offhand(buffDef, bag, slot, count, playerUnit, texture,
+function module:AddConsumableWeaponBuff_HaveItem_Offhand(buffDef, bag, slot, count, playerUnit, texture,
                                                                  itemLink)
   local offhandMessage = ngStringsModule:FormatTexture( --[[@as string]] texture) .. itemLink .. "x" .. count
 
@@ -1214,7 +1214,7 @@ function taskScanModule:AddConsumableWeaponBuff_HaveItem_Offhand(buffDef, bag, s
 end
 
 ---@return boolean Whether class has a mainhand weapon and can enchant 1 or 2hand weapon, and is not a rogue in case of 2h
-function taskScanModule:CharacterCanEnchantMainhand()
+function module:CharacterCanEnchantMainhand()
   local mainhandId, _ = GetInventoryItemID("player", 16)
   if mainhandId == nil then
     return false
@@ -1228,7 +1228,7 @@ function taskScanModule:CharacterCanEnchantMainhand()
 end
 
 ---@return boolean Whether class has an offhand weapon and can enchant it
-function taskScanModule:CharacterCanEnchantOffhand()
+function module:CharacterCanEnchantOffhand()
   local offhandId, _ = GetInventoryItemID("player", 17)
   return offhandId ~= nil
 end
@@ -1238,7 +1238,7 @@ end
 ---@param slot number
 ---@param count number
 ---@param playerUnit BomUnit
-function taskScanModule:AddConsumableWeaponBuff_HaveItem(buffDef, bag, slot, count, playerUnit)
+function module:AddConsumableWeaponBuff_HaveItem(buffDef, bag, slot, count, playerUnit)
   -- Have item, display the cast message and setup the cast button
   local itemInfo = envModule.GetContainerItemInfo(bag, slot)
   local needMainhand, needOffhand = buffChecksModule:WeaponHandsNeedingBuff(buffDef, playerUnit)
@@ -1267,7 +1267,7 @@ end
 ---@param buffDef BomBuffDefinition
 ---@param count number
 ---@param playerUnit BomUnit
-function taskScanModule:AddConsumableWeaponBuff_DontHaveItem(buffDef, count, playerUnit)
+function module:AddConsumableWeaponBuff_DontHaveItem(buffDef, count, playerUnit)
   -- Don't have item but display the intent
   -- Text: [Icon] [Consumable Name] x Count
   if buffDef.singleText then
@@ -1288,7 +1288,7 @@ end
 ---@param buffDef BomBuffDefinition the spell to cast
 ---@param playerUnit BomUnit the player
 ---@param _buffCtx BomBuffScanContext
-function taskScanModule:AddConsumableWeaponBuff(buffDef, playerUnit, _buffCtx)
+function module:AddConsumableWeaponBuff(buffDef, playerUnit, _buffCtx)
   -- count - reagent count remaining for the spell
   local haveItem, bag, slot, count = buffChecksModule:HasItem(buffDef.items or {}, true)
   count = count or 0
@@ -1313,7 +1313,7 @@ end
 ---@param buffDef BomBuffDefinition - the spell to cast
 ---@param playerUnit BomUnit - the player
 ---@param _buffCtx BomBuffScanContext
-function taskScanModule:AddWeaponEnchant(buffDef, playerUnit, _buffCtx)
+function module:AddWeaponEnchant(buffDef, playerUnit, _buffCtx)
   local playerClass = envModule.playerClass
 
   local isTBCShaman = envModule.haveTBC and playerClass == "SHAMAN"
@@ -1372,7 +1372,7 @@ end
 
 ---Check if player has rep items equipped where they should not have them
 ---@param _playerMember BomUnit
-function taskScanModule:CheckReputationItems(_playerMember)
+function module:CheckReputationItems(_playerMember)
   local _name, _instanceType, _difficultyID, _difficultyName, _maxPlayers
   , _dynamicDifficulty, _isDynamic, instanceID, _instanceGroupSize
   , _LfgDungeonID = GetInstanceInfo()
@@ -1403,7 +1403,7 @@ end
 
 ---Check player weapons and report if they have the "Warn about missing enchants" option enabled
 ---@param _playerUnit BomUnit
-function taskScanModule:CheckMissingWeaponEnchantments(_playerUnit)
+function module:CheckMissingWeaponEnchantments(_playerUnit)
   -- enchantment on weapons
   ---@type boolean, number, number, number, boolean, number, number, number
   local hasMainHandEnchant, _mainHandExpiration, _mainHandCharges, _mainHandEnchantID
@@ -1429,7 +1429,7 @@ end
 
 ---@param playerUnit BomUnit
 ---@param _buffCtx BomBuffScanContext
-function taskScanModule:CheckItemsAndContainers(playerUnit, _buffCtx)
+function module:CheckItemsAndContainers(playerUnit, _buffCtx)
   --itemcheck
   local allPlayerItems = itemListCacheModule:GetItemList()
 
@@ -1488,7 +1488,7 @@ end
 ---@param buffDef BomBuffDefinition
 ---@param party BomParty
 ---@param buffCtx BomBuffScanContext
-function taskScanModule:CreateOneBuffTask(buffDef, party, buffCtx)
+function module:CreateOneBuffTask(buffDef, party, buffCtx)
   if #buffDef.unitsNeedBuff > 0
       and not buffDef.isInfo
       and not buffDef.isConsumable
@@ -1567,7 +1567,7 @@ end
 
 ---@param party BomParty
 ---@param buffCtx BomBuffScanContext
-function taskScanModule:CreateBuffTasks(party, buffCtx)
+function module:CreateBuffTasks(party, buffCtx)
   -- Go through all available and selected player buffs
   for _, buffDef in ipairs(allBuffsModule.selectedBuffs) do
     local profileBuff = profileModule:GetProfileBuff(buffDef.buffId, nil)
@@ -1592,7 +1592,7 @@ end
 ---When a paladin is mounted and AutoCrusaderAura enabled,
 ---offer player to cast Crusader Aura.
 ---@return boolean True if the scanning should be interrupted and only crusader aura prompt will be visible
-function taskScanModule:MountedCrusaderAuraPrompt()
+function module:MountedCrusaderAuraPrompt()
   local playerUnit = unitCacheModule:GetUnit("player", nil, nil, nil)
 
   if playerUnit and self:IsMountedAndCrusaderAuraRequired() then
@@ -1612,7 +1612,7 @@ function taskScanModule:MountedCrusaderAuraPrompt()
   return false -- continue scanning spells
 end
 
-function taskScanModule:SomeoneIsDrinking()
+function module:SomeoneIsDrinking()
   if BuffomatShared.SomeoneIsDrinking ~= "hide" then
     local count = BuffomatAddon.drinkingPersonCount
 
@@ -1632,7 +1632,7 @@ function taskScanModule:SomeoneIsDrinking()
   end
 end
 
-function taskScanModule:PlayTaskSound()
+function module:PlayTaskSound()
   local s = BuffomatShared.PlaySoundWhenTask
   if s ~= nil and s ~= "-" then
     PlaySoundFile("Interface\\AddOns\\BuffomatClassic\\Sounds\\" .. BuffomatShared.PlaySoundWhenTask)
@@ -1640,12 +1640,12 @@ function taskScanModule:PlayTaskSound()
 end
 
 ---@param context TaskScanContext
-function taskScanModule:DoScan(context)
+function module:DoScan(context)
   local buffCtx = --[[@as BomBuffScanContext]] {
     macroCommand = "",
     castButtonTitle = "",
     inRange = false,
-    someoneIsDead = taskScanModule.saveSomeoneIsDead,
+    someoneIsDead = module.saveSomeoneIsDead,
   }
 
   if next(throttleModule.taskRescanRequestedBy) ~= nil then
@@ -1685,7 +1685,7 @@ function taskScanModule:DoScan(context)
 end
 
 ---Store the player's current and max mana for the mana checks while creating tasks.
-function taskScanModule:UpdatePlayerMana()
+function module:UpdatePlayerMana()
   -- Forever can report player power as a secret value (wrapper returns nil).
   -- Falling back to 0 made every spell CAN_CAST_OOM; assume full mana instead
   -- and let the client reject a cast that is really unaffordable.
@@ -1699,7 +1699,7 @@ end
 ---@param buffDef BomBuffDefinition
 ---@param playerUnit BomUnit
 ---@return boolean
-function taskScanModule:IsAuraFreeBuff(buffDef, playerUnit)
+function module:IsAuraFreeBuff(buffDef, playerUnit)
   if buffDef.type == "weapon" then
     return not playerUnit.weaponDataUnavailable
   elseif buffDef.type == "tracking" then
@@ -1713,7 +1713,7 @@ end
 ---A party of only the player. In a PvP match other players' names can be secret,
 ---and the full party refresh uses names as table keys and compares them.
 ---@return BomParty|nil
-function taskScanModule:GetPlayerOnlyParty()
+function module:GetPlayerOnlyParty()
   local player = unitCacheModule:GetUnit("player", nil, nil, nil)
   if not player then
     return nil
@@ -1729,7 +1729,7 @@ end
 ---tracking, and usable or openable items. Used during a PvP match, where the
 ---client keeps aura data secret even out of combat.
 ---@param context TaskScanContext
-function taskScanModule:DoAuraFreeScan(context)
+function module:DoAuraFreeScan(context)
   local buffCtx = --[[@as BomBuffScanContext]] { someoneIsDead = false }
   local playerUnit = context.party.player
 
@@ -1758,7 +1758,7 @@ function taskScanModule:DoAuraFreeScan(context)
 end
 
 ---Explain once per session why most buffs are not checked during a PvP match.
-function taskScanModule:NotifyPvPMatchOnce()
+function module:NotifyPvPMatchOnce()
   if not self.pvpMatchNoticeShown then
     self.pvpMatchNoticeShown = true
     BuffomatAddon:Print(_t("message.PvPMatchAuraFree"))
@@ -1766,7 +1766,7 @@ function taskScanModule:NotifyPvPMatchOnce()
 end
 
 ---@param context TaskScanContext
-function taskScanModule:Finalize(context)
+function module:Finalize(context)
   -- Open Buffomat if any cast tasks were added to the task list
   if #self.tasklist.tasks > 0 or #self.tasklist.comments > 0 then
     taskListPanelModule:AutoShow("ts:Finalize/haveTasks")
@@ -1798,7 +1798,7 @@ end
 ---For raid, invalidated group is rotated 1 to 8. For solo and party it does not rotate.
 ---Reloads party members and refreshes their buffs as necessary.
 ---@return BomParty
-function taskScanModule:RotateInvalidatedGroup_GetGroup()
+function module:RotateInvalidatedGroup_GetGroup()
   partyModule:InvalidatePartyGroup(self.roundRobinGroup)
   local party = partyModule:GetParty()
 
@@ -1824,7 +1824,7 @@ end
 
 ---@param _context TaskScanContext
 ---@return boolean True if the scan should continue, false if it should be aborted
-function taskScanModule:Precheck(_context)
+function module:Precheck(_context)
   if allBuffsModule.selectedBuffs == nil then
     return false -- Too soon the system did not initialize yet
   end
@@ -1851,7 +1851,7 @@ end -- end function bomUpdateScan_PreCheck1()
 
 ---@param context TaskScanContext
 ---@return boolean
-function taskScanModule:CheckBuffomatInactive(context)
+function module:CheckBuffomatInactive(context)
   -- Check whether BOM is disabled due to some option and a matching condition
   if not self:IsMountedAndCrusaderAuraRequired() then
     -- If mounted and crusader aura enabled, then do not do further checks, allow the crusader aura
@@ -1870,7 +1870,7 @@ end
 
 ---@param _context TaskScanContext
 ---@return boolean
-function taskScanModule:CheckCastingChanneling(_context)
+function module:CheckCastingChanneling(_context)
   -- If currently casting
   if BuffomatAddon.isPlayerCasting == "cast" then
     self:ShowInactive(_t("castButton.Busy"))
@@ -1888,7 +1888,7 @@ end -- end function bomUpdateScan_PreCheck2()
 ---Do not infer missing buffs from aura data the client did not let us read.
 ---@param context TaskScanContext
 ---@return boolean
-function taskScanModule:CheckAuraData(context)
+function module:CheckAuraData(context)
   if context.auraFree then
     return true -- auras are known to be unreadable; the aura-free scan does not use them
   end
@@ -1907,7 +1907,7 @@ end
 
 ---@param _context TaskScanContext
 ---@return boolean
-function taskScanModule:CheckGlobalCooldown(_context)
+function module:CheckGlobalCooldown(_context)
   local isInGlobalCooldown, cooldownEndTime = self:IsInGlobalCooldown()
   if not isInGlobalCooldown then
     return true
@@ -1921,7 +1921,7 @@ function taskScanModule:CheckGlobalCooldown(_context)
   return false
 end
 
-function taskScanModule:ShowInactive(reason)
+function module:ShowInactive(reason)
   throttleModule:ClearForceUpdate()
   BuffomatAddon.checkForError = false
   BuffomatAddon.theMacro:Clear()
@@ -1936,7 +1936,7 @@ end
 --- THIS IS THE SCAN ENTRY POINT
 --- Scan the available spells and group members to find who needs the rebuff/res and what would be their priority?
 ---@param callerLocation string Debug value to trace the caller of this function
-function taskScanModule:ScanTasks(callerLocation)
+function module:ScanTasks(callerLocation)
   if InCombatLockdown() then
     return
   end
@@ -2006,7 +2006,7 @@ function BuffomatAddon.AddMemberToSkipList()
   end
 end
 
-function taskScanModule:ClearSkip()
+function module:ClearSkip()
   for _, spell in ipairs(allBuffsModule.selectedBuffs) do
     if spell.skipList then
       wipe(spell.skipList)
@@ -2022,7 +2022,7 @@ function BuffomatAddon.DoCancelBuffs()
 
   for _, spell in ipairs(BuffomatAddon.cancelBuffs) do
     if buffomatModule.currentProfile.CancelBuff[spell.buffId].Enable
-        and taskScanModule:CancelBuff(spell.singleFamily)
+        and module:CancelBuff(spell.singleFamily)
     then
       BuffomatAddon:Print(string.format(_t("message.CancelBuff"), spell:SingleLink(),
         UnitName(BuffomatAddon.cancelBuffSource) or ""))

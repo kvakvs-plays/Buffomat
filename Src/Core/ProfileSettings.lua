@@ -2,8 +2,8 @@ local BuffomatAddon = BuffomatAddon
 
 ---@class ProfileModule
 ---@field ALL_PROFILES ProfileName[]
+local module = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 
-local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 
@@ -26,7 +26,7 @@ local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 ---@alias PlayerBuffChoiceDict {[BomBuffId]: PlayerBuffChoice}
 
 ---@return BlessingState
-function profileModule:NewBlessingState()
+function module:NewBlessingState()
   return {} --[[@as BlessingState]]
 end
 
@@ -68,7 +68,7 @@ end
 ---@alias BomBuffDefinitionDict {[BomBuffId]: BomBuffDefinition}
 
 ---@return ProfileSettings
-function profileModule:New()
+function module:New()
   local profile = {} --[[@as ProfileSettings]]
   -- profile.AutoOpen = true
   profile.AutoStand = true
@@ -86,7 +86,7 @@ function profileModule:New()
   return profile
 end
 
-function profileModule:Setup()
+function module:Setup()
   if envModule.hasDualSpec or GetActiveTalentGroup ~= nil then
     self.ALL_PROFILES = {
       "solo", "solo_spec2",
@@ -108,7 +108,7 @@ local function bomGetActiveTalentGroup()
 end
 
 ---@return ProfileName
-function profileModule:SoloProfile()
+function module:SoloProfile()
   local spec = bomGetActiveTalentGroup()
   if spec == 1 or spec == nil then
     return "solo"
@@ -118,7 +118,7 @@ function profileModule:SoloProfile()
 end
 
 ---@return ProfileName
-function profileModule:GroupProfile()
+function module:GroupProfile()
   local spec = bomGetActiveTalentGroup()
   if spec == 1 or spec == nil then
     return "group"
@@ -128,7 +128,7 @@ function profileModule:GroupProfile()
 end
 
 ---@return ProfileName
-function profileModule:RaidProfile()
+function module:RaidProfile()
   local spec = bomGetActiveTalentGroup()
   if spec == 1 or spec == nil then
     return "raid"
@@ -138,7 +138,7 @@ function profileModule:RaidProfile()
 end
 
 ---@return ProfileName
-function profileModule:BattlegroundProfile()
+function module:BattlegroundProfile()
   local spec = bomGetActiveTalentGroup()
   if spec == 1 or spec == nil then
     return "battleground"
@@ -150,7 +150,7 @@ end
 ---Based on profile settings and current PVE or PVP instance choose the mode
 ---of operation
 ---@return ProfileName
-function profileModule:ChooseProfile()
+function module:ChooseProfile()
   local _inInstance, instanceType = IsInInstance()
   local selectedProfile = self:SoloProfile()
 
@@ -175,7 +175,7 @@ end
 ---@param buffId BomBuffId
 ---@param profileName ProfileName|nil
 ---@return PlayerBuffChoice
-function profileModule:GetProfileBuff(buffId, profileName)
+function module:GetProfileBuff(buffId, profileName)
   if profileName == nil then
     return buffomatModule.currentProfile.Spell[buffId]
   end

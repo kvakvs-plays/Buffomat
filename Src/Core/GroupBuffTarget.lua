@@ -1,6 +1,6 @@
 ---@class BomGroupBuffTargetModule
+local module = LibStub("Buffomat-GroupBuffTarget") --[[@as BomGroupBuffTargetModule]]
 
-local groupBuffTargetModule = --[[@as BomGroupBuffTargetModule]] LibStub("Buffomat-GroupBuffTarget")
 local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
@@ -11,7 +11,7 @@ local groupBuffTargetClass = {}
 groupBuffTargetClass.__index = groupBuffTargetClass
 
 ---@return BomGroupBuffTarget
-function groupBuffTargetModule:New(groupNum)
+function module:New(groupNum)
   local fields = --[[@as BomGroupBuffTarget]] {
     groupIndex = groupNum,
   }
