@@ -22,6 +22,7 @@
     Fear Ward 3 minutes.
   - Removed spells are hidden: Blessing of Light, Salvation and Sanctuary (and Greater), Sanctity Aura,
     Omen of Clarity (now passive), Elune's Grace ranks 2-5 (rank 1 stays for Night Elf priests).
+  - Blessing of Kings is on by default for Mages, Priests and Warlocks (Might stays on for physical classes).
   - New: druid Revive, paladin Seal of Fury and Oath of Light, new ranks of Trueshot Aura and Aspect of the Beast.
   - Firestone and Spellstone are tracked as 2-hour weapon enchantments.
   - Food is grouped by the single stat its Well Fed buff gives; new elixirs, Natural flasks, Familiar and

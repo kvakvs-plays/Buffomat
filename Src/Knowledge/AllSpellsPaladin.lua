@@ -26,13 +26,17 @@ function module:SetupPaladinSpells(allBuffs, _enchants)
   --
   -- LESSER BLESSINGS
 
-  -- Blessing of Kings
+  -- Blessing of Kings. On Forever every paladin learns it at level 20, so it is on by default there,
+  -- but only for pure casters: Might stays the default for physical classes (Hunters too), and one
+  -- paladin's blessings replace each other on a target, so overlapping defaults would recast forever.
+  -- Before level 20 only Might/Wisdom are known, which suit low levels better than 10% stats anyway.
   buffDefModule:createAndRegisterBuff(allBuffs, 20217, nil)
       :GroupFamily({ 25898 })
       :IsBlessing(true)
-      :IsDefault(false)
+      :IsDefault(allBuffsModule.ForeverOr(true, false))
       :SingleDuration(blessingDuration)
-      :DefaultTargetClasses({ "MAGE", "HUNTER", "WARLOCK" })
+      :DefaultTargetClasses(allBuffsModule.ForeverOr({ "MAGE", "PRIEST", "WARLOCK" },
+        { "MAGE", "HUNTER", "WARLOCK" }))
       :IgnoreIfHaveBuff(25898) -- Greater Kings
       :Category("blessing")
       :HideInCata()

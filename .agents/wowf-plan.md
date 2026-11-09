@@ -416,11 +416,27 @@ items, which are unchanged. No change.
 
 ## 7. Open questions
 
-1. Should Blessing of Kings be on by default for paladins on Forever, now that every paladin has it?
+1. ~~Should Blessing of Kings be on by default for paladins on Forever?~~ Decided 2026-11-09: yes, for
+   Mage/Priest/Warlock only. Might stays the default for physical classes (Hunters too): one paladin's
+   blessings replace each other, so overlapping defaults would recast forever. Kings is learned at 20;
+   below that Might/Wisdom (rank-scaled) suit low levels better than 10% stats.
 2. Is totem support wanted, now that the totem bar exists? It is out of scope in this plan.
-3. Should Buffomat remind players about Camp Benefits (1229741)?
+3. Should Buffomat remind players about Camp Benefits (1229741)? Design pending; data below.
 4. What does Permanence add per rank? Gourmand? (Ask the ForeverDB API: `spells/1225502`, `spells/1225499`.)
 5. Do higher Trueshot Aura ranks come with the talent, or from a trainer?
+
+Camp and XP data (Forever client tables, build 1.60.1.70862):
+- **Camp Benefits** 1229741, 60 min (Permanence +50%): sit 1 min by a Welcoming Campfire (1229739 /
+  1289723). Its tooltip lists only the placed features: Mana Well (mana regen), Sharpening Wheel (Str),
+  Enchanted Lute (armor, attributes, resistances), First Aid Kit (Sta), Fish Bowl (+8% all stats),
+  Incense Candle (Int), Lodestone (melee AP), Camp Chair (+crit), Faction Banner (Spi). Not castable:
+  Buffomat can only tell, not click. "Campfire Nearby" 1283391 may mark being near one `(verify)`.
+- **Camp Tent** 1229487 raises rested XP after resting near it; then **Boosted Rest** 1229451 (60 min)
+  blocks another tent boost. Legacy talent **Well Rested** 1225478: rested XP +20% faster, cap +20%.
+- **Well Fed XP Boost** 1243969: passive, +5% kill XP while Well Fed (shown in every Forever Well Fed
+  tooltip; player condition 142418, probably below max level `(verify)`).
+- **Well-Rested** 429959: +XP, 2 hours, stacks to 3, from Cozy Sleeping Bag 211527 (Unroll Bag 429961).
+  ForeverDB marks the bag a Season of Discovery leftover not touched by Forever `(verify it drops)`.
 
 Answered from ForeverDB data (build 1.60.1.70862): Elune's Grace rank 1 stays for Night Elf priests;
 Sanctity Aura cannot be learned; the Natural flasks give only Stamina.

@@ -139,6 +139,12 @@ do
   equal(fury.singleFamily[1], 1311649, "Seal of Fury rank 1 first")
   equal(fury.singleFamily[#fury.singleFamily], 20423, "Seal of Fury rank 7 last")
   equal(eraBuffs[20423], nil, "Era has no Seal of Fury")
+  -- Kings is on by default on Forever, for classes Might does not cover (blessings replace each other)
+  equal(buffs[20217].default, true, "Forever Blessing of Kings is on by default")
+  equal(eraBuffs[20217].default, false, "Era Blessing of Kings stays off by default")
+  for _, class in ipairs(buffs[20217].targetClasses) do
+    assert(not contains(buffs[25291].targetClasses, class), "Kings and Might default targets overlap: " .. class)
+  end
   -- Seal of Wisdom ranks 2 and 3 (ForeverDB class list, also Classic Era)
   for _, list in ipairs({ buffs, eraBuffs }) do
     assert(contains(list[20166].singleFamily, 20356) and contains(list[20166].singleFamily, 20357),
