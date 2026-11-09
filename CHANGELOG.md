@@ -1,8 +1,15 @@
 # Changelog
 
-## Buffomat Classic 2026.11.0
+## Buffomat Classic 2026.11.2
 
-- Hunter tracking is using correct API in TBC
+- WoW: Forever reminders for levelling characters, hidden at level 60. Both are on by default; turn them off
+  in the new Reminders section at the top of the Spells window, or under [Forever] on the Scan options page:
+  - Camp Benefits: near a campfire without Camp Benefits, or with them running out, a task says to sit by
+    the fire.
+  - Experience: a task when you are not Well Fed (+5% kill experience) or carry a sleeping bag without its
+    bonus, with your rested experience.
+- WoW: Forever: Blessing of Kings is on by default for Mages, Priests and Warlocks (Might stays on for
+  physical classes). Imbue scrolls are for mages only. The beta-only Endless elixirs and scroll are removed.
 - Seal of Wisdom knows ranks 2 and 3; Elixir of the Sages shows on Classic Era and WoW: Forever again;
   Blessed Wizard Oil and Consecrated Sharpening Stone count as 1-hour enchantments.
 - Buffs that were never listed in the Spells window now show: Elixir of Greater Intellect, Juju Ember,
@@ -11,9 +18,15 @@
   Scrolls of Stamina I-IV. Lower ranks join existing groups: Elixir of Wisdom (Intellect), Minor, Lesser
   and regular Defense elixirs (Armor, with Superior Defense), Mighty Troll's Blood (health regeneration),
   Scrolls of Agility and Strength I-II. Existing settings for these buffs are kept.
-- New About page in the options with usage notes and credits.
 - Consumables are hidden until the player reaches the required level of at least one of their items
   (the check now takes the lowest item level and updates when item data loads or the player levels up).
+- Buff level limits work again: Aspect of the Monkey hides above level 74 in WotLK.
+- New About page in the options with usage notes and credits, including data from ForeverDB.net.
+- Options tabs are numbered 01, 02, ... so the About tab sorts last.
+- The task list's top buttons line up on WoW: Forever, where the close button is smaller.
+
+## Buffomat Classic 2026.11.1
+
 - Sharpening stones are suggested only for bladed weapons and weightstones only for blunt weapons
   (maces, staves, fist weapons); Elemental and Consecrated stones only for melee weapons, not fishing poles.
 - WoW: Forever buff and consumable update (client build 1.60.1.70862):
@@ -22,23 +35,18 @@
     Fear Ward 3 minutes.
   - Removed spells are hidden: Blessing of Light, Salvation and Sanctuary (and Greater), Sanctity Aura,
     Omen of Clarity (now passive), Elune's Grace ranks 2-5 (rank 1 stays for Night Elf priests).
-  - Blessing of Kings is on by default for Mages, Priests and Warlocks (Might stays on for physical classes).
-  - Camp Benefits reminder: near a campfire without Camp Benefits, or with them running out, a task says to
-    sit by the fire. XP reminder: a task when you are not Well Fed (+5% kill experience) or carry a sleeping
-    bag without its bonus, with your rested experience. Both are on by default and hidden at 60. Turn them
-    off in the new Reminders section at the top of the Spells window, or under [Forever] on the Scan
-    options page.
   - New: druid Revive, paladin Seal of Fury and Oath of Light, new ranks of Trueshot Aura and Aspect of the Beast.
   - Firestone and Spellstone are tracked as 2-hour weapon enchantments.
   - Food is grouped by the single stat its Well Fed buff gives; new elixirs, Natural flasks, Familiar and
     Imbue scrolls; Elixir of Greater Firepower became Elixir of Holy Power; Greater Protection Potions are
     no longer treated as long buffs.
   - With the Legacy talent Reagent Economy the reagent count is hidden for vendor reagents.
-  - Imbue scrolls are for mages only. The beta-only Endless elixirs and scroll are not included.
   - Imbue scrolls are suggested only for a weapon they fit (staff, dagger or one-handed sword), and the
     spells dialog shows the weapon type.
-- Buff level limits work again: Aspect of the Monkey hides above level 74 in WotLK.
-- Options tabs are numbered 01, 02, ... so the About tab sorts last.
+
+## Buffomat Classic 2026.11.0
+
+- Hunter tracking is using correct API in TBC
 
 ## Buffomat Classic 2026.10.5
 
