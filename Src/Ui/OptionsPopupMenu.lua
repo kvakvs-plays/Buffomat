@@ -101,7 +101,11 @@ function module:Setup(control, minimap)
   -- --------------------------------------------
   if true then
     for _, buffDef in ipairs(allBuffsModule.selectedBuffs) do
-      if not buffDef.isConsumable then
+      if buffDef.settingKey then
+        -- Synthetic buff (a reminder): toggles the account option, same as the Scan options page
+        table.insert(menuItems, popupModule:Boolean(
+          _t("options.short." .. buffDef.settingKey), BuffomatShared, buffDef.settingKey))
+      elseif not buffDef.isConsumable then
         table.insert(menuItems, popupModule:Boolean(
           buffDef:SingleLink(),
           profileModule:GetProfileBuff(buffDef.buffId, nil),

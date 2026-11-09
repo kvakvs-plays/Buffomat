@@ -92,16 +92,12 @@ end
 ---@param allBuffs BomBuffDefinition[]
 function module:SetupForeverReminders(allBuffs)
   buffDefModule:createAndRegisterBuff(allBuffs, CAMP_BENEFITS, nil)
-      :Reminder(module.CampCheck)
-      :IsDefault(true)
+      :Reminder(module.CampCheck, "ForeverCampReminder")
       :MaxLevel(MAX_LEVEL - 1)
       :RequireForever()
-      :Category("classicBuff")
 
   buffDefModule:createAndRegisterBuff(allBuffs, WELL_FED_XP_BOOST, nil)
-      :Reminder(module.XpCheck)
-      :IsDefault(true)
+      :Reminder(module.XpCheck, "ForeverXpReminder")
       :MaxLevel(MAX_LEVEL - 1)
       :RequireForever()
-      :Category("classicBuff")
 end

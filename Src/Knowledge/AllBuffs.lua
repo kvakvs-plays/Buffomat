@@ -1,6 +1,6 @@
 local BuffomatAddon = BuffomatAddon
 
----@alias BuffCategoryName ""|"tracking"|"pet"|"aura"|"seal"|"blessing"|"class"|"classicPhysFood"|"classicSpellFood"|"classicFood"|"classicPhysElixir"|"classicPhysBuff"|"classicBuff"|"classicSpellElixir"|"classicElixir"|"classicFlask"|"tbcPhysFood"|"tbcSpellFood"|"tbcFood"|"tbcPhysElixir"|"tbcSpellElixir"|"tbcElixir"|"tbcFlask"|"wotlkPhysFood"|"wotlkSpellFood"|"wotlkFood"|"wotlkPhysElixir"|"wotlkSpellElixir"|"wotlkElixir"|"wotlkFlask"|"scroll"|"weaponEnchantment"|"classWeaponEnchantment"|"cataElixir"|"cataFood"|"cataFlask"
+---@alias BuffCategoryName ""|"reminder"|"tracking"|"pet"|"aura"|"seal"|"blessing"|"class"|"classicPhysFood"|"classicSpellFood"|"classicFood"|"classicPhysElixir"|"classicPhysBuff"|"classicBuff"|"classicSpellElixir"|"classicElixir"|"classicFlask"|"tbcPhysFood"|"tbcSpellFood"|"tbcFood"|"tbcPhysElixir"|"tbcSpellElixir"|"tbcElixir"|"tbcFlask"|"wotlkPhysFood"|"wotlkSpellFood"|"wotlkFood"|"wotlkPhysElixir"|"wotlkSpellElixir"|"wotlkElixir"|"wotlkFlask"|"scroll"|"weaponEnchantment"|"classWeaponEnchantment"|"cataElixir"|"cataFood"|"cataFlask"
 
 ---@alias BomBuffidBuffdefLookup {[BomBuffId]: BomBuffDefinition}
 ---@alias BomEnchantToSpellLookup {[BomEnchantmentId]: WowSpellId}
@@ -205,6 +205,7 @@ function module:SetupConstantsCategories()
 
   -- Categories ordered for display
   self.buffCategories = {
+    "reminder", -- synthetic buffs: Forever reminders, on/off is an account option
     "class", "classWeaponEnchantment", "blessing", "seal", "aura", "pet", "tracking",
 
     "classicPhysElixir", "classicPhysBuff", "classicBuff", "classicSpellElixir", "classicElixir", "classicFlask",

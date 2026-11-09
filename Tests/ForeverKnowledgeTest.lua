@@ -290,15 +290,30 @@ do
   assert(contains(mage[25722].items, 287972), "Rumsey Rum Dark with its Forever item")
 end
 
--- Forever reminders: Camp Benefits (on by default) and XP bonuses (on), both hidden at level 60
+-- Forever reminders: Camp Benefits and XP bonuses, account options on by default, both hidden at level 60
 do
-  local _, buffs, _, _, libs = setup("forever", "WARRIOR", "Human")
+  local _, buffs, _, allBuffsModule, libs = setup("forever", "WARRIOR", "Human")
   local _, eraBuffs = setup("era", "WARRIOR", "Human")
   local camp, xp = buffs[1229741], buffs[1243969]
   assert(camp and camp.isInfo and camp.reminderCheck, "Forever Camp Benefits reminder")
   assert(xp and xp.isInfo and xp.reminderCheck, "Forever XP reminder")
-  equal(camp.default, true, "Camp reminder is on by default")
-  equal(xp.default, true, "XP reminder is on by default")
+  equal(camp.settingKey, "ForeverCampReminder", "Camp reminder follows its account option")
+  equal(xp.settingKey, "ForeverXpReminder", "XP reminder follows its account option")
+  equal(camp.category, "reminder", "Camp reminder in the Reminders category")
+  equal(xp.category, "reminder", "XP reminder in the Reminders category")
+  allBuffsModule:SetupConstants()
+  equal(allBuffsModule.buffCategories[1], "reminder", "Reminders are listed first in the Spells dialog")
+
+  local settingsFile = io.open("Src/Core/SharedSettings.lua"):read("*a")
+  assert(settingsFile:find("ForeverCampReminder = true", 1, true), "Camp reminder option on by default")
+  assert(settingsFile:find("ForeverXpReminder = true", 1, true), "XP reminder option on by default")
+
+  local buffDefModule = libs["Buffomat-BuffDefinition"]
+  local savedShared = _G.BuffomatShared
+  _G.BuffomatShared = { ForeverCampReminder = true, ForeverXpReminder = false }
+  equal(buffDefModule:IsBuffEnabled(1229741, nil), true, "camp reminder enabled by its option")
+  equal(buffDefModule:IsBuffEnabled(1243969, nil), false, "XP reminder disabled by its option")
+  _G.BuffomatShared = savedShared
   equal(camp.limitations.maxLevel, 59, "Camp reminder hidden at level 60")
   equal(xp.limitations.maxLevel, 59, "XP reminder hidden at level 60")
   -- The level limits must survive ApplyPostLimitations; the fixture player is level 60

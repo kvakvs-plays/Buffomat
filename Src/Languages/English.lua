@@ -21,6 +21,7 @@ function englishModule:Translations()
     ["Category_classicPhysBuff"] = "Physical Buffs (Classic)",
     ["Category_classicSpellElixir"] = "Spell Elixirs (Classic)",
     ["Category_classicBuff"] = "Buffs (Classic)",
+    ["Category_reminder"] = "Reminders",
     ["Category_classicElixir"] = "Elixirs (Classic)",
     ["Category_classicFlask"] = "Flasks (Classic)",
 
@@ -93,6 +94,8 @@ function englishModule:Translations()
     ["options.short.ReputationTrinket"] = "Warn about reputation items",
     ["options.short.ResGhost"] = "Attempt ressing ghosts",
     ["options.short.SameZone"] = "Scan members in same zone",
+    ["options.short.ForeverCampReminder"] = "[Forever] Remind to sit by the campfire for Camp Benefits",
+    ["options.short.ForeverXpReminder"] = "[Forever] Remind about experience bonuses",
     ["options.short.ScanInRestArea"] = "Scan in rest area",
     ["options.short.ScanInStealth"] = "Scan in stealth",
     ["options.short.ScanWhileMounted"] = "Scan while mounted",
@@ -141,6 +144,10 @@ function englishModule:Translations()
     ["options.long.ReputationTrinket"] = "Remind to unequip reputation trinket",
     ["options.long.ResGhost"] = "Attempt to resurrect ghosts in hopes that the body is reachable (no distance check)",
     ["options.long.SameZone"] = "Watch only when in same zone",
+    ["options.long.ForeverCampReminder"] =
+    "WoW: Forever, below level 60. Near a campfire without Camp Benefits, or with them running out, show a task to sit by the fire",
+    ["options.long.ForeverXpReminder"] =
+    "WoW: Forever, below level 60. Show a task when you are not Well Fed (+5% experience from kills), or carry a sleeping bag without its bonus. Your rested experience is shown too",
     ["options.long.ScanInRestArea"] = "Scan buffs in rest areas (city and inn)",
     ["options.long.ScanInStealth"] = "Scan buffs in stealth",
     ["options.long.ScanWhileMounted"] = "Scan while on a player is mounted",

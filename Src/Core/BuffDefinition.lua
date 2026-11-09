@@ -99,6 +99,7 @@ end
 ---@field isInfo boolean Set true to send expiration whispers?
 ---@field reminderCheck BomReminderCheck|nil Reminder buff: returns the task text when the player should act
 ---@field reminderText string|nil Text from the last reminder check, shown in the info task
+---@field settingKey string|nil Reminder buff: on/off comes from this BuffomatShared option, not the profile
 ---@field isOwn boolean Spell only casts on self
 ---@field isScanned boolean
 ---@field itemIcon string|number
@@ -728,12 +729,16 @@ end
 
 ---Makes this a reminder: nothing is cast or used. On each scan `check` looks at the player and returns the
 ---text of an info task (no button, no macro), or nil when there is nothing to remind about. Reminders are
----listed in the Spells dialog without a known spell, like other info buffs.
+---listed first in the Spells dialog, in the "reminder" category, without a known spell.
+---On/off is the account option `settingKey` (also on the Scan options page), not the profile checkbox.
 ---@param check BomReminderCheck
+---@param settingKey string BomSharedSettings field
 ---@return BomBuffDefinition
-function buffDefClass:Reminder(check)
+function buffDefClass:Reminder(check, settingKey)
   self.isInfo = true
   self.reminderCheck = check
+  self.settingKey = settingKey
+  self.category = "reminder"
   return self
 end
 
@@ -812,6 +817,10 @@ end
 ---@param profileName ProfileName|nil
 ---@return boolean
 function module:IsBuffEnabled(buffId, profileName)
+  local buffDef = allBuffsModule.allBuffs[buffId]
+  if buffDef and buffDef.settingKey then
+    return BuffomatShared[buffDef.settingKey] == true
+  end
   local spell = profileModule:GetProfileBuff(buffId, profileName)
   if spell == nil then
     return false

@@ -10,6 +10,8 @@ local eventsModule = LibStub("Buffomat-Events") --[[@as EventsModule]]
 local taskScanModule = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
 local kvOptionsModule = LibStub("KvLibShared-Options") --[[@as KvOptionsModule]]
 local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
+local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
+local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local libIcon = LibStub("LibDBIcon-1.0")
 
 ---@param dict table|nil
@@ -66,7 +68,7 @@ function module:CreateGeneralOptionsTable()
 
   return {
     type = "group",
-    name = "1. " .. _t("options.general.group.General"),
+    name = "01. " .. _t("options.general.group.General"),
     args = {
       language = self:CreateLanguageOption(),
       autoOpen = self:TemplateCheckbox("AutoOpen", nil, nil, nil),
@@ -150,10 +152,21 @@ function module:CreateLanguageOption()
   }
 end
 
+---A checkbox shown only on WoW: Forever; its label has the "[Forever]" prefix in the translations.
+---Changing it rescans, so a reminder task appears or goes away at once.
+---@param name string BomSharedSettings field
+function module:TemplateForeverCheckbox(name)
+  local checkbox = self:TemplateCheckbox(name, nil, nil, function()
+    throttleModule:RequestTaskRescan("options:" .. name)
+  end)
+  checkbox.hidden = function() return not envModule.isForever end
+  return checkbox
+end
+
 function module:CreateScanOptionsTable()
   return {
     type = "group",
-    name = "2. " .. _t("options.general.group.Scan"),
+    name = "02. " .. _t("options.general.group.Scan"),
     args = {
       scanInRestArea = self:TemplateCheckbox("ScanInRestArea", nil, nil, nil),
       scanInStealth = self:TemplateCheckbox("ScanInStealth", nil, nil, nil),
@@ -163,6 +176,8 @@ function module:CreateScanOptionsTable()
       inInstance = self:TemplateCheckbox("InInstance", nil, nil, nil),
       sameZone = self:TemplateCheckbox("SameZone", nil, nil, nil),
       bestAvailableConsume = self:TemplateCheckbox("BestAvailableConsume", nil, nil, nil),
+      foreverCampReminder = self:TemplateForeverCheckbox("ForeverCampReminder"),
+      foreverXpReminder = self:TemplateForeverCheckbox("ForeverXpReminder"),
     }
   }
 end
@@ -170,7 +185,7 @@ end
 function module:CreateAutoActionOptionsTable()
   return {
     type = "group",
-    name = "3. " .. _t("options.general.group.AutoActions"),
+    name = "03. " .. _t("options.general.group.AutoActions"),
     args = {
       autoCrusaderAura = self:TemplateCheckbox("AutoCrusaderAura", nil, nil, nil),
       autoDismount = self:TemplateCheckbox("AutoDismount", nil, nil, nil),
@@ -184,7 +199,7 @@ end
 function module:CreateConvenienceOptionsTable()
   return {
     type = "group",
-    name = "4. " .. _t("options.general.group.Convenience"),
+    name = "04. " .. _t("options.general.group.Convenience"),
     args = {
       preventPVPTag = self:TemplateCheckbox("PreventPVPTag", nil, nil, nil),
       deathBlock = self:TemplateCheckbox("DeathBlock", nil, nil, nil),
@@ -217,7 +232,7 @@ end
 function module:CreateBuffingOptionsTable()
   return {
     type = "group",
-    name = "5. " .. _t("options.general.group.Buffing"),
+    name = "05. " .. _t("options.general.group.Buffing"),
     args = {
       minBuff = self:TemplateRange("MinBuff", 1, 5, 1, nil, nil, nil),
       minBlessing = self:TemplateRange("MinBlessing", 1, 40, 1, nil, nil, nil),
@@ -233,7 +248,7 @@ end
 function module:CreateVisibilityOptionsTable()
   return {
     type = "group",
-    name = "6. " .. _t("options.general.group.Visibility"),
+    name = "06. " .. _t("options.general.group.Visibility"),
     args = {
       categories = self:TemplateMultiselect(
         "VisibleCategories",
@@ -257,7 +272,7 @@ end
 function module:CreateClassOptionsTable()
   return {
     type = "group",
-    name = "9. " .. _t("options.general.group.Class"),
+    name = "09. " .. _t("options.general.group.Class"),
     args = {
       shamanFlametongueRanked = self:TemplateCheckbox("ShamanFlametongueRanked", nil, nil, nil),
     } -- end args

@@ -27,6 +27,7 @@ local ngStringsModule = LibStub("Buffomat-NgStrings") --[[@as NgStringsModule]]
 local ngToolboxModule = LibStub("Buffomat-NgToolbox") --[[@as NgToolboxModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 local texturesModule = LibStub("Buffomat-Textures") --[[@as TexturesModule]]
+local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
 local characterSettingsModule = LibStub("Buffomat-CharacterSettings") --[[@as CharacterSettingsModule]]
 
 ---@param preselectCategory BuffCategoryName|nil
@@ -236,15 +237,28 @@ function module:CreateBuffRow(buffDef, profileBuff, _context)
 
   -- Create the checkbox to enable/disable the buff
   local checkEnabled = libGUI:Create("CheckBox")
-  checkEnabled:SetValue(profileBuff.Enable)
-  checkEnabled:SetCallback("OnValueChanged", function(_control, _callbackName, value)
-    profileBuff.Enable = value
-  end)
-  checkEnabled:SetLabel("-")
-  buffDef:SetSpellListText(function(text)
-    checkEnabled:SetLabel(text)
+  if buffDef.settingKey then
+    -- Synthetic buff (a reminder): the checkbox is the account option from the Scan options page
+    local settingKey = buffDef.settingKey
+    checkEnabled:SetValue(BuffomatShared[settingKey] == true)
+    checkEnabled:SetCallback("OnValueChanged", function(_control, _callbackName, value)
+      BuffomatShared[settingKey] = value
+      throttleModule:RequestTaskRescan("spellsDialog:" .. settingKey)
+    end)
+    checkEnabled:SetLabel(_t("options.short." .. settingKey))
     checkEnabled:SetWidth(checkEnabled.text:GetStringWidth() + 32)
-  end)
+    ngToolboxModule:TooltipWithTranslationKey(checkEnabled, "options.long." .. settingKey)
+  else
+    checkEnabled:SetValue(profileBuff.Enable)
+    checkEnabled:SetCallback("OnValueChanged", function(_control, _callbackName, value)
+      profileBuff.Enable = value
+    end)
+    checkEnabled:SetLabel("-")
+    buffDef:SetSpellListText(function(text)
+      checkEnabled:SetLabel(text)
+      checkEnabled:SetWidth(checkEnabled.text:GetStringWidth() + 32)
+    end)
+  end
   row:AddChild(checkEnabled)
 
   -- Create checkboxes one per class

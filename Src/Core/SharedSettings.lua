@@ -48,6 +48,8 @@ local supportedLanguageSettings = {
 ---@field ScanInStealth boolean
 ---@field ScanWhileMounted boolean
 ---@field BestAvailableConsume boolean
+---@field ForeverCampReminder boolean WoW: Forever, below level 60: remind to sit by a campfire for Camp Benefits
+---@field ForeverXpReminder boolean WoW: Forever, below level 60: remind about Well Fed and sleeping bag XP bonuses
 ---@field InWorld boolean
 ---@field InPVP boolean
 ---@field InInstance boolean
@@ -127,6 +129,8 @@ function module:Defaults()
     InPVP = true,
     InInstance = true,
     SameZone = true,
+    ForeverCampReminder = true,
+    ForeverXpReminder = true,
     ----------------------
     AutoCrusaderAura = true,
     AutoDismount = true,
