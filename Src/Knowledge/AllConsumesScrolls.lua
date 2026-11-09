@@ -12,6 +12,7 @@ local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 function module:SetupScrolls(allBuffs, enchantments)
   self:_SetupScrollsAgility(allBuffs, enchantments)
   self:_SetupScrollsStrength(allBuffs, enchantments)
+  self:_SetupScrollsStamina(allBuffs, enchantments)
   self:_SetupScrollsProtection(allBuffs, enchantments)
   self:_SetupScrollsSpirit(allBuffs, enchantments)
   self:_SetupScrollsIntellect(allBuffs, enchantments)
@@ -28,7 +29,10 @@ end
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
 function module:_SetupScrollsAgility(allBuffs, enchantments)
+  -- Items are tried from the last one: list them weakest first
   local scrollItemIds = {
+    3012,  -- Scroll of Agility 1
+    1477,  -- Scroll of Agility 2
     4425,  -- Scroll of Agility 3
     10309, -- Scroll of Agility 4
   }
@@ -44,9 +48,12 @@ function module:_SetupScrollsAgility(allBuffs, enchantments)
     table.insert(scrollItemIds, 63303) -- Cata: Scroll of Agility 9
   end
 
+  -- The first aura is the buff ID; add new ones at the end
   local scrollAuras = {
     8117,  -- Aura for Scroll of Agility 3
     12174, -- Aura for Scroll of Agility 4
+    8115,  -- Aura for Scroll of Agility 1
+    8116,  -- Aura for Scroll of Agility 2
   }
   if envModule.haveTBC then
     table.insert(scrollAuras, 33077) -- Aura for Scroll of Agility 5 (TBC)
@@ -70,7 +77,10 @@ end
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
 ---@param enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
 function module:_SetupScrollsStrength(allBuffs, enchantments)
+  -- Items are tried from the last one: list them weakest first
   local scrollItemIds = {
+    954,   -- Scroll of Strength 1
+    2289,  -- Scroll of Strength 2
     4426,  -- Scroll of Strength 3
     10310, -- Scroll of Strength 4
   }
@@ -86,9 +96,12 @@ function module:_SetupScrollsStrength(allBuffs, enchantments)
     table.insert(scrollItemIds, 63304) -- Cata: Scroll of Strength 9
   end
 
+  -- The first aura is the buff ID; add new ones at the end
   local scrollAuras = {
     8120,  -- Aura for Scroll of Strength 3
     12179, -- Aura for Scroll of Strength 4
+    8118,  -- Aura for Scroll of Strength 1
+    8119,  -- Aura for Scroll of Strength 2
   }
   if envModule.haveTBC then
     table.insert(scrollAuras, 33082) -- Aura for Scroll of Strength 5 (TBC)
@@ -105,6 +118,28 @@ function module:_SetupScrollsStrength(allBuffs, enchantments)
   buffDefModule:consumableGroup(allBuffs, "scrollStr", scrollAuras, scrollItemIds)
       :RequirePlayerClass(allBuffsModule.MELEE_CLASSES)
       :ConsumeGroupTitle("scroll", ITEM_MOD_STRENGTH_SHORT, 237162) -- "inv_inscription_scroll"
+      :Category("scroll")
+      :ExtraText(_t("tooltip.scroll.bestInBag"))
+end
+
+---Scrolls of Stamina 1-4. Later expansion ranks are not listed: their IDs are not verified yet.
+---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
+---@param _enchantments table<number, number[]> Key is spell id, value is list of enchantment ids
+function module:_SetupScrollsStamina(allBuffs, _enchantments)
+  local scrollItemIds = {
+    1180,  -- Scroll of Stamina 1
+    1711,  -- Scroll of Stamina 2
+    4422,  -- Scroll of Stamina 3
+    10307, -- Scroll of Stamina 4
+  }
+  local scrollAuras = {
+    8099,  -- Aura for Scroll of Stamina 1
+    8100,  -- Aura for Scroll of Stamina 2
+    8101,  -- Aura for Scroll of Stamina 3
+    12178, -- Aura for Scroll of Stamina 4
+  }
+  buffDefModule:consumableGroup(allBuffs, "scrollSta", scrollAuras, scrollItemIds)
+      :ConsumeGroupTitle("scroll", ITEM_MOD_STAMINA_SHORT, 237162) -- "inv_inscription_scroll"
       :Category("scroll")
       :ExtraText(_t("tooltip.scroll.bestInBag"))
 end

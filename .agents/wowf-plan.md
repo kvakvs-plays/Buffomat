@@ -450,6 +450,7 @@ Still open:
 
 - The in-game checklist in section 5.
 - Open questions 1-3 in section 7 (Kings default, totems, Camp Benefits reminder).
+- ForeverDB candidates: done, see section 9.
 - Not done on purpose: removed reputation/riding trinkets stay in their lists (absent items are never
   in bags, so they are harmless); `AllDrink` keeps the classic Drink auras, which Nutritious Drink
   still applies.
@@ -478,8 +479,20 @@ Noise in the report: TBC/WotLK ranks in shared spell families are unknown on For
 later expansions (Seal of Blood, Crusader Aura, Felguard, Earthliving) appear in the dump because
 they only need the spell to be known. Neither shows up in the game.
 
-Candidates not in Buffomat (decide later): Elixir of Brute Force 13453; low elixirs (Minor
-Fortitude, Wisdom, Lesser/Minor Defense, Defense, Troll's Blood, Fire Power); Scrolls of
-Stamina/Strength/Agility I-IV; Bloodkelp elixirs; Rumsey Rum; fishing and zone Well Fed foods;
-Shaman totems. Filet o' Flank 238638 (Agility food) is a Season of Discovery leftover that Forever
-did not touch; it is harmless in the list.
+Added 2026-11-09 (also on Classic Era): Elixir of Brute Force 13453, Fire Power 6373, Minor
+Fortitude 2458, Rumsey Rum Dark 21114/287972, Scrolls of Stamina I-IV (group `scrollSta`). Joined
+existing groups: Elixir of Wisdom 3383 (Intellect group, buff ID 11396), Minor/Lesser/regular Defense
+5997/3389/8951 (Armor group, buff ID 11348 of Superior Defense), Mighty Troll's Blood 3826 (hp5),
+Scrolls of Agility and Strength I-II. A group's buff ID is its **first** aura and its items are tried
+from the **last** one, so new ranks append auras and prepend weaker items; saved settings carry over.
+
+Also found: buffs whose category is not in `buffCategories` are never listed in the Spells dialog.
+`classicBuff` was missing from the list (Juju Ember/Chill, Crystal Ward/Spire/Force), Elixir of
+Greater Intellect used `tbcSpellElixir`, and Seal of Justice 20164 had `Category(3)`. All fixed;
+`Tests/ForeverKnowledgeTest.lua` now checks every Forever and Era buff's category.
+
+Left out on purpose: utility draughts (water breathing, detect undead/demon), fishing and zone Well
+Fed foods (fishing skill, zone movement speed), holiday food, Rumsey Rum Light, Watered-down Beer,
+Oil of Olaf, Bloodkelp elixirs, the SoD-only abilities in report section 2, and Shaman totems (open
+question 2). Filet o' Flank 238638 (Agility food) is a Season of Discovery leftover that Forever did
+not touch; it is harmless in the list.

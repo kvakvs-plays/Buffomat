@@ -112,6 +112,12 @@ function module:_SetupBattleCasterElixirsClassic(allBuffs, enchantments)
       :RequirePlayerClass(allBuffsModule.FROST_CLASSES)
       :Category("classicSpellElixir")
       :ElixirType("battle")
+
+  --Elixir of Fire Power +10 FIRE
+  buffDefModule:genericConsumable(allBuffs, 7844, 6373)
+      :RequirePlayerClass(allBuffsModule.FIRE_CLASSES)
+      :Category("classicSpellElixir")
+      :ElixirType("battle")
 end
 
 ---@param allBuffs BomBuffDefinition[] A list of buffs (not dictionary)
@@ -120,6 +126,12 @@ function module:_SetupBattlePhysicalElixirsClassic(allBuffs, enchantments)
   --Elixir of the Mongoose
   buffDefModule:genericConsumable(allBuffs, 17538, 13452)
       :RequirePlayerClass(allBuffsModule.PHYSICAL_CLASSES)
+      :Category("classicPhysElixir")
+      :ElixirType("battle")
+
+  --Elixir of Brute Force +18 STR/+18 STA
+  buffDefModule:genericConsumable(allBuffs, 17537, 13453)
+      :RequirePlayerClass(allBuffsModule.MELEE_CLASSES)
       :Category("classicPhysElixir")
       :ElixirType("battle")
 
@@ -316,40 +328,65 @@ function module:_SetupGuardianElixirsClassic(allBuffs, enchantments)
       :Category("classicSpellElixir")
       :ElixirType("guardian")
 
-  --All Intellect elixirs
-  local _intItemIds = {
-    3383,     -- Elixir of Wisdom +6
+  --All Intellect elixirs. The first aura is the buff ID, the one Elixir of Greater Intellect had
+  --alone, so saved settings carry over. Was in the TBC category, which hid it on Era and Forever.
+  local intItemIds = {
+    3383,     -- Elixir of Wisdom +6 (+3 on Forever)
     9179,     -- Elixir of Greater Intellect +25
   }
-  local _intAuras = {
-    3166,      -- +6 INT
+  local intAuras = {
     11396,     -- +25 INT
+    3166,      -- +6 INT
   }
-  buffDefModule:genericConsumable(allBuffs, 11396, 9179)
+  buffDefModule:consumableGroup(allBuffs, "elixirInt", intAuras, intItemIds)
       :RequirePlayerClass(allBuffsModule.MANA_CLASSES)
-      :Category("tbcSpellElixir")
+      :Category("classicSpellElixir")
       :ElixirType("guardian")
+      :ConsumeGroupTitle("elixir", ITEM_MOD_INTELLECT_SHORT, 132379)   -- "inv_alchemy_imbuedvial"
+      :ExtraText(_t("tooltip.elixir.bestInBag"))
 
   --Elixir of Fortitude
   buffDefModule:genericConsumable(allBuffs, 3593, 3825)
       :Category("classicElixir")
       :ElixirType("guardian")
 
-  --Elixir of Superior Defense
-  buffDefModule:genericConsumable(allBuffs, 11348, 13445)
+  --Elixir of Minor Fortitude +27 HP
+  buffDefModule:genericConsumable(allBuffs, 2378, 2458)
       :Category("classicElixir")
       :ElixirType("guardian")
+
+  --All armor elixirs. The first aura is the buff ID that Elixir of Superior Defense had alone.
+  local armorItemIds = {
+    5997,      -- Elixir of Minor Defense +50
+    3389,      -- Elixir of Lesser Defense +150
+    8951,      -- Elixir of Defense +250
+    13445,     -- Elixir of Superior Defense +450
+  }
+  local armorAuras = {
+    11348,     -- +450 ARMOR
+    673,       -- +50 ARMOR
+    3220,      -- +150 ARMOR
+    11349,     -- +250 ARMOR
+  }
+  buffDefModule:consumableGroup(allBuffs, "elixirArmor", armorAuras, armorItemIds)
+      :Category("classicElixir")
+      :ElixirType("guardian")
+      :ConsumeGroupTitle("elixir", ITEM_MOD_EXTRA_ARMOR_SHORT, 132379)   -- "inv_alchemy_imbuedvial"
+      :ExtraText(_t("tooltip.elixir.bestInBag"))
 
   --All health regen elixirs
   local healthRegenItemIds = {
     3382,      -- Weak Troll's Blood Potion +2 hp/5
     3388,      -- Strong Troll's Blood Potion +6 hp/5
+    3826,      -- Mighty Troll's Blood Potion +12 hp/5
     20004,     -- Major Troll's Blood Potion +20 hp/5
   }
+  -- The first aura is the buff ID; add new ones at the end
   local healthRegenAuras = {
     3219,      -- +2 hp/5
     3222,      -- +6 hp/5
     24361,     -- +20 hp/5
+    3223,      -- +12 hp/5
   }
   buffDefModule:consumableGroup(allBuffs, "elixirHp5", healthRegenAuras, healthRegenItemIds)
       :Category("classicElixir")

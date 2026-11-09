@@ -81,6 +81,11 @@ function module:_SetupMiscConsumablesClassic(allBuffs, enchantments)
       :ExtraText(_t("tooltip.alcohol.stamina"))
       :Category("classicFood")
 
+  --Rumsey Rum Dark +10 STA; Forever also sells it as item 287972
+  buffDefModule:genericConsumable(allBuffs, 25722, { 21114, 287972 })
+      :ExtraText(_t("tooltip.alcohol.stamina"))
+      :Category("classicFood")
+
   --Crystal Ward
   buffDefModule:genericConsumable(allBuffs, 15233, 11564)
       :Category("classicBuff")

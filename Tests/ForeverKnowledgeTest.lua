@@ -266,6 +266,39 @@ do
   equal(mage[28898].singleDuration, 3600, "Blessed Wizard Oil lasts an hour")
   equal(warrior[28891].singleDuration, 3600, "Consecrated Sharpening Stone lasts an hour")
   equal(mage[25122].singleDuration, 1800, "Brilliant Wizard Oil stays 30 minutes")
+
+  -- Consumables ForeverDB lists that Buffomat lacked; group buff IDs must stay the same
+  local int = mage[11396]
+  assert(int and contains(int.items, 3383) and int.items[#int.items] == 9179,
+    "Intellect elixirs: Elixir of Wisdom added, Greater Intellect tried first")
+  equal(int.category, "classicSpellElixir", "Intellect elixirs shown in a Classic category")
+  local armor = warrior[11348]
+  assert(armor and contains(armor.items, 5997) and armor.items[#armor.items] == 13445, "armor elixirs")
+  assert(contains(warrior[3219].items, 3826), "Troll's Blood Elixir joins the hp5 group")
+  assert(warrior[17537] and contains(warrior[17537].items, 13453), "Elixir of Brute Force")
+  assert(warrior[2378] and mage[7844], "Elixir of Minor Fortitude, Elixir of Fire Power")
+  equal(warrior[8117].items[1], 3012, "Scroll of Agility I added, weakest first")
+  assert(contains(warrior[8120].items, 954), "Scroll of Strength I added")
+  assert(warrior[8099] and #warrior[8099].items == 4, "Scrolls of Stamina I-IV")
+  assert(contains(mage[25722].items, 287972), "Rumsey Rum Dark with its Forever item")
+end
+
+-- Every buff sits in a category the spells dialog shows; others are never listed there
+do
+  for _, clientName in ipairs({ "forever", "era" }) do
+    for _, class in ipairs({ "WARRIOR", "PALADIN", "HUNTER", "ROGUE", "PRIEST", "SHAMAN", "MAGE", "WARLOCK",
+      "DRUID" }) do
+      local _, buffs, _, allBuffsModule = setup(clientName, class, "Human")
+      allBuffsModule:SetupConstants()
+      for buffId, buff in pairs(buffs) do
+        assert(contains(allBuffsModule.buffCategories, buff.category),
+          string.format("%s %s buff %s has hidden category %s", clientName, class, tostring(buffId),
+            tostring(buff.category)))
+      end
+    end
+  end
+  local _, eraPaladin = setup("era", "PALADIN", "Human")
+  equal(eraPaladin[20164].category, "seal", "Seal of Justice is listed with the seals")
 end
 
 print("PASS: Forever knowledge for capabilities, classes and consumables")

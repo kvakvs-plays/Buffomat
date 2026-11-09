@@ -5,6 +5,12 @@
 - Hunter tracking is using correct API in TBC
 - Seal of Wisdom knows ranks 2 and 3; Elixir of the Sages shows on Classic Era and WoW: Forever again;
   Blessed Wizard Oil and Consecrated Sharpening Stone count as 1-hour enchantments.
+- Buffs that were never listed in the Spells window now show: Elixir of Greater Intellect, Juju Ember,
+  Juju Chill, Crystal Ward, Crystal Spire, Crystal Force, and paladin Seal of Justice.
+- New consumables: Elixir of Brute Force, Elixir of Fire Power, Elixir of Minor Fortitude, Rumsey Rum Dark,
+  Scrolls of Stamina I-IV. Lower ranks join existing groups: Elixir of Wisdom (Intellect), Minor, Lesser
+  and regular Defense elixirs (Armor, with Superior Defense), Mighty Troll's Blood (health regeneration),
+  Scrolls of Agility and Strength I-II. Existing settings for these buffs are kept.
 - New About page in the options with usage notes and credits.
 - Consumables are hidden until the player reaches the required level of at least one of their items
   (the check now takes the lowest item level and updates when item data loads or the player levels up).

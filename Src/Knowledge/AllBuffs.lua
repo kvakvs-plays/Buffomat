@@ -206,7 +206,7 @@ function module:SetupConstantsCategories()
   self.buffCategories = {
     "class", "classWeaponEnchantment", "blessing", "seal", "aura", "pet", "tracking",
 
-    "classicPhysElixir", "classicPhysBuff", "classicSpellElixir", "classicElixir", "classicFlask",
+    "classicPhysElixir", "classicPhysBuff", "classicBuff", "classicSpellElixir", "classicElixir", "classicFlask",
     "classicFood", "classicPhysFood", "classicSpellFood",
   }
 

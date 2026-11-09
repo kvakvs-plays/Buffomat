@@ -311,13 +311,13 @@ function module:SetupPaladinSpells(allBuffs, _enchants)
       :RequirePlayerClass("PALADIN")
       :Category("class")
 
-  -- Sanctity Seal (classic and TBC only)
+  -- Seal of Justice (Classic Era and Forever; Cataclysm has its own definition below)
   buffDefModule:createAndRegisterBuff(allBuffs, 20164, nil)
       :BuffType("seal")
       :IsDefault(false)
       :RequirePlayerClass("PALADIN")
       :HideInTBC()
-      :Category(3)                                         -- classic only
+      :Category("seal")
 
   buffDefModule:createAndRegisterBuff(allBuffs, 5502, nil) -- Sense undead
       :BuffType("tracking")
