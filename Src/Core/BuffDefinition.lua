@@ -97,6 +97,8 @@ end
 ---@field isBlessing boolean Spell will be cast on group members of the same class
 ---@field isConsumable boolean Is an item-based buff; the spell must have 'items' field too
 ---@field isInfo boolean Set true to send expiration whispers?
+---@field reminderCheck BomReminderCheck|nil Reminder buff: returns the task text when the player should act
+---@field reminderText string|nil Text from the last reminder check, shown in the info task
 ---@field isOwn boolean Spell only casts on self
 ---@field isScanned boolean
 ---@field itemIcon string|number
@@ -719,6 +721,19 @@ end
 ---@param text string
 function buffDefClass:ExtraText(text)
   self.extraText = text
+  return self
+end
+
+---@alias BomReminderCheck fun(buffDef: BomBuffDefinition, playerUnit: BomUnit): string|nil
+
+---Makes this a reminder: nothing is cast or used. On each scan `check` looks at the player and returns the
+---text of an info task (no button, no macro), or nil when there is nothing to remind about. Reminders are
+---listed in the Spells dialog without a known spell, like other info buffs.
+---@param check BomReminderCheck
+---@return BomBuffDefinition
+function buffDefClass:Reminder(check)
+  self.isInfo = true
+  self.reminderCheck = check
   return self
 end
 

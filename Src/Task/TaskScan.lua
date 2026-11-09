@@ -201,6 +201,8 @@ function module:UpdateMissingBuffs_EachBuff(party, buffDef, buffCtx)
     buffChecksModule:HunterPetNeedsBuff(buffDef, party.player)
   elseif buffDef.isConsumable then
     buffChecksModule:PlayerNeedsConsumable(buffDef, party.player)
+  elseif buffDef.reminderCheck then
+    buffChecksModule:PlayerNeedsReminder(buffDef, party.player)
   elseif buffDef.isInfo then
     buffChecksModule:PartyNeedsInfoBuff(buffDef, party)
   elseif buffDef.isOwn then
@@ -1518,6 +1520,15 @@ function module:CreateOneBuffTask(buffDef, party, buffCtx)
   elseif buffDef.isConsumable then
     if #buffDef.unitsNeedBuff > 0 then
       self:AddConsumableSelfbuff(buffDef, party.player, buffDef.consumableTarget, buffCtx)
+    end
+  elseif buffDef.reminderCheck then
+    if buffDef.reminderText then
+      -- Text: [Spell Link] what to do; nothing to cast
+      self.tasklist:Add(taskModule:Create(buffDef:SingleLink(), buffDef.singleText)
+        :ExtraText(buffDef.reminderText)
+        :Target(buffTargetModule:FromSelf(party.player))
+        :IsInfo()
+        :LinkToBuffDef(buffDef))
     end
   elseif buffDef.isInfo then
     if #buffDef.unitsNeedBuff then

@@ -421,7 +421,14 @@ items, which are unchanged. No change.
    blessings replace each other, so overlapping defaults would recast forever. Kings is learned at 20;
    below that Might/Wisdom (rank-scaled) suit low levels better than 10% stats.
 2. Is totem support wanted, now that the totem bar exists? It is out of scope in this plan.
-3. Should Buffomat remind players about Camp Benefits (1229741)? Design pending; data below.
+3. ~~Should Buffomat remind players about Camp Benefits (1229741)?~~ Done 2026-11-09 in
+   `Src/Knowledge/ForeverReminders.lua`: info tasks (no button) from `buffDefClass:Reminder(check)`.
+   Camp reminder (on by default) shows only near a campfire (Campfire Nearby 1283391 or Welcoming
+   Campfire on the player) without Camp Benefits or with them running out. XP reminder (buff 1243969,
+   on by default) shows when not Well Fed or when a Cozy Sleeping Bag is
+   in the bags without Well-Rested, adding rested XP; quiet while eating. Both hidden at level 60
+   (`MaxLevel(59)`) in the scan and the Spells dialog. `(verify)` Campfire Nearby lands on the player
+   by player-built campfires; GetSpellInfo names the passive 1243969.
 4. What does Permanence add per rank? Gourmand? (Ask the ForeverDB API: `spells/1225502`, `spells/1225499`.)
 5. Do higher Trueshot Aura ranks come with the talent, or from a trainer?
 

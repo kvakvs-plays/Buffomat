@@ -219,6 +219,21 @@ function module:PlayerNeedsConsumable(buff, playerUnit)
   end
 end
 
+---Runs a reminder buff's check on the player and keeps its text for the info task
+---@param buffDef BomBuffDefinition
+---@param playerUnit BomUnit
+function module:PlayerNeedsReminder(buffDef, playerUnit)
+  buffDef.reminderText = nil
+  if playerUnit.isDead or playerUnit.auraDataUnavailable then
+    return
+  end
+  local text = buffDef.reminderCheck(buffDef, playerUnit)
+  if text then
+    buffDef.reminderText = text
+    table.insert(buffDef.unitsNeedBuff, playerUnit)
+  end
+end
+
 ---@param buff BomBuffDefinition
 ---@param party BomParty
 function module:PartyNeedsInfoBuff(buff, party)

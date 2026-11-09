@@ -339,6 +339,10 @@ function russianModule:Translations()
     ["tooltip.consumable.bestInBag"] = " (лучшее, что есть в сумке)",
     ["tooltip.elixir.bestInBag"] = " (лучший эликсир в сумке)",
     ["tooltip.food.bestInBag"] = " (лучшая еда в сумке)",
+    ["reminder.camp"] = "посидите у костра 1 минуту",
+    ["reminder.xp.wellFed"] = "поешьте для сытости (+5% опыта за убийства)",
+    ["reminder.xp.sleepingBag"] = "расстелите спальный мешок",
+    ["reminder.xp.rested"] = "отдых %d%% уровня",
     ["tooltip.scroll.bestInBag"] = " (лучший свиток в сумке)",
 
     ["consumeType.food"] = "Еда",

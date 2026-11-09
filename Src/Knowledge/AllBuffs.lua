@@ -39,6 +39,7 @@ local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local flasksModule = LibStub("Buffomat-AllConsumesFlasks") --[[@as AllConsumesFlasksModule]]
 local foodModule = LibStub("Buffomat-AllConsumesFood") --[[@as AllConsumesFoodModule]]
 local foreverConsumesModule = LibStub("Buffomat-AllConsumesForever") --[[@as AllConsumesForeverModule]]
+local foreverRemindersModule = LibStub("Buffomat-ForeverReminders") --[[@as ForeverRemindersModule]]
 local otherModule = LibStub("Buffomat-AllConsumesOther") --[[@as AllConsumesOtherModule]]
 local scrollsModule = LibStub("Buffomat-AllConsumesScrolls") --[[@as AllConsumesScrollsModule]]
 local spellIdsModule = LibStub("Buffomat-SpellIds") --[[@as SpellIdsModule]]
@@ -254,7 +255,7 @@ function module:ApplyPostLimitations(allBuffs)
         table.insert(result, buff)
       end
     end
-    buff.limitations = nil -- do not need to store this
+    -- Keep the limitations: SpellSetup checks the dynamic ones (maxLevel, minLevel, hideIfSpellKnown)
   end
 
   return result
@@ -296,6 +297,7 @@ function module:SetupSpells()
   otherModule:SetupOtherConsumables(allBuffs, enchantments)
   if envModule.isForever then
     foreverConsumesModule:SetupForeverConsumables(allBuffs, enchantments)
+    foreverRemindersModule:SetupForeverReminders(allBuffs)
   end
 
   allBuffs = self:ApplyPostLimitations(allBuffs) --filter the list and make new shorter list

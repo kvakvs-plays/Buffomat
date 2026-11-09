@@ -26,7 +26,7 @@ local FILES = {
   "Src/Knowledge/AllSpellsDeathknight.lua", "Src/Knowledge/AllConsumesScrolls.lua",
   "Src/Knowledge/AllConsumesEnchantments.lua", "Src/Knowledge/AllConsumesElixirs.lua",
   "Src/Knowledge/AllConsumesFlasks.lua", "Src/Knowledge/AllConsumesFood.lua", "Src/Knowledge/AllConsumesOther.lua",
-  "Src/Knowledge/AllConsumesForever.lua",
+  "Src/Knowledge/AllConsumesForever.lua", "Src/Knowledge/ForeverReminders.lua",
   "Src/Const/SpellIds.lua", "Src/Const/ItemIds.lua", "Src/Core/BuffDefinition.lua",
 }
 
@@ -41,6 +41,7 @@ local CLIENTS = {
 ---@return table allBuffs buffId -> definition
 ---@return table enchantments spellId -> enchant ids
 ---@return table allBuffsModule
+---@return table libs LibStub modules by name, for stubbing
 local function setup(clientName, class, race)
   local client = CLIENTS[clientName]
   local libs = { ["Buffomat-Buffomat"] = { Color = function(_, _color, text) return text end } }
@@ -88,7 +89,7 @@ local function setup(clientName, class, race)
   end
   local allBuffsModule = libs["Buffomat-AllBuffs"]
   allBuffsModule:SetupSpells()
-  return libs["KvLibShared-Env"], allBuffsModule.allBuffs, globals.BuffomatAddon.enchantList, allBuffsModule
+  return libs["KvLibShared-Env"], allBuffsModule.allBuffs, globals.BuffomatAddon.enchantList, allBuffsModule, libs
 end
 
 local function contains(list, value)
@@ -287,6 +288,39 @@ do
   assert(contains(warrior[8120].items, 954), "Scroll of Strength I added")
   assert(warrior[8099] and #warrior[8099].items == 4, "Scrolls of Stamina I-IV")
   assert(contains(mage[25722].items, 287972), "Rumsey Rum Dark with its Forever item")
+end
+
+-- Forever reminders: Camp Benefits (on by default) and XP bonuses (on), both hidden at level 60
+do
+  local _, buffs, _, _, libs = setup("forever", "WARRIOR", "Human")
+  local _, eraBuffs = setup("era", "WARRIOR", "Human")
+  local camp, xp = buffs[1229741], buffs[1243969]
+  assert(camp and camp.isInfo and camp.reminderCheck, "Forever Camp Benefits reminder")
+  assert(xp and xp.isInfo and xp.reminderCheck, "Forever XP reminder")
+  equal(camp.default, true, "Camp reminder is on by default")
+  equal(xp.default, true, "XP reminder is on by default")
+  equal(camp.limitations.maxLevel, 59, "Camp reminder hidden at level 60")
+  equal(xp.limitations.maxLevel, 59, "XP reminder hidden at level 60")
+  -- The level limits must survive ApplyPostLimitations; the fixture player is level 60
+  equal(libs["Buffomat-BuffDefinition"]:CheckDynamicLimitations(camp.limitations), false,
+    "level 60 hides the camp reminder")
+  equal(eraBuffs[1229741], nil, "Era has no camp reminder")
+  equal(eraBuffs[1243969], nil, "Era has no XP reminder")
+
+  local function player(auras, campBuff)
+    return { allBuffs = auras, knownBuffs = { [1229741] = campBuff } }
+  end
+  equal(camp.reminderCheck(camp, player({})), nil, "no camp reminder away from a campfire")
+  equal(camp.reminderCheck(camp, player({ [1283391] = true })), "reminder.camp", "camp reminder near a campfire")
+  libs["Buffomat-BuffChecks"].TimeCheck = function(_, expiration) return expiration > 100 end
+  equal(camp.reminderCheck(camp, player({ [1283391] = true }, { expirationTime = 3000, duration = 3600 })), nil,
+    "no camp reminder with Camp Benefits running")
+  equal(camp.reminderCheck(camp, player({ [1283391] = true }, { expirationTime = 50, duration = 3600 })),
+    "reminder.camp", "camp reminder when Camp Benefits run out")
+
+  equal(xp.reminderCheck(xp, player({})), "reminder.xp.wellFed", "XP reminder when not Well Fed")
+  equal(xp.reminderCheck(xp, player({ [1248406] = true })), nil, "no XP reminder when Well Fed")
+  equal(xp.reminderCheck(xp, player({ [1249906] = true })), nil, "no XP reminder while drinking")
 end
 
 -- Every buff sits in a category the spells dialog shows; others are never listed there
