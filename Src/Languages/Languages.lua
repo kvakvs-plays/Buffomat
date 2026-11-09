@@ -91,7 +91,9 @@ function languagesModule:SetupTranslations()
   self.currentLocale["AboutCredits"] = "nanjuekaien1 & wellcat for the Chinese translation|n" ..
       "OlivBEL for the french translation|n" ..
       "Arrogant_Dreamer & kvakvs for the russian translation|n" ..
-      "Yann Lugrin @yannlugrin - initial push for the WoW: Forever port"
+      "Main icon (Wizard) by max.icons - https://www.flaticon.com/free-icons/wizard|n" ..
+      "Yann Lugrin @yannlugrin - initial push for the WoW: Forever port|n" ..
+      "WoW: Forever spell and item data checked with ForeverDB.net - https://foreverdb.net"
 end
 
 function languagesModule:LocalizationInit()

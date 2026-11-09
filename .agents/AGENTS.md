@@ -24,8 +24,15 @@ When need to search for code locations, consult with `.agents/code-index.md`
 * Do not fetch Wowhead; its robots.txt disallows Anthropic agents and it answers scripts with 403.
   `.agents/wowhead/` is deprecated and marked for deletion.
 * For Forever trainer lists, talents, consumables and spell details use ForeverDB, which welcomes
-  AI assistants: `.agents/foreverdb/foreverdb.py` (API key in `.agents/foreverdb/.apikey`), then read
-  `.agents/foreverdb/out/summary.txt`. Credit "Data from ForeverDB.net"; its addon data is GPL-3.0,
-  so never copy it into `Src/`.
+  AI assistants: `.agents/foreverdb/foreverdb.py`, then read `.agents/foreverdb/out/summary.txt`.
+  The API key is `FOREVERDB_API_KEY` in the git-ignored repository `.env`; the client reads it from
+  there. Never print or commit the key. Limits: 60 requests a minute, 10,000 a day.
+  Request counts per minute for the last 24 hours are kept in the git-ignored
+  `.agents/foreverdb/usage-24h.log` (`YYYY-MM-DD HH:MM<TAB>count`); run
+  `python .agents/foreverdb/foreverdb.py usage` before a large query to see how many are left.
+  To check the Forever buff database, run `.agents/foreverdb/dump_buffs.lua` and
+  `.agents/foreverdb/verify_buffs.py` (see `.agents/foreverdb/README.md`).
+  Credit "Data from ForeverDB.net" with a link to https://foreverdb.net (README credits and the
+  options About box already do); its addon data is GPL-3.0, so never copy it into `Src/`.
 * For raw game data (spells, items, talents) use wago.tools DB2 CSV exports through
   `.agents/wowf-scan/scripts/fetch.py`; see `.agents/wowf-scan/README.md`.

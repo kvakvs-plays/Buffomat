@@ -424,6 +424,10 @@ items, which are unchanged. No change.
 
 Answered from ForeverDB data (build 1.60.1.70862): Elune's Grace rank 1 stays for Night Elf priests;
 Sanctity Aura cannot be learned; the Natural flasks give only Stamina.
+Answered from the ForeverDB API (2026-11-09): Permanence makes class party/raid stat buffs last 100%
+longer and camp benefits 50% longer; Gourmand makes food buffs last 100% longer (one rank each).
+Trueshot Aura rank 1 (1299346, level 25) is the talent; ranks 2-5 (1299348 L32, 19506 L40,
+20905 L50, 20906 L60) exist as spells. Rank 1 gives 20 ranged attack power on live (30 on beta).
 
 ---
 
@@ -445,8 +449,6 @@ Forever 1.60.1.70862 client data.
 Still open:
 
 - The in-game checklist in section 5.
-- ForeverDB API (key requested): Permanence and Gourmand values; whether higher Trueshot Aura ranks
-  come with the talent (`.agents/foreverdb/verify-forever.txt`).
 - Open questions 1-3 in section 7 (Kings default, totems, Camp Benefits reminder).
 - Not done on purpose: removed reputation/riding trinkets stay in their lists (absent items are never
   in bags, so they are harmless); `AllDrink` keeps the classic Drink auras, which Nutritious Drink
@@ -454,3 +456,30 @@ Still open:
 - Imbue scrolls: each fits one weapon type (staff, dagger or one-handed sword, from `SpellEquippedItems`);
   `RequireWeaponType` makes the scan ask for them only on a fitting weapon. Off by default, caster classes only.
   The same limit could be applied to sharpening stones and weightstones later.
+
+---
+
+## 9. ForeverDB verification (2026-11-09)
+
+`.agents/foreverdb/dump_buffs.lua` + `verify_buffs.py` checked all 198 Forever buffs against the
+ForeverDB API (build 1.60.1.70862, ~1,450 requests). Report: `.agents/foreverdb/out/verify-buffs.txt`.
+
+Confirmed: hiding Blessing of Salvation/Light/Sanctuary is right (Salvation was renamed to
+"Salvation" in 70425, then removed in 70707); Omen of Clarity is a passive level-20 trainer spell;
+Seal of Fury, Revive, Aspect of the Beast and Firestone/Spellstone ranks match the class lists;
+the Endless elixirs and Scroll of Endless Fortitude are beta-event items (left out on purpose).
+
+Fixed (bugs on Classic Era too):
+- Seal of Wisdom had only rank 1: added 20356, 20357 (and TBC 27166).
+- Elixir of the Sages was marked TBC-only, so Era and Forever never showed it.
+- Blessed Wizard Oil and Consecrated Sharpening Stone last 1 hour, not 30 minutes.
+
+Noise in the report: TBC/WotLK ranks in shared spell families are unknown on Forever; buffs of
+later expansions (Seal of Blood, Crusader Aura, Felguard, Earthliving) appear in the dump because
+they only need the spell to be known. Neither shows up in the game.
+
+Candidates not in Buffomat (decide later): Elixir of Brute Force 13453; low elixirs (Minor
+Fortitude, Wisdom, Lesser/Minor Defense, Defense, Troll's Blood, Fire Power); Scrolls of
+Stamina/Strength/Agility I-IV; Bloodkelp elixirs; Rumsey Rum; fishing and zone Well Fed foods;
+Shaman totems. Filet o' Flank 238638 (Agility food) is a Season of Discovery leftover that Forever
+did not touch; it is harmless in the list.

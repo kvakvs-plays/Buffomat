@@ -118,9 +118,10 @@ The reference checkout in `references/forever-branch` is ignored and not package
 
 ## Credits
 
-* wellcat for the Chinese translation
+* nanjuekaien1 & wellcat for the Chinese translation
 * OlivBEL for the french translation
 * Arrogant_Dreamer & kvakvs for the russian translation
 * Free icons
   * Main Icon (Wizard): https://www.flaticon.com/free-icons/wizard, created by max.icons
 * Yann Lugrin github @yannlugrin - thanks for initial push for the WoW: Forever port.
+* WoW: Forever spell and item data checked with ForeverDB: [Data from ForeverDB.net](https://foreverdb.net) — https://foreverdb.net

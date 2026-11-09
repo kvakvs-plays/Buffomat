@@ -264,6 +264,36 @@ function optionsModule:CreateClassOptionsTable()
   }
 end
 
+local FOREVERDB_URL = "https://foreverdb.net"
+
+---About page: what Buffomat does, how to use it, and credits. ForeverDB asks for a visible link
+---wherever its data is used; the game cannot open links, so the URL is in a box to copy from.
+---@return table AceConfig group
+function optionsModule:CreateAboutOptionsTable()
+  return {
+    type = "group",
+    name = "10. " .. _t("PanelAbout"),
+    args = {
+      version = {
+        type = "description", order = 1, fontSize = "medium",
+        name = constModule.SHORT_TITLE .. " " .. tostring(constModule.TOC_VERSION or ""),
+      },
+      infoHeader = { type = "header", order = 2, name = _t("HeaderInfo") },
+      info = { type = "description", order = 3, name = _t("AboutInfo") },
+      usageHeader = { type = "header", order = 4, name = _t("HeaderUsage") },
+      usage = { type = "description", order = 5, name = _t("AboutUsage") },
+      creditsHeader = { type = "header", order = 6, name = _t("HeaderCredits") },
+      credits = { type = "description", order = 7, name = _t("AboutCredits") },
+      foreverDbLink = {
+        type = "input", order = 8, width = "double",
+        name = "Data from ForeverDB.net",
+        get = function() return FOREVERDB_URL end,
+        set = function() end, -- read-only: shown so the link can be selected and copied
+      },
+    },
+  }
+end
+
 function optionsModule:CreateOptionsTable()
   kvOptionsModule.optionsOrder = 0
 
@@ -277,6 +307,7 @@ function optionsModule:CreateOptionsTable()
       buffingOptions = self:CreateBuffingOptionsTable(),
       visibilityOptions = self:CreateVisibilityOptionsTable(),
       classOptions = self:CreateClassOptionsTable(),
+      aboutOptions = self:CreateAboutOptionsTable(),
     } -- end args
   }   -- end
 end

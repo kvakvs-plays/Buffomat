@@ -377,6 +377,8 @@ function module:SetupPaladinSpells(allBuffs, _enchants)
   buffDefModule:createAndRegisterBuff(allBuffs, 20166, nil)
       :BuffType("seal")
       :IsDefault(false)
+      :SingleFamily({ 20166, 20356, 20357, -- Seal of Wisdom 1-3; also WotLK/Cata: Seal of Wisdom
+        27166 })                           -- TBC: Seal of Wisdom 4
       :RequirePlayerClass("PALADIN")
       :Category("seal")
 

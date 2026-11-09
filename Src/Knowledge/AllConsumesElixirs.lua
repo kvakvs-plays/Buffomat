@@ -270,13 +270,6 @@ function module:_SetupGuardianElixirsTBC(allBuffs, enchantments)
       :Category("tbcSpellElixir")
       :ElixirType("guardian")
 
-  --Classic: Elixir of the Sages +18 INT/+18 SPI
-  buffDefModule:genericConsumable(allBuffs, 17535, 13447)
-      :RequireTBC()
-      :RequirePlayerClass(allBuffsModule.MANA_CLASSES)
-      :Category("classicSpellElixir")
-      :ElixirType("guardian")
-
   --TBC: Elixir of Mastery +15 all stats
   buffDefModule:genericConsumable(allBuffs, 33726, 28104)
       :RequireTBC()
@@ -313,6 +306,12 @@ end
 function module:_SetupGuardianElixirsClassic(allBuffs, enchantments)
   -- Mageblood Potion
   buffDefModule:genericConsumable(allBuffs, 24363, 20007)
+      :RequirePlayerClass(allBuffsModule.MANA_CLASSES)
+      :Category("classicSpellElixir")
+      :ElixirType("guardian")
+
+  -- Elixir of the Sages +18 INT/+18 SPI. Was marked TBC-only, which hid it on Classic Era and Forever.
+  buffDefModule:genericConsumable(allBuffs, 17535, 13447)
       :RequirePlayerClass(allBuffsModule.MANA_CLASSES)
       :Category("classicSpellElixir")
       :ElixirType("guardian")

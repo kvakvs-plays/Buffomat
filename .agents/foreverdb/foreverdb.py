@@ -4,7 +4,8 @@
 ForeverDB welcomes apps, tools and AI assistants (see https://foreverdb.net/robots.txt and
 /llms.txt), so agents may run this tool. The API needs a key: a maintainer requests it on
 https://foreverdb.net/developers (Battle.net login), then stores it in the FOREVERDB_API_KEY
-environment variable or in .agents/foreverdb/.apikey (git-ignored).
+environment variable, as FOREVERDB_API_KEY=... in the repository .env, or in
+.agents/foreverdb/.apikey (both git-ignored). Never print or commit the key.
 
 Terms to keep: credit "Data from ForeverDB.net" with a link wherever the data is shown, do not
 resell it or present it as our own, and keep to 60 requests a minute and 10,000 a day per key.
@@ -52,12 +53,125 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ATTRIBUTION = "Data from ForeverDB.net (https://foreverdb.net)"
 
 
+USAGE_LOG = os.path.join(HERE, "usage-24h.log")   # git-ignored
+USAGE_WINDOW = 24 * 3600
+DAILY_LIMIT = 10000
+DAILY_RESERVE = 100                                # stop this far below the daily limit
+
+
 class StopRun(Exception):
     """Abort the run: continuing would break the API terms or hammer the server."""
 
 
+class UsageLog:
+    """Request counts per minute for the last 24 hours, shared by every run, for rate-limit counting.
+    One line per minute with requests: "YYYY-MM-DD HH:MM<TAB>count" (local time). Minutes older than
+    24 hours are dropped on write. No paths, statuses or keys are stored."""
+
+    def __init__(self, path: str):
+        self.path = path
+        self.minutes: dict[int, int] = self._read()   # minute start (epoch) -> requests
+
+    @staticmethod
+    def _minute(when: float) -> int:
+        return int(when // 60 * 60)
+
+    def _read(self) -> dict[int, int]:
+        out: dict[int, int] = {}
+        if not os.path.exists(self.path):
+            return out
+        cutoff = time.time() - USAGE_WINDOW
+        with open(self.path, encoding="utf-8") as f:
+            for line in f:
+                parts = line.strip().split("\t")
+                if len(parts) != 2 or not parts[1].isdigit():
+                    continue
+                try:
+                    minute = int(time.mktime(time.strptime(parts[0], "%Y-%m-%d %H:%M")))
+                except ValueError:
+                    continue
+                if minute + 60 > cutoff:
+                    out[minute] = out.get(minute, 0) + int(parts[1])
+        return out
+
+    def _write(self) -> None:
+        cutoff = time.time() - USAGE_WINDOW
+        self.minutes = {m: n for m, n in sorted(self.minutes.items()) if m + 60 > cutoff}
+        with open(self.path, "w", encoding="utf-8") as f:
+            for minute, count in self.minutes.items():
+                f.write(f"{time.strftime('%Y-%m-%d %H:%M', time.localtime(minute))}\t{count}\n")
+
+    def record(self, when: Optional[float] = None) -> None:
+        minute = self._minute(time.time() if when is None else when)
+        self.minutes[minute] = self.minutes.get(minute, 0) + 1
+        self._write()
+
+    def count(self) -> int:
+        """Requests in the last 24 hours."""
+        return sum(self.minutes.values())
+
+    def last_minute(self) -> int:
+        """Requests in the current and previous minute (the per-minute limit is a sliding window)."""
+        now = self._minute(time.time())
+        return self.minutes.get(now, 0) + self.minutes.get(now - 60, 0)
+
+    def seed_from_cache(self, cache_dir: str) -> int:
+        """Start an empty log from the response cache: the fetch time of each cached 200/404 answer
+        in the last 24 hours. Does nothing when the log already has entries. Returns the count added."""
+        if self.minutes or not os.path.isdir(cache_dir):
+            return 0
+        cutoff = time.time() - USAGE_WINDOW
+        added = 0
+        for name in os.listdir(cache_dir):
+            try:
+                with open(os.path.join(cache_dir, name), encoding="utf-8") as f:
+                    when = json.load(f).get("fetched", 0)
+            except (OSError, ValueError):
+                continue
+            if when >= cutoff:
+                minute = self._minute(when)
+                self.minutes[minute] = self.minutes.get(minute, 0) + 1
+                added += 1
+        if added:
+            self._write()
+        return added
+
+    def summary(self) -> str:
+        if not self.minutes:
+            return "ForeverDB requests in the last 24 h: 0"
+        first, last = min(self.minutes), max(self.minutes)
+        frees = time.strftime("%Y-%m-%d %H:%M", time.localtime(first + USAGE_WINDOW))
+        fmt = lambda m: time.strftime("%Y-%m-%d %H:%M", time.localtime(m))  # noqa: E731
+        return (f"ForeverDB requests in the last 24 h: {self.count()} of {DAILY_LIMIT} "
+                f"(first {fmt(first)}, last {fmt(last)}; oldest drops out {frees}). Log: {self.path}")
+
+
+REPO_ROOT = os.path.dirname(os.path.dirname(HERE))
+
+
+def read_dotenv_value(path: str, name: str) -> Optional[str]:
+    """Value of NAME=... in a .env file, or None. Quotes and "export " are allowed."""
+    if not os.path.exists(path):
+        return None
+    with open(path, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if line.startswith("export "):
+                line = line[len("export "):].strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            if key.strip() == name:
+                return value.strip().strip("\"'") or None
+    return None
+
+
 def read_api_key() -> Optional[str]:
+    """The key from FOREVERDB_API_KEY, then the repository .env (git-ignored), then .apikey."""
     key = os.environ.get("FOREVERDB_API_KEY", "").strip()
+    if key:
+        return key
+    key = read_dotenv_value(os.path.join(REPO_ROOT, ".env"), "FOREVERDB_API_KEY")
     if key:
         return key
     path = os.path.join(HERE, ".apikey")
@@ -77,8 +191,10 @@ def normalize_path(path: str) -> str:
 
 
 class Client:
-    def __init__(self, key: Optional[str], cache_dir: str, max_requests: int, refresh: bool):
+    def __init__(self, key: Optional[str], cache_dir: str, max_requests: int, refresh: bool,
+                 usage_log: Optional[str] = USAGE_LOG):
         self.key = key
+        self.usage = UsageLog(usage_log) if usage_log else None
         self.cache_dir = cache_dir
         self.max_requests = max_requests
         self.refresh = refresh
@@ -107,6 +223,8 @@ class Client:
     def _raw_get(self, url: str, with_key: bool) -> tuple[int, bytes, dict]:
         if self.requests >= self.max_requests:
             raise StopRun(f"request limit {self.max_requests} reached; raise --max-requests to continue")
+        if self.usage and self.usage.count() >= DAILY_LIMIT - DAILY_RESERVE:
+            raise StopRun(self.usage.summary() + "; stopping before the daily limit")
         pause = self.last_request + self.spacing - time.time()
         if pause > 0:
             time.sleep(pause)
@@ -118,10 +236,13 @@ class Client:
         req = urllib.request.Request(url, headers=headers)
         try:
             with urllib.request.urlopen(req, timeout=60) as resp:
-                return resp.status, resp.read(), {k.lower(): v for k, v in resp.headers.items()}
+                result = resp.status, resp.read(), {k.lower(): v for k, v in resp.headers.items()}
         except urllib.error.HTTPError as err:
             body = err.read() if err.fp else b""
-            return err.code, body, {k.lower(): v for k, v in (err.headers or {}).items()}
+            result = err.code, body, {k.lower(): v for k, v in (err.headers or {}).items()}
+        if self.usage:
+            self.usage.record()
+        return result
 
     def _note_limits(self, headers: dict) -> None:
         for name, value in headers.items():
@@ -322,6 +443,8 @@ def run_api_jobs(client: Client, jobs: list[tuple[str, str]], out_dir: str, comm
         print("Limits: " + ", ".join(f"{k}={v}" for k, v in sorted(client.limits.items())), file=sys.stderr)
     print(f"{client.requests} HTTP requests. Run file: {run_path}\nMerged: {data_path}\nSummary: {summary_path}",
           file=sys.stderr)
+    if client.usage:
+        print(client.usage.summary(), file=sys.stderr)
     return code
 
 
@@ -374,10 +497,18 @@ def main(argv: Optional[list[str]] = None) -> int:
     sub.add_parser("meta")
     sub.add_parser("addon-data").add_argument("names", nargs="*", help="e.g. Consumables Assist (default: all)")
     sub.add_parser("selftest")
+    sub.add_parser("usage", help="Requests in the last 24 h (adds cached fetches the log lacks)")
     args = parser.parse_args(argv)
 
     if args.command == "selftest":
         return selftest()
+    if args.command == "usage":  # also printed after every run, see run_api_jobs
+        log = UsageLog(USAGE_LOG)
+        added = log.seed_from_cache(args.cache)
+        if added:
+            print(f"added {added} requests from the response cache")
+        print(log.summary())
+        return 0
     client = Client(read_api_key(), args.cache, args.max_requests, args.refresh)
     try:
         if args.command == "addon-data":
@@ -448,15 +579,16 @@ def selftest() -> int:
             return status, body.encode(), {"x-ratelimit-remaining": "59", "x-daily-remaining": "9999"}
         original = Client._raw_get
         Client._raw_get = fake  # type: ignore[assignment]
+        log_path = os.path.join(tmp, "usage.log")
         try:
-            client = Client("k", os.path.join(tmp, "cache"), 10, False)
+            client = Client("k", os.path.join(tmp, "cache"), 10, False, log_path)
             jobs = [("spells/2651", "Elune"), ("spells/9", "")]
             assert run_api_jobs(client, jobs, tmp, "batch", False) == 0
-            client2 = Client("k", os.path.join(tmp, "cache"), 10, False)
+            client2 = Client("k", os.path.join(tmp, "cache"), 10, False, log_path)
             assert run_api_jobs(client2, jobs, tmp, "batch", False) == 0
             assert len(calls) == 2, calls          # second run fully cached (404 too)
             assert client.limits["x-daily-remaining"] == "9999"
-            nokey = Client(None, os.path.join(tmp, "cache"), 10, False)
+            nokey = Client(None, os.path.join(tmp, "cache"), 10, False, log_path)
             try:
                 nokey.api("meta")
                 raise AssertionError("expected StopRun without a key")
@@ -469,6 +601,28 @@ def selftest() -> int:
         assert ATTRIBUTION in summary and "== spells/2651  # Elune" in summary and "ERROR: HTTP 404" in summary
         with open(os.path.join(tmp, "foreverdb-data.json"), encoding="utf-8") as f:
             assert set(json.load(f)) == {"spells/2651", "spells/9"}
+
+        # Usage log: per-minute counts, drops minutes older than 24 h, seeds only an empty log
+        log = UsageLog(log_path)
+        assert log.count() == 0                     # fake _raw_get made no real requests
+        assert log.seed_from_cache(os.path.join(tmp, "cache")) == 2   # the two cached answers
+        assert log.seed_from_cache(os.path.join(tmp, "cache")) == 0   # not twice
+        log.record(when=time.time() - USAGE_WINDOW - 120)
+        log.record()
+        log.record()
+        assert log.count() == 4 and log.last_minute() >= 2, log.minutes
+        with open(log_path, encoding="utf-8") as f:
+            lines = f.read().splitlines()
+        assert all(len(line.split("\t")) == 2 for line in lines), lines
+        assert UsageLog(log_path).count() == 4
+        assert "requests in the last 24 h: 4" in log.summary(), log.summary()
+        full = Client("k", os.path.join(tmp, "cache"), 10, False, log_path)
+        full.usage.minutes[UsageLog._minute(time.time())] = DAILY_LIMIT
+        try:
+            full._raw_get(f"{API}/meta", True)
+            raise AssertionError("expected StopRun near the daily limit")
+        except StopRun:
+            pass
     print("selftest passed")
     return 0
 

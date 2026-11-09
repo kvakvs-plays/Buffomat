@@ -3,6 +3,9 @@
 ## Buffomat Classic 2026.11.0
 
 - Hunter tracking is using correct API in TBC
+- Seal of Wisdom knows ranks 2 and 3; Elixir of the Sages shows on Classic Era and WoW: Forever again;
+  Blessed Wizard Oil and Consecrated Sharpening Stone count as 1-hour enchantments.
+- New About page in the options with usage notes and credits.
 - Consumables are hidden until the player reaches the required level of at least one of their items
   (the check now takes the lowest item level and updates when item data loads or the player levels up).
 - Sharpening stones are suggested only for bladed weapons and weightstones only for blunt weapons

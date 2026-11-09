@@ -111,7 +111,7 @@ Lookup hints below use file paths plus a function/section name (no line numbers;
 
 - [.agents/wowf-plan.md](wowf-plan.md) — WoW: Forever buff/consumable update plan with spell and item IDs.
 - [.agents/wowf-scan/](wowf-scan/README.md) — Python scripts comparing Forever and Classic Era game data (wago.tools DB2 CSV exports); `reports/` holds the results.
-- [.agents/foreverdb/](foreverdb/README.md) — `foreverdb.py`, ForeverDB API client and addon-data downloader (agents may run it; needs an API key for the API). Results in `.agents/foreverdb/out/summary.txt`, `foreverdb-data.json`, `addon-data/`.
+- [.agents/foreverdb/](foreverdb/README.md) — `foreverdb.py`, ForeverDB API client and addon-data downloader (agents may run it; API key `FOREVERDB_API_KEY` in the repository `.env`). `dump_buffs.lua` + `verify_buffs.py` check the Forever buff database against ForeverDB. Results in `.agents/foreverdb/out/summary.txt`, `foreverdb-data.json`, `addon-data/`.
 - [.agents/wowhead/](wowhead/README.md) — deprecated, marked for deletion (Wowhead blocks scripted clients).
 
 ## Tests

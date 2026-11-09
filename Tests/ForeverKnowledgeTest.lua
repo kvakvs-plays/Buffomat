@@ -139,6 +139,11 @@ do
   equal(fury.singleFamily[1], 1311649, "Seal of Fury rank 1 first")
   equal(fury.singleFamily[#fury.singleFamily], 20423, "Seal of Fury rank 7 last")
   equal(eraBuffs[20423], nil, "Era has no Seal of Fury")
+  -- Seal of Wisdom ranks 2 and 3 (ForeverDB class list, also Classic Era)
+  for _, list in ipairs({ buffs, eraBuffs }) do
+    assert(contains(list[20166].singleFamily, 20356) and contains(list[20166].singleFamily, 20357),
+      "Seal of Wisdom has ranks 2 and 3")
+  end
 end
 
 -- Priest
@@ -254,6 +259,13 @@ do
   equal(warrior[1327737], nil, "beta-only Elixir of Endless Power is gone")
   equal(mage[1327754], nil, "beta-only Scroll of Endless Fortitude is gone")
   assert(contains(warrior[16138].items, 287978), "Forever Rough Sharpening Stone item")
+
+  -- Fixes found with ForeverDB: Classic items that Buffomat hid or timed wrong
+  assert(mage[17535] and contains(mage[17535].items, 13447), "Forever Elixir of the Sages")
+  assert(eraMage[17535], "Era Elixir of the Sages")
+  equal(mage[28898].singleDuration, 3600, "Blessed Wizard Oil lasts an hour")
+  equal(warrior[28891].singleDuration, 3600, "Consecrated Sharpening Stone lasts an hour")
+  equal(mage[25122].singleDuration, 1800, "Brilliant Wizard Oil stays 30 minutes")
 end
 
 print("PASS: Forever knowledge for capabilities, classes and consumables")

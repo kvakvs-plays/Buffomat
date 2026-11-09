@@ -64,6 +64,7 @@ function module:_SetupCasterEnchantments(allBuffs, enchantments)
 
   --Blessed Wizard Oil
   self:RegisterEnchantment(allBuffs, 28898)
+      :SingleDuration(allBuffsModule.HOUR) -- 1 hour, unlike most oils
       :CreatesOrProvidedByItem({ 23123 })
       :RequirePlayerClass(allBuffsModule.MANA_CLASSES)
   enchantments[28898] = { 2685 }   --Blessed Wizard Oil
@@ -112,6 +113,7 @@ function module:_SetupPhysicalEnchantments(allBuffs, enchantments)
 
   --Consecrated Sharpening Stone
   self:RegisterEnchantment(allBuffs, 28891)
+      :SingleDuration(allBuffsModule.HOUR) -- 1 hour, unlike most stones
       :CreatesOrProvidedByItem({ 23122 })
       :RequirePlayerClass(allBuffsModule.PHYSICAL_CLASSES)
       :RequireWeaponType(melee)
