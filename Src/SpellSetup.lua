@@ -369,6 +369,7 @@ function module:RequestSetup()
   C_Timer.After(1, function()
     self.setupRequested = false
     self:SetupAvailableSpells()
+    scanSchedulerModule:MarkDirty("player") -- the level which item requirements are compared with
     scanSchedulerModule:Request("spellSetup")
   end)
 end

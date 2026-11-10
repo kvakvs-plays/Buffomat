@@ -7,6 +7,7 @@ local taskModule = LibStub("Buffomat-Task") --[[@as TaskModule]]
 local playerStateModule = LibStub("Buffomat-PlayerStateScan") --[[@as PlayerStateScanModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
+local kvUnitModule = LibStub("KvLibShared-Unit") --[[@as KvUnitModule]]
 local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
 
 ---@class TaskActionCast: BomTaskAction Casts a spell with a power (mana) cost on a target
@@ -91,7 +92,7 @@ function actionCastClass:UpdateMacro(m)
   if BuffomatShared.UseRank
       or (self.target and (self.target).unitId == "target")
   then
-    local targetLevel = UnitLevel((self.target).unitId)
+    local targetLevel = kvUnitModule.GetLevel((self.target).unitId)
 
     if buffDef and targetLevel ~= nil and targetLevel > 0 then
       local spellChoices

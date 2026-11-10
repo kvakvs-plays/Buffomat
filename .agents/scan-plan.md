@@ -1,7 +1,8 @@
 # Scan rewrite plan: scanning loop, readers and timers
 
-Written 2026-11-10 against `master` at `ff28161` (version 2026.11.2). Status: **design only, nothing
-implemented.**
+Written 2026-11-10 against `master` at `ff28161` (version 2026.11.2). Status: **steps 0 to 9 are
+implemented on branch `feature/scan-rewrite`; nothing has been run in a game client yet.** See the next
+section before relying on anything below.
 
 This plan replaces how Buffomat reads the game state (group roster, unit auras, bags, player state)
 and when it decides to scan. The old code is replaced, not wrapped. Supported clients stay the same:
@@ -16,6 +17,69 @@ Terms used below:
 - **Pass**: one run of the scan pipeline: read dirty domains, evaluate, build tasks, present.
 - **Aura-free mode**: the existing PvP-match mode where auras are secret but bags, weapon enchants
   and tracking are readable (`TaskScan:DoAuraFreeScan`).
+
+## Status (2026-11-10)
+
+Steps 0 to 9 are implemented, one commit per step ("Scan step N"). Step 10 is not: it depends on
+measurements. Everything was checked with luacheck (0 warnings) and the tests in `Tests/`, which run
+the real modules on a fake client (`Tests/ScanFixture.lua`). **None of it has been run in WoW.**
+
+Still to do, all of it in game:
+
+- Step 0.2 and 9.4: the measurements. Turn on `BuffomatShared.DebugLogging`, run `/bom scanstats`
+  twice a minute apart, and record passes per minute, ms per pass, aura reads and evaluations for:
+  solo idle, 5-man idle, 40-man idle, 40-man during buffing. There is no baseline of the old code;
+  to take one, check out the "Scan step 0" commit, which has the counters on the old loop.
+- The per-client checks at the end of section 7.
+- A smoke test on each client: solo, 5-man, raid; a paladin with class blessings; a PvP match and a
+  dungeon boss on Forever.
+
+Where the implementation differs from the plan below, this list is right:
+
+- **KvLib.** Every release-dependent API the scan uses is wrapped in `Src/KvLib/`: `KvUnit.lua`
+  (units, group, auras, distance), `KvPlayer.lua` (player state and the few actions), `KvEvents.lua`
+  (event registration), and additions to `KvEnv.lua`. `ReadAura` is in `KvUnit`, not `KvEnv`.
+  luacheck gives `Src/Scan/`, `Src/Task/`, `BuffChecks.lua` and the unit and target classes a
+  restricted standard (`stds.scan` in `.luacheckrc`), so a raw WoW API call there is a lint warning.
+- **No Throttle shim.** The call sites were converted to `MarkAllDirty` / `Request` in step 1.
+- **Events.** All scan events go through one `KvEventDispatcher` frame, not AceEvent, so that an
+  event name a client does not have is refused in one place. `BAG_UPDATE` and `BAG_UPDATE_DELAYED`
+  are both taken where valid; a burst still makes one pass. `MODIFIER_STATE_CHANGED` is always
+  registered, because Alt also means "try again". `UNIT_AURA` is unregistered during combat.
+  Added: `UNIT_FACTION` (PvP flag), `UPDATE_STEALTH`, `PLAYER_CONTROL_LOST` / `GAINED` (taxi),
+  `ZONE_CHANGED_INDOORS`, `PLAYER_MOUNT_DISPLAY_CHANGED`.
+- **`updateInfo`.** Aura instance ids are not tracked, so the only update that can be skipped is one
+  which added harmful auras and nothing else (`KvUnit.AuraUpdateTouchesBuffs`).
+- **Range.** `RangeScan:Distance(unit)` measures on demand, once per pass. There is no "distance
+  bucket" check; instead the task list window is redrawn only when its lines changed
+  (`TaskList:Display`), which was the expensive part. The range tick does not stop when the window is
+  hidden, because the macro and its key binding work without the window.
+- **Evaluation waits for the read queue.** While units are still queued for an aura read, the pass
+  returns "continue" and does not evaluate: a half-read raid would show tasks for buffs which are
+  only unread.
+- **Timers.** The resync also marks `status` (a member's zone has no event). The dead watch, resync
+  and range timers are cancelled while Buffomat is paused (resting, mounted, casting and so on).
+- **Weapon enchants** are no longer copied into the player's `knownBuffs`; nothing read them there.
+  `player.mainhandEnchantment` / `offhandEnchantment` remain, filled by `PlayerStateScan`.
+- **Bag cooldowns** are read lazily, when a check asks about an item, once per cooldown change.
+  No registry of "tracked" items is needed.
+- **Roster.** Raid pets are not scanned, as before. The target outside the group keeps group 1.
+  Toggling the BuffTarget option rebuilds the roster.
+- **Modules.** Step 8 added `ScanResult.lua`, `ScanEvaluate.lua` and `ScanEffects.lua`.
+  `TaskScan.lua` became `Src/Task/TaskBuilder.lua`; `Core/Party.lua` is gone.
+- **Removed as dead code:** `WhisperExpired` (the flag it tested was never set) and
+  `BuffomatAddon.lastAura`. `SomeoneIsDrinking` is kept but, as before, nothing calls it.
+
+Defects of the old code fixed on the way:
+
+- An item on cooldown made a full scan run twice a second (relative time in `nextCooldownDue`).
+- Rescan requests raised during a scan were lost.
+- Showing the window rescanned on every tick while tasks existed; with AutoClose, hiding it did too.
+- In a raid the player was listed twice: as `raidN`, and as `player` in subgroup 1.
+- A class blessing with enough members to bless looked for its target with `pairs(list.byUnitId)`
+  on a plain list, which raises an error.
+- A raid-wide group buff, and a class blessing, reported "out of range" in a raid, because the
+  target was looked up as raid subgroup 0 or as a subgroup named like the class.
 
 ## 1. What is wrong today
 
@@ -142,12 +206,18 @@ New files, all under `Src/Scan/`. Each needs a `LibStub:NewLibrary` line in
 |---|---|---|
 | `ScanScheduler.lua` | `Buffomat-ScanScheduler` | `Src/Throttle.lua` |
 | `ScanEvents.lua` | `Buffomat-ScanEvents` | the scan-related half of `Src/Events.lua` |
-| `ScanPass.lua` | `Buffomat-ScanPass` | `TaskScan:ScanTasks`, `Precheck`, `Check*`, `Finalize` |
+| `ScanPass.lua` | `Buffomat-ScanPass` | `TaskScan:ScanTasks`, `Precheck`, `Finalize`, `ShowInactive` |
 | `RosterScan.lua` | `Buffomat-RosterScan` | roster code in `Core/Party.lua`, `Cache/UnitCache.lua` |
 | `AuraScan.lua` | `Buffomat-AuraScan` | `Unit:UnitAura`, `Unit:ForceUpdateBuffs` |
 | `BagScan.lua` | `Buffomat-BagScan` | `Cache/ItemListCache.lua`, `BuffChecks:HasOneItem` / `HasItem` |
 | `PlayerStateScan.lua` | `Buffomat-PlayerStateScan` | weapon enchant, mana, form, mount, tracking reads spread over `Unit.lua`, `TaskScan.lua`, `BuffChecks.lua` |
 | `RangeScan.lua` | `Buffomat-RangeScan` | distance in `Unit:UpdateBuffs`, `repeatUpdate` |
+| `ScanResult.lua` | `Buffomat-ScanResult` | `unitsNeedBuff` and the other scan results on `BomBuffDefinition` |
+| `ScanEvaluate.lua` | `Buffomat-ScanEvaluate` | `TaskScan:IsActive`, `Check*`, `UpdateMissingBuffs*`, aura / seal / tracking selection |
+| `ScanEffects.lua` | `Buffomat-ScanEffects` | `TaskScan:CancelBuff*`, `SetTracking`, skip list, watch-group reset |
+| `ScanStats.lua` | `Buffomat-ScanStats` | new: counters for `/bom scanstats` |
+
+The task builders of `TaskScan.lua` are now `Src/Task/TaskBuilder.lua` (`Buffomat-TaskBuilder`).
 
 `Src/Events.lua` keeps the handlers that are not scanning: taxi, UI error auto-stand / dismount,
 downrank learning, skip list.
@@ -214,10 +284,10 @@ numbers on the reused record.
 
 ### Aura reading
 
-- Add `envModule.ReadAura(unit, index, filter)` to [Src/KvLib/KvEnv.lua](../Src/KvLib/KvEnv.lua),
-  returning `spellId, duration, expirationTime, sourceUnit, readable` as plain values with no table.
-  It checks only those four values for secrets and does **not** check combat or restrictions; the
-  gate did. `GetUnitAura` stays for `TaskScan:CancelBuff` and the existing tests.
+- `kvUnitModule.ReadAura(unit, index, filter)` in [Src/KvLib/KvUnit.lua](../Src/KvLib/KvUnit.lua)
+  returns `spellId, name, duration, expirationTime, sourceUnit, readable` as plain values with no
+  table. It checks only those values for secrets and does **not** check combat or restrictions; the
+  gate did. `envModule.GetUnitAura` stays for the existing tests.
 - Replace the three `tContains` calls with set lookups built once in `SpellSetup`:
   `allBuffsModule.drinkSpellIdSet`, `ignoreAllSpellIdSet`, and the existing
   `selectedBuffsSpellIds` / `spellIdIsSingleLookup`.
@@ -270,36 +340,37 @@ domain's flag immediately before reading that domain, never at the end.
 
 ## 4. Events
 
-`ScanEvents` owns one plain frame for unit events, because AceEvent has no `RegisterUnitEvent`.
-Other events go through AceEvent as today. Every uncertain event name is guarded with
-`envModule.IsEventValid`.
+`ScanEvents` owns one `KvEventDispatcher` (`Src/KvLib/KvEvents.lua`) for all of these. The dispatcher
+refuses an event name the client does not have, so every row is "if valid". "player only" means
+`RegisterUnitEvent` with a fallback filter. Handlers outside scanning stay on AceEvent in `Src/Events.lua`.
 
 | Event | Registration | Effect |
 |---|---|---|
-| `GROUP_ROSTER_UPDATE`, `GROUP_JOINED`, `GROUP_LEFT`, `RAID_ROSTER_UPDATE` | AceEvent | `roster` |
-| `PLAYER_ROLES_ASSIGNED` (if valid) | AceEvent | `roster` |
-| `UNIT_PET` | plain | `roster` |
-| `UNIT_AURA` | plain; first line is `roster.byUnitId[unit]`, unknown units return | `auras[unit]`, `status[unit]`; for `player` also `player` (mount, stealth and form are auras) |
-| `UNIT_CONNECTION`, `INCOMING_RESURRECT_CHANGED` | plain, same filter | `status[unit]` |
-| `PLAYER_DEAD`, `PLAYER_ALIVE`, `PLAYER_UNGHOST` | AceEvent | `status[player]`, `auras[player]` |
-| `READY_CHECK` | AceEvent | `auras` all |
-| `BAG_UPDATE_DELAYED` | AceEvent | `bags`, `bagCooldowns` |
-| `BAG_UPDATE` | only where `BAG_UPDATE_DELAYED` is not valid | `bags` |
-| `TRADE_CLOSED` | AceEvent | `bags` |
-| `BAG_UPDATE_COOLDOWN` | AceEvent | `bagCooldowns` |
-| `UNIT_INVENTORY_CHANGED` | `RegisterUnitEvent(…, "player")` | `weapon` |
-| `PLAYER_EQUIPMENT_CHANGED`, `WEAPON_ENCHANT_CHANGED` (if valid) | AceEvent | `weapon` |
-| `UPDATE_SHAPESHIFT_FORM`, `PLAYER_UPDATE_RESTING`, `ZONE_CHANGED`, `ZONE_CHANGED_NEW_AREA`, `MINIMAP_UPDATE_TRACKING`, `UNIT_ENTERED_VEHICLE` / `UNIT_EXITED_VEHICLE` (if valid) | AceEvent / player unit event | `player` |
-| `UNIT_POWER_UPDATE` | `RegisterUnitEvent(…, "player")`, registered only while a task waits for mana | `player` |
-| `UNIT_SPELLCAST_START` / `STOP` / `SUCCEEDED` / `FAILED` / `INTERRUPTED`, `UNIT_SPELLCAST_CHANNEL_START` / `STOP` | `RegisterUnitEvent(…, "player")` | casting state on PlayerStateScan, then `settings` |
-| `PLAYER_TARGET_CHANGED` | AceEvent | only with `BuffTarget` on: `roster` (target slot) and `auras["target"]` |
-| `MODIFIER_STATE_CHANGED` | registered only while a task depends on the modifier | `settings` |
-| `SPELLS_CHANGED`, `PLAYER_LEVEL_UP`, `TRAIT_CONFIG_UPDATED` | AceEvent | spell setup as today, then `settings` |
-| `PLAYER_REGEN_DISABLED` | AceEvent | cancel all scan timers; UI and cancel-buff handling as today |
-| `PLAYER_REGEN_ENABLED` | AceEvent | everything dirty |
-| `LOADING_SCREEN_ENABLED`, `PLAYER_LEAVING_WORLD` | AceEvent | gate closed, timers cancelled |
-| `LOADING_SCREEN_DISABLED`, `PLAYER_ENTERING_WORLD` | AceEvent | gate opens after the grace timer; everything dirty |
-| `ADDON_RESTRICTION_STATE_CHANGED` (if supported) | AceEvent | everything dirty; pass runs from the timer, never inside the event (the state is not final yet) |
+| `GROUP_ROSTER_UPDATE`, `GROUP_JOINED`, `GROUP_LEFT`, `RAID_ROSTER_UPDATE`, `PLAYER_ROLES_ASSIGNED` | all units | `roster` |
+| `UNIT_PET` | all units | `roster` for the player's pet and, outside a raid, a member's pet; for the player also `player` |
+| `UNIT_AURA` | player and pet only when alone; all units in a group or with BuffTarget, then filtered by `roster.byUnitId[unit]`; not registered in combat | `auras[unit]`, `status[unit]`; for `player` also `player` (mount, stealth and form are auras). Skipped when the payload says only harmful auras were added |
+| `UNIT_CONNECTION`, `INCOMING_RESURRECT_CHANGED` | all units, roster filter | `status[unit]` |
+| `PLAYER_DEAD`, `PLAYER_ALIVE`, `PLAYER_UNGHOST` | | `status[player]`, `auras[player]`, `player` |
+| `READY_CHECK` | | `auras` all, `status` all |
+| `BAG_UPDATE_DELAYED`, `BAG_UPDATE`, `TRADE_CLOSED` | | `bags`, `bagCooldowns` |
+| `BAG_UPDATE_COOLDOWN` | | `bagCooldowns` |
+| `UNIT_INVENTORY_CHANGED` | player only | `weapon` |
+| `PLAYER_EQUIPMENT_CHANGED`, `WEAPON_ENCHANT_CHANGED` | | `weapon` |
+| `UPDATE_SHAPESHIFT_FORM`, `PLAYER_UPDATE_RESTING`, `ZONE_CHANGED_INDOORS`, `MINIMAP_UPDATE_TRACKING`, `PLAYER_MOUNT_DISPLAY_CHANGED`, `UPDATE_STEALTH`, `PLAYER_CONTROL_LOST` / `GAINED` | | `player` |
+| `UNIT_ENTERED_VEHICLE` / `UNIT_EXITED_VEHICLE`, `UNIT_FACTION` | player only | `player` |
+| `ZONE_CHANGED`, `ZONE_CHANGED_NEW_AREA` | | `player`, `status` all (members are compared with the player's zone) |
+| `UNIT_POWER_UPDATE` | player only, registered only while a task waits for mana (`ScanEvents:SetManaWatch`) | `player`, once mana reaches `PlayerStateScan.manaWakeLimit` |
+| `UNIT_SPELLCAST_START` / `STOP` / `SUCCEEDED` / `FAILED` / `INTERRUPTED`, `UNIT_SPELLCAST_CHANNEL_START` / `STOP` | player only | `PlayerStateScan.casting`, then `settings`; stop and result also `player` (mana) |
+| `PLAYER_TARGET_CHANGED` | | only with `BuffTarget` on and a different buffable outsider: `roster` and `auras["target"]` |
+| `MODIFIER_STATE_CHANGED` | | Alt down: forget skip list and resurrections, everything dirty. Otherwise `settings` while a task waits for a modifier |
+| `PLAYER_REGEN_DISABLED` | | cancel the pass timer, unregister `UNIT_AURA` |
+| `PLAYER_REGEN_ENABLED` | | register `UNIT_AURA`, everything dirty |
+| `LOADING_SCREEN_ENABLED`, `PLAYER_LEAVING_WORLD` | | gate closed, timers cancelled |
+| `LOADING_SCREEN_DISABLED`, `PLAYER_ENTERING_WORLD` | | gate opens after the grace timer; everything dirty |
+| `ADDON_RESTRICTION_STATE_CHANGED` (where restrictions exist) | | everything dirty; pass runs from the timer, never inside the event (the state is not final yet) |
+
+In `Src/Events.lua` (AceEvent): `SPELLS_CHANGED`, `PLAYER_LEVEL_UP`, `TRAIT_CONFIG_UPDATED` and
+`ACTIVE_TALENT_GROUP_CHANGED` run the spell setup or profile choice and then call `Request`.
 
 Removed: `COMBAT_LOG_EVENT_UNFILTERED` on every client, and the unfiltered generic update events.
 
@@ -320,9 +391,9 @@ timer runs in combat, behind a loading screen, or when nothing is pending.
 | Minimum gap | 0.2 s between pass starts | always enforced | Caps the cost of a continuous event stream at 5 passes a second. |
 | Continuation | 0.05 s | the aura budget left dirty units | Finishes a full-raid read in about four passes without a frame spike. |
 | Deadline | at `nextWakeAt` | a pass collected a future wake time | Replaces `nextCooldownDue`, `checkCooldown` and the cooldown polling. |
-| Range tick | 1.0 s, re-armed by the pass | the task list has a target that is out of range, or a group buff waiting for its group | Replaces `repeatUpdate`. Marks `range` only. Stops when no task depends on range or the window is hidden. |
-| Dead watch | 2.0 s, re-armed by the pass | the roster has a dead member and a resurrection or buff task depends on it | Marks `status` for dead units only. |
-| Resync | 30 s, re-armed by the pass | in a group and Buffomat is active | Marks `auras` all. Insurance against a missed `UNIT_AURA` for far-away members. Remove it if in-game testing shows it never changes a snapshot version. |
+| Range tick | 1.0 s, re-armed by the pass | a task builder made a task for another member, a group or a resurrection | Replaces `repeatUpdate`. Marks `range`, which forces an evaluation with fresh distances. Stops when no such task is left or Buffomat is paused. |
+| Dead watch | 2.0 s, re-armed by the pass | the roster has a dead member and Buffomat is active | Marks `deadWatch`: the status of the dead members only. |
+| Resync | 30 s, re-armed by the pass | more than one unit in the roster and Buffomat is active | Marks `auras` and `status` all. Insurance against a missed `UNIT_AURA` or a zone change of a far-away member. Remove it if in-game testing shows it never changes a snapshot version. |
 | Loading grace | `constModule.LOADING_SCREEN_TIMEOUT` | loading screen ended | Opens the gate. Replaces the timeout polling. |
 
 `nextWakeAt` is the minimum, always as an absolute `GetTime()` value, of:
@@ -350,10 +421,15 @@ function module:MarkAllDirty(reason) end
 ---@param reason string
 function module:Request(reason) end
 
----Ask for a pass no later than this absolute time.
+---Make a domain dirty at an absolute time; an earlier request for the same domain wins.
 ---@param time number GetTime() based
-function module:WakeAt(time) end
+---@param domain BomScanDomain? Defaults to "settings", which only evaluates again
+function module:WakeAt(time, domain) end
 ```
+
+Also `MarkUnit(unitId)` (auras and status of one unit), `WakeAfter(seconds, domain)` and
+`CancelWake(domain)`. The pass reads its input from `pending` / `pendingUnits`; marks made while a
+pass runs go to the next pass.
 
 Timers are restarted, not accumulated: arming a timer that is already armed for an earlier time is a
 no-op, and for a later time is ignored.
@@ -520,10 +596,18 @@ Capability-gated; the full re-read stays as the fallback and as the path for `is
 | `UNIT_AURA` `updateInfo` | documented in the Classic UI source; not confirmed per flavor | present; fields may be secret in restricted states |
 | Tracking | texture or tracking-settings API (`envModule.usesTrackingSettings`) | tracking-settings API |
 
-To verify in game before relying on it, per client: `UNIT_AURA` fires for out-of-range raid members;
-`UNIT_AURA` fires on a member's death; `WEAPON_ENCHANT_CHANGED` and `PLAYER_ROLES_ASSIGNED` are valid
-events; `BAG_UPDATE_DELAYED` fires on Era and TBC; `RegisterUnitEvent` accepts `"player", "pet"`.
-Record the answers in this table.
+To verify in game, per client, and record in this table:
+
+- `UNIT_AURA` fires for out-of-range raid members, and on a member's death (the dead member's
+  status is read with the aura event; without it a death is noticed only by the 30 s resync).
+- A resurrected member is noticed within the 2 s dead watch.
+- `RegisterUnitEvent` accepts `"player", "pet"`, and one unit without a second argument.
+- Which of `WEAPON_ENCHANT_CHANGED`, `PLAYER_ROLES_ASSIGNED`, `UPDATE_STEALTH`,
+  `PLAYER_MOUNT_DISPLAY_CHANGED`, `PLAYER_CONTROL_LOST` exist (`/dump C_EventUtils.IsEventValid(...)`).
+  On a client without `C_EventUtils` an unknown name is caught by the protected registration.
+- The end of a temporary weapon enchant is noticed (event or the deadline timer).
+- Mounting, taking a taxi, entering stealth and changing form each update the cast button.
+- On Era: activating a tracking spell through `CastSpellByID` still works out of combat.
 
 ## 8. Risks
 

@@ -20,6 +20,7 @@ local addonName, ns = ...
 ---@field tasklist BomTaskList The task list, rebuilt by every evaluation
 ---@field seen ScanPassSeenVersions Snapshot versions the last evaluation was made from
 ---@field wasActive boolean The last evaluation found Buffomat active
+---@field mustEvaluate boolean? A settings or range request is waiting for the read queue to empty
 local module = LibStub("Buffomat-ScanPass") --[[@as ScanPassModule]]
 
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
@@ -50,7 +51,7 @@ module.wasActive = false
 ---@param auraFree boolean
 ---@return boolean more Units are still queued for an aura read
 function module:Read(pending, pendingUnits, auraFree)
-  if pending.roster or rosterScanModule.playerOnly ~= auraFree then
+  if pending.roster or rosterScanModule.playerOnly ~= auraFree or rosterScanModule:NeedsRebuild() then
     rosterScanModule:Rebuild(pendingUnits, auraFree)
   end
   local roster = rosterScanModule.roster
@@ -93,13 +94,11 @@ function module:Read(pending, pendingUnits, auraFree)
 end
 
 ---Whether anything an evaluation looks at changed since the last one.
----@param pending BomScanDirtyFlags
 ---@param auraFree boolean
 ---@return boolean
-function module:HasChanged(pending, auraFree)
+function module:HasChanged(auraFree)
   local seen = self.seen
-  -- Settings, and range and deadlines which arrive as "settings", have no snapshot to compare
-  if pending.settings or pending.range then
+  if self.mustEvaluate then
     return true
   end
   return seen.roster ~= rosterScanModule.roster.version
@@ -236,7 +235,17 @@ function module:Run(pending, pendingUnits)
   scanEventsModule:RegisterAuraEvent() -- the BuffTarget option changes which units are heard
 
   if pending.roster or pending.player or pending.settings then
+    local profileBefore = buffomatModule.currentProfileName
     buffomatModule:UseProfile(profileModule:ChooseProfile())
+    if buffomatModule.currentProfileName ~= profileBefore then
+      pending.settings = true -- another profile enables other buffs, whatever the snapshots say
+    end
+  end
+
+  -- Settings, and range and deadlines which arrive as "settings", have no snapshot to compare.
+  -- The request is remembered, because the passes which empty the read queue come first.
+  if pending.settings or pending.range then
+    self.mustEvaluate = true
   end
 
   local more = self:Read(pending, pendingUnits, auraFree)
@@ -249,7 +258,8 @@ function module:Run(pending, pendingUnits)
     return "continue"
   end
 
-  if self:HasChanged(pending, auraFree) then
+  if self:HasChanged(auraFree) then
+    self.mustEvaluate = false
     self:RememberVersions(auraFree)
     self.wasActive = self:Evaluate(roster, auraFree)
   end

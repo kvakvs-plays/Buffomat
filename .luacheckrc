@@ -70,8 +70,9 @@ stds.wow = { read_globals = {
   "WOW_PROJECT_WRATH_CLASSIC",
 } }
 
--- Scan modules reach the game only through Src/KvLib (see .agents/scan-plan.md), so a raw
--- WoW API call there is reported as an undefined global
+-- The scan pipeline (readers, evaluation, task builders) reaches the game only through
+-- Src/KvLib (see .agents/scan-plan.md), so a raw WoW API call there is reported as an
+-- undefined global
 stds.scan = { read_globals = { "GetTime", "InCombatLockdown", "LibStub", "tContains", "wipe" } }
 
 files["Src/Languages/**"] = { max_line_length = false }
@@ -80,5 +81,10 @@ files["Src/Knowledge/**"] = { ignore = { "212/enchantments" } }
 -- AceConfig option callbacks receive `info` whether they need it or not
 files["Src/Ui/Options.lua"] = { ignore = { "212/info" } }
 files["Src/KvLib/KvOptions.lua"] = { ignore = { "212/info" } }
-files["Src/Scan/**"] = { std = "lua51+scan" }
+for _, path in ipairs({ "Src/Scan/**", "Src/Task/**", "Src/BuffChecks.lua", "Src/Core/Unit.lua",
+  "Src/Core/UnitBuffTarget.lua", "Src/Core/GroupBuffTarget.lua" }) do
+  files[path] = { std = "lua51+scan" }
+end
+-- The legacy cast button frame and a client error string
+files["Src/Task/TaskList.lua"] = { std = "lua51+scan", read_globals = { "BomC_ListTab_Button", "ERR_SPELL_OUT_OF_RANGE" } }
 files["Tests/**"] = { read_globals = { "setfenv", "loadfile" } }

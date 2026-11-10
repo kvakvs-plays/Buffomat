@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+- The scanner was rewritten. Buffomat no longer rescans everything twice a second: it reacts to game
+  events, reads only what changed (in a raid, only the members whose buffs changed), and redraws the task
+  list only when it changed. A change shows up in the task list within a fraction of a second.
+  Buff timers and cooldowns are checked exactly when they run out.
+- Fixed: an item on cooldown (for example a Soulstone) made Buffomat rescan constantly.
+- Fixed: a Greater Blessing for a class raised an error instead of adding a task.
+- Fixed: in a raid, raid-wide group buffs and class blessings showed a red "out of range" line.
+- Fixed: in a raid the player was counted twice, once in group 1.
+- `/bom scanstats` prints scan statistics while debug logging is on.
+
 ## Buffomat Classic 2026.11.2
 
 - WoW: Forever reminders for levelling characters, hidden at level 60. Both are on by default; turn them off

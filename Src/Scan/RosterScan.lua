@@ -25,6 +25,7 @@ local addonName, ns = ...
 ---@field roster BomRoster
 ---@field units table<string, BomUnit> One reused object per unit id
 ---@field playerOnly boolean? The roster was last built in aura-free mode
+---@field builtWithBuffTarget boolean? Value of the BuffTarget option at the last build
 local module = LibStub("Buffomat-RosterScan") --[[@as RosterScanModule]]
 
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
@@ -63,9 +64,10 @@ local changed = false -- set while filling units during a rebuild
 local function describeUnit(unit, isPet)
   local class = not isPet and kvUnitModule.GetPlayerClass(unit.guid) or nil
   if class then
+    local color = constModule.CLASS_COLOR[class]
     unit.class = class
     unit.link = (constModule.CLASS_ICONS[class] or "") .. "|Hunit:" .. unit.guid .. ":" .. unit.name
-        .. "|h|c" .. constModule.CLASS_COLOR[class].colorStr .. unit.name .. "|r|h"
+        .. "|h|c" .. (color and color.colorStr or "ffffffff") .. unit.name .. "|r|h"
   else
     unit.class = "pet"
     unit.link = ngStringsModule:FormatTexture(texturesModule.ICON_PET) .. unit.name
@@ -152,6 +154,13 @@ local function addPet(unitId, owner, pendingUnits)
   return pet
 end
 
+---The BuffTarget option decides whether the target is part of the roster, so the option
+---changing means the roster has to be built again.
+---@return boolean
+function module:NeedsRebuild()
+  return self.builtWithBuffTarget ~= (BuffomatShared.BuffTarget == true)
+end
+
 ---Rebuild the roster from the group as it is now.
 ---@param pendingUnits BomScanDirtyUnits Units found to be new are added, to be read in the same pass
 ---@param playerOnly boolean Aura-free mode: other members' names can be secret, and nothing is read from them
@@ -174,6 +183,7 @@ function module:Rebuild(pendingUnits, playerOnly)
   roster.playerPet, roster.target = nil, nil
   changed = self.playerOnly ~= playerOnly
   self.playerOnly = playerOnly
+  self.builtWithBuffTarget = BuffomatShared.BuffTarget == true
 
   local raidSize = playerOnly and 0 or kvUnitModule.GetNumRaidMembers()
   local isRaid = raidSize > 0

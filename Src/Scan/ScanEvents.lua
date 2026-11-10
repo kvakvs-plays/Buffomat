@@ -262,7 +262,8 @@ function module:Init()
 
   -- Player state
   for _, event in ipairs({ "UPDATE_SHAPESHIFT_FORM", "PLAYER_UPDATE_RESTING", "ZONE_CHANGED_INDOORS",
-    "MINIMAP_UPDATE_TRACKING", "PLAYER_MOUNT_DISPLAY_CHANGED" }) do
+    "MINIMAP_UPDATE_TRACKING", "PLAYER_MOUNT_DISPLAY_CHANGED", "UPDATE_STEALTH",
+    "PLAYER_CONTROL_LOST", "PLAYER_CONTROL_GAINED" }) do -- control is lost and gained with a taxi ride
     dispatcher:On(event, onPlayerStateChanged)
   end
   dispatcher:On("ZONE_CHANGED", onZoneChanged)

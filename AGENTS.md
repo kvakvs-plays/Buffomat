@@ -75,6 +75,26 @@
 - Avoid string concatenation in hot loops; prefer prebuilt strings or `table.concat`.
 - Avoid `pairs` over large tables every frame.
 
+## Scanning
+
+Design: `.agents/scan-plan.md`. The modules are in `Src/Scan/`.
+
+- Events never scan. A handler in `Src/Scan/ScanEvents.lua` marks the domain it affects with
+  `scanSchedulerModule:MarkDirty(domain, unitId)`; UI and settings code calls `scanSchedulerModule:Request(reason)`.
+- Only the readers (`RosterScan`, `AuraScan`, `BagScan`, `PlayerStateScan`, `RangeScan`) read the game state, and
+  only through `Src/KvLib/` (`KvEnv`, `KvUnit`, `KvPlayer`, `KvEvents`). Evaluation (`ScanEvaluate`, `BuffChecks`)
+  and the task builders (`Src/Task/`) read the snapshots. luacheck reports a raw WoW API call in these files as an
+  undefined global; add a wrapper to `Src/KvLib/` instead of the global to the allowed list.
+- A wrapper in `Src/KvLib/` returns plain values or says the value is unreadable. Callers do not test for secret
+  values themselves.
+- A condition which becomes true with time (a buff running out, a cooldown ending) calls
+  `scanSchedulerModule:WakeAt(time, domain)`. Do not add repeating timers or polling.
+- A reader increments its snapshot `version` only when the data changed; the pass skips evaluation when no version
+  moved. Reuse tables in readers; no table per aura, per bag slot or per pass.
+- Scan results go into `BomScanResult` (`Src/Scan/ScanResult.lua`), never onto a `BomBuffDefinition`.
+- Side effects decided by a scan (cancel a buff, switch tracking on) are listed in the result and carried out by
+  `ScanEffects:Run`, not during evaluation.
+
 ## Saved Variables
 
 - Declare saved variables in TOC metadata.
@@ -108,6 +128,6 @@
 - `toc_template.toc` is the authoritative load-order template for generated TOC files.
 - When adding a module, update `Src/EarlyBoot.lua` and ensure the module is included in the TOC load order.
 - `luacheck Src Tests` must report 0 warnings with the committed `.luacheckrc`. Prefix intentionally unused
-  values with `_`, and add new WoW API globals to `read_globals` there. On Windows there is no launcher:
+  values with `_`, and add new WoW API globals to `stds.wow` there. On Windows there is no launcher:
   run `lua "%APPDATA%\luarocks\bin\luacheck"` with `LUA_PATH` set (see `.agents/luacheck-plan.md`).
 - Run the tests with `lua Tests/<name>.lua` from the repository root.

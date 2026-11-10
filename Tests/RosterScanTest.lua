@@ -146,7 +146,9 @@ for _, modern in ipairs({ false, true }) do
   f:unit("target", { name = "Stranger", class = "MAGE" })
   rosterScan:Rebuild(pendingUnits(), false)
   equal(roster.target, nil, "strangers are ignored without the option")
+  equal(rosterScan:NeedsRebuild(), false)
   f.globals.BuffomatShared.BuffTarget = true
+  equal(rosterScan:NeedsRebuild(), true, "the option decides whether the target is scanned")
   pending = pendingUnits()
   rosterScan:Rebuild(pending, false)
   equal(roster.target.name, "Stranger"); equal(roster.byUnitId.target, roster.target); equal(pending.auras.target, true)

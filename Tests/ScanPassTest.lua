@@ -200,6 +200,13 @@ do
   equal(f:counter("evaluations"), evaluations, "the same auras again are not evaluated")
   equal(f.panel.clears, clears)
 
+  -- A settings change is evaluated even when it has to wait for a re-read of the whole raid
+  evaluations = f:counter("evaluations")
+  scheduler:Request("test")
+  scheduler:MarkDirty("auras")
+  f:advance(1)
+  equal(f:counter("evaluations"), evaluations + 1, "the request survives the continuation passes")
+
   -- The other groups get the prayer too; a ready check re-reads everybody
   for index = 1, 40 do
     local unitId = index == 1 and "player" or ("raid" .. index)
