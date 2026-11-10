@@ -5,16 +5,24 @@ local addonName, ns = ...
 
 ---@class ScanPassModule
 local module = LibStub("Buffomat-ScanPass") --[[@as ScanPassModule]]
+local bagScanModule = LibStub("Buffomat-BagScan") --[[@as BagScanModule]]
 local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
 local taskScanModule = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
 
----@param _pending BomScanDirtyFlags Domains to read in this pass
+---@param pending BomScanDirtyFlags Domains to read in this pass
 ---@param _pendingUnits BomScanDirtyUnits Units to read in this pass
 ---@return BomScanPassResult
-function module:Run(_pending, _pendingUnits)
+function module:Run(pending, _pendingUnits)
   -- Window show and hide requests wait for a pass, because a pass never runs in combat
   taskListPanelModule:WindowCommand()
+
+  if pending.bags or bagScanModule:NeedsRead() then
+    bagScanModule:Read()
+  end
+  if pending.bagCooldowns then
+    bagScanModule:InvalidateCooldowns()
+  end
 
   -- Until the readers are split by domain, any change re-reads the whole group
   partyModule:InvalidatePartyCache()

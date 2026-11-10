@@ -38,7 +38,6 @@ module.libIcon = LibStub("LibDBIcon-1.0")
 ---@field ALL_PROFILES ProfileName[] Lists all buffomat profile names (group, solo... etc)
 ---@field buffExchangeId table<number, number[]> Combines spell ids of spellrank flavours into main spell id
 ---@field buffIgnoreAll number[] Having this buff on target excludes the target (phaseshifted imp for example)
----@field cachedPlayerBag BomCachedPlayerBag Items in player's bag
 ---@field cancelBuffs BomBuffDefinition[] All spells to be canceled on detection
 ---@field cancelBuffSource string Unit who casted the buff to be auto-canceled
 ---@field castFailedBuff BomBuffDefinition|nil Used for spell min level target detection (not available via API)
@@ -65,7 +64,6 @@ module.libIcon = LibStub("LibDBIcon-1.0")
 ---@field scanModifierKeyDown boolean Will update buffomat when modifier key is held down
 ---@field somebodyIsGhost boolean [unused?] Someone in the party is a ghost
 ---@field spellTabsCreatedFlag boolean Indicated spells tab already populated with controls
----@field wipeCachedItems boolean Command to reset cached items on the next call to itemListCacheModule; TODO move to itemListCacheModule
 ---@field setupAvailableSpellsFn function
 -- -@field Print fun(self: BomAddon, msg: string): void
 -- -@field RegisterEvent fun(self: BomAddon, event: string, handler: function): void
@@ -78,17 +76,6 @@ BuffomatAddon = LibStub("AceAddon-3.0"):NewAddon(
 local BuffomatAddon = BuffomatAddon
 local libDB = LibStub("LibDataBroker-1.1")
 local libIcon = LibStub("LibDBIcon-1.0")
-
----@class BomCachedBagItem
----@field a boolean Player has item
----@field b number Bag
----@field c number Slot
----@field d number Count
-
----@alias BomCachedPlayerBag table<string, BomCachedBagItem>
-
----@type table<string, BomCachedBagItem>
-BuffomatAddon.cachedPlayerBag = {}
 
 ---Print a text with "BomDebug: " prefix in the game chat window
 ---@param t string

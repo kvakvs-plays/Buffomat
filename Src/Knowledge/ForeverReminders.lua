@@ -10,6 +10,7 @@ local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
 local buffChecksModule = LibStub("Buffomat-BuffChecks") --[[@as BuffChecksModule]]
 local spellIdsModule = LibStub("Buffomat-SpellIds") --[[@as SpellIdsModule]]
+local bagScanModule = LibStub("Buffomat-BagScan") --[[@as BagScanModule]]
 
 -- Forever's level cap; the reminders show up to the level below it
 local MAX_LEVEL = 60
@@ -40,13 +41,6 @@ local function hasAnyAura(auras, ids)
   return false
 end
 
----@param itemId WowItemId
----@return number
-local function itemCount(itemId)
-  local getCount = (C_Item and C_Item.GetItemCount) or GetItemCount
-  return getCount and getCount(itemId) or 0
-end
-
 ---Near a campfire without Camp Benefits, or with them about to run out
 ---@type BomReminderCheck
 function module.CampCheck(buffDef, playerUnit)
@@ -73,7 +67,7 @@ function module.XpCheck(_buffDef, playerUnit)
   if not hasAnyAura(auras, WELL_FED_XP_AURAS) then
     table.insert(missing, _t("reminder.xp.wellFed"))
   end
-  if not auras[WELL_RESTED] and itemCount(COZY_SLEEPING_BAG) > 0 then
+  if not auras[WELL_RESTED] and bagScanModule:Count(COZY_SLEEPING_BAG) > 0 then
     table.insert(missing, _t("reminder.xp.sleepingBag"))
   end
   if #missing == 0 then

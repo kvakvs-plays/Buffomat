@@ -25,7 +25,7 @@ local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local groupBuffTargetModule = LibStub("Buffomat-GroupBuffTarget") --[[@as BomGroupBuffTargetModule]]
 local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
-local itemListCacheModule = LibStub("Buffomat-ItemListCache") --[[@as ItemListCacheModule]]
+local bagScanModule = LibStub("Buffomat-BagScan") --[[@as BagScanModule]]
 local macroModule = LibStub("Buffomat-Macro") --[[@as MacroModule]]
 local ngStringsModule = LibStub("Buffomat-NgStrings") --[[@as NgStringsModule]]
 local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
@@ -1426,58 +1426,54 @@ function module:CheckMissingWeaponEnchantments(_playerUnit)
   end
 end
 
+---Add a task to use or open a bag item.
+---@param item BomBagItem
+---@param target string? Name of the player the item is used on
+---@param playerUnit BomUnit
+function module:AddUseItemTask(item, target, playerUnit)
+  local extraMsg = "" -- tell user they need to hold Alt or something
+  if BuffomatShared.DontUseConsumables and not IsModifierKeyDown() then
+    extraMsg = _t("task.hint.HoldShiftConsumable")
+  end
+
+  local actionText = ngStringsModule:FormatTexture(item.texture)
+      .. item.link
+      .. (target and (" @" .. target) or "")
+  -- Text: [Icon] [Item Link] @Target
+  local task = taskModule:Create(actionText, nil)
+      :ExtraText("(" .. _t("task.UseOrOpen") .. ") " .. extraMsg)
+      :Prio(taskModule.PRIO_OPEN_CONTAINER)
+      :Target(buffTargetModule:FromSelf(playerUnit))
+
+  if BuffomatShared.DontUseConsumables and not IsModifierKeyDown() then
+    -- Can't use or cast
+    self.tasklist:Add(task:IsInfo())
+  else
+    -- Will use/cast
+    self.tasklist:Add(task
+      :Action(actionUseModule:New(nil, target, item.bag, item.slot, item.link))
+      :InRange(true))
+  end
+  BuffomatAddon.scanModifierKeyDown = BuffomatShared.DontUseConsumables
+end
+
+---Tasks for usable items (soulstones) which are off cooldown, and for containers to open.
 ---@param playerUnit BomUnit
 ---@param _buffCtx BomBuffScanContext
 function module:CheckItemsAndContainers(playerUnit, _buffCtx)
-  --itemcheck
-  local allPlayerItems = itemListCacheModule:GetItemList()
-
-  for _, item in ipairs(allPlayerItems) do
-    local ok = false
-    local target
-
-    if item.CD then
-      if (item.CD[1] or 0) ~= 0 then
-        scanSchedulerModule:WakeAt(item.CD[1] + (item.CD[2] or 0))
-      elseif item.Link then
-        ok = true
-
-        if allBuffsModule.itemListSpellLookup[item.ID] then
-          if partyModule.itemListTarget[allBuffsModule.itemListSpellLookup[item.ID]] then
-            target = partyModule.itemListTarget[allBuffsModule.itemListSpellLookup[item.ID]]
-          end
-        end
+  for _, itemIds in ipairs(BuffomatAddon.itemList) do
+    for _, itemId in ipairs(itemIds) do
+      local item = bagScanModule:Find(itemId)
+      if item and item.link and bagScanModule:IsReady(item) then
+        -- Use it on whoever had its buff from the player before
+        local target = partyModule.itemListTarget[allBuffsModule.itemListSpellLookup[itemId]]
+        self:AddUseItemTask(item, target, playerUnit)
       end
-    elseif item.Lootable then
-      ok = true
     end
+  end
 
-    if ok then
-      local extraMsg = "" -- tell user they need to hold Alt or something
-      if BuffomatShared.DontUseConsumables and not IsModifierKeyDown() then
-        extraMsg = _t("task.hint.HoldShiftConsumable")
-      end
-
-      local actionText = ngStringsModule:FormatTexture(item.Texture)
-          .. item.Link
-          .. (target and (" @" .. target) or "")
-      -- Text: [Icon] [Item Link] @Target
-      local task = taskModule:Create(actionText, nil)
-          :ExtraText("(" .. _t("task.UseOrOpen") .. ") " .. extraMsg)
-          :Prio(taskModule.PRIO_OPEN_CONTAINER)
-          :Target(buffTargetModule:FromSelf(playerUnit))
-
-      if BuffomatShared.DontUseConsumables and not IsModifierKeyDown() then
-        -- Can't use or cast
-        self.tasklist:Add(task:IsInfo())
-      else
-        -- Will use/cast
-        self.tasklist:Add(task
-          :Action(actionUseModule:New(nil, target, item.Bag, item.Slot, item.Link))
-          :InRange(true))
-      end
-      BuffomatAddon.scanModifierKeyDown = BuffomatShared.DontUseConsumables
-    end
+  for _, item in ipairs(bagScanModule.openable) do
+    self:AddUseItemTask(item, nil, playerUnit)
   end
 end
 

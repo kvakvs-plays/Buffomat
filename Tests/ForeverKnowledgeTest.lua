@@ -333,7 +333,14 @@ do
   equal(camp.reminderCheck(camp, player({ [1283391] = true }, { expirationTime = 50, duration = 3600 })),
     "reminder.camp", "camp reminder when Camp Benefits run out")
 
+  local sleepingBags = 0
+  libs["Buffomat-BagScan"].Count = function(_, itemId) return itemId == 211527 and sleepingBags or 0 end
   equal(xp.reminderCheck(xp, player({})), "reminder.xp.wellFed", "XP reminder when not Well Fed")
+  sleepingBags = 1
+  equal(xp.reminderCheck(xp, player({ [1248406] = true })), "reminder.xp.sleepingBag",
+    "sleeping bag reminder only with one in the bags")
+  equal(xp.reminderCheck(xp, player({ [1248406] = true, [429959] = true })), nil, "no reminder when Well Rested")
+  sleepingBags = 0
   equal(xp.reminderCheck(xp, player({ [1248406] = true })), nil, "no XP reminder when Well Fed")
   equal(xp.reminderCheck(xp, player({ [1249906] = true })), nil, "no XP reminder while drinking")
 end

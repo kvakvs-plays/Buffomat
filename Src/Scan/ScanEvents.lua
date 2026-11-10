@@ -86,10 +86,6 @@ local function onReadyCheck()
 end
 
 local function onBagsChanged()
-  BuffomatAddon.wipeCachedItems = true
-  if BuffomatAddon.cachedPlayerBag then
-    wipe(BuffomatAddon.cachedPlayerBag)
-  end
   scheduler:MarkDirty("bags")
   scheduler:MarkDirty("bagCooldowns")
 end

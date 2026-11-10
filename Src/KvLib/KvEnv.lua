@@ -314,6 +314,29 @@ function module.GetContainerItemInfo(bag, slot)
   }
 end
 
+---One bag slot as plain values. Unlike GetContainerItemInfo this builds no table on
+---clients which return a tuple, so a walk over every bag slot allocates nothing there.
+---@param bag number
+---@param slot number
+---@return number? itemId Nil for an empty or unreadable slot
+---@return number? count
+---@return string? link
+---@return number|string? icon
+---@return boolean? hasLoot
+function module.ReadContainerItem(bag, slot)
+  local icon, count, _locked, _quality, _readable, lootable, link, _filtered, _noValue, itemID =
+      getContainerItemInfo(bag, slot)
+  if type(icon) == "table" then
+    local info = icon
+    icon, count, lootable, link, itemID = info.iconFileID, info.stackCount, info.hasLoot, info.hyperlink, info.itemID
+  end
+  if module.IsSecretValue(itemID) or itemID == nil or module.IsSecretValue(count) or module.IsSecretValue(link)
+      or module.IsSecretValue(icon) or module.IsSecretValue(lootable) then
+    return nil
+  end
+  return itemID, count or 1, link, icon, lootable == true
+end
+
 local scanTooltip ---@type table? Hidden tooltip, created on first use
 
 ---Whether the tooltip of a bag item has a line with exactly this text, such as LOCKED
@@ -339,6 +362,14 @@ function module.ContainerItemTooltipHasLine(bag, slot, text)
     end
   end
   return false
+end
+
+---A lockbox which still has to be picked or unlocked with a key.
+---@param bag number
+---@param slot number
+---@return boolean
+function module.IsContainerItemLockedBox(bag, slot)
+  return module.ContainerItemTooltipHasLine(bag, slot, LOCKED)
 end
 
 ---Backpack, equipped bags, and the reagent bag where one exists. Built once

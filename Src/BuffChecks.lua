@@ -12,7 +12,7 @@ local unitCacheModule = LibStub("Buffomat-UnitCache") --[[@as UnitCacheModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
-local scanStatsModule = LibStub("Buffomat-ScanStats") --[[@as ScanStatsModule]]
+local bagScanModule = LibStub("Buffomat-BagScan") --[[@as BagScanModule]]
 local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
 
 ---Checks whether a tracking spell is now active
@@ -65,53 +65,26 @@ function module:TimeCheck(expirationTime, maxDuration)
   return false
 end
 
+---Whether the player has an item in the bags, answered from the bag snapshot.
 ---@param itemToCheck WowItemId
----@param cd boolean respect the cooldown?
----@return boolean, number|nil, number|nil, number|nil {HasItem, Bag, Slot, Count}
+---@param cd boolean When true, an item on cooldown counts as not available
+---@return boolean hasItem
+---@return number? bag Bag of the first stack
+---@return number? slot Slot of the first stack
+---@return number? count Total in all bags
 function module:HasOneItem(itemToCheck, cd)
   if itemToCheck == nil then
     return true, nil, nil, 1 -- spell.items is nil, no items required
   end
 
-  local key = itemToCheck .. (cd and "CD" or "")
-  local cachedItem = BuffomatAddon.cachedPlayerBag[key]
-
-  if not cachedItem then
-    BuffomatAddon.cachedPlayerBag[key] = --[[@as BomCachedBagItem]] {}
-    cachedItem = BuffomatAddon.cachedPlayerBag[key]
-    cachedItem.a = false
-    cachedItem.d = 0
-    scanStatsModule:Count("bagScans")
-
-    for _, bag in ipairs(envModule.playerBagIds) do
-      scanStatsModule:Count("bagSlotReads", envModule.GetContainerNumSlots(bag))
-      for slot = 1, envModule.GetContainerNumSlots(bag) do
-        local itemInfo = envModule.GetContainerItemInfo(bag, slot)
-        if itemInfo then
-          if itemToCheck == itemInfo.itemID then
-            if cd then
-              cachedItem.a, cachedItem.b, cachedItem.c = true, bag, slot
-              cachedItem.d = cachedItem.d + itemInfo.stackCount
-            else
-              cachedItem.a = true
-              return true, nil, nil, nil
-            end
-          end -- if required item
-        end   -- if iteminfo
-      end     -- for slot
-    end       -- for bag
-  end         -- if not cacheditem
-
-  if cd and cachedItem.b and cachedItem.c then
-    local startTime, _, _ = envModule.GetContainerItemCooldown(cachedItem.b, cachedItem.c)
-    if (startTime or 0) == 0 then
-      return cachedItem.a, cachedItem.b, cachedItem.c, cachedItem.d
-    else
-      return false, cachedItem.b, cachedItem.c, cachedItem.d
-    end
+  local item = bagScanModule:Find(itemToCheck)
+  if item == nil then
+    return false, nil, nil, 0
   end
-
-  return cachedItem.a, cachedItem.b, cachedItem.c, cachedItem.d
+  if cd and not bagScanModule:IsReady(item) then
+    return false, item.bag, item.slot, item.count
+  end
+  return true, item.bag, item.slot, item.count
 end
 
 --- Check item min level
