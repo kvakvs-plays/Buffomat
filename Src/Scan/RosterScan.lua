@@ -18,6 +18,9 @@ local addonName, ns = ...
 ---@field incomplete boolean A member's name or GUID was unreadable; decisions would be made on a partial group
 ---@field hasDead boolean A member is dead
 
+---The old name of the roster, still used by the task builders.
+---@alias BomParty BomRoster
+
 ---@class RosterScanModule
 ---@field roster BomRoster
 ---@field units table<string, BomUnit> One reused object per unit id

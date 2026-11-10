@@ -128,10 +128,6 @@ for _, client in ipairs({
   equal(env.ChatEdit_SendText({}), not forever)
   if forever then assert(not state.chat and not state.sent, "Forever must not activate chat") end
 
-  loadModule("Src/Task/TaskScan.lua", globals)
-  local scan = libs["Buffomat-TaskScan"]
-  setmetatable(libs["Buffomat-Languages"], { __call = function(_, key) return key end })
-  scan.ShowInactive = function(_, reason) state.inactive = reason end
   if modern then
     local names = { [0] = "Combat", "Encounter", "ChallengeMode", "PvPMatch" }
     for kind = 0, 3 do

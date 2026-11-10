@@ -57,11 +57,10 @@ Src/Core/UnitBuffTarget.lua
 Src/Core/ProfileSettings.lua
 Src/Core/SharedSettings.lua
 Src/Core/BuffDefinition.lua
-Src/Core/Party.lua
 
 Src/Task/Task.lua
 Src/Task/TaskList.lua
-Src/Task/TaskScan.lua
+Src/Task/TaskBuilder.lua
 Src/Task/ActionCast.lua
 Src/Task/ActionUse.lua
 Src/Task/ActionMacro.lua
@@ -78,6 +77,9 @@ Src/Scan/RosterScan.lua
 Src/Scan/AuraScan.lua
 Src/Scan/PlayerStateScan.lua
 Src/Scan/RangeScan.lua
+Src/Scan/ScanResult.lua
+Src/Scan/ScanEvaluate.lua
+Src/Scan/ScanEffects.lua
 
 Src/Ui/Options.lua
 Src/Ui/OptionsPopupMenu.lua

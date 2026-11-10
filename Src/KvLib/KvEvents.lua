@@ -46,8 +46,11 @@ local function register(frame, event, unit1, unit2)
   if not envModule.IsEventValid(event) then
     return false
   end
-  if unit1 ~= nil then
+  if unit1 ~= nil and unit2 ~= nil then
     return (pcall(frame.RegisterUnitEvent, frame, event, unit1, unit2))
+  elseif unit1 ~= nil then
+    -- An explicit nil second unit is not the same as no second unit to every client
+    return (pcall(frame.RegisterUnitEvent, frame, event, unit1))
   end
   return (pcall(frame.RegisterEvent, frame, event))
 end

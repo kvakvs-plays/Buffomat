@@ -78,7 +78,7 @@ module.RESURRECT_CLASSES = RESURRECT_CLASSES
 --- Classes which have mana bar and benefit from mp/5 and spirit
 ---@type ClassName[]
 local MANA_CLASSES = { "HUNTER", "WARLOCK", "MAGE", "DRUID", "SHAMAN", "PRIEST", "PALADIN" }
-BuffomatAddon.MANA_CLASSES = MANA_CLASSES --used in TaskScan.lua
+BuffomatAddon.MANA_CLASSES = MANA_CLASSES
 module.MANA_CLASSES = MANA_CLASSES
 
 ---TODO: Move to constModule

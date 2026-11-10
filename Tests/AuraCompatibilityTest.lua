@@ -73,15 +73,16 @@ local function run(mode)
     if mode == "mixed" then globals.C_UnitAuras = {} end
   end
   loadModule("Src/KvLib/KvEnv.lua", globals)
-  loadModule("Src/Task/TaskScan.lua", globals)
+  loadModule("Src/KvLib/KvUnit.lua", globals)
+  loadModule("Src/KvLib/KvPlayer.lua", globals)
+  loadModule("Src/Scan/ScanEvaluate.lua", globals)
+  loadModule("Src/Scan/ScanEffects.lua", globals)
   local env = libs["KvLibShared-Env"]
-  local scan = libs["Buffomat-TaskScan"]
-  local allBuffs = libs["Buffomat-AllBuffs"]
-  allBuffs.selectedBuffs = {}
+  local scan = libs["Buffomat-ScanEffects"]
+  local evaluate = libs["Buffomat-ScanEvaluate"]
   setmetatable(libs["Buffomat-Languages"], { __call = function(_, key) return key end })
-  scan.ShowInactive = function(_, reason) state.paused = reason end
   local player = { unitId = "player", name = "Tester", knownBuffs = {}, allBuffs = {} }
-  local context = { party = { player = player, byUnitId = { player = player } } }
+  local roster = { player = player, units = { player } }
 
   local aura, readable = env.GetUnitAura("player", 1, "HELPFUL")
   if mode == "unavailable" then
@@ -96,7 +97,7 @@ local function run(mode)
   equal(aura.duration, 60); equal(aura.expirationTime, 90); equal(aura.timeMod, 1)
   aura, readable = env.GetUnitAura("player", 2, "HELPFUL")
   equal(aura, nil); equal(readable, true, "end of list remains readable")
-  equal(scan:CheckAuraData(context), true)
+  equal(evaluate:IsAuraDataComplete(roster), true)
 
   -- Every returned primitive must be checked before use, including spell IDs,
   -- durations, source tokens, and aura names used as cache keys.
@@ -116,15 +117,18 @@ local function run(mode)
   state.inCombat = false
 
   player.auraDataUnavailable = true
-  equal(scan:CheckAuraData(context), false, "an unread player blocks decisions")
+  equal(evaluate:IsAuraDataComplete(roster), false, "an unread player blocks decisions")
   player.auraDataUnavailable = false
 
-  context.party.byUnitId.party1 = { auraDataUnavailable = true }
-  equal(scan:CheckAuraData(context), false, "restricted party member blocks partial decisions")
-  context.party.byUnitId.party1 = nil
-  context.party.playerPet = { auraDataUnavailable = true }
-  equal(scan:CheckAuraData(context), false, "restricted pet blocks partial decisions")
-  context.party.playerPet = nil
+  roster.units[2] = { auraDataUnavailable = true }
+  equal(evaluate:IsAuraDataComplete(roster), false, "restricted party member blocks partial decisions")
+  roster.units[2] = nil
+  player.weaponDataUnavailable = true
+  equal(evaluate:IsAuraDataComplete(roster), false, "unreadable weapon enchants block partial decisions")
+  player.weaponDataUnavailable = false
+  roster.incomplete = true
+  equal(evaluate:IsAuraDataComplete(roster), false, "a member the client hides blocks partial decisions")
+  roster.incomplete = false
 
   equal(scan:CancelBuff({42}), true)
   equal(state.filter, "HELPFUL|CANCELABLE")

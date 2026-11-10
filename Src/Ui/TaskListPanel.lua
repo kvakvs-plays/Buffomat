@@ -14,6 +14,7 @@ local BuffomatAddon = BuffomatAddon
 ---@field titleBuffGroups string The buff groups which go into the title of the window
 ---@field messages string[]
 ---@field saveBuffButtonText string Saves the button text when in combat
+---@field shownText string? The lines the visible window shows now; nil when it has to be drawn again
 -- --- User show/hide and auto show/hide mechanics ---
 ---@field windowCommand WindowCommand Delays actual window show/hide operation till it is a safe time to do
 ---@field windowCommandCallLocation string The location where the window command was called from
@@ -85,7 +86,8 @@ function module:IsWindowVisible()
   return self.taskFrame ~= nil and self.taskFrame:IsVisible()
 end
 
-local function doShow()
+---@param byUser boolean The user asked for the window, as opposed to tasks appearing
+local function doShow(byUser)
   local wasVisible = module:IsWindowVisible()
   if module.taskFrame == nil then
     module:ConstructWindow()
@@ -100,8 +102,14 @@ local function doShow()
   --   self:AddMessageLabel(message)
   -- end
   if not wasVisible then
-    -- The task list is only drawn into a visible window; read and draw everything again
-    scanSchedulerModule:MarkAllDirty("showWindow")
+    -- The task list is only drawn into a visible window, so it has to be drawn now. When
+    -- the user opens the window, everything is also read again.
+    module.shownText = nil
+    if byUser then
+      scanSchedulerModule:MarkAllDirty("showWindow")
+    else
+      scanSchedulerModule:Request("autoShowWindow")
+    end
   end
 end
 
@@ -109,6 +117,19 @@ local function doHide()
   if module.taskFrame ~= nil then
     module.taskFrame:Hide()
   end
+  module.shownText = nil
+end
+
+---@param text string All lines of the task list, joined
+---@return boolean Whether the visible window already shows exactly this
+function module:IsShowing(text)
+  return self.shownText == text and self:IsWindowVisible()
+end
+
+---Remember what was just drawn; nothing is drawn into a hidden window.
+---@param text string All lines of the task list, joined
+function module:SetShowing(text)
+  self.shownText = self:IsWindowVisible() and text or nil
 end
 
 --- Do not call this directly. Called from the scan pass, which never runs in combat: the window
@@ -136,14 +157,14 @@ function module:WindowCommand(_command)
     -- --------------------------------------------------
   elseif self.windowCommand == "show" then
     -- The user shows the window (and it stays visible)
-    doShow()
+    doShow(true)
     self.lastUserWindowCommand = "show"
     -- --------------------------------------------------
   elseif self.windowCommand == "autoshow" --and self.lastUserWindowCommand ~= "hide"
   then
     -- The addon requests showing the window
     -- Allow if either settings allow auto showing, or the window was auto-hidden from show state
-    doShow()
+    doShow(false)
   end
   -- --------------------------------------------------
   self.windowCommand = nil

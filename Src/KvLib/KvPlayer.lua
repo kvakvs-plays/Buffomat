@@ -147,6 +147,28 @@ function module.GetLatency()
   return ((lagHome or 0) + (lagWorld or 0)) / 1000
 end
 
+local cancelUnitBuff, castSpellByID, playSoundFile = CancelUnitBuff, _G["CastSpellByID"], PlaySoundFile
+
+---Cancel one of the player's own auras. Protected in combat; callers check first.
+---@param index number Position in the aura list selected by `filter`
+---@param filter string The filter the index was found with, such as "HELPFUL|CANCELABLE"
+function module.CancelAura(index, filter)
+  cancelUnitBuff("player", index, filter)
+end
+
+---Cast a spell without a target, where the client lets addons do that (old tracking spells).
+---@param spellId number
+function module.CastSpellByID(spellId)
+  if castSpellByID then
+    castSpellByID(spellId)
+  end
+end
+
+---@param path string Sound file inside the addon
+function module.PlaySoundFile(path)
+  playSoundFile(path)
+end
+
 local debugProfileStop = _G["debugprofilestop"]
 
 ---@return number milliseconds High resolution clock for measuring code; 0 where the client has none

@@ -181,6 +181,12 @@ function module:WakeAfter(seconds, domain)
   self:WakeAt(GetTime() + self:Interval(seconds), domain)
 end
 
+---Forget a wake time; the armed timer may still fire and will find nothing to do.
+---@param domain BomScanDomain
+function module:CancelWake(domain)
+  self.wakeTimes[domain] = nil
+end
+
 ---Turn wake times which have come due into dirty domains.
 ---@param now number
 function module:FireWakes(now)

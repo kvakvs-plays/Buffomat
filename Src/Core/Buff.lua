@@ -7,6 +7,7 @@ local module = --[[@as BuffModule]] LibStub("Buffomat-Buff")
 ---@field expirationTime number
 ---@field source string Unit/player who gave this buff
 ---@field isSingle boolean
+---@field fromPlayer boolean? The player cast it
 
 local buffClass = {}
 buffClass.__index = buffClass

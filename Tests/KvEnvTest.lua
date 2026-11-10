@@ -212,40 +212,43 @@ local function fixture(mode, projectID)
   equal(libs["Buffomat-ActionCast"]:New(10, 42, "", {}, nil, false):CanCast(), "oom")
   state.cooldown = nil
   loadModule("Src/KvLib/KvPlayer.lua", globals)
-  loadModule("Src/Task/TaskScan.lua", globals)
-  local scan = libs["Buffomat-TaskScan"]
-  equal(scan:IsInGlobalCooldown(), false, "unavailable GCD probe must not block the scan")
+  loadModule("Src/Scan/ScanEvaluate.lua", globals)
+  local evaluate = libs["Buffomat-ScanEvaluate"]
+  equal(evaluate:IsInGlobalCooldown(), false, "unavailable GCD probe must not block the scan")
   setmetatable(libs["Buffomat-Languages"], { __call = function(_, key) return key end })
-  scan.ShowInactive = function(_, reason) state.inactive = reason end
+  -- A player with nothing else in the way of a scan
+  local playerState = globals.LibStub("Buffomat-PlayerStateScan")
+  playerState.instanceType, playerState.maxMana = "none", 0
+  libs["Buffomat-Macro"].IsMacroFrameOpen = function() return false end
+  libs["Buffomat-SpellIds"].Paladin_CrusaderAura = 32223
+  globals.InCombatLockdown = function() return false end
+  globals.BuffomatShared = { InWorld = true }
+  local roster = { player = { allBuffs = {} }, units = {} }
   state.wakeAt = nil
-  equal(scan:CheckGlobalCooldown({}), true)
-  equal(state.inactive, nil, "unknown GCD must not display Global Cooldown")
+  equal(evaluate:GetInactiveReason(roster, false), nil, "unknown GCD must not display Global Cooldown")
 
   state.cooldown = { startTime = 0, duration = 0, isEnabled = true, modRate = 1 }
-  equal(scan:IsInGlobalCooldown(), false, "idle GCD")
+  equal(evaluate:IsInGlobalCooldown(), false, "idle GCD")
   state.cooldown.startTime, state.cooldown.duration = 100, 1.5
-  local gcdActive, endsAt = scan:IsInGlobalCooldown()
+  local gcdActive, endsAt = evaluate:IsInGlobalCooldown()
   equal(gcdActive, true); equal(endsAt, 101.5)
-  equal(scan:CheckGlobalCooldown({}), false)
-  equal(state.inactive, "castButton.inactive.GlobalCooldown")
+  equal(evaluate:GetInactiveReason(roster, false), "castButton.inactive.GlobalCooldown")
   equal(state.wakeAt, 101.5, "rescan when GCD ends")
   state.now = 101.49
-  equal(scan:IsInGlobalCooldown(), false, "remaining time respects latency allowance")
+  equal(evaluate:IsInGlobalCooldown(), false, "remaining time respects latency allowance")
   state.now = 102
-  state.inactive = nil
-  equal(scan:CheckGlobalCooldown({}), true, "expired nonzero GCD must not block")
-  equal(state.inactive, nil)
+  equal(evaluate:GetInactiveReason(roster, false), nil, "expired nonzero GCD must not block")
   if mode ~= "legacy" then
     state.cooldown.startTime = secret
-    equal(scan:CheckGlobalCooldown({}), true, "restricted GCD must not block")
-    equal(state.inactive, nil)
+    equal(evaluate:GetInactiveReason(roster, false), nil, "restricted GCD must not block")
     equal(action:CanCast(), "ok", "restricted cooldown does not block casting")
   end
-  globals.LibStub("Buffomat-PlayerStateScan").casting = "cast"
-  equal(scan:CheckCastingChanneling({}), false, "casting still pauses scanning")
-  equal(state.inactive, "castButton.Busy")
-  globals.LibStub("Buffomat-PlayerStateScan").casting = nil
-  equal(scan:CheckCastingChanneling({}), true)
+  playerState.casting = "cast"
+  equal(evaluate:GetInactiveReason(roster, false), "castButton.Busy", "casting still pauses scanning")
+  playerState.casting = "channel"
+  equal(evaluate:GetInactiveReason(roster, false), "castButton.BusyChanneling")
+  playerState.casting = nil
+  equal(evaluate:GetInactiveReason(roster, false), nil)
   state.cooldown = nil
 
   -- Item/Spell mixins request data and dispatch DATA_LOAD_RESULT in the client.
@@ -294,9 +297,9 @@ local function fixture(mode, projectID)
   globals.BuffomatCharacter = { profiles = { solo = {} } }
   globals.BuffomatShared = {}
   globals.wipe = function(values) for key in pairs(values) do values[key] = nil end end
-  libs["Buffomat-Profile"].ALL_PROFILES = { "solo" }
-  libs["Buffomat-Profile"].NewBlessingState = function() return {} end
-  local allBuffs = libs["Buffomat-AllBuffs"]
+  globals.LibStub("Buffomat-Profile").ALL_PROFILES = { "solo" }
+  globals.LibStub("Buffomat-Profile").NewBlessingState = function() return {} end
+  local allBuffs = globals.LibStub("Buffomat-AllBuffs")
   allBuffs.selectedBuffs = { 42 }
   allBuffs.selectedBuffsSpellIds = {}
   allBuffs.spellIdtoBuffId = {}

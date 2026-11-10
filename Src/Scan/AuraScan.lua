@@ -44,14 +44,17 @@ end
 ---@param expirationTime number
 ---@param source string
 ---@param isSingle boolean
+---@param fromPlayer boolean
 ---@return BomUnitBuff
-local function newBuff(spellId, duration, expirationTime, source, isSingle)
+local function newBuff(spellId, duration, expirationTime, source, isSingle, fromPlayer)
   local buff = table.remove(pool)
   if buff == nil then
-    return buffModule:New(spellId, duration, expirationTime, source, isSingle)
+    buff = buffModule:New(spellId, duration, expirationTime, source, isSingle)
+  else
+    buff.singleId, buff.duration, buff.expirationTime, buff.source, buff.isSingle =
+        spellId, duration, expirationTime, source, isSingle
   end
-  buff.singleId, buff.duration, buff.expirationTime, buff.source, buff.isSingle =
-      spellId, duration, expirationTime, source, isSingle
+  buff.fromPlayer = fromPlayer
   return buff
 end
 
@@ -110,7 +113,9 @@ function module:ReadUnit(unit)
       unit.isDrinking = true
     end
 
-    if watched[spellId] and source ~= nil and source ~= "" and envModule.UnitIsUnit(source, "player") then
+    local fromPlayer = watched[spellId] == true and source ~= nil and source ~= ""
+        and envModule.UnitIsUnit(source, "player")
+    if fromPlayer then
       -- Some clients report no duration for a buff on somebody else; remember the one
       -- seen on the player for the same spell name
       if unit.isPlayer and duration ~= nil and duration > 0 then
@@ -123,7 +128,7 @@ function module:ReadUnit(unit)
         duration = 0 -- no end time known: the buff counts as present, never as running out
       end
     end
-    signature = signature + (spellId % 1000 + 1) * ((expirationTime or 0) + 13.7) + (source == "player" and 1 or 0)
+    signature = signature + (spellId % 1000 + 1) * ((expirationTime or 0) + 13.7) + (fromPlayer and 1 or 0)
 
     local buffDef = selected[spellId]
     if buffDef then
@@ -137,7 +142,8 @@ function module:ReadUnit(unit)
         signature = signature + 0.5
         break
       end
-      known[buffDef.buffId] = newBuff(spellId, duration, expirationTime, source, isSingleLookup[spellId] ~= nil)
+      known[buffDef.buffId] = newBuff(spellId, duration, expirationTime, source, isSingleLookup[spellId] ~= nil,
+        fromPlayer)
     end
   end
 

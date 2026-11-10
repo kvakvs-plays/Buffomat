@@ -8,6 +8,7 @@ local addonName, ns = ...
 ---@field isPlayerInGroup boolean Group membership at the last roster event
 ---@field outsiderName string? Name of the targeted player outside the group, with BuffTarget on
 ---@field aurasForGroup boolean? UNIT_AURA is registered for all units, not only the player and pet
+---@field modifierWatch boolean? A task waits for a modifier key; set by the pass
 local module = LibStub("Buffomat-ScanEvents") --[[@as ScanEventsModule]]
 
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
@@ -19,7 +20,7 @@ local playerStateModule = LibStub("Buffomat-PlayerStateScan") --[[@as PlayerStat
 local rosterScanModule = LibStub("Buffomat-RosterScan") --[[@as RosterScanModule]]
 local scheduler = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
 local taskListModule = LibStub("Buffomat-TaskList") --[[@as TaskListModule]]
-local taskScanModule = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
+local scanEffectsModule = LibStub("Buffomat-ScanEffects") --[[@as ScanEffectsModule]]
 
 module.isPlayerInGroup = false
 
@@ -39,7 +40,7 @@ local function onRosterChanged()
   if module.isPlayerInGroup ~= inGroup then
     module.isPlayerInGroup = inGroup
     if not inGroup then
-      taskScanModule:MaybeResetWatchGroups()
+      scanEffectsModule:MaybeResetWatchGroups()
     end
   end
 end
@@ -164,9 +165,9 @@ end
 local function onModifierChanged()
   if kvPlayerModule.IsAltKeyDown() then
     rosterScanModule:ForgetResurrections()
-    taskScanModule:ClearSkip()
+    scanEffectsModule:ClearSkip()
     scheduler:MarkAllDirty("altKey")
-  elseif BuffomatAddon.scanModifierKeyDown then
+  elseif module.modifierWatch then
     scheduler:Request("modifierKey")
   end
 end

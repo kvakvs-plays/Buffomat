@@ -54,11 +54,13 @@ for _, mode in ipairs({ "modern", "legacy" }) do
   loadModule("Src/BuffChecks.lua", globals)
   local checks, ids = libs["Buffomat-BuffChecks"], libs["Buffomat-ItemIds"]
   -- Equipped items come from the player state snapshot
-  local function equip(items) libs["Buffomat-PlayerStateScan"].inventory = items end
+  local playerState = libs["Buffomat-PlayerStateScan"]
+  playerState.SLOT_MAINHAND, playerState.SLOT_OFFHAND = 16, 17
+  local function equip(items) playerState.inventory = items end
 
-  local staffScroll = { buffId = 1, weaponSubclasses = { ids.WeaponSubclass.Staff }, unitsNeedBuff = {} }
-  local daggerScroll = { buffId = 2, weaponSubclasses = { ids.WeaponSubclass.Dagger }, unitsNeedBuff = {} }
-  local anyOil = { buffId = 3, unitsNeedBuff = {} }
+  local staffScroll = { buffId = 1, weaponSubclasses = { ids.WeaponSubclass.Staff } }
+  local daggerScroll = { buffId = 2, weaponSubclasses = { ids.WeaponSubclass.Dagger } }
+  local anyOil = { buffId = 3 }
   local player = {}
 
   equip({ [16] = 1 }) -- staff
@@ -71,10 +73,12 @@ for _, mode in ipairs({ "modern", "legacy" }) do
   local main, off = checks:WeaponHandsNeedingBuff(daggerScroll, player)
   equal(main, false, mode .. " sword main hand does not need the dagger scroll")
   equal(off, true, mode .. " dagger off hand needs it")
-  checks:PlayerNeedsWeaponBuff(daggerScroll, player)
-  equal(#daggerScroll.unitsNeedBuff, 1, mode .. " player needs the dagger scroll")
-  checks:PlayerNeedsWeaponBuff(staffScroll, player)
-  equal(#staffScroll.unitsNeedBuff, 0, mode .. " no staff, no staff scroll task")
+  local need = { units = {} }
+  checks:PlayerNeedsWeaponBuff(daggerScroll, need, player)
+  equal(#need.units, 1, mode .. " player needs the dagger scroll")
+  need = { units = {} }
+  checks:PlayerNeedsWeaponBuff(staffScroll, need, player)
+  equal(#need.units, 0, mode .. " no staff, no staff scroll task")
 
   player.offhandEnchantment = 8698
   local _, enchantedOff = checks:WeaponHandsNeedingBuff(daggerScroll, player)
@@ -85,8 +89,8 @@ for _, mode in ipairs({ "modern", "legacy" }) do
   main, off = checks:WeaponHandsNeedingBuff(daggerScroll, player)
   equal(main, true, mode .. " dagger main hand"); equal(off, false, mode .. " a shield is not a weapon")
 
-  local sharpening = { buffId = 4, weaponSubclasses = ids.BladedWeapons, unitsNeedBuff = {} }
-  local weightstone = { buffId = 5, weaponSubclasses = ids.BluntWeapons, unitsNeedBuff = {} }
+  local sharpening = { buffId = 4, weaponSubclasses = ids.BladedWeapons }
+  local weightstone = { buffId = 5, weaponSubclasses = ids.BluntWeapons }
   equip({ [16] = 1, [17] = 2 }) -- staff and dagger
   equal(checks:WeaponFitsBuff(sharpening, 16), false, mode .. " a staff is not bladed")
   equal(checks:WeaponFitsBuff(sharpening, 17), true, mode .. " a dagger is bladed")

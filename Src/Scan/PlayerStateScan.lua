@@ -12,6 +12,7 @@ local addonName, ns = ...
 ---@field mana number Current mana; maximum mana when the client hides it
 ---@field maxMana number 0 when the client hides it
 ---@field manaWakeLimit number? Mana at which a task that was too expensive becomes affordable; nil when nothing waits
+---@field level number? Character level
 ---@field isDead boolean
 ---@field isMounted boolean
 ---@field isFlying boolean
@@ -86,6 +87,7 @@ function module:Read()
   set("maxMana", maxMana or 0)
   set("mana", envModule.UnitPower("player", 0) or maxMana or math.huge)
 
+  set("level", kvUnitModule.GetLevel("player"))
   set("isDead", kvPlayerModule.IsDeadOrGhost())
   set("isMounted", kvPlayerModule.IsMounted())
   set("isFlying", kvPlayerModule.IsFlying())

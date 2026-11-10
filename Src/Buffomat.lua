@@ -21,7 +21,7 @@ local optionsPopupModule = LibStub("Buffomat-OptionsPopup") --[[@as OptionsPopup
 local popupModule = LibStub("Buffomat-Popup") --[[@as PopupModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 local slashModule = LibStub("Buffomat-SlashCommands") --[[@as SlashCommandsModule]]
-local taskScanModule = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
+local scanEffectsModule = LibStub("Buffomat-ScanEffects") --[[@as ScanEffectsModule]]
 local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxModule]]
 local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
 local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
@@ -32,13 +32,10 @@ module.libIcon = LibStub("LibDBIcon-1.0")
 
 ---global, visible from XML files and from script console and chat commands
 ---@class BomAddon : AceAddon
----@field activePaladinAura nil|number Spell id of aura if an unique aura was casted (only one can be active)
----@field activePaladinSeal nil|number Spell id of weapon seal, if an seal-type temporary enchant was used (only one can be active)
 ---@field ALL_PROFILES ProfileName[] Lists all buffomat profile names (group, solo... etc)
 ---@field buffExchangeId table<number, number[]> Combines spell ids of spellrank flavours into main spell id
 ---@field buffIgnoreAll number[] Having this buff on target excludes the target (phaseshifted imp for example)
 ---@field cancelBuffs BomBuffDefinition[] All spells to be canceled on detection
----@field cancelBuffSource string Unit who casted the buff to be auto-canceled
 ---@field castFailedBuff BomBuffDefinition|nil Used for spell min level target detection (not available via API)
 ---@field castFailedBuffTarget BomUnit|nil
 ---@field castFailedSpellId number|nil
@@ -47,9 +44,7 @@ module.libIcon = LibStub("LibDBIcon-1.0")
 ---@field AllDrink WowSpellId[] Used for warning "X persons is/are drinking"
 ---@field enchantList {[WowSpellId]: number[]} Spell ids mapping to enchantment ids
 ---@field forceProfile ProfileName|nil Nil will choose profile name automatically, otherwise this profile will be used
----@field forceTracking WowIconId|nil Defines icon id for enforced tracking
 ---@field itemList number[][] Group different ranks of item together
----@field lastAura BomBuffId|nil Buff id of active or last active aura
 ---@field lastTarget string|nil Last player's target
 ---@field theMacro BomMacro
 ---@field MANA_CLASSES ClassName[] Classes with mana resource
@@ -58,7 +53,6 @@ module.libIcon = LibStub("LibDBIcon-1.0")
 ---@field RESURRECT_CLASS ClassName[] Classes who can resurrect others
 ---@field ridingSpeedZones BomRidingSpeedZones Equipped Riding trinket: Spell to and zone ids to check
 ---@field SaveTargetName string|nil
----@field scanModifierKeyDown boolean Will update buffomat when modifier key is held down
 ---@field spellTabsCreatedFlag boolean Indicated spells tab already populated with controls
 ---@field setupAvailableSpellsFn function
 -- -@field Print fun(self: BomAddon, msg: string): void
@@ -125,7 +119,7 @@ function module.ChooseProfile(profile)
     return
   end
 
-  taskScanModule:ClearSkip()
+  scanEffectsModule:ClearSkip()
   BuffomatAddon.popupMenuDynamic:Wipe(nil)
   scanSchedulerModule:Request("profileSelected")
 

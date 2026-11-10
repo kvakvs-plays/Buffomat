@@ -123,31 +123,42 @@ function taskListClass:Sort()
   end
 end
 
----Unload the contents of DisplayInfo cache into BomC_ListTab_MessageFrame
----The messages (tasks) are sorted
-function taskListClass:Display()
-  taskListPanelModule:Clear()
+local displayLines = {} ---@type string[] Reused between calls
 
+---Show the comments and the sorted tasks in the task list window. Rebuilding the window
+---rows is the expensive part of a scan pass, so it is skipped when the window already
+---shows exactly these lines.
+function taskListClass:Display()
   local haveAnyTasks = next(self.lowPrioComments) or next(self.comments) or next(self.tasks)
   if haveAnyTasks and not taskListPanelModule:IsWindowVisible() then
     taskListPanelModule:AutoShow("tl:Display/haveTasks") -- have tasks, show the window
   end
 
-  for _i, text in pairs(self.lowPrioComments) do
-    taskListPanelModule:AddMessage(buffomatModule:Color("aaaaaa", text))
+  wipe(displayLines)
+  for _, text in ipairs(self.lowPrioComments) do
+    displayLines[#displayLines + 1] = buffomatModule:Color("aaaaaa", text)
   end
-
-  for _i, text in pairs(self.comments) do
-    taskListPanelModule:AddMessage(text)
+  for _, text in ipairs(self.comments) do
+    displayLines[#displayLines + 1] = text
   end
-  for _i, task in pairs(self.tasks) do
+  for _, task in ipairs(self.tasks) do
     if task.distance > 43 * 43 then
-      taskListPanelModule:AddMessage(task:FormatDisabledRed(_t("task.error.range")))
+      displayLines[#displayLines + 1] = task:FormatDisabledRed(_t("task.error.range"))
     end
   end
-  for _, task in pairs(self.tasks) do
-    taskListPanelModule:AddMessage(task:Format())
+  for _, task in ipairs(self.tasks) do
+    displayLines[#displayLines + 1] = task:Format()
   end
+
+  local text = table.concat(displayLines, "\n")
+  if taskListPanelModule:IsShowing(text) then
+    return
+  end
+  taskListPanelModule:Clear()
+  for _, line in ipairs(displayLines) do
+    taskListPanelModule:AddMessage(line)
+  end
+  taskListPanelModule:SetShowing(text)
 end
 
 function taskListClass:CastButton_Nothing()

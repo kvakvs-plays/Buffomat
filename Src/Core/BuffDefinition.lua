@@ -59,7 +59,6 @@ end
 -- -@field [BomSpellId] BomBuffDefinition
 
 ---@alias BomForcedTargets {[string]: boolean}
----@alias BomDeadMap {[number|ClassName]: boolean}
 
 -- Fields below belong to PlayerBuffChoice
 -- -@field AllowWhisper boolean [⚠DO NOT RENAME] Allow whispering expired soulstone to the warlock
@@ -73,7 +72,6 @@ end
 
 ---@class BomBuffDefinition
 ---@field buffId BomBuffId Spell id of level 60 spell used as key everywhere else
----@field buffSource string Unit/player who gave this buff
 ---@field category BuffCategoryName Group by this field and use special translation table to display headers
 ---@field consumableEra string One of constants BOM.CLASSIC_ERA or BOM.IsTBC_ERA which will affect buff visibility based on used choice
 ---@field consumableTarget string Add "[@" .. consumableTarget .. "]" to the "/use bag slot" macro
@@ -87,8 +85,6 @@ end
 ---@field groupFamily number[]|nil Family of group buff spell ids which are mutually exclusive
 ---@field groupLink string Printable link for group buff
 ---@field groupMana number Mana cost for group buff
----@field groupsHaveDead BomDeadMap Group/class members who might be dead but their class needs this buff
----@field groupsNeedBuff table List of groups who might need this buff
 ---@field groupText string Name of group buff spell (from GetSpellInfo())
 ---@field hasCD boolean There's a cooldown on this spell
 ---@field highestRankGroupId WowSpellId Updated in SpellSetup for each spell cache update
@@ -98,7 +94,6 @@ end
 ---@field isConsumable boolean Is an item-based buff; the spell must have 'items' field too
 ---@field isInfo boolean Set true to send expiration whispers?
 ---@field reminderCheck BomReminderCheck|nil Reminder buff: returns the task text when the player should act
----@field reminderText string|nil Text from the last reminder check, shown in the info task
 ---@field settingKey string|nil Reminder buff: on/off comes from this BuffomatShared option, not the profile
 ---@field isOwn boolean Spell only casts on self
 ---@field isScanned boolean
@@ -133,8 +128,6 @@ end
 ---@field trackingSpellName string For tracking spells, contains string name for the spell
 ---@field weaponSubclasses WowWeaponSubclass[]|nil Weapon enchantment fits only these weapon types
 ---@field type BomBuffType Defines type: "aura", "consumable", "weapon" for Enchant Consumables, "seal", "tracking", "resurrection"
----@field unitsHaveBetterBuff BomUnit[] List of group members who might need this buff but won't get it because they have better
----@field unitsNeedBuff BomUnit[] List of group members who might need this buff
 --[deprecated] -@field frames BomBuffRowFrames Dynamic list of controls associated with this spell in the UI
 
 local buffDefClass = {}
@@ -153,10 +146,6 @@ function module:New(singleId)
   buff.limitations = {} --[[@as BomSpellLimitations]]
   buff.ForcedTarget = {} --[[@as BomForcedTargets]]
   buff.ExcludedTarget = {} --[[@as BomForcedTargets]]
-  buff.unitsNeedBuff = {}
-  buff.unitsHaveBetterBuff = {}
-  buff.groupsNeedBuff = {}
-  buff.groupsHaveDead = {} --[[@as BomDeadMap]]
   buff.skipList = {}
   buff.targetClasses = {}
 
@@ -791,11 +780,6 @@ function buffDefClass:HasClasses()
     or self.isInfo)
 end
 
----@param class_name string
-function buffDefClass:IncrementNeedGroupBuff(class_name)
-  self.groupsNeedBuff[class_name] = (self.groupsNeedBuff[class_name] or 0) + 1
-end
-
 ---@param profileName ProfileName|nil
 ---@return BlessingState
 function module:GetProfileBlessingState(profileName)
@@ -882,13 +866,6 @@ function buffDefClass:DoesUnitHaveBetterBuffs(unit)
   end
 
   return false
-end
-
-function buffDefClass:ResetBuffTargets()
-  wipe(self.groupsNeedBuff)
-  wipe(self.groupsHaveDead)
-  wipe(self.unitsNeedBuff)
-  wipe(self.unitsHaveBetterBuff)
 end
 
 ---@param iconReadyFn fun(texture: string)|nil Call with result when icon value is ready

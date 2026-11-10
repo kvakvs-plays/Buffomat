@@ -13,7 +13,7 @@ local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 local spellSetupModule = LibStub("Buffomat-SpellSetup") --[[@as BomSpellSetupModule]]
 local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
-local taskScanModule = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
+local scanEffectsModule = LibStub("Buffomat-ScanEffects") --[[@as ScanEffectsModule]]
 local rosterScanModule = LibStub("Buffomat-RosterScan") --[[@as RosterScanModule]]
 local scanEventsModule = LibStub("Buffomat-ScanEvents") --[[@as ScanEventsModule]]
 local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
@@ -60,7 +60,7 @@ local function Event_CombatStart()
 end
 
 local function Event_CombatStop()
-  taskScanModule:ClearSkip()
+  scanEffectsModule:ClearSkip()
   rosterScanModule:ForgetResurrections()
   taskListPanelModule:OnCombatStop()
 end
@@ -154,7 +154,7 @@ end
 function module:InitEvents()
   -- After a loading screen: forget who was skipped and who was already being resurrected
   scanSchedulerModule.onLoadingEnd = function()
-    taskScanModule:ClearSkip()
+    scanEffectsModule:ClearSkip()
     rosterScanModule:ForgetResurrections()
   end
   scanEventsModule:Init()

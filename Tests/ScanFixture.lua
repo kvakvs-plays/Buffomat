@@ -366,6 +366,9 @@ function fixture.new(options)
     IsModifierKeyDown = function() return state.modifier end,
     IsAltKeyDown = function() return state.alt end,
     IsShiftKeyDown = function() return false end,
+    CancelUnitBuff = function(unitId, index, filter) state.cancelled = { unitId, index, filter } end,
+    PlaySoundFile = function(path) state.sound = path end,
+    GetSpellSubtext = function() return "" end,
     GetNetStats = function() return 0, 0, 20, 20 end,
     GetItemCount = function(itemId)
       local total = 0
@@ -389,6 +392,10 @@ function fixture.new(options)
     local info = state.spellCooldowns[spell]
     if info == nil then return 0, 0, 1, 1 end
     return info.start, info.duration, 1, 1
+  end
+
+  local function spellName(spell)
+    return "Spell" .. tostring(spell)
   end
 
   if modern then
@@ -445,6 +452,10 @@ function fixture.new(options)
         if unit == nil then return nil end
         return (unit.distance or 0) <= (known or 900)
       end,
+      GetSpellInfo = function(spell)
+        return { name = spellName(spell), iconID = 1, castTime = 0, minRange = 0, maxRange = 30, spellID = spell }
+      end,
+      GetSpellSubtext = function() return "" end,
     }
     globals.C_SpellBook = { IsSpellKnown = function(spellId) return state.knownSpells[spellId] == true end }
   else
@@ -476,6 +487,7 @@ function fixture.new(options)
       return ((unit.distance or 0) <= (state.spellRange[spell] or 900)) and 1 or 0
     end
     globals.IsSpellKnown = function(spellId) return state.knownSpells[spellId] == true end
+    globals.GetSpellInfo = function(spell) return spellName(spell), "", 1, 0, 0, 30, spell end
     globals.IsItemInRange = function() return false end
     globals.CheckInteractDistance = function() return false end
   end

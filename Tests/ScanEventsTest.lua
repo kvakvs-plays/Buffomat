@@ -14,8 +14,8 @@ local function setup(options)
   f:load("Src/Scan/ScanEvents.lua")
   f:lib("Buffomat-Const").LOADING_SCREEN_TIMEOUT = 2
   f:lib("Buffomat-TaskList").WipeMacro = function() f.state.macroWiped = true end
-  f:lib("Buffomat-TaskScan").MaybeResetWatchGroups = function() f.state.watchGroupsReset = true end
-  f:lib("Buffomat-TaskScan").ClearSkip = function() f.state.skipCleared = true end
+  f:lib("Buffomat-ScanEffects").MaybeResetWatchGroups = function() f.state.watchGroupsReset = true end
+  f:lib("Buffomat-ScanEffects").ClearSkip = function() f.state.skipCleared = true end
   local scheduler = f:lib("Buffomat-ScanScheduler")
   local passes = {}
   f:lib("Buffomat-ScanPass").Run = function(_, pending, pendingUnits)
@@ -179,7 +179,7 @@ for _, modern in ipairs({ false, true }) do
   f:fire("MODIFIER_STATE_CHANGED")
   f:advance(0.3)
   equal(#passes, before, "nothing waits for a modifier key")
-  f.globals.BuffomatAddon.scanModifierKeyDown = true
+  events.modifierWatch = true
   f:fire("MODIFIER_STATE_CHANGED")
   f:advance(0.3)
   equal(#passes, before + 1); equal(passes[#passes].domains.settings, true); equal(passes[#passes].domains.auras, nil)
@@ -189,7 +189,7 @@ for _, modern in ipairs({ false, true }) do
   equal(#passes, before + 2); equal(passes[#passes].domains.auras, true); equal(f.state.skipCleared, true)
   equal(f.state.resurrectionsForgotten, true)
   f.state.alt, f.state.modifier = false, false
-  f.globals.BuffomatAddon.scanModifierKeyDown = false
+  events.modifierWatch = false
 
   -- A restriction change is never scanned inside the event
   if modern then

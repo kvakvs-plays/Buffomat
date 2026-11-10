@@ -1,15 +1,16 @@
 local BuffomatAddon = BuffomatAddon
 
+-- Per-buff checks of the evaluation stage: does this member need this buff? They read
+-- the snapshots made by Src/Scan and write who needs the buff into a BomBuffNeed.
+
 ---@class BuffChecksModule
 
 local module = LibStub("Buffomat-BuffChecks") --[[@as BuffChecksModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
-local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local spellIdsModule = LibStub("Buffomat-SpellIds") --[[@as SpellIdsModule]]
 local playerStateModule = LibStub("Buffomat-PlayerStateScan") --[[@as PlayerStateScanModule]]
-local rosterScanModule = LibStub("Buffomat-RosterScan") --[[@as RosterScanModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
@@ -81,7 +82,7 @@ end
 function module:IsUsableItem(itemId)
   local itemInfo = BuffomatAddon.GetItemInfo(itemId)
   if itemInfo then
-    return (itemInfo).itemMinLevel <= UnitLevel("player")
+    return (itemInfo).itemMinLevel <= (playerStateModule.level or 0)
   end
   return true
 end
@@ -133,29 +134,32 @@ function module:WeaponHandsNeedingBuff(buff, playerUnit)
     return false, false
   end
   local needMainhand = profileBuff.MainHandEnable and playerUnit.mainhandEnchantment == nil
-      and self:WeaponFitsBuff(buff, 16)
+      and self:WeaponFitsBuff(buff, playerStateModule.SLOT_MAINHAND)
   local needOffhand = profileBuff.OffHandEnable and playerUnit.offhandEnchantment == nil
-      and self:WeaponFitsBuff(buff, 17)
+      and self:WeaponFitsBuff(buff, playerStateModule.SLOT_OFFHAND)
   return needMainhand == true, needOffhand == true
 end
 
----@param buff BomBuffDefinition the spell to update
+---@param buff BomBuffDefinition the weapon buff
+---@param need BomBuffNeed
 ---@param playerUnit BomUnit the player
-function module:PlayerNeedsWeaponBuff(buff, playerUnit)
+function module:PlayerNeedsWeaponBuff(buff, need, playerUnit)
   local needMainHand, needOffhand = self:WeaponHandsNeedingBuff(buff, playerUnit)
   if needMainHand or needOffhand then
-    table.insert(buff.unitsNeedBuff, playerUnit)
+    table.insert(need.units, playerUnit)
   end
 end
 
+---For TBC hunter pet buffs: the pet is missing the buff, but the hunter must consume it.
 ---@param buff BomBuffDefinition
----@param playerUnit BomUnit
-function module:HunterPetNeedsBuff(buff, playerUnit)
+---@param need BomBuffNeed
+---@param roster BomRoster
+function module:HunterPetNeedsBuff(buff, need, roster)
   if not envModule.haveTBC then
     return -- pre-TBC this did not exist
   end
 
-  local pet = rosterScanModule.roster.playerPet
+  local pet = roster.playerPet
   if not pet then
     return -- no pet - no problem
   end
@@ -164,12 +168,13 @@ function module:HunterPetNeedsBuff(buff, playerUnit)
     return -- have pet, have buff
   end
 
-  table.insert(buff.unitsNeedBuff, playerUnit) -- add player to buff list, because player must consume it
+  table.insert(need.units, roster.player) -- the player must consume it
 end
 
 ---@param buff BomBuffDefinition
+---@param need BomBuffNeed
 ---@param playerUnit BomUnit
-function module:PlayerNeedsConsumable(buff, playerUnit)
+function module:PlayerNeedsConsumable(buff, need, playerUnit)
   if buff.providesAuras then
     for _, aura in pairs(buff.providesAuras) do
       if playerUnit.allBuffs[aura] then
@@ -179,40 +184,40 @@ function module:PlayerNeedsConsumable(buff, playerUnit)
   end
 
   if not playerUnit.knownBuffs[buff.buffId] then
-    table.insert(buff.unitsNeedBuff, playerUnit)
+    table.insert(need.units, playerUnit)
   end
 end
 
 ---Runs a reminder buff's check on the player and keeps its text for the info task
 ---@param buffDef BomBuffDefinition
+---@param need BomBuffNeed
 ---@param playerUnit BomUnit
-function module:PlayerNeedsReminder(buffDef, playerUnit)
-  buffDef.reminderText = nil
+function module:PlayerNeedsReminder(buffDef, need, playerUnit)
   if playerUnit.isDead or playerUnit.auraDataUnavailable then
     return
   end
   local text = buffDef.reminderCheck(buffDef, playerUnit)
   if text then
-    buffDef.reminderText = text
-    table.insert(buffDef.unitsNeedBuff, playerUnit)
+    need.reminderText = text
+    table.insert(need.units, playerUnit)
   end
 end
 
+---An info buff is reported for every member who has it.
 ---@param buff BomBuffDefinition
----@param party BomParty
-function module:PartyNeedsInfoBuff(buff, party)
-  for _i, partyMember in pairs(party.byUnitId) do
-    local partyMemberBuff = partyMember.knownBuffs[buff.buffId]
+---@param need BomBuffNeed
+---@param roster BomRoster
+---@param result BomScanResult
+function module:PartyNeedsInfoBuff(buff, need, roster, result)
+  for _, member in ipairs(roster.units) do
+    local memberBuff = member.knownBuffs[buff.buffId]
 
-    if partyMemberBuff then
-      table.insert(buff.unitsNeedBuff, partyMember)
+    if memberBuff then
+      table.insert(need.units, member)
 
-      if partyMember.isPlayer then
-        buff.buffSource = partyMemberBuff.source
-      end
-
-      if envModule.UnitIsUnit("player", partyMemberBuff.source or "") then
-        partyModule.itemListTarget[buff.buffId] = partyMember.name
+      if memberBuff.fromPlayer then
+        -- A usable item with this buff (a soulstone) goes to the same member again
+        result.itemTargets[buff.buffId] = member.name
       end
     end
   end
@@ -220,43 +225,47 @@ end
 
 --- Checks if the player needs some buff that is in the buffs knowledge database. Must be a spell/aura that is stored in playerUnit.knownBuffs
 ---@param buff BomBuffDefinition
+---@param need BomBuffNeed
 ---@param playerUnit BomUnit
-function module:PlayerNeedsSelfBuff(buff, playerUnit)
+function module:PlayerNeedsSelfBuff(buff, need, playerUnit)
   if not playerUnit.isDead then
     local thisBuffOnPlayer = playerUnit.knownBuffs[buff.buffId]
 
     -- Check if the self-buff includes creating/conjuring an item
     if buff.lockIfHaveItem then
       if envModule.IsSpellKnown(buff.highestRankSingleId) and not (self:HasItem(buff.lockIfHaveItem, buff.hasCD)) then
-        table.insert(buff.unitsNeedBuff, playerUnit)
+        table.insert(need.units, playerUnit)
       end
 
       -- Else check if the buff is on player and timer is not too short
     elseif not (thisBuffOnPlayer
           and self:TimeCheck(thisBuffOnPlayer.expirationTime, thisBuffOnPlayer.duration))
     then
-      table.insert(buff.unitsNeedBuff, playerUnit)
+      table.insert(need.units, playerUnit)
     end
   end
 end
 
----@param buff BomBuffDefinition
----@param party BomParty
-function module:DeadNeedsResurrection(buff, party)
-  for _i, member in pairs(party.byUnitId) do
+---@param _buff BomBuffDefinition
+---@param need BomBuffNeed
+---@param roster BomRoster
+function module:DeadNeedsResurrection(_buff, need, roster)
+  for _, member in ipairs(roster.units) do
     if member.isDead
         and not member.hasResurrection
         and member.isConnected
         and member.class ~= "pet"
         and (not BuffomatShared.SameZone or member.isSameZone) then
-      table.insert(buff.unitsNeedBuff, member)
+      table.insert(need.units, member)
     end
   end
 end
 
 ---@param buff BomBuffDefinition
+---@param need BomBuffNeed
 ---@param playerUnit BomUnit
-function module:PlayerNeedsTracking(buff, playerUnit)
+---@param result BomScanResult
+function module:PlayerNeedsTracking(buff, need, playerUnit, result)
   -- Special handling: Having find herbs and find ore will be ignored if
   -- in cat form and track humanoids is enabled
   if (buff.highestRankSingleId == spellIdsModule.FindHerbs or
@@ -265,45 +274,48 @@ function module:PlayerNeedsTracking(buff, playerUnit)
       and buffDefModule:IsBuffEnabled(spellIdsModule.Druid_TrackHumanoids, nil) then
     -- Do nothing - ignore herbs and minerals in catform if enabled track humanoids
   elseif not self:IsTrackingActive(buff)
-      and (BuffomatAddon.forceTracking == nil
-        or BuffomatAddon.forceTracking == buff.trackingIconId) then
-    table.insert(buff.unitsNeedBuff, playerUnit)
+      and (result.forceTracking == nil
+        or result.forceTracking == buff.trackingIconId) then
+    table.insert(need.units, playerUnit)
   end
 end
 
 ---@param buff BomBuffDefinition
+---@param need BomBuffNeed
 ---@param playerUnit BomUnit
-function module:PaladinNeedsAura(buff, playerUnit)
-  if BuffomatAddon.activePaladinAura ~= buff.buffId
+---@param result BomScanResult
+function module:PaladinNeedsAura(buff, need, playerUnit, result)
+  if result.activeAura ~= buff.buffId
       and (buffomatModule.currentProfile.LastAura == nil
         or buffomatModule.currentProfile.LastAura == buff.buffId)
   then
-    table.insert(buff.unitsNeedBuff, playerUnit)
+    table.insert(need.units, playerUnit)
   end
 end
 
----@param spell BomBuffDefinition
+---@param buff BomBuffDefinition
+---@param need BomBuffNeed
 ---@param playerUnit BomUnit
-function module:PaladinNeedsSeal(spell, playerUnit)
-  if BuffomatAddon.activePaladinSeal ~= spell.buffId
+---@param result BomScanResult
+function module:PaladinNeedsSeal(buff, need, playerUnit, result)
+  if result.activeSeal ~= buff.buffId
       and (buffomatModule.currentProfile.LastSeal == nil
-        or buffomatModule.currentProfile.LastSeal == spell.buffId)
+        or buffomatModule.currentProfile.LastSeal == buff.buffId)
   then
-    table.insert(spell.unitsNeedBuff, playerUnit)
+    table.insert(need.units, playerUnit)
   end
 end
 
 ---@param buffDef BomBuffDefinition
----@param party BomParty
----@param buffCtx BomBuffScanContext
-function module:PartyNeedsPaladinBlessing(buffDef, party, buffCtx)
+---@param need BomBuffNeed
+---@param roster BomRoster
+function module:PartyNeedsPaladinBlessing(buffDef, need, roster)
   -- Blessing user settings (regardless of the current buff)
   local currentBlessing = buffDefModule:GetProfileBlessingState(nil)
   -- Current user settings for the selected buff
   local profileBuff = profileModule:GetProfileBuff(buffDef.buffId, nil)
 
-  ---@param partyMember BomUnit
-  for _, partyMember in pairs(party.byUnitId) do
+  for _, partyMember in ipairs(roster.units) do
     local ok = false
     local notGroup = false
 
@@ -314,12 +326,11 @@ function module:PartyNeedsPaladinBlessing(buffDef, party, buffCtx)
       notGroup = true
     elseif currentBlessing[partyMember.name] == nil then
       if profileBuff.Class[partyMember.class]
-          and (not IsInRaid() or BuffomatCharacter.WatchGroup[partyMember.group])
+          and (not roster.isRaid or BuffomatCharacter.WatchGroup[partyMember.group])
           and not profileBuff.SelfCast then
         ok = true
       end
-      if profileBuff.SelfCast
-          and envModule.UnitIsUnit(partyMember.unitId, "player") then
+      if profileBuff.SelfCast and partyMember.isPlayer then
         ok = true
       end
     end
@@ -340,44 +351,42 @@ function module:PartyNeedsPaladinBlessing(buffDef, party, buffCtx)
 
       if partyMember.isDead then
         if partyMember.group ~= 9 and partyMember.class ~= "pet" then
-          buffCtx.someoneIsDead = true
-          buffDef.groupsHaveDead[partyMember.class] = true
+          need.groupsHaveDead[partyMember.class] = true
         end
       elseif partyMemberBuff then
         found = self:TimeCheck(partyMemberBuff.expirationTime, partyMemberBuff.duration)
       end
 
       if not found then
-        table.insert(buffDef.unitsNeedBuff, partyMember)
+        table.insert(need.units, partyMember)
         if not notGroup then
-          buffDef:IncrementNeedGroupBuff(partyMember.class)
+          need.groups[partyMember.class] = (need.groups[partyMember.class] or 0) + 1
         end
       elseif not notGroup
           and BuffomatShared.ReplaceSingle
           and partyMemberBuff
           and partyMemberBuff.isSingle then
-        buffDef:IncrementNeedGroupBuff(partyMember.class)
+        need.groups[partyMember.class] = (need.groups[partyMember.class] or 0) + 1
       end
     end
   end
 end
 
 ---@param buffDef BomBuffDefinition
----@param party BomParty
----@param buffCtx BomBuffScanContext
-function module:PartyNeedsBuff(buffDef, party, buffCtx)
-  --spells
-  for _, partyMember in pairs(party.byUnitId) do
+---@param need BomBuffNeed
+---@param roster BomRoster
+function module:PartyNeedsBuff(buffDef, need, roster)
+  local profileBuff = profileModule:GetProfileBuff(buffDef.buffId, nil)
+
+  for _, partyMember in ipairs(roster.units) do
     local ok = false
-    local profileBuff = profileModule:GetProfileBuff(buffDef.buffId, nil)
 
     if profileBuff.Class[partyMember.class]
-        and (not IsInRaid() or BuffomatCharacter.WatchGroup[partyMember.group])
+        and (not roster.isRaid or BuffomatCharacter.WatchGroup[partyMember.group])
         and not profileBuff.SelfCast then
       ok = true
     end
-    if profileBuff.SelfCast
-        and envModule.UnitIsUnit(partyMember.unitId, "player") then
+    if profileBuff.SelfCast and partyMember.isPlayer then
       ok = true
     end
     if partyMember.isTank and profileBuff.Class["tank"]
@@ -402,19 +411,18 @@ function module:PartyNeedsBuff(buffDef, party, buffCtx)
       local partyMemberBuff = partyMember.knownBuffs[buffDef.buffId]
 
       if partyMember.isDead then
-        buffCtx.someoneIsDead = true
-        buffDef.groupsHaveDead[partyMember.group] = true
+        need.groupsHaveDead[partyMember.group] = true
       elseif partyMemberBuff then
         found = self:TimeCheck(partyMemberBuff.expirationTime, partyMemberBuff.duration)
       end
 
       if not found then
-        table.insert(buffDef.unitsNeedBuff, partyMember)
-        buffDef.groupsNeedBuff[partyMember.group] = (buffDef.groupsNeedBuff[partyMember.group] or 0) + 1
+        table.insert(need.units, partyMember)
+        need.groups[partyMember.group] = (need.groups[partyMember.group] or 0) + 1
       elseif BuffomatShared.ReplaceSingle
           and partyMemberBuff
           and partyMemberBuff.isSingle then
-        buffDef.groupsNeedBuff[partyMember.group] = (buffDef.groupsNeedBuff[partyMember.group] or 0) + 1
+        need.groups[partyMember.group] = (need.groups[partyMember.group] or 0) + 1
       end
     end -- if needbuff and connected and samezone
   end   -- for all in party

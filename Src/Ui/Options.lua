@@ -6,7 +6,7 @@ local languagesModule = _t
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local eventsModule = LibStub("Buffomat-Events") --[[@as EventsModule]]
-local taskScanModule = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
+local scanEffectsModule = LibStub("Buffomat-ScanEffects") --[[@as ScanEffectsModule]]
 local kvOptionsModule = LibStub("KvLibShared-Options") --[[@as KvOptionsModule]]
 local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
 local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
@@ -115,7 +115,7 @@ function module:CreateGeneralOptionsTable()
       playSoundWhenTask = self:TemplateSelect("PlaySoundWhenTask", sounds, "dropdown",
         nil, nil, nil, nil),
       soundTest = self:TemplateButton("PlaySoundWhenTask.test", function()
-        taskScanModule:PlayTaskSound()
+        scanEffectsModule:PlayTaskSound()
       end),
       debugLogging = self:TemplateCheckbox("DebugLogging", nil, nil, nil),
     }
