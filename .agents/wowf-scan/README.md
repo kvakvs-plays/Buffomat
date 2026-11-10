@@ -1,7 +1,8 @@
 # WoW: Forever data scan
 
 Offline tools that compare WoW: Forever game data with Classic Era game data, and check the
-spell and item IDs that Buffomat references. They produced the findings in `../wowf-plan.md`.
+spell and item IDs that Buffomat references. They produced the findings for the Forever buff update (its plan, `wowf-plan.md`, was removed
+when the work was done; it is in git history before commit c76c69b).
 
 ## Data source and request policy
 

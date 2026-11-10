@@ -128,7 +128,6 @@ Design and history: [.agents/scan-plan.md](scan-plan.md). These modules call no 
 
 ## Research tools (`.agents/`, not shipped)
 
-- [.agents/wowf-plan.md](wowf-plan.md) — WoW: Forever buff/consumable update plan with spell and item IDs.
 - [.agents/scan-plan.md](scan-plan.md) — Design of the scan loop, timers and the roster / aura / bag / player readers in `Src/Scan/`, with the status of its implementation and what still has to be checked in game.
 - [.agents/wowf-scan/](wowf-scan/README.md) — Python scripts comparing Forever and Classic Era game data (wago.tools DB2 CSV exports); `reports/` holds the results.
 - [.agents/foreverdb/](foreverdb/README.md) — `foreverdb.py`, ForeverDB API client and addon-data downloader (agents may run it; API key `FOREVERDB_API_KEY` in the repository `.env`). `dump_buffs.lua` + `verify_buffs.py` check the Forever buff database against ForeverDB. Results in `.agents/foreverdb/out/summary.txt`, `foreverdb-data.json`, `addon-data/`.

@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased (will be Buffomat Classic 2026.11.3)
+## Buffomat Classic 2026.11.3
 
 - The scanner was rewritten. Buffomat no longer rescans everything twice a second: it reacts to game
   events, reads only what changed (in a raid, only the members whose buffs changed), and redraws the task

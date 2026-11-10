@@ -34,7 +34,7 @@ details). Do not run it and do not work around the guard.
 Global options go **before** the command.
 
 ```sh
-# The open questions from ../wowf-plan.md (about 22 requests)
+# The open questions of the Forever buff update (about 22 requests)
 python .agents/wowhead/wowhead.py batch .agents/wowhead/verify-forever.txt
 
 # Single lookups

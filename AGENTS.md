@@ -29,7 +29,7 @@ This codebase is yours: what it's for and how it's built are your call, and you'
 - On WotLK and WoW: Forever, group buffs (Prayers, Gift of the Wild, Arcane Brilliance, Battle Shout) cover the
   whole raid; check `envModule.groupBuffsRaidWide`, not the expansion. On Forever all blessings last 60 minutes.
 - Forever-only or Forever-hidden buff definitions use `:RequireForever()` / `:HideInForever()`; scalar differences
-  use `allBuffsModule.ForeverOr(foreverValue, otherValue)`. See `.agents/wowf-plan.md`.
+  use `allBuffsModule.ForeverOr(foreverValue, otherValue)`.
 
 ## Target Runtime
 
