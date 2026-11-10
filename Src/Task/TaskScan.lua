@@ -29,6 +29,7 @@ local itemListCacheModule = LibStub("Buffomat-ItemListCache") --[[@as ItemListCa
 local macroModule = LibStub("Buffomat-Macro") --[[@as MacroModule]]
 local ngStringsModule = LibStub("Buffomat-NgStrings") --[[@as NgStringsModule]]
 local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
+local playerStateModule = LibStub("Buffomat-PlayerStateScan") --[[@as PlayerStateScanModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 local spellIdsModule = LibStub("Buffomat-SpellIds") --[[@as SpellIdsModule]]
 local taskListModule = LibStub("Buffomat-TaskList") --[[@as TaskListModule]]
@@ -1537,7 +1538,7 @@ function module:CreateOneBuffTask(buffDef, party, buffCtx)
   elseif buffDef.type == "tracking" then
     -- TODO: Move this to its own periodic timer
     if #buffDef.unitsNeedBuff > 0 then
-      if BuffomatAddon.isPlayerCasting == nil then
+      if playerStateModule.casting == nil then
         self:SetTracking(buffDef, true)
       else
         -- Text: "Player" "Spell Name"
@@ -1855,11 +1856,11 @@ end
 ---@return boolean
 function module:CheckCastingChanneling(_context)
   -- If currently casting
-  if BuffomatAddon.isPlayerCasting == "cast" then
+  if playerStateModule.casting == "cast" then
     self:ShowInactive(_t("castButton.Busy"))
     return false -- Casting a spell, do not scan
   else
-    if BuffomatAddon.isPlayerCasting == "channel" then
+    if playerStateModule.casting == "channel" then
       self:ShowInactive(_t("castButton.BusyChanneling"))
       return false -- Channeling a spell, do not scan
     end

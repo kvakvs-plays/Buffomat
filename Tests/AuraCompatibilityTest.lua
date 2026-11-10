@@ -84,7 +84,6 @@ local function run(mode)
   allBuffs.allSpellIds = { 42 }
   allBuffs.selectedBuffsSpellIds = { [42] = { buffId = 42 } }
   allBuffs.spellIdIsSingleLookup = { [42] = true }
-  libs["Buffomat-Party"].unitAurasLastUpdated = {}
   setmetatable(libs["Buffomat-Languages"], { __call = function(_, key) return key end })
   scan.ShowInactive = function(_, reason) state.paused = reason end
   local player = unitModule:New({ unitId = "player", name = "Tester", knownBuffs = {}, allBuffs = {} })
@@ -124,13 +123,6 @@ local function run(mode)
     equal(scan:CheckAuraData(context), false)
     data[key] = value
   end
-
-  data.expirationTime = 0
-  state.fullName = secret
-  aura, readable = unitModule:UnitAura("player", 1, "HELPFUL")
-  equal(aura, nil); equal(readable, false, "secret unit name in duration fallback")
-  state.fullName = "Tester"
-  data.expirationTime = 90
 
   state.inCombat = true
   local callsBeforeCombat = state.calls

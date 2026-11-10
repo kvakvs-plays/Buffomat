@@ -31,8 +31,6 @@ local scanStatsModule = LibStub("Buffomat-ScanStats") --[[@as ScanStatsModule]]
 
 module.libIcon = LibStub("LibDBIcon-1.0")
 
----@alias CastingState "cast"|"channel"|nil
-
 ---global, visible from XML files and from script console and chat commands
 ---@class BomAddon : AceAddon
 ---@field activePaladinAura nil|number Spell id of aura if an unique aura was casted (only one can be active)
@@ -54,8 +52,6 @@ module.libIcon = LibStub("LibDBIcon-1.0")
 ---@field enchantList {[WowSpellId]: number[]} Spell ids mapping to enchantment ids
 ---@field forceProfile ProfileName|nil Nil will choose profile name automatically, otherwise this profile will be used
 ---@field forceTracking WowIconId|nil Defines icon id for enforced tracking
----@field isPlayerCasting CastingState Indicates that the player is currently casting (updated in event handlers)
----@field isPlayerMoving boolean Indicated that the player is moving (updated in event handlers)
 ---@field itemList number[][] Group different ranks of item together
 ---@field lastAura BomBuffId|nil Buff id of active or last active aura
 ---@field lastTarget string|nil Last player's target
@@ -453,8 +449,6 @@ function module:OnFailedCast_LearnedDownrank()
     end
   end
 end
-
-partyModule.unitAurasLastUpdated = --[[@as BomBuffUpdatesPerUnit]] {}
 
 ---@class BomUnitAuraResult
 ---@field name string The name of the spell or effect of the debuff. This is the name shown in yellow when you mouse over the icon

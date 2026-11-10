@@ -74,6 +74,7 @@ Src/Cache/UnitCache.lua
 Src/Scan/ScanStats.lua
 Src/Scan/ScanScheduler.lua
 Src/Scan/ScanPass.lua
+Src/Scan/ScanEvents.lua
 
 Src/Ui/Options.lua
 Src/Ui/OptionsPopupMenu.lua

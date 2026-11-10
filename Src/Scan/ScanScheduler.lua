@@ -134,6 +134,15 @@ function module:MarkDirty(domain, key)
   self:SchedulePass(self:Interval(self.COALESCE))
 end
 
+---A unit's auras changed. Its status is read with them: death and resurrection have no
+---cheap event of their own, but both change the auras.
+---@param unitId string
+function module:MarkUnit(unitId)
+  self.dirtyUnits.auras[unitId] = true
+  self.dirtyUnits.status[unitId] = true
+  self:SchedulePass(self:Interval(self.COALESCE))
+end
+
 ---Mark everything dirty: combat end, loading end, restriction change, full resync.
 ---@param reason string Shown by /bom scanstats
 function module:MarkAllDirty(reason)

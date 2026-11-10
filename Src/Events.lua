@@ -1,51 +1,21 @@
 local BuffomatAddon = BuffomatAddon
 
+-- Event handlers which are not scanning: auto-stand and dismount, spell setup, profile
+-- switching, combat housekeeping. Events that change what a scan finds live in
+-- Src/Scan/ScanEvents.lua.
+
 ---@class EventsModule
 local module = LibStub("Buffomat-Events") --[[@as EventsModule]]
 
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
-local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
-local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 local spellSetupModule = LibStub("Buffomat-SpellSetup") --[[@as BomSpellSetupModule]]
-local taskListModule = LibStub("Buffomat-TaskList") --[[@as TaskListModule]]
 local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
 local taskScanModule = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
+local scanEventsModule = LibStub("Buffomat-ScanEvents") --[[@as ScanEventsModule]]
 local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
-
---"UNIT_POWER_UPDATE","UNIT_SPELLCAST_START","UNIT_SPELLCAST_STOP","PLAYER_STARTED_MOVING","PLAYER_STOPPED_MOVING"
-module.EVT_COMBAT_STOP = { "PLAYER_REGEN_ENABLED" }
-module.EVT_COMBAT_START = { "PLAYER_REGEN_DISABLED" }
-module.EVT_LOADING_SCREEN_START = { "LOADING_SCREEN_ENABLED", "PLAYER_LEAVING_WORLD" }
-module.EVT_LOADING_SCREEN_END = { "PLAYER_ENTERING_WORLD", "LOADING_SCREEN_DISABLED" }
-
----@enum GenericUpdateEvent
-module.GENERIC_UPDATE_EVENTS = {
-  "UPDATE_SHAPESHIFT_FORM", "UNIT_AURA", "READY_CHECK",
-  "PLAYER_ALIVE", "PLAYER_UNGHOST", "INCOMING_RESURRECT_CHANGED",
-  "UNIT_INVENTORY_CHANGED" }
-
-local function bagChangedEvents()
-  local _, _, _, tocversion = GetBuildInfo()
-  local isWotLK = (tocversion >= 30000 and tocversion <= 39999)
-
-  if isWotLK then
-    -- For WotLK classic the BAG_UPDATE event is the same as BAG_UPDATE_DELAYED
-    return { "BAG_UPDATE_DELAYED", "TRADE_CLOSED" }
-  end
-  -- For classic keep both, needs more testing on classic
-  return { "BAG_UPDATE_DELAYED", "BAG_UPDATE", "TRADE_CLOSED" }
-end
-
--- It seems that WotLK 3.4.1 update dropped event "BAG_UPDATE_DELAYED", so use "BAG_UPDATE" instead
-module.EVT_BAG_CHANGED = bagChangedEvents()
-
-module.EVT_PARTY_CHANGED = { "GROUP_JOINED", "GROUP_ROSTER_UPDATE",
-  "RAID_ROSTER_UPDATE", "GROUP_LEFT" }
-
-module.EVT_SPELLBOOK_CHANGED = { "SPELLS_CHANGED", } -- "LEARNED_SPELL_IN_TAB" stopped working in TBC anniversary
 
 --- Error messages which will make player stand if sitting.
 ---@enum ErrorNotStanding
@@ -81,32 +51,8 @@ local function Event_TAXIMAP_OPENED()
   end
 end
 
----@param _event string
----@param unitTarget string
----@param powerType string
-local function Event_UNIT_POWER_UPDATE(_event, unitTarget, powerType)
-  --UNIT_POWER_UPDATE: "unitTarget", "powerType"
-  if powerType == "MANA" and envModule.UnitIsUnit(unitTarget, "player") then
-    local maxMana = partyModule.playerManaLimit or 0
-    local actualMana = envModule.UnitPower("player", 0)
-
-    if actualMana ~= nil and maxMana <= actualMana then
-      scanSchedulerModule:MarkAllDirty("powerUpdate")
-    end
-  end
-end
-
-local function Event_PLAYER_STARTED_MOVING()
-  BuffomatAddon.isPlayerMoving = true
-end
-
-local function Event_PLAYER_STOPPED_MOVING()
-  BuffomatAddon.isPlayerMoving = false
-end
-
 ---On combat start will close the UI window and disable the UI. Will cancel the cancelable buffs.
 local function Event_CombatStart()
-  scanSchedulerModule:OnCombatStart()
   BuffomatAddon.declineHasResurrection = true
   taskListPanelModule:OnCombatStart()
   BuffomatAddon.DoCancelBuffs()
@@ -114,17 +60,8 @@ end
 
 local function Event_CombatStop()
   taskScanModule:ClearSkip()
-  scanSchedulerModule:OnCombatEnd()
   BuffomatAddon.declineHasResurrection = true
   taskListPanelModule:OnCombatStop()
-end
-
-function module:OnCombatStop()
-  return Event_CombatStop()
-end
-
-local function Event_LoadingStart()
-  scanSchedulerModule:OnLoadingStart()
 end
 
 local oneTimeLoadItemsAndSpells = false
@@ -134,12 +71,10 @@ local function Event_LoadingStop()
     oneTimeLoadItemsAndSpells = true
     allBuffsModule:LoadItemsAndSpells()
   end
-
-  scanSchedulerModule:OnLoadingEnd(constModule.LOADING_SCREEN_TIMEOUT)
 end
 
----Event_PLAYER_TARGET_CHANGED
----Handle player target change, spells possibly might have changed too.
+---Remember the targeted friendly player for the "add current target" buttons of the
+---forced and excluded target lists.
 local function Event_PLAYER_TARGET_CHANGED()
   if InCombatLockdown() or envModule.IsAuraRestricted() then
     BuffomatAddon.lastTarget = nil
@@ -148,79 +83,16 @@ local function Event_PLAYER_TARGET_CHANGED()
   local isBuffableUnit = UnitIsPlayer("target") or UnitIsOtherPlayersPet("target")
   local isPartyMember = UnitInParty("target") or UnitInRaid("target")
 
-  if not InCombatLockdown() then
-    -- Allow current party members, raid members or any player
-    if isPartyMember or (isBuffableUnit and UnitIsFriend("target", "player"))
-    then
-      local name = UnitFullName("target")
-      if not envModule.IsSecretValue(name) then
-        BuffomatAddon.lastTarget = name
-      else
-        BuffomatAddon.lastTarget = nil
-      end
-    elseif BuffomatAddon.lastTarget then
+  -- Allow current party members, raid members or any player
+  if isPartyMember or (isBuffableUnit and UnitIsFriend("target", "player")) then
+    local name = UnitFullName("target")
+    if not envModule.IsSecretValue(name) then
+      BuffomatAddon.lastTarget = name
+    else
       BuffomatAddon.lastTarget = nil
     end
   else
     BuffomatAddon.lastTarget = nil
-  end
-
-  if not BuffomatShared.BuffTarget then
-    return
-  end
-
-  local newName
-  if UnitExists("target")
-      and UnitCanCooperate("player", "target")
-      and isBuffableUnit
-      and not UnitPlayerOrPetInParty("target")
-      and not UnitPlayerOrPetInRaid("target")
-  then
-    newName = UnitName("target")
-  end
-
-  if envModule.IsSecretValue(newName) then
-    return
-  end
-  if newName ~= BuffomatAddon.SaveTargetName then
-    BuffomatAddon.SaveTargetName = newName
-    scanSchedulerModule:MarkAllDirty("targetChanged")
-  end
-end
-
-local partyCheckMask = (COMBATLOG_OBJECT_AFFILIATION_RAID or 0)
-    + (COMBATLOG_OBJECT_AFFILIATION_PARTY or 0)
-    + (COMBATLOG_OBJECT_AFFILIATION_MINE or 0)
---  partyModule.buffs cleanup in scan bom_get_party_members
-
-local function Event_COMBAT_LOG_EVENT_UNFILTERED()
-  ---@type number, any, boolean, string, string, any, any, string, string, any, any, number, string, number, number, number
-  local _timestamp, event, _hideCaster, _sourceGUID, _sourceName, _sourceFlags, _sourceRaidFlags
-  , _destGUID, unitName, destFlags, _destRaidFlags, spellId, _spellName, _spellSchool
-  , _auraType, _amount = CombatLogGetCurrentEventInfo()
-
-  if bit.band(destFlags, partyCheckMask) > 0 and unitName ~= nil and unitName ~= "" then
-    --print(event,spellName,bit.band(destFlags,partyCheckMask)>0,bit.band(sourceFlags,COMBATLOG_OBJECT_AFFILIATION_MINE)>0)
-    if event == "UNIT_DIED" then
-      --partyModule.buffs[destName]=nil -- problem with hunters and fake-deaths!
-      --additional check in bom_get_party_members
-      --print("dead",destName)
-      scanSchedulerModule:MarkAllDirty("unitDied")
-    elseif allBuffsModule.selectedBuffsSpellIds
-        and allBuffsModule.selectedBuffsSpellIds[spellId] ~= nil then
-      -- a known buff
-      --if bit.band(sourceFlags, COMBATLOG_OBJECT_AFFILIATION_MINE) > 0 then
-      if event == "SPELL_CAST_SUCCESS" then
-        -- nothing
-      elseif event == "SPELL_AURA_REFRESH" then
-        partyModule:OnBuffsChangedEvent(unitName, spellId, "refreshed")
-      elseif event == "SPELL_AURA_APPLIED" then
-        partyModule:OnBuffsChangedEvent(unitName, spellId, "applied")
-      elseif event == "SPELL_AURA_REMOVED" then
-        partyModule:OnBuffsChangedEvent(unitName, spellId, "removed")
-      end
-      --end
-    end
   end
 end
 
@@ -268,87 +140,14 @@ local function Event_PLAYER_LEVEL_UP()
   spellSetupModule:RequestSetup()
 end
 
-module.isPlayerInParty = IsInRaid() or IsInGroup()
-
-local function Event_PartyChanged()
-  partyModule:InvalidatePartyCache()
-  partyModule.theParty = nil -- Reset saved party
-
-  scanSchedulerModule:MarkAllDirty("partyChanged")
-
-  -- if in_party changed from true to false, clear the watch groups
-  local inParty = IsInRaid() or IsInGroup()
-  if module.isPlayerInParty ~= inParty then
-    if not inParty then
-      taskScanModule:MaybeResetWatchGroups()
-    end
-    module.isPlayerInParty = inParty
-  end
-end
-
 local function Event_TALENT_GROUP_CHANGED(_newGroup, _oldGroup)
   buffomatModule:UseProfile(profileModule:ChooseProfile())
-end
-
-local function Event_UNIT_SPELLCAST_errors(unit)
-  if envModule.UnitIsUnit(unit, "player") then
-    BuffomatAddon.checkForError = false
-    scanSchedulerModule:MarkAllDirty("spellcastError")
-  end
-end
-
-function module:SafeWipeMacro()
-  if not InCombatLockdown() then
-    -- To prevent same macro being recast when player quickly mashes the shortcut key
-    taskListModule:WipeMacro(nil)
-  end
-end
-
-local function Event_UNIT_SPELLCAST_START(_eventType, unit)
-  if envModule.UnitIsUnit(unit, "player") then
-    BuffomatAddon.isPlayerCasting = "cast"
-    module:SafeWipeMacro() -- not sure if this has any effect
-    scanSchedulerModule:MarkAllDirty("castStart")
-  end
-end
-
-local function Event_UNIT_SPELLCAST_STOP(_eventType, unit)
-  if envModule.UnitIsUnit(unit, "player") then
-    BuffomatAddon.isPlayerCasting = nil
-    scanSchedulerModule:MarkAllDirty("castStop")
-    BuffomatAddon.checkForError = false
-  end
-end
-
-local function Event_UNIT_SPELLCHANNEL_START(_eventType, unit)
-  if envModule.UnitIsUnit(unit, "player") then
-    BuffomatAddon.isPlayerCasting = "channel"
-    module:SafeWipeMacro() -- not sure if this has any effect
-    scanSchedulerModule:MarkAllDirty("channelStart")
-  end
-end
-
-local function Event_UNIT_SPELLCHANNEL_STOP(_eventType, unit)
-  if envModule.UnitIsUnit(unit, "player") then
-    BuffomatAddon.isPlayerCasting = nil
-    scanSchedulerModule:MarkAllDirty("channelStop")
-    BuffomatAddon.checkForError = false
-  end
+  scanSchedulerModule:Request("talentGroupChanged")
 end
 
 function module.Event_SpellsChanged()
   spellSetupModule:SetupAvailableSpells()
-  scanSchedulerModule:MarkAllDirty("spellsChanged")
-  --spellButtonsTabModule:UpdateSpellsTab("spellsChanged")
-end
-
-local function Event_Bag()
-  scanSchedulerModule:MarkAllDirty("bagUpdate")
-  BuffomatAddon.wipeCachedItems = true
-
-  if BuffomatAddon.cachedPlayerBag then
-    wipe(BuffomatAddon.cachedPlayerBag)
-  end
+  scanSchedulerModule:Request("spellsChanged")
 end
 
 function module:InitEvents()
@@ -357,46 +156,12 @@ function module:InitEvents()
     taskScanModule:ClearSkip()
     BuffomatAddon.declineHasResurrection = true
   end
-
-  -- Tasks which need a modifier key held change when the key goes down or up
-  if envModule.IsEventValid("MODIFIER_STATE_CHANGED") then
-    BuffomatAddon:RegisterEvent("MODIFIER_STATE_CHANGED", function()
-      if BuffomatAddon.scanModifierKeyDown or IsAltKeyDown() then
-        scanSchedulerModule:MarkAllDirty("modifierKey")
-      end
-    end)
-  end
+  scanEventsModule:Init()
 
   BuffomatAddon:RegisterEvent("PLAYER_LEVEL_UP", Event_PLAYER_LEVEL_UP)
-
-  -- Events which might change active state of Buffomat
-  BuffomatAddon:RegisterEvent("ZONE_CHANGED", function()
-    scanSchedulerModule:MarkAllDirty("zoneChanged")
-  end)
-  BuffomatAddon:RegisterEvent("PLAYER_UPDATE_RESTING", function()
-    scanSchedulerModule:MarkAllDirty("restingChanged")
-  end)
-
   BuffomatAddon:RegisterEvent("TAXIMAP_OPENED", Event_TAXIMAP_OPENED)
-  --BuffomatAddon:RegisterEvent("ADDON_LOADED", Event_ADDON_LOADED)
-  BuffomatAddon:RegisterEvent("UNIT_POWER_UPDATE", Event_UNIT_POWER_UPDATE)
-  BuffomatAddon:RegisterEvent("PLAYER_STARTED_MOVING", Event_PLAYER_STARTED_MOVING)
-  BuffomatAddon:RegisterEvent("PLAYER_STOPPED_MOVING", Event_PLAYER_STOPPED_MOVING)
   BuffomatAddon:RegisterEvent("PLAYER_TARGET_CHANGED", Event_PLAYER_TARGET_CHANGED)
-  -- Forever relies on UNIT_AURA and the normal out-of-combat rescan instead.
-  if not envModule.isForever and CombatLogGetCurrentEventInfo then
-    BuffomatAddon:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED", Event_COMBAT_LOG_EVENT_UNFILTERED)
-  end
   BuffomatAddon:RegisterEvent("UI_ERROR_MESSAGE", Event_UI_ERROR_MESSAGE)
-
-  BuffomatAddon:RegisterEvent("UNIT_SPELLCAST_START", Event_UNIT_SPELLCAST_START)
-  BuffomatAddon:RegisterEvent("UNIT_SPELLCAST_STOP", Event_UNIT_SPELLCAST_STOP)
-  BuffomatAddon:RegisterEvent("UNIT_SPELLCAST_CHANNEL_START", Event_UNIT_SPELLCHANNEL_START)
-  BuffomatAddon:RegisterEvent("UNIT_SPELLCAST_CHANNEL_STOP", Event_UNIT_SPELLCHANNEL_STOP)
-
-  BuffomatAddon:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", Event_UNIT_SPELLCAST_errors)
-  BuffomatAddon:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED", Event_UNIT_SPELLCAST_errors)
-  BuffomatAddon:RegisterEvent("UNIT_SPELLCAST_FAILED", Event_UNIT_SPELLCAST_errors)
 
   -- Dualspec talent switch (WotLK+, Forever). Modern clients throw on unknown events.
   if envModule.hasDualSpec and envModule.IsEventValid("ACTIVE_TALENT_GROUP_CHANGED") then
@@ -409,44 +174,11 @@ function module:InitEvents()
     BuffomatAddon:RegisterEvent("TRAIT_CONFIG_UPDATED", module.Event_SpellsChanged)
   end
 
-  if envModule.supportsAuraRestrictions then
-    BuffomatAddon:RegisterEvent("ADDON_RESTRICTION_STATE_CHANGED", function()
-      partyModule:InvalidatePartyCache()
-      -- Do not scan here: during this event IsAddOnRestrictionActive still reports
-      -- false for a restriction that is about to activate. The throttle timer
-      -- runs the requested rescan on the next frame.
-      scanSchedulerModule:MarkAllDirty("restrictionChanged")
-    end)
-  end
+  -- "LEARNED_SPELL_IN_TAB" stopped working in TBC anniversary
+  BuffomatAddon:RegisterEvent("SPELLS_CHANGED", module.Event_SpellsChanged)
 
-  -- TODO for TBC: PLAYER_REGEN_DISABLED / ENABLED is sent before/after the combat and protected frames lock up
-
-  for _, event in ipairs(module.EVT_COMBAT_START) do
-    BuffomatAddon:RegisterEvent(event, Event_CombatStart)
-  end
-  for _, event in ipairs(module.EVT_COMBAT_STOP) do
-    BuffomatAddon:RegisterEvent(event, Event_CombatStop)
-  end
-  for _, event in ipairs(module.EVT_LOADING_SCREEN_START) do
-    BuffomatAddon:RegisterEvent(event, Event_LoadingStart)
-  end
-  for _, event in ipairs(module.EVT_LOADING_SCREEN_END) do
-    BuffomatAddon:RegisterEvent(event, Event_LoadingStop)
-  end
-
-  for _, event in ipairs(module.EVT_SPELLBOOK_CHANGED) do
-    BuffomatAddon:RegisterEvent(event, module.Event_SpellsChanged)
-  end
-  for _, event in ipairs(module.EVT_PARTY_CHANGED) do
-    BuffomatAddon:RegisterEvent(event, Event_PartyChanged)
-  end
-  for _, event in ipairs(module.GENERIC_UPDATE_EVENTS) do
-    local e = event .. ""
-    BuffomatAddon:RegisterEvent(event, function()
-      scanSchedulerModule:MarkAllDirty(e)
-    end)
-  end
-  for _, event in ipairs(module.EVT_BAG_CHANGED) do
-    BuffomatAddon:RegisterEvent(event, Event_Bag)
-  end
+  BuffomatAddon:RegisterEvent("PLAYER_REGEN_DISABLED", Event_CombatStart)
+  BuffomatAddon:RegisterEvent("PLAYER_REGEN_ENABLED", Event_CombatStop)
+  BuffomatAddon:RegisterEvent("PLAYER_ENTERING_WORLD", Event_LoadingStop)
+  BuffomatAddon:RegisterEvent("LOADING_SCREEN_DISABLED", Event_LoadingStop)
 end

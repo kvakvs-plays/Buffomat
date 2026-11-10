@@ -1,21 +1,15 @@
 local BuffomatAddon = BuffomatAddon
 
----Collection of tables of buffs, indexed per unit name
----@alias BomBuffUpdatesPerUnit {[string]: number} Time when buffs updated on that unit
 ---@alias BomPartyCacheInvalidation {[number]: boolean}
 
 ---@class PartyModule
 ---@field theParty BomParty|nil Synchronized party cache, invalidated on party change events
----@field unitAurasLastUpdated BomBuffUpdatesPerUnit When each unit got their aura last updated, indexed by spellid
 ---@field partyCacheInvalidation BomPartyCacheInvalidation
 ---@field itemListTarget table<number, string> Remember who casted item buff on you?
 ---@field playerManaLimit number Player max mana
 ---@field playerMana number Player current mana
 local module = LibStub("Buffomat-Party") --[[@as PartyModule]]
 
-
----@type BomBuffUpdatesPerUnit
-module.unitAurasLastUpdated = {}
 
 ---@type {[number]: boolean}
 module.partyCacheInvalidation = {}
@@ -66,17 +60,6 @@ function module:New()
   return p
 end
 
----@param unitName string
----@param _evType string
-function module:OnBuffsChangedEvent(unitName, _spellId, _evType)
-  if self.theParty
-      and not (self.theParty):IsNameInParty(unitName) then
-    return
-  end
-  self.unitAurasLastUpdated[unitName] = self.unitAurasLastUpdated[unitName] or {}
-  self.unitAurasLastUpdated[unitName] = GetTime()
-end
-
 ---@param member BomUnit
 function partyClass:Add(member)
   self.byUnitId[member.unitId] = member
@@ -91,17 +74,6 @@ end
 ---@return boolean
 function partyClass:IsNameInParty(name)
   return self.byName[name] ~= nil
-end
-
----Drop buffs for names which aren't in our party
----@param party BomParty
-function module:CleanUpBuffs(party)
-  -- Clean partyModule.buffs up
-  for name, _ in pairs(self.unitAurasLastUpdated) do
-    if not party:IsNameInParty(name) then
-      self.unitAurasLastUpdated[name] = nil
-    end
-  end
 end
 
 ---@return number count Party size including pets
@@ -189,7 +161,6 @@ function module:RefreshParty(party, invalidGroups)
   end
 
   unitCacheModule.partyCache = party
-  module:CleanUpBuffs(party)
   return party
 end
 

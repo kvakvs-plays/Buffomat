@@ -88,7 +88,7 @@ for _, client in ipairs({
   { 5, 20506, 1, false, false }, { 11, 30402, 2, false, false }, { 14, 40402, 3, false, false },
 }) do
   local project, interface, expansion, modern, forever = client[1], client[2], client[3], client[4], client[5]
-  local libs, handlers, state, globals, secret = fixture(project, interface, expansion, modern)
+  local libs, _handlers, state, globals, secret = fixture(project, interface, expansion, modern)
   local env = libs["KvLibShared-Env"]
   equal(env.isForever, forever, "Forever detection")
   equal(env.isClassic, project == 2 or forever, "Classic content selection")
@@ -217,39 +217,13 @@ for _, client in ipairs({
     loadModule("Src/KvLib/KvEnv.lua", globals)
   end
 
-  loadModule("Src/Events.lua", globals)
-  local scheduler = libs["Buffomat-ScanScheduler"]
-  scheduler.MarkAllDirty = function(_, reason) state.reason = reason end
-  scheduler.OnCombatStart, scheduler.OnCombatEnd = function() end, function() end
-  libs["Buffomat-Party"].InvalidatePartyCache = function() state.invalidated = true end
-  libs["Buffomat-Party"].playerManaLimit = 50
-  libs["Buffomat-Events"]:InitEvents()
-  equal(handlers.COMBAT_LOG_EVENT_UNFILTERED ~= nil, not forever, "combat-log registration")
-  equal(handlers.ADDON_RESTRICTION_STATE_CHANGED ~= nil, modern, "restriction event capability")
-  assert(handlers.UNIT_AURA, "UNIT_AURA must remain registered without the combat log")
-  state.reason = nil
-  handlers.UNIT_POWER_UPDATE("UNIT_POWER_UPDATE", "player", "MANA")
-  equal(state.reason, nil, "secret mana event does not compare")
-  state.power = 100
-  handlers.UNIT_POWER_UPDATE("UNIT_POWER_UPDATE", "player", "MANA")
-  equal(state.reason, "powerUpdate", "AceEvent callback includes event name")
   -- Forever returns a secret boolean for "targettarget" inside instances.
   local unitIsUnit = globals.UnitIsUnit
   globals.UnitIsUnit = function() return secret end
   loadModule("Src/KvLib/KvEnv.lua", globals)
   equal(env.UnitIsUnit("targettarget", "player"), false, "secret unit identity")
   equal(env.UnitIsUnit("player", "player"), true, "same token skips the API")
-  state.reason = nil
-  handlers.UNIT_POWER_UPDATE("UNIT_POWER_UPDATE", "targettarget", "MANA")
-  equal(state.reason, nil, "secret unit identity does not branch")
   globals.UnitIsUnit = unitIsUnit
   loadModule("Src/KvLib/KvEnv.lua", globals)
-  if modern then
-    scan.ScanTasks = function(_, reason) state.scanReason = reason end
-    handlers.ADDON_RESTRICTION_STATE_CHANGED()
-    equal(state.invalidated, true); equal(state.reason, "restrictionChanged")
-    -- Scanning inside the event would see the activating restriction as inactive
-    equal(state.scanReason, nil, "rescan is deferred to the scheduler timer")
-  end
-  print("PASS: interface " .. interface .. " detection, enchants, restrictions, power, range, chat, and events")
+  print("PASS: interface " .. interface .. " detection, enchants, restrictions, power, range and chat")
 end

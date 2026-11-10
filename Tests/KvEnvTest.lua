@@ -240,10 +240,10 @@ local function fixture(mode, projectID)
     equal(state.inactive, nil)
     equal(action:CanCast(), "ok", "restricted cooldown does not block casting")
   end
-  globals.BuffomatAddon.isPlayerCasting = "cast"
+  globals.LibStub("Buffomat-PlayerStateScan").casting = "cast"
   equal(scan:CheckCastingChanneling({}), false, "casting still pauses scanning")
   equal(state.inactive, "castButton.Busy")
-  globals.BuffomatAddon.isPlayerCasting = nil
+  globals.LibStub("Buffomat-PlayerStateScan").casting = nil
   equal(scan:CheckCastingChanneling({}), true)
   state.cooldown = nil
 

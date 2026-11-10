@@ -6,7 +6,6 @@ local module = LibStub("Buffomat-Unit") --[[@as UnitModule]]
 
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffModule = LibStub("Buffomat-Buff") --[[@as BuffModule]]
-local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxModule]]
 local scanStatsModule = LibStub("Buffomat-ScanStats") --[[@as ScanStatsModule]]
 
@@ -73,25 +72,6 @@ function module:UnitAura(unitId, buffIndex, filter)
         duration = BuffomatShared.Duration[name] or 0
       end
 
-      if duration > 0 and (expirationTime == nil or expirationTime == 0) then
-        local destName = UnitFullName(unitId) ---@type string
-        if envModule.IsSecretValue(destName) then
-          return nil, false
-        end
-        local buffOnPlayer = partyModule.unitAurasLastUpdated[destName]
-
-        if type(buffOnPlayer) == "table" and buffOnPlayer[name] then
-          expirationTime = (buffOnPlayer[name] or 0) + duration
-
-          local now = GetTime()
-
-          if expirationTime <= now then
-            buffOnPlayer[name] = now
-            expirationTime = now + duration
-          end
-        end
-      end
-
       if expirationTime == 0 then
         duration = 0
       end
@@ -135,9 +115,7 @@ function unitClass:ForceUpdateBuffs(playerUnit)
   BuffomatAddon.somebodyIsGhost = BuffomatAddon.somebodyIsGhost or self.isGhost
 
   if self.isDead then
-    -- Clear known buffs for self, as we're very dead atm
-    partyModule.unitAurasLastUpdated[self.name] = nil
-    return
+    return -- the dead have no buffs
   end
 
   self.hasReputationTrinket = false

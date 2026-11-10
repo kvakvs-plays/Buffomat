@@ -70,6 +70,8 @@ LibStub:NewLibrary("Buffomat-UnitCache", 1)
 LibStub:NewLibrary("Buffomat-ScanStats", 1)
 LibStub:NewLibrary("Buffomat-ScanScheduler", 1)
 LibStub:NewLibrary("Buffomat-ScanPass", 1)
+LibStub:NewLibrary("Buffomat-ScanEvents", 1)
+LibStub:NewLibrary("Buffomat-PlayerStateScan", 1)
 
 LibStub:NewLibrary("KvLibShared-Env", 1)
 LibStub:NewLibrary("KvLibShared-Events", 1)
