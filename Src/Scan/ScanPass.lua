@@ -9,8 +9,8 @@ local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local auraScanModule = LibStub("Buffomat-AuraScan") --[[@as AuraScanModule]]
 local bagScanModule = LibStub("Buffomat-BagScan") --[[@as BagScanModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
-local kvUnitModule = LibStub("KvLibShared-Unit") --[[@as KvUnitModule]]
 local playerStateModule = LibStub("Buffomat-PlayerStateScan") --[[@as PlayerStateScanModule]]
+local rangeScanModule = LibStub("Buffomat-RangeScan") --[[@as RangeScanModule]]
 local rosterScanModule = LibStub("Buffomat-RosterScan") --[[@as RosterScanModule]]
 local scanEventsModule = LibStub("Buffomat-ScanEvents") --[[@as ScanEventsModule]]
 local scheduler = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
@@ -43,11 +43,6 @@ function module:Read(pending, pendingUnits, auraFree)
   else
     auraScanModule:Enqueue(roster, pending.auras == true, pendingUnits.auras)
     more = auraScanModule:ReadQueued(roster)
-  end
-
-  -- Until the range reader is split out, every pass measures every unit
-  for _, unit in ipairs(roster.units) do
-    unit.distance = kvUnitModule.DistanceSquared(unit.unitId)
   end
 
   if pending.player or playerStateModule.version == 0 then
@@ -99,6 +94,7 @@ function module:Run(pending, pendingUnits)
   end
 
   playerStateModule.manaWakeLimit = nil
+  rangeScanModule:BeginPass()
   local active = taskScanModule:ScanTasks(roster, auraFree)
   -- Mana events are only wanted while something waits for mana
   scanEventsModule:SetManaWatch(playerStateModule.manaWakeLimit ~= nil)

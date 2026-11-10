@@ -31,6 +31,7 @@ local ngStringsModule = LibStub("Buffomat-NgStrings") --[[@as NgStringsModule]]
 local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local playerStateModule = LibStub("Buffomat-PlayerStateScan") --[[@as PlayerStateScanModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
+local rangeScanModule = LibStub("Buffomat-RangeScan") --[[@as RangeScanModule]]
 local spellIdsModule = LibStub("Buffomat-SpellIds") --[[@as SpellIdsModule]]
 local taskListModule = LibStub("Buffomat-TaskList") --[[@as TaskListModule]]
 local taskModule = LibStub("Buffomat-Task") --[[@as TaskModule]]
@@ -241,13 +242,14 @@ function module:GetGroupInRange(spellName, units, groupIndex, spell)
   local ret
   for _, member in pairs(units) do
     if member.group == groupIndex then
+      local distance = rangeScanModule:Distance(member)
       if not (envModule.IsSpellInRange(spellName, member.unitId) == 1 or member.isDead) then
-        if member.distance > 2000 then
+        if distance > 2000 then
           return nil
         end
-      elseif (minDist == nil or member.distance < minDist)
+      elseif (minDist == nil or distance < minDist)
           and not tContains(spell.skipList, member.name) then
-        minDist = member.distance
+        minDist = distance
         ret = member
       end
     end
@@ -271,10 +273,12 @@ function module:GetAnyPartyMemberInRange(spellName, buffDef, _party, playerUnit)
   for _, member in ipairs(buffDef.unitsNeedBuff) do
     if envModule.IsSpellInRange(spellName, member.unitId) == 1
         and not member.isDead
-        and (minDist == nil or member.distance < minDist)
         and not tContains(buffDef.skipList, member.name) then
-      minDist = member.distance
-      ret = member
+      local distance = rangeScanModule:Distance(member)
+      if minDist == nil or distance < minDist then
+        minDist = distance
+        ret = member
+      end
     end
     --if not (IsSpellInRange(spellName, member.unitGUID) == 1 or member.isDead) then
     --  if member.distance > 2000 then
@@ -305,13 +309,15 @@ function module:GetClassInRange(spellName, party, class, spell)
       if member.isDead then
         return nil
       elseif envModule.IsSpellInRange(spellName, member.unitId) ~= 1 then
-        if member.distance > 2000 then
+        if rangeScanModule:Distance(member) > 2000 then
           return nil
         end
-      elseif (minDist == nil or member.distance < minDist)
-          and not tContains(spell.skipList, member.name) then
-        minDist = member.distance
-        ret = member
+      elseif not tContains(spell.skipList, member.name) then
+        local distance = rangeScanModule:Distance(member)
+        if minDist == nil or distance < minDist then
+          minDist = distance
+          ret = member
+        end
       end
     end -- if class
   end

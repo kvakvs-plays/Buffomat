@@ -73,6 +73,7 @@ LibStub:NewLibrary("Buffomat-PlayerStateScan", 1)
 LibStub:NewLibrary("Buffomat-BagScan", 1)
 LibStub:NewLibrary("Buffomat-RosterScan", 1)
 LibStub:NewLibrary("Buffomat-AuraScan", 1)
+LibStub:NewLibrary("Buffomat-RangeScan", 1)
 
 LibStub:NewLibrary("KvLibShared-Env", 1)
 LibStub:NewLibrary("KvLibShared-Events", 1)

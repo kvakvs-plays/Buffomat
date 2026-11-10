@@ -12,7 +12,8 @@ local module = LibStub("Buffomat-Unit") --[[@as UnitModule]]
 ---@field auraDataUnavailable boolean? Prevent decisions from an incomplete aura scan.
 ---@field weaponDataUnavailable boolean? Player weapon enchants could not be read; skip weapon buff decisions.
 ---@field class ClassName
----@field distance number
+---@field distance number Squared yards, as measured in the pass `distanceEpoch`; read it through RangeScan
+---@field distanceEpoch number? Pass in which `distance` was measured
 ---@field group number Raid group number (9 if temporary moved out of the raid by BOM)
 ---@field guid string? Identity of the character behind the unit id
 ---@field auraSignature number? Checksum of the last aura read, to tell a real change from a repeated event

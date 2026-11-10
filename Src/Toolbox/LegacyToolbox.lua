@@ -245,47 +245,6 @@ function module:GetRaidIcon(name)
   return ICON_TAG_LIST[x] and constModule.RAID_ICON[ICON_TAG_LIST[x]] or name
 end
 
-local TOO_FAR = 1000011 -- special value to find out that the range error originates from this module
-
----@param uId string Unit to check distance from the player
-function module:UnitDistanceSquared(uId)
-  --partly copied from DBM
-  --    * Paul Emmerich (Tandanu @ EU-Aegwynn) (DBM-Core)
-  --    * Martin Verges (Nitram @ EU-Azshara) (DBM-GUI)
-
-  local range
-
-  if kvEnvModule.UnitIsUnit(uId, "player") then
-    range = 0
-  else
-    local distanceSquared, checkedDistance = UnitDistanceSquared(uId)
-
-    if not kvEnvModule.IsSecretValue(checkedDistance) and checkedDistance
-        and not kvEnvModule.IsSecretValue(distanceSquared) then
-      range = distanceSquared
-    elseif C_Map.GetBestMapForUnit(uId) ~= C_Map.GetBestMapForUnit("player") then
-      range = TOO_FAR
-    elseif kvEnvModule.IsItemInRange(8149, uId) then
-      range = 64   -- 8 --Voodoo Charm
-    elseif CheckInteractDistance(uId, 3) then
-      range = 100  --10
-    elseif CheckInteractDistance(uId, 2) then
-      range = 121  --11
-    elseif kvEnvModule.IsItemInRange(14530, uId) then
-      range = 324  --18--Heavy Runecloth Bandage. (despite popular sites saying it's 15 yards, it's actually 18 yards verified by UnitDistanceSquared
-    elseif kvEnvModule.IsItemInRange(21519, uId) then
-      range = 529  --23--Item says 20, returns true until 23.
-    elseif kvEnvModule.IsItemInRange(1180, uId) then
-      range = 1089 --33--Scroll of Stamina
-    elseif kvEnvModule.UnitInRange(uId) then
-      range = 1849 --43 item scheck of 34471 also good for 43
-    else
-      range = 10000
-    end
-  end
-  return range
-end
-
 ---@deprecated
 function module:Merge(t1, ...)
   for index = 1, select("#", ...) do

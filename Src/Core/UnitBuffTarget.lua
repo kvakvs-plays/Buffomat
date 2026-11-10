@@ -1,20 +1,24 @@
 ---@class BomUnitBuffTargetModule
 local module = LibStub("Buffomat-UnitBuffTarget") --[[@as BomUnitBuffTargetModule]]
 
-local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxModule]]
-local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
+local rangeScanModule = LibStub("Buffomat-RangeScan") --[[@as RangeScanModule]]
 
 ---@class BomUnitBuffTarget
----@field unitName string Just the name
+---@field unitName string Unit id, such as "raid7"
 ---@field link string|nil Colored unit name with class icon
+---@field unit BomUnit|nil The roster unit, for the distance
 local buffTargetClass = {}
 buffTargetClass.__index = buffTargetClass
 
+---@param unitName string Unit id
+---@param link string|nil
+---@param unit BomUnit|nil
 ---@return BomUnitBuffTarget
-function module:New(unitName, link)
+function module:New(unitName, link, unit)
   local fields = {} --[[@as BomUnitBuffTarget]]
   fields.unitName = unitName
   fields.link = link
+  fields.unit = unit
   setmetatable(fields, buffTargetClass)
 
   return fields
@@ -23,21 +27,21 @@ end
 ---@param m BomUnit
 ---@return BomUnitBuffTarget
 function module:FromUnit(m)
-  return self:New(m.unitId, m.link)
+  return self:New(m.unitId, m.link, m)
 end
 
 ---@param m BomUnit
 ---@return BomUnitBuffTarget
 function module:FromSelf(m)
-  return self:New("player", m.link)
+  return self:New("player", m.link, nil)
 end
 
+---@return number distanceSquared
 function buffTargetClass:GetDistance()
-  if self.unitName == "player" then
+  if self.unitName == "player" or self.unit == nil then
     return 0
   end
-
-  return toolboxModule:UnitDistanceSquared(self.unitName)
+  return rangeScanModule:Distance(self.unit)
 end
 
 function buffTargetClass:GetText()
