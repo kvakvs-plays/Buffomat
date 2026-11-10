@@ -27,7 +27,7 @@ local ngStringsModule = LibStub("Buffomat-NgStrings") --[[@as NgStringsModule]]
 local ngToolboxModule = LibStub("Buffomat-NgToolbox") --[[@as NgToolboxModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 local texturesModule = LibStub("Buffomat-Textures") --[[@as TexturesModule]]
-local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
+local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
 local characterSettingsModule = LibStub("Buffomat-CharacterSettings") --[[@as CharacterSettingsModule]]
 
 ---@param preselectCategory BuffCategoryName|nil
@@ -243,7 +243,7 @@ function module:CreateBuffRow(buffDef, profileBuff, _context)
     checkEnabled:SetValue(BuffomatShared[settingKey] == true)
     checkEnabled:SetCallback("OnValueChanged", function(_control, _callbackName, value)
       BuffomatShared[settingKey] = value
-      throttleModule:RequestTaskRescan("spellsDialog:" .. settingKey)
+      scanSchedulerModule:Request("spellsDialog:" .. settingKey)
     end)
     checkEnabled:SetLabel(_t("options.short." .. settingKey))
     checkEnabled:SetWidth(checkEnabled.text:GetStringWidth() + 32)

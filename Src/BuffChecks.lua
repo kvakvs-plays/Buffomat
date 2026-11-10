@@ -13,6 +13,7 @@ local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 local scanStatsModule = LibStub("Buffomat-ScanStats") --[[@as ScanStatsModule]]
+local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
 
 ---Checks whether a tracking spell is now active
 ---@param spell BomBuffDefinition The tracking spell which might have tracking enabled
@@ -56,10 +57,8 @@ function module:TimeCheck(expirationTime, maxDuration)
   end
 
   if remainingTimeTrigger + GetTime() < expirationTime then
-    expirationTime = expirationTime - remainingTimeTrigger
-    if expirationTime < BuffomatAddon.nextCooldownDue then
-      BuffomatAddon.nextCooldownDue = expirationTime
-    end
+    -- Look again when the buff gets close enough to its end to be refreshed
+    scanSchedulerModule:WakeAt(expirationTime - remainingTimeTrigger)
     return true
   end
 

@@ -218,7 +218,9 @@ for _, client in ipairs({
   end
 
   loadModule("Src/Events.lua", globals)
-  libs["Buffomat-Throttle"].RequestTaskRescan = function(_, reason) state.reason = reason end
+  local scheduler = libs["Buffomat-ScanScheduler"]
+  scheduler.MarkAllDirty = function(_, reason) state.reason = reason end
+  scheduler.OnCombatStart, scheduler.OnCombatEnd = function() end, function() end
   libs["Buffomat-Party"].InvalidatePartyCache = function() state.invalidated = true end
   libs["Buffomat-Party"].playerManaLimit = 50
   libs["Buffomat-Events"]:InitEvents()
@@ -247,7 +249,7 @@ for _, client in ipairs({
     handlers.ADDON_RESTRICTION_STATE_CHANGED()
     equal(state.invalidated, true); equal(state.reason, "restrictionChanged")
     -- Scanning inside the event would see the activating restriction as inactive
-    equal(state.scanReason, nil, "rescan is deferred to the throttle timer")
+    equal(state.scanReason, nil, "rescan is deferred to the scheduler timer")
   end
   print("PASS: interface " .. interface .. " detection, enchants, restrictions, power, range, chat, and events")
 end

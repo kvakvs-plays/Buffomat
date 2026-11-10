@@ -200,11 +200,13 @@ local function fixture(mode, projectID)
   -- blocked task leaves the cast button on "Nothing to do" with no recovery.
   libs["Buffomat-Task"] = { CAN_CAST_ON_CD = "cooldown", CAN_CAST_OK = "ok", CAN_CAST_OOM = "oom" }
   libs["Buffomat-Party"] = { playerMana = 0 }
+  globals.LibStub("Buffomat-ScanScheduler").WakeAt = function(_, time) state.wakeAt = time end
   loadModule("Src/Task/ActionCast.lua", globals)
   local action = libs["Buffomat-ActionCast"]:New(0, 42, "", {}, nil, false)
   equal(action:CanCast(), "ok", "unknown cooldown is castable")
   state.cooldown = { startTime = 10, duration = 20, isEnabled = true, modRate = 1 }
   equal(action:CanCast(), "cooldown", "known cooldown blocks casting")
+  equal(state.wakeAt, 30, "look again when the cooldown ends")
   state.cooldown = { startTime = 0, duration = 0, isEnabled = true, modRate = 1 }
   equal(action:CanCast(), "ok", "ready spell is castable")
   equal(libs["Buffomat-ActionCast"]:New(10, 42, "", {}, nil, false):CanCast(), "oom")
@@ -214,7 +216,7 @@ local function fixture(mode, projectID)
   equal(scan:IsInGlobalCooldown(), false, "unavailable GCD probe must not block the scan")
   setmetatable(libs["Buffomat-Languages"], { __call = function(_, key) return key end })
   scan.ShowInactive = function(_, reason) state.inactive = reason end
-  globals.BuffomatAddon.nextCooldownDue = 1000
+  state.wakeAt = nil
   equal(scan:CheckGlobalCooldown({}), true)
   equal(state.inactive, nil, "unknown GCD must not display Global Cooldown")
 
@@ -225,7 +227,7 @@ local function fixture(mode, projectID)
   equal(gcdActive, true); equal(endsAt, 101.5)
   equal(scan:CheckGlobalCooldown({}), false)
   equal(state.inactive, "castButton.inactive.GlobalCooldown")
-  equal(globals.BuffomatAddon.nextCooldownDue, 101.5, "rescan when GCD ends")
+  equal(state.wakeAt, 101.5, "rescan when GCD ends")
   state.now = 101.49
   equal(scan:IsInGlobalCooldown(), false, "remaining time respects latency allowance")
   state.now = 102
@@ -266,7 +268,7 @@ local function fixture(mode, projectID)
       GetSpellName = function() return "Spell" end,
     }
   end }
-  libs["Buffomat-Throttle"].RequestTaskRescan = function() state.rescanned = true end
+  globals.LibStub("Buffomat-ScanScheduler").Request = function() state.rescanned = true end
   loadModule("Src/Cache/ItemCache.lua", globals)
   loadModule("Src/Cache/SpellCache.lua", globals)
   equal(globals.BuffomatAddon.GetSpellInfo(nil), nil, "missing cached spell identifier")

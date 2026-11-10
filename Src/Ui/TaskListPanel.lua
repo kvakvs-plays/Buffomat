@@ -33,8 +33,7 @@ local actionMacroModule = LibStub("Buffomat-ActionMacro") --[[@as ActionMacroMod
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local libGUI = LibStub("AceGUI-3.0")
 local ngToolboxModule = LibStub("Buffomat-NgToolbox") --[[@as NgToolboxModule]]
-local taskScanModule = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
-local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
+local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
 
 --- Constructs the window. Only called from one location - WindowCommand()
 function module:ConstructWindow()
@@ -77,9 +76,9 @@ function module:ToggleWindow(_holdOpen)
   if self:IsWindowVisible() then
     self.windowCommand = "hide"
   else
-    throttleModule:RequestTaskRescan("toggleWindow")
     self.windowCommand = "show"
   end
+  scanSchedulerModule:Request("toggleWindow")
 end
 
 function module:IsWindowVisible()
@@ -87,6 +86,7 @@ function module:IsWindowVisible()
 end
 
 local function doShow()
+  local wasVisible = module:IsWindowVisible()
   if module.taskFrame == nil then
     module:ConstructWindow()
     module:SetWindowScale(tonumber(BuffomatShared.UIWindowScale) or 1.0)
@@ -99,19 +99,20 @@ local function doShow()
   -- for _, message in pairs(self.messages or {}) do
   --   self:AddMessageLabel(message)
   -- end
-  throttleModule:RequestTaskRescan("showWindow")
-  taskScanModule:ScanTasks("show")
+  if not wasVisible then
+    -- The task list is only drawn into a visible window; read and draw everything again
+    scanSchedulerModule:MarkAllDirty("showWindow")
+  end
 end
 
 local function doHide()
   if module.taskFrame ~= nil then
     module.taskFrame:Hide()
   end
-
-  throttleModule:RequestTaskRescan("hideWindow")
 end
 
---- Do not call this directly. Called from the throttle module on timed updates.
+--- Do not call this directly. Called from the scan pass, which never runs in combat: the window
+--- holds a secure button and cannot be shown or hidden then.
 ---@param _command WindowCommand
 function module:WindowCommand(_command)
   if not self.windowCommand then
@@ -155,6 +156,7 @@ function module:HideWindow(callLocation)
   self.windowCommand = "hide"
   self.windowCommandCallLocation = callLocation
   self.windowCommandForceHide = nil
+  scanSchedulerModule:Request("hideWindow")
 end
 
 ---Attempt to close if holdOpen is false (holds open if user manually called up the window)
@@ -182,6 +184,7 @@ function module:ShowWindow(callLocation)
   self.windowCommand = "show"
   self.windowCommandCallLocation = callLocation
   self.windowCommandForceHide = nil
+  scanSchedulerModule:Request("showWindow")
 end
 
 -- Reset the window to the default position and size, save the default position and size

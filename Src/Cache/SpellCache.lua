@@ -12,7 +12,7 @@ local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local module = LibStub("Buffomat-SpellCache") --[[@as SpellCacheModule]]
 module.cache = --[[@as BomSpellCache]] {}
 
-local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
+local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
 
 ---@class BomSpellCacheElement
 ---@field name string
@@ -93,7 +93,7 @@ function module:LoadSpell(spellId, onLoaded)
     cacheSpell.maxRange = maxRange
 
     self.cache[spellId] = cacheSpell
-    throttleModule:RequestTaskRescan(string.format("sp:%d", spellId))
+    scanSchedulerModule:Request("spellLoaded")
 
     if onLoaded ~= nil then
       onLoaded(cacheSpell)

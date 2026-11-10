@@ -12,7 +12,7 @@ local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local module = LibStub("Buffomat-ItemCache") --[[@as ItemCacheModule]]
 module.cache = {}
 
-local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
+local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
 
 ---@class BomItemCacheElement
 ---@field itemName string
@@ -108,7 +108,7 @@ function module:LoadItem(itemId, onLoaded)
     }
 
     module.cache[itemId] = cacheItem
-    throttleModule:RequestTaskRescan(string.format("item%d", itemId))
+    scanSchedulerModule:Request("itemLoaded")
 
     if onLoaded ~= nil then
       onLoaded(cacheItem)

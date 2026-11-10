@@ -9,7 +9,7 @@ local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPa
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
-local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
+local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
 
 ---@class BomTaskList
 ---@field tasks BomTask[]
@@ -244,8 +244,7 @@ function taskListClass:CastButton_OutOfRange()
   end
 
   if skipreset then
-    throttleModule:FastUpdateTimer()
-    throttleModule:RequestTaskRescan("skipReset")
+    scanSchedulerModule:Request("skipReset")
   end
 end -- if inrange
 

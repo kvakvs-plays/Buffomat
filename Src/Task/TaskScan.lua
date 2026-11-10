@@ -34,7 +34,7 @@ local spellIdsModule = LibStub("Buffomat-SpellIds") --[[@as SpellIdsModule]]
 local taskListModule = LibStub("Buffomat-TaskList") --[[@as TaskListModule]]
 local taskModule = LibStub("Buffomat-Task") --[[@as TaskModule]]
 local texturesModule = LibStub("Buffomat-Textures") --[[@as TexturesModule]]
-local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
+local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
 local unitCacheModule = LibStub("Buffomat-UnitCache") --[[@as UnitCacheModule]]
 local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
 
@@ -232,10 +232,8 @@ function module:UpdateMissingBuffs_EachBuff(party, buffDef, buffCtx)
       buffDef:ResetBuffTargets()
       startTime = startTime + duration
 
-      -- Check next time when the cooldown is up, or sooner
-      if BuffomatAddon.nextCooldownDue > startTime then
-        BuffomatAddon.nextCooldownDue = startTime
-      end
+      -- Check again when the cooldown is up
+      scanSchedulerModule:WakeAt(startTime)
 
       buffCtx.someoneIsDead = false
     end
@@ -660,7 +658,7 @@ function module:AddBlessing(buffDef, party, _buffCtx)
       if buffDef.groupsNeedBuff[eachClassName]
           and buffDef.groupsNeedBuff[eachClassName] >= BuffomatShared.MinBlessing
       then
-        BuffomatAddon.repeatUpdate = true
+        scanSchedulerModule:WakeAfter(scanSchedulerModule.RANGE_TICK, "range")
         local classInRange = self:GetClassInRange(
           buffDef.groupText, --[[@as BomParty]] buffDef.unitsNeedBuff, eachClassName, buffDef)
 
@@ -718,7 +716,7 @@ function module:AddBlessing(buffDef, party, _buffCtx)
           or buffDef.groupsNeedBuff[needsBuff.class] == nil
           or buffDef.groupsNeedBuff[needsBuff.class] < BuffomatShared.MinBlessing) then
       if not needsBuff.isPlayer then
-        BuffomatAddon.repeatUpdate = true
+        scanSchedulerModule:WakeAfter(scanSchedulerModule.RANGE_TICK, "range")
       end
 
       local targetIcon = "" -- marks players with a forced or assigned target
@@ -772,7 +770,7 @@ function module:FindTargetForGroupBuff(groupIndex, buffDef, party, minBuff, _buf
   if buffDef.groupsNeedBuff[groupIndex]
       and buffDef.groupsNeedBuff[groupIndex] >= minBuff
   then
-    BuffomatAddon.repeatUpdate = true
+    scanSchedulerModule:WakeAfter(scanSchedulerModule.RANGE_TICK, "range")
     local groupInRange = self:GetGroupInRange(buffDef.groupText, buffDef.unitsNeedBuff, groupIndex, buffDef)
 
     --if groupInRange == nil then
@@ -841,7 +839,7 @@ function module:AddBuff_SingleBuff(buffDef, minBuff, _buffCtx)
           or buffDef.groupsNeedBuff[needBuff.group] < minBuff)
     then
       if not needBuff.isPlayer then
-        BuffomatAddon.repeatUpdate = true
+        scanSchedulerModule:WakeAfter(scanSchedulerModule.RANGE_TICK, "range")
       end
 
       local targetIcon = "" -- marks players with a forced or assigned target
@@ -955,7 +953,7 @@ function module:AddResurrection(spell, _playerUnit, _buffCtx)
 
   for _k, unitNeedsBuff in ipairs(spell.unitsNeedBuff) do
     if not tContains(spell.skipList, unitNeedsBuff.name) then
-      BuffomatAddon.repeatUpdate = true
+      scanSchedulerModule:WakeAfter(scanSchedulerModule.RANGE_TICK, "range")
 
       local prio = taskModule.PRIO_RESURRECTION
       if tContains(allBuffsModule.RESURRECT_CLASSES, unitNeedsBuff.class) then
@@ -1281,8 +1279,6 @@ function module:AddConsumableWeaponBuff_DontHaveItem(buffDef, count, playerUnit)
         :IsInfo()
         :LinkToBuffDef(buffDef)
     self.tasklist:Add(task)
-  else
-    throttleModule:RequestTaskRescan("weaponConsumableBuff") -- try rescan?
   end
 end
 
@@ -1441,10 +1437,7 @@ function module:CheckItemsAndContainers(playerUnit, _buffCtx)
 
     if item.CD then
       if (item.CD[1] or 0) ~= 0 then
-        local ti = item.CD[1] + item.CD[2] - GetTime() + 1
-        if ti < BuffomatAddon.nextCooldownDue then
-          BuffomatAddon.nextCooldownDue = ti
-        end
+        scanSchedulerModule:WakeAt(item.CD[1] + (item.CD[2] or 0))
       elseif item.Link then
         ok = true
 
@@ -1659,10 +1652,7 @@ function module:DoScan(context)
     someoneIsDead = module.saveSomeoneIsDead,
   }
 
-  if next(throttleModule.taskRescanRequestedBy) ~= nil then
-    -- TODO: Only scan missing buffs on current roundRobinGroup while in raid
-    self:UpdateMissingBuffs(context.party, buffCtx)
-  end
+  self:UpdateMissingBuffs(context.party, buffCtx)
 
   -- cancel buffs
   self:CancelBuffs(context.party.player)
@@ -1791,8 +1781,6 @@ function module:Finalize(context)
   self.tasklist:Sort()
   self.tasklist:Display() -- Show all tasks and comments
 
-  throttleModule:ClearForceUpdate()
-
   local firstToCast = self.tasklist:SelectTask()
   if firstToCast then
     self.tasklist:CastButton(firstToCast)
@@ -1840,23 +1828,7 @@ function module:Precheck(_context)
     return false -- Too soon the system did not initialize yet
   end
 
-  if BuffomatAddon.inLoadingScreen then
-    return false -- Do not scan if we are in the loading screen
-  end
-
-  BuffomatAddon.nextCooldownDue = GetTime() + 36000 -- 10 hours
   self.tasklist:Clear()
-  BuffomatAddon.repeatUpdate = false
-
-  --Choose Profile
-  local selectedProfileName = profileModule:ChooseProfile()
-
-  if buffomatModule.currentProfileName ~= selectedProfileName then
-    buffomatModule:UseProfile(selectedProfileName)
-    --spellButtonsTabModule:UpdateSpellsTab("profileChanged")
-    throttleModule:RequestTaskRescan("profileChanged")
-  end
-
   return true
 end -- end function bomUpdateScan_PreCheck1()
 
@@ -1924,8 +1896,8 @@ function module:CheckGlobalCooldown(_context)
     return true
   end
 
-  if cooldownEndTime and cooldownEndTime < BuffomatAddon.nextCooldownDue then
-    BuffomatAddon.nextCooldownDue = cooldownEndTime
+  if cooldownEndTime then
+    scanSchedulerModule:WakeAt(cooldownEndTime)
   end
 
   self:ShowInactive(_t("castButton.inactive.GlobalCooldown"))
@@ -1933,7 +1905,6 @@ function module:CheckGlobalCooldown(_context)
 end
 
 function module:ShowInactive(reason)
-  throttleModule:ClearForceUpdate()
   BuffomatAddon.checkForError = false
   BuffomatAddon.theMacro:Clear()
   taskListPanelModule:CastButtonText(reason, false)
@@ -2011,8 +1982,7 @@ function BuffomatAddon.AddMemberToSkipList()
     if (castFailedBuffVal).skipList
         and BuffomatAddon.castFailedBuffTarget then
       table.insert(castFailedBuffVal.skipList, castFailedTarget.name)
-      throttleModule:FastUpdateTimer()
-      throttleModule:RequestTaskRescan("skipListMemberAdded")
+      scanSchedulerModule:Request("skipListMemberAdded")
     end
   end
 end

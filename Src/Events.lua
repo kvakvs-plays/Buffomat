@@ -13,7 +13,7 @@ local spellSetupModule = LibStub("Buffomat-SpellSetup") --[[@as BomSpellSetupMod
 local taskListModule = LibStub("Buffomat-TaskList") --[[@as TaskListModule]]
 local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
 local taskScanModule = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
-local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
+local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
 
 --"UNIT_POWER_UPDATE","UNIT_SPELLCAST_START","UNIT_SPELLCAST_STOP","PLAYER_STARTED_MOVING","PLAYER_STOPPED_MOVING"
 module.EVT_COMBAT_STOP = { "PLAYER_REGEN_ENABLED" }
@@ -91,7 +91,7 @@ local function Event_UNIT_POWER_UPDATE(_event, unitTarget, powerType)
     local actualMana = envModule.UnitPower("player", 0)
 
     if actualMana ~= nil and maxMana <= actualMana then
-      throttleModule:RequestTaskRescan("powerUpdate")
+      scanSchedulerModule:MarkAllDirty("powerUpdate")
     end
   end
 end
@@ -106,7 +106,7 @@ end
 
 ---On combat start will close the UI window and disable the UI. Will cancel the cancelable buffs.
 local function Event_CombatStart()
-  throttleModule:RequestTaskRescan("combatStart")
+  scanSchedulerModule:OnCombatStart()
   BuffomatAddon.declineHasResurrection = true
   taskListPanelModule:OnCombatStart()
   BuffomatAddon.DoCancelBuffs()
@@ -114,7 +114,7 @@ end
 
 local function Event_CombatStop()
   taskScanModule:ClearSkip()
-  throttleModule:RequestTaskRescan("combatStop")
+  scanSchedulerModule:OnCombatEnd()
   BuffomatAddon.declineHasResurrection = true
   taskListPanelModule:OnCombatStop()
 end
@@ -124,10 +124,7 @@ function module:OnCombatStop()
 end
 
 local function Event_LoadingStart()
-  BuffomatAddon.inLoadingScreen = true
-  BuffomatAddon.loadingScreenTimeOut = nil
-  Event_CombatStart()
-  --print("loading start")
+  scanSchedulerModule:OnLoadingStart()
 end
 
 local oneTimeLoadItemsAndSpells = false
@@ -138,8 +135,7 @@ local function Event_LoadingStop()
     allBuffsModule:LoadItemsAndSpells()
   end
 
-  BuffomatAddon.loadingScreenTimeOut = GetTime() + constModule.LOADING_SCREEN_TIMEOUT
-  throttleModule:RequestTaskRescan("loadingStop")
+  scanSchedulerModule:OnLoadingEnd(constModule.LOADING_SCREEN_TIMEOUT)
 end
 
 ---Event_PLAYER_TARGET_CHANGED
@@ -188,8 +184,7 @@ local function Event_PLAYER_TARGET_CHANGED()
   end
   if newName ~= BuffomatAddon.SaveTargetName then
     BuffomatAddon.SaveTargetName = newName
-    throttleModule:RequestTaskRescan("targetChanged")
-    taskScanModule:ScanTasks("PlayerTargetChanged")
+    scanSchedulerModule:MarkAllDirty("targetChanged")
   end
 end
 
@@ -210,7 +205,7 @@ local function Event_COMBAT_LOG_EVENT_UNFILTERED()
       --partyModule.buffs[destName]=nil -- problem with hunters and fake-deaths!
       --additional check in bom_get_party_members
       --print("dead",destName)
-      throttleModule:RequestTaskRescan("unitDied")
+      scanSchedulerModule:MarkAllDirty("unitDied")
     elseif allBuffsModule.selectedBuffsSpellIds
         and allBuffsModule.selectedBuffsSpellIds[spellId] ~= nil then
       -- a known buff
@@ -279,7 +274,7 @@ local function Event_PartyChanged()
   partyModule:InvalidatePartyCache()
   partyModule.theParty = nil -- Reset saved party
 
-  throttleModule:RequestTaskRescan("partyChanged")
+  scanSchedulerModule:MarkAllDirty("partyChanged")
 
   -- if in_party changed from true to false, clear the watch groups
   local inParty = IsInRaid() or IsInGroup()
@@ -298,7 +293,7 @@ end
 local function Event_UNIT_SPELLCAST_errors(unit)
   if envModule.UnitIsUnit(unit, "player") then
     BuffomatAddon.checkForError = false
-    throttleModule:RequestTaskRescan("spellcastError")
+    scanSchedulerModule:MarkAllDirty("spellcastError")
   end
 end
 
@@ -313,14 +308,14 @@ local function Event_UNIT_SPELLCAST_START(_eventType, unit)
   if envModule.UnitIsUnit(unit, "player") then
     BuffomatAddon.isPlayerCasting = "cast"
     module:SafeWipeMacro() -- not sure if this has any effect
-    throttleModule:RequestTaskRescan("castStart")
+    scanSchedulerModule:MarkAllDirty("castStart")
   end
 end
 
 local function Event_UNIT_SPELLCAST_STOP(_eventType, unit)
   if envModule.UnitIsUnit(unit, "player") then
     BuffomatAddon.isPlayerCasting = nil
-    throttleModule:RequestTaskRescan("castStop")
+    scanSchedulerModule:MarkAllDirty("castStop")
     BuffomatAddon.checkForError = false
   end
 end
@@ -329,26 +324,26 @@ local function Event_UNIT_SPELLCHANNEL_START(_eventType, unit)
   if envModule.UnitIsUnit(unit, "player") then
     BuffomatAddon.isPlayerCasting = "channel"
     module:SafeWipeMacro() -- not sure if this has any effect
-    throttleModule:RequestTaskRescan("channelStart")
+    scanSchedulerModule:MarkAllDirty("channelStart")
   end
 end
 
 local function Event_UNIT_SPELLCHANNEL_STOP(_eventType, unit)
   if envModule.UnitIsUnit(unit, "player") then
     BuffomatAddon.isPlayerCasting = nil
-    throttleModule:RequestTaskRescan("channelStop")
+    scanSchedulerModule:MarkAllDirty("channelStop")
     BuffomatAddon.checkForError = false
   end
 end
 
 function module.Event_SpellsChanged()
   spellSetupModule:SetupAvailableSpells()
-  throttleModule:RequestTaskRescan("spellsChanged")
+  scanSchedulerModule:MarkAllDirty("spellsChanged")
   --spellButtonsTabModule:UpdateSpellsTab("spellsChanged")
 end
 
 local function Event_Bag()
-  throttleModule:RequestTaskRescan("bagUpdate")
+  scanSchedulerModule:MarkAllDirty("bagUpdate")
   BuffomatAddon.wipeCachedItems = true
 
   if BuffomatAddon.cachedPlayerBag then
@@ -357,14 +352,29 @@ local function Event_Bag()
 end
 
 function module:InitEvents()
+  -- After a loading screen: forget who was skipped and who was already being resurrected
+  scanSchedulerModule.onLoadingEnd = function()
+    taskScanModule:ClearSkip()
+    BuffomatAddon.declineHasResurrection = true
+  end
+
+  -- Tasks which need a modifier key held change when the key goes down or up
+  if envModule.IsEventValid("MODIFIER_STATE_CHANGED") then
+    BuffomatAddon:RegisterEvent("MODIFIER_STATE_CHANGED", function()
+      if BuffomatAddon.scanModifierKeyDown or IsAltKeyDown() then
+        scanSchedulerModule:MarkAllDirty("modifierKey")
+      end
+    end)
+  end
+
   BuffomatAddon:RegisterEvent("PLAYER_LEVEL_UP", Event_PLAYER_LEVEL_UP)
 
   -- Events which might change active state of Buffomat
   BuffomatAddon:RegisterEvent("ZONE_CHANGED", function()
-    throttleModule:RequestTaskRescan("zoneChanged")
+    scanSchedulerModule:MarkAllDirty("zoneChanged")
   end)
   BuffomatAddon:RegisterEvent("PLAYER_UPDATE_RESTING", function()
-    throttleModule:RequestTaskRescan("restingChanged")
+    scanSchedulerModule:MarkAllDirty("restingChanged")
   end)
 
   BuffomatAddon:RegisterEvent("TAXIMAP_OPENED", Event_TAXIMAP_OPENED)
@@ -405,7 +415,7 @@ function module:InitEvents()
       -- Do not scan here: during this event IsAddOnRestrictionActive still reports
       -- false for a restriction that is about to activate. The throttle timer
       -- runs the requested rescan on the next frame.
-      throttleModule:RequestTaskRescan("restrictionChanged")
+      scanSchedulerModule:MarkAllDirty("restrictionChanged")
     end)
   end
 
@@ -433,7 +443,7 @@ function module:InitEvents()
   for _, event in ipairs(module.GENERIC_UPDATE_EVENTS) do
     local e = event .. ""
     BuffomatAddon:RegisterEvent(event, function()
-      throttleModule:RequestTaskRescan(e)
+      scanSchedulerModule:MarkAllDirty(e)
     end)
   end
   for _, event in ipairs(module.EVT_BAG_CHANGED) do

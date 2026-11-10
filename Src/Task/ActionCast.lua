@@ -7,6 +7,7 @@ local taskModule = LibStub("Buffomat-Task") --[[@as TaskModule]]
 local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
+local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
 
 ---@class TaskActionCast: BomTaskAction Casts a spell with a power (mana) cost on a target
 ---@field buffDef BomBuffDefinition|nil
@@ -42,10 +43,9 @@ function actionCastClass:CanCast()
   -- addon restrictions, so nil means the client gave no data; blocking left
   -- the cast button stuck on "Nothing to do" with no rescan to recover it.
   -- The client still rejects a cast that really is on cooldown.
-  local cdtest = envModule.GetSpellCooldown(self.spellId)
-  if cdtest ~= nil and cdtest ~= 0 then
-    BuffomatAddon.checkCooldown = self.spellId
-    --BomC_ListTab_Button:Disable()
+  local cooldownStart, cooldownDuration = envModule.GetSpellCooldown(self.spellId)
+  if cooldownStart ~= nil and cooldownStart ~= 0 then
+    scanSchedulerModule:WakeAt(cooldownStart + (cooldownDuration or 0))
     return taskModule.CAN_CAST_ON_CD
   end
   BuffomatAddon.castFailedBuff = self.buffDef

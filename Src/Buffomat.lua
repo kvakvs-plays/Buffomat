@@ -2,7 +2,6 @@
 ---@field character CharacterSettings Refers to BuffomatCharacter global
 ---@field currentProfileName string
 ---@field currentProfile ProfileSettings
----@field throttleUpdateTimer table AceTimerHandle useful for canceling the timer
 
 BINDING_HEADER_BUFFOMATHEADER = "Buffomat"
 BINDING_NAME_BUFFOMAT_WINDOW = "Toggle Window"
@@ -26,7 +25,7 @@ local slashModule = LibStub("Buffomat-SlashCommands") --[[@as SlashCommandsModul
 local taskScanModule = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
 local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxModule]]
 local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
-local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
+local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
 local ngStringsModule = LibStub("Buffomat-NgStrings") --[[@as NgStringsModule]]
 local scanStatsModule = LibStub("Buffomat-ScanStats") --[[@as ScanStatsModule]]
 
@@ -47,7 +46,6 @@ module.libIcon = LibStub("LibDBIcon-1.0")
 ---@field castFailedBuff BomBuffDefinition|nil Used for spell min level target detection (not available via API)
 ---@field castFailedBuffTarget BomUnit|nil
 ---@field castFailedSpellId number|nil
----@field checkCooldown number|nil Spell id to check cooldown for
 ---@field checkForError boolean Used by error suppression code
 ---@field currentProfile ProfileSettings Current profile from CharacterState.Profiles
 ---@field declineHasResurrection boolean Set to true on combat start, stop, holding Alt, cleared on party update
@@ -56,20 +54,14 @@ module.libIcon = LibStub("LibDBIcon-1.0")
 ---@field enchantList {[WowSpellId]: number[]} Spell ids mapping to enchantment ids
 ---@field forceProfile ProfileName|nil Nil will choose profile name automatically, otherwise this profile will be used
 ---@field forceTracking WowIconId|nil Defines icon id for enforced tracking
----@field forceUpdate boolean Requests immediate spells/buffs refresh
----@field inLoadingScreen boolean True while in the loading screen
 ---@field isPlayerCasting CastingState Indicates that the player is currently casting (updated in event handlers)
 ---@field isPlayerMoving boolean Indicated that the player is moving (updated in event handlers)
 ---@field itemList number[][] Group different ranks of item together
 ---@field lastAura BomBuffId|nil Buff id of active or last active aura
 ---@field lastTarget string|nil Last player's target
----@field loadingScreenTimeOut number|nil
 ---@field theMacro BomMacro
 ---@field MANA_CLASSES ClassName[] Classes with mana resource
----@field nextCooldownDue number Set this to next spell cooldown to force update
----@field isPartyUpdateNeeded boolean Requests player party update
 ---@field popupMenuDynamic GPIPopupDynamic
----@field repeatUpdate boolean Requests some sort of spells update similar to ForceUpdate
 ---@field reputationTrinketZones BomReputationTrinketZones Equipped AD trinket: Spell to and zone ids to check
 ---@field RESURRECT_CLASS ClassName[] Classes who can resurrect others
 ---@field ridingSpeedZones BomRidingSpeedZones Equipped Riding trinket: Spell to and zone ids to check
@@ -121,8 +113,7 @@ end
 
 -- Something changed (buff gained possibly?) update all spells and spell tabs
 function module.OptionsUpdate()
-  throttleModule:RequestTaskRescan("optionsUpdate")
-  taskScanModule:ScanTasks("OptionsUpdate")
+  scanSchedulerModule:Request("optionsUpdate")
 
   --spellButtonsTabModule:UpdateSpellsTab("OptionsUpdate")
   --BOM.minimapButton:UpdatePosition()
@@ -157,8 +148,7 @@ function module.ChooseProfile(profile)
 
   taskScanModule:ClearSkip()
   BuffomatAddon.popupMenuDynamic:Wipe(nil)
-  throttleModule:RequestTaskRescan("profileSelected")
-  taskScanModule:ScanTasks("profileSelected")
+  scanSchedulerModule:Request("profileSelected")
 
   module:UseProfile(profile)
 end
@@ -245,25 +235,9 @@ function module:UpdateBuffTabText()
   -- PanelTemplates_TabResize(t, 0)
 end
 
-function module:ScheduleUpdateTimer()
-  -- Cancel timer if exists
-  if self.throttleUpdateTimer then
-    BuffomatAddon:CancelTimer(BuffomatAddon.throttleUpdateTimer)
-    self.throttleUpdateTimer = nil
-  end
-
-  local interval = 0.5
-  if BuffomatShared.SlowerHardware then
-    interval = 1.5
-  end
-
-  self.throttleUpdateTimer = BuffomatAddon:ScheduleRepeatingTimer(throttleModule.UpdateTimer, interval)
-end
-
 function module:InitUI()
   taskListPanelModule:ShowWindow("buffomat:InitUI")
   taskListPanelModule:CheckWindowBounds()
-  self:ScheduleUpdateTimer()
 
   BuffomatAddon.popupMenuDynamic = popupModule:CreatePopup(module.OptionsUpdate)
 
@@ -285,7 +259,7 @@ function module:InitUI()
 
   module:OptionsInit()
   partyModule:InvalidatePartyCache()
-  BuffomatAddon.repeatUpdate = false
+  scanSchedulerModule:Start()
 end
 
 function module:InitGlobalStates()
@@ -345,8 +319,7 @@ function BuffomatAddon:MakeSlashCommand()
       command = "update",
       description = _t("SlashUpdate"),
       handler = function()
-        throttleModule:RequestTaskRescan("macro-/update")
-        taskScanModule:ScanTasks("macro-/update")
+        scanSchedulerModule:MarkAllDirty("slash:update")
       end
     },
     -- {
@@ -468,8 +441,7 @@ function module:OnFailedCast_LearnedDownrank()
           or BuffomatShared.TargetTooLowLevel[BuffomatAddon.castFailedSpellId] < failedTargetLevel
       then
         BuffomatShared.TargetTooLowLevel[BuffomatAddon.castFailedSpellId] = failedTargetLevel
-        throttleModule:FastUpdateTimer()
-        throttleModule:RequestTaskRescan("Downgrade")
+        scanSchedulerModule:Request("downrank")
 
         BuffomatAddon:Print(string.format(_t("error.castFailed.tooLowLevel"), failedBuff.singleText, failedTarget.name))
       elseif BuffomatShared.TargetTooLowLevel[BuffomatAddon.castFailedSpellId] >= failedTargetLevel then

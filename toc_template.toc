@@ -21,7 +21,6 @@ Src/KvLib/KvUnit.lua
 Src/KvLib/KvPlayer.lua
 Src/KvLib/KvEvents.lua
 Src/Buffomat.lua
-Src/Throttle.lua
 
 Src/KvLib/KvOptions.lua
 
@@ -73,6 +72,8 @@ Src/Cache/ItemListCache.lua
 Src/Cache/UnitCache.lua
 
 Src/Scan/ScanStats.lua
+Src/Scan/ScanScheduler.lua
+Src/Scan/ScanPass.lua
 
 Src/Ui/Options.lua
 Src/Ui/OptionsPopupMenu.lua

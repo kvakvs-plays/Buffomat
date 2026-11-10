@@ -11,7 +11,7 @@ local buffDefinitionModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefi
 local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 local ngStringsModule = LibStub("Buffomat-NgStrings") --[[@as NgStringsModule]]
-local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
+local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
 
 ---Formats a spell icon + spell name as a link
 -- TODO: Move to SpellDef class
@@ -369,7 +369,7 @@ function module:RequestSetup()
   C_Timer.After(1, function()
     self.setupRequested = false
     self:SetupAvailableSpells()
-    throttleModule:RequestTaskRescan("spellSetup")
+    scanSchedulerModule:Request("spellSetup")
   end)
 end
 

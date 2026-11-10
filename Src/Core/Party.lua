@@ -13,7 +13,6 @@ local BuffomatAddon = BuffomatAddon
 ---@field playerMana number Player current mana
 local module = LibStub("Buffomat-Party") --[[@as PartyModule]]
 
-local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
 
 ---@type BomBuffUpdatesPerUnit
 module.unitAurasLastUpdated = {}
@@ -191,7 +190,6 @@ function module:RefreshParty(party, invalidGroups)
 
   unitCacheModule.partyCache = party
   module:CleanUpBuffs(party)
-  throttleModule:RequestTaskRescan("reloadParty") -- always read all buffs on new party!
   return party
 end
 
@@ -212,20 +210,7 @@ function partyClass:GetPlayerAndPetUnit()
     self.playerPet = nil
   end
 
-  -- Refresh weapon-buffs
-  -- Clear old
-  local OldMainHandBuff = self.player.mainhandEnchantment
-  local OldOffHandBuff = self.player.offhandEnchantment
-
   self.player:UpdatePlayerWeaponEnchantments()
-
-  if OldMainHandBuff ~= self.player.mainhandEnchantment then
-    throttleModule:RequestTaskRescan("mainHandBuffChanged")
-  end
-
-  if OldOffHandBuff ~= self.player.offhandEnchantment then
-    throttleModule:RequestTaskRescan("offhandBuffChanged")
-  end
 end
 
 ---@return BomParty

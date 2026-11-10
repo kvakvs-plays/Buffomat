@@ -4,13 +4,12 @@ local module = LibStub("Buffomat-Options") --[[@as OptionsModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local languagesModule = _t
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
-local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local eventsModule = LibStub("Buffomat-Events") --[[@as EventsModule]]
 local taskScanModule = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
 local kvOptionsModule = LibStub("KvLibShared-Options") --[[@as KvOptionsModule]]
 local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
-local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
+local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local libIcon = LibStub("LibDBIcon-1.0")
 
@@ -83,11 +82,7 @@ function module:CreateGeneralOptionsTable()
         end
       ),
       useProfiles = self:TemplateCheckbox("UseProfiles", BuffomatCharacter, nil, nil),
-      slowerHardware = self:TemplateCheckbox("SlowerHardware", BuffomatShared, nil,
-        ---@diagnostic disable-next-line: unused-local
-        function(_key, _value)
-          buffomatModule:ScheduleUpdateTimer()
-        end),
+      slowerHardware = self:TemplateCheckbox("SlowerHardware", BuffomatShared, nil, nil),
       minimapButtonShow = {
         type = "toggle",
         name = _t("options.short.ShowMinimapButton"),
@@ -157,7 +152,7 @@ end
 ---@param name string BomSharedSettings field
 function module:TemplateForeverCheckbox(name)
   local checkbox = self:TemplateCheckbox(name, nil, nil, function()
-    throttleModule:RequestTaskRescan("options:" .. name)
+    scanSchedulerModule:Request("options:" .. name)
   end)
   checkbox.hidden = function() return not envModule.isForever end
   return checkbox
