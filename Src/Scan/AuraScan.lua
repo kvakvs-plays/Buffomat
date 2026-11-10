@@ -141,23 +141,16 @@ function module:ReadUnit(unit)
     end
   end
 
-  if unit.isPlayer then
-    unit:UpdatePlayerWeaponEnchantments()
-  end
-
   local changed = unit.auraSignature ~= signature
   unit.auraSignature = signature
   return changed
 end
 
 ---Aura-free mode: nothing is read from auras, and the player's are marked unreadable.
----Weapon enchants stay readable and are still stored with the player's buffs.
 ---@param roster BomRoster
 function module:SetAuraFree(roster)
   wipe(self.queue)
-  local player = roster.player
-  local changed = self:MarkUnreadable(player)
-  player:UpdatePlayerWeaponEnchantments()
+  local changed = self:MarkUnreadable(roster.player)
   if changed then
     self.version = self.version + 1
     self.drinkingCount = 0

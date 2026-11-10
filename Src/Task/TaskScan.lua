@@ -22,6 +22,7 @@ local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local buffTargetModule = LibStub("Buffomat-UnitBuffTarget") --[[@as BomUnitBuffTargetModule]]
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
+local kvPlayerModule = LibStub("KvLibShared-Player") --[[@as KvPlayerModule]]
 local groupBuffTargetModule = LibStub("Buffomat-GroupBuffTarget") --[[@as BomGroupBuffTargetModule]]
 local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
 local bagScanModule = LibStub("Buffomat-BagScan") --[[@as BagScanModule]]
@@ -51,10 +52,7 @@ local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPa
 --local nextCastSpell = {}
 
 function module:IsFlying()
-  if envModule.haveTBC then
-    return IsFlying() and not BuffomatShared.AutoDismountFlying
-  end
-  return false
+  return envModule.haveTBC and playerStateModule.isFlying and not BuffomatShared.AutoDismountFlying
 end
 
 ---Only pause the scan for a confirmed, unexpired global cooldown.
@@ -74,8 +72,7 @@ function module:IsInGlobalCooldown()
 
   local minValue = 0.05
   local maxValue = 0.3
-  local _kbsDown, _kbsUp, lagHome, lagWorld = GetNetStats()
-  local curPing = (lagHome + lagWorld) / 1000 + .025
+  local curPing = kvPlayerModule.GetLatency() + .025
 
   if curPing < minValue then
     curPing = minValue
@@ -90,21 +87,16 @@ function module:IsInGlobalCooldown()
   return true, cooldownEndTime
 end
 
-function module:IsInVehicle()
-  return type(UnitInVehicle) == "function" and UnitInVehicle("player")
-end
-
 ---@return boolean
 function module:IsMountedAndCrusaderAuraRequired()
-  if UnitOnTaxi("player") or self:IsInVehicle()
-  then
+  if playerStateModule.isOnTaxi or playerStateModule.isInVehicle then
     return false
   end
   local crusaderAuraShapeshiftForm = (envModule.isCata and 5) or 7
-  return BuffomatShared.AutoCrusaderAura                    -- if setting enabled
+  return BuffomatShared.AutoCrusaderAura                              -- if setting enabled
       and envModule.IsSpellKnown(spellIdsModule.Paladin_CrusaderAura) -- and has the spell
-      and (IsMounted() or self:IsFlying())                  -- and flying
-      and GetShapeshiftForm() ~= crusaderAuraShapeshiftForm -- and not crusader aura
+      and (playerStateModule.isMounted or self:IsFlying())            -- and flying
+      and playerStateModule.form ~= crusaderAuraShapeshiftForm        -- and not crusader aura
 end
 
 function module:CancelBuff(list)
@@ -354,7 +346,8 @@ end
 ---@param playerUnit BomUnit
 ---@return boolean, string {Active, WhyNotActive: string}
 function module:IsActive(playerUnit)
-  local _inInstance, instanceType = IsInInstance()
+  local state = playerStateModule
+  local instanceType = state.instanceType
 
   -- Cancel buff tasks if in combat (ALWAYS FIRST CHECK)
   if InCombatLockdown() then
@@ -365,7 +358,7 @@ function module:IsActive(playerUnit)
     return false, _t("castButton.inactive.MacroFrameShown")
   end
 
-  if UnitIsDeadOrGhost("player") then
+  if state.isDead then
     return false, _t("castButton.inactive.IsDead")
   end
 
@@ -387,32 +380,30 @@ function module:IsActive(playerUnit)
   end
 
   -- Cancel buff tasks if is in a resting area, and option to scan is not set
-  if not BuffomatShared.ScanInRestArea and IsResting() then
+  if not BuffomatShared.ScanInRestArea and state.isResting then
     return false, _t("castButton.inactive.RestArea")
   end
 
   -- Cancel buff task scan while mounted or on taxi
-  if UnitOnTaxi("player") then
+  if state.isOnTaxi then
     return false, _t("castButton.inactive.Taxi")
   end
-  if self:IsInVehicle() then
+  if state.isInVehicle then
     return false, _t("castButton.inactive.Vehicle")
   end
-  if not BuffomatShared.ScanWhileMounted and (IsMounted()) then
+  if not BuffomatShared.ScanWhileMounted and state.isMounted then
     return false, _t("castButton.inactive.Mounted")
   end
 
   -- Cancel buff tasks if is in stealth, and option to scan is not set
-  if not BuffomatShared.ScanInStealth and IsStealthed() then
+  if not BuffomatShared.ScanInStealth and state.isStealthed then
     return false, _t("castButton.inactive.IsStealth")
   end
 
-  -- Cancel buff tasks if is in stealth, and option to scan is not set
-  -- and current mana is < 90%
-  local spiritTapManaPercent = (BuffomatShared.ActivateBomOnSpiritTap or 0) * 0.01
-  local currentMana = partyModule.playerMana or envModule.UnitPower("player", 0) or 0
-  if playerUnit.allBuffs[spellIdsModule.Priest_SpiritTap]
-      and currentMana < (envModule.UnitPowerMax("player", 0) or 0) * spiritTapManaPercent then
+  -- With Spirit Tap running, let mana regenerate up to the configured share first
+  local spiritTapMana = state.maxMana * (BuffomatShared.ActivateBomOnSpiritTap or 0) * 0.01
+  if playerUnit.allBuffs[spellIdsModule.Priest_SpiritTap] and state.mana < spiritTapMana then
+    state.manaWakeLimit = spiritTapMana -- look again when there is that much
     return false, _t("castButton.inactive.PriestSpiritTap")
   end
 
@@ -435,7 +426,7 @@ function module:ActivateSelectedTracking()
     if buffDef.type == "tracking" then
       if buffDefModule:IsBuffEnabled(buffDef.buffId, nil) then
         if buffDef.requiresForm ~= nil then
-          if GetShapeshiftFormID() == buffDef.requiresForm
+          if playerStateModule.formId == buffDef.requiresForm
               and BuffomatAddon.forceTracking ~= buffDef.trackingIconId then
             BuffomatAddon.forceTracking = buffDef.trackingIconId
             --spellButtonsTabModule:UpdateSpellsTab("ForceUp1")
@@ -1215,7 +1206,7 @@ end
 
 ---@return boolean Whether class has a mainhand weapon and can enchant 1 or 2hand weapon, and is not a rogue in case of 2h
 function module:CharacterCanEnchantMainhand()
-  local mainhandId, _ = GetInventoryItemID("player", 16)
+  local mainhandId = playerStateModule.inventory[playerStateModule.SLOT_MAINHAND]
   if mainhandId == nil then
     return false
   end
@@ -1229,8 +1220,7 @@ end
 
 ---@return boolean Whether class has an offhand weapon and can enchant it
 function module:CharacterCanEnchantOffhand()
-  local offhandId, _ = GetInventoryItemID("player", 17)
-  return offhandId ~= nil
+  return playerStateModule.inventory[playerStateModule.SLOT_OFFHAND] ~= nil
 end
 
 ---@param buffDef BomBuffDefinition
@@ -1322,8 +1312,7 @@ function module:AddWeaponEnchant(buffDef, playerUnit, _buffCtx)
 
   -- Special handling for TBC shamans, you cannot specify slot for enchants,
   -- and it goes into main then offhand
-  local hasMainhand, _mhExpire, _mhCharges, _mhEnchantid
-  , _hasOffhand, _ohExpire, _ohCharges, _ohEnchantid = envModule.GetWeaponEnchantInfo()
+  local hasMainhand = playerStateModule.hasMainhandEnchant
 
   local profileBuff = profileModule:GetProfileBuff(buffDef.buffId, nil)
 
@@ -1371,12 +1360,9 @@ end
 ---Check if player has rep items equipped where they should not have them
 ---@param _playerMember BomUnit
 function module:CheckReputationItems(_playerMember)
-  local _name, _instanceType, _difficultyID, _difficultyName, _maxPlayers
-  , _dynamicDifficulty, _isDynamic, instanceID, _instanceGroupSize
-  , _LfgDungeonID = GetInstanceInfo()
-
-  local itemTrinket1, _ = GetInventoryItemID("player", 13)
-  local itemTrinket2, _ = GetInventoryItemID("player", 14)
+  local instanceID = playerStateModule.instanceId
+  local itemTrinket1 = playerStateModule.inventory[playerStateModule.SLOT_TRINKET1]
+  local itemTrinket2 = playerStateModule.inventory[playerStateModule.SLOT_TRINKET2]
 
   if BuffomatShared.ReputationTrinket then
     -- settings to remind to remove AD trinket != instance compatible with AD Commission
@@ -1402,26 +1388,13 @@ end
 ---Check player weapons and report if they have the "Warn about missing enchants" option enabled
 ---@param _playerUnit BomUnit
 function module:CheckMissingWeaponEnchantments(_playerUnit)
-  -- enchantment on weapons
-  ---@type boolean, number, number, number, boolean, number, number, number
-  local hasMainHandEnchant, _mainHandExpiration, _mainHandCharges, _mainHandEnchantID
-  , hasOffHandEnchant, _offHandExpiration, _offHandCharges, _offHandEnchantId = envModule.GetWeaponEnchantInfo()
-
-  if BuffomatShared.MainHand and not hasMainHandEnchant then
-    local link = GetInventoryItemLink("player", envModule.GetInventorySlotInfo("MainHandSlot"))
-
-    if link then
-      -- Text: [Consumable Enchant Link]
-      self.tasklist:Comment(_t("MSG_MAINHAND_ENCHANT_MISSING"))
-    end
+  local state = playerStateModule
+  if BuffomatShared.MainHand and not state.hasMainhandEnchant and state.inventory[state.SLOT_MAINHAND] then
+    self.tasklist:Comment(_t("MSG_MAINHAND_ENCHANT_MISSING"))
   end
 
-  if BuffomatShared.SecondaryHand and not hasOffHandEnchant then
-    local link = GetInventoryItemLink("player", envModule.GetInventorySlotInfo("SECONDARYHANDSLOT"))
-
-    if link then
-      self.tasklist:Comment(_t("MSG_OFFHAND_ENCHANT_MISSING"))
-    end
+  if BuffomatShared.SecondaryHand and not state.hasOffhandEnchant and state.inventory[state.SLOT_OFFHAND] then
+    self.tasklist:Comment(_t("MSG_OFFHAND_ENCHANT_MISSING"))
   end
 end
 
@@ -1476,6 +1449,17 @@ function module:CheckItemsAndContainers(playerUnit, _buffCtx)
   end
 end
 
+---A spell costs more mana than the player has: remember the cheapest such cost, so the
+---mana event that makes it affordable starts a pass.
+---@param cost number?
+function module:WaitForMana(cost)
+  local state = playerStateModule
+  if cost and cost > state.mana and cost < state.maxMana
+      and (state.manaWakeLimit == nil or cost < state.manaWakeLimit) then
+    state.manaWakeLimit = cost
+  end
+end
+
 ---@param buffDef BomBuffDefinition
 ---@param party BomParty
 ---@param buffCtx BomBuffScanContext
@@ -1484,16 +1468,8 @@ function module:CreateOneBuffTask(buffDef, party, buffCtx)
       and not buffDef.isInfo
       and not buffDef.isConsumable
   then
-    if buffDef.singleMana < partyModule.playerManaLimit
-        and buffDef.singleMana > partyModule.playerMana then
-      partyModule.playerManaLimit = buffDef.singleMana
-    end
-
-    if buffDef.groupMana
-        and buffDef.groupMana < partyModule.playerManaLimit
-        and buffDef.groupMana > partyModule.playerMana then
-      partyModule.playerManaLimit = buffDef.groupMana
-    end
+    self:WaitForMana(buffDef.singleMana)
+    self:WaitForMana(buffDef.groupMana)
   end
 
   if buffDef.type == "summon" then
@@ -1550,7 +1526,7 @@ function module:CreateOneBuffTask(buffDef, party, buffCtx)
         or buffDef.type == "aura"
         or buffDef.type == "seal")
   then
-    if buffDef.shapeshiftFormId and GetShapeshiftFormID() == buffDef.shapeshiftFormId then
+    if buffDef.shapeshiftFormId and playerStateModule.formId == buffDef.shapeshiftFormId then
       -- if spell is shapeshift, and is already active, skip it
     elseif #buffDef.unitsNeedBuff > 0 then
       -- self buffs are not pvp-guarded
@@ -1579,7 +1555,7 @@ function module:CreateBuffTasks(party, buffCtx)
 
     -- if spell is enabled and we're in the correct shapeshift form
     if buffDefModule:IsBuffEnabled(buffDef.buffId, nil)
-        and (buffDef.requiresForm == nil or GetShapeshiftFormID() == buffDef.requiresForm)
+        and (buffDef.requiresForm == nil or playerStateModule.formId == buffDef.requiresForm)
     then
       -- ================
       -- Scan entry point
@@ -1653,13 +1629,8 @@ function module:DoScan(context)
   -- cancel buffs
   self:CancelBuffs(context.party.player)
 
-  -- fill list and find cast
-  self:UpdatePlayerMana()
-
-  --self:ClearNextCastSpell()
-
   -- Cast crusader aura when mounted, without condition. Ignore all other buffs
-  if self:MountedCrusaderAuraPrompt() and not UnitOnTaxi("player") then
+  if self:MountedCrusaderAuraPrompt() and not playerStateModule.isOnTaxi then
     local task = taskModule:Create("Crusader", nil)
         :Action(actionMacroModule:New("/cast Crusader Aura", "Crusader Aura"))
         :InRange(true)
@@ -1679,16 +1650,6 @@ function module:DoScan(context)
 
     self:CheckItemsAndContainers(context.party.player, buffCtx)
   end
-end
-
----Store the player's current and max mana for the mana checks while creating tasks.
-function module:UpdatePlayerMana()
-  -- Forever can report player power as a secret value (wrapper returns nil).
-  -- Falling back to 0 made every spell CAN_CAST_OOM; assume full mana instead
-  -- and let the client reject a cast that is really unaffordable.
-  local maxMana = envModule.UnitPowerMax("player", 0)
-  partyModule.playerManaLimit = maxMana or 0
-  partyModule.playerMana = envModule.UnitPower("player", 0) or maxMana or math.huge
 end
 
 ---Whether a buff's need check reads only bags, weapon enchants, or tracking
@@ -1716,14 +1677,13 @@ function module:DoAuraFreeScan(context)
   local playerUnit = context.party.player
 
   self:ActivateSelectedTracking()
-  self:UpdatePlayerMana()
   BuffomatAddon.scanModifierKeyDown = false
 
   for _, buffDef in ipairs(allBuffsModule.selectedBuffs) do
     if self:IsAuraFreeBuff(buffDef, playerUnit) then
       self:UpdateMissingBuffs_EachBuff(context.party, buffDef, buffCtx)
       if buffDefModule:IsBuffEnabled(buffDef.buffId, nil)
-          and (buffDef.requiresForm == nil or GetShapeshiftFormID() == buffDef.requiresForm) then
+          and (buffDef.requiresForm == nil or playerStateModule.formId == buffDef.requiresForm) then
         self:CreateOneBuffTask(buffDef, context.party, buffCtx)
       end
     else

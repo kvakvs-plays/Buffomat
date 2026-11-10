@@ -199,7 +199,7 @@ local function fixture(mode, projectID)
   -- not block casting: scans only run outside combat and restrictions, and a
   -- blocked task leaves the cast button on "Nothing to do" with no recovery.
   libs["Buffomat-Task"] = { CAN_CAST_ON_CD = "cooldown", CAN_CAST_OK = "ok", CAN_CAST_OOM = "oom" }
-  libs["Buffomat-Party"] = { playerMana = 0 }
+  globals.LibStub("Buffomat-PlayerStateScan").mana = 0
   globals.LibStub("Buffomat-ScanScheduler").WakeAt = function(_, time) state.wakeAt = time end
   loadModule("Src/Task/ActionCast.lua", globals)
   local action = libs["Buffomat-ActionCast"]:New(0, 42, "", {}, nil, false)
@@ -211,6 +211,7 @@ local function fixture(mode, projectID)
   equal(action:CanCast(), "ok", "ready spell is castable")
   equal(libs["Buffomat-ActionCast"]:New(10, 42, "", {}, nil, false):CanCast(), "oom")
   state.cooldown = nil
+  loadModule("Src/KvLib/KvPlayer.lua", globals)
   loadModule("Src/Task/TaskScan.lua", globals)
   local scan = libs["Buffomat-TaskScan"]
   equal(scan:IsInGlobalCooldown(), false, "unavailable GCD probe must not block the scan")

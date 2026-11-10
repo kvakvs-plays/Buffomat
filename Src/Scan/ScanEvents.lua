@@ -15,7 +15,6 @@ local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local kvEventsModule = LibStub("KvLibShared-Events") --[[@as KvEventsModule]]
 local kvPlayerModule = LibStub("KvLibShared-Player") --[[@as KvPlayerModule]]
 local kvUnitModule = LibStub("KvLibShared-Unit") --[[@as KvUnitModule]]
-local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local playerStateModule = LibStub("Buffomat-PlayerStateScan") --[[@as PlayerStateScanModule]]
 local rosterScanModule = LibStub("Buffomat-RosterScan") --[[@as RosterScanModule]]
 local scheduler = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
@@ -50,6 +49,9 @@ end
 local function onUnitPet(_event, unitId)
   if isScannedUnit(unitId) and not rosterScanModule.roster.isRaid or unitId == "player" then
     scheduler:MarkDirty("roster")
+  end
+  if unitId == "player" then
+    scheduler:MarkDirty("player") -- some buffs depend on which pet is out
   end
 end
 
@@ -111,8 +113,9 @@ local function onPlayerPower(_event, _unitId, powerType)
     return
   end
   -- Only interesting once there is enough mana for the cheapest spell that was too expensive
+  local limit = playerStateModule.manaWakeLimit
   local mana = envModule.UnitPower("player", 0)
-  if mana ~= nil and (partyModule.playerManaLimit or 0) <= mana then
+  if limit ~= nil and mana ~= nil and limit <= mana then
     scheduler:MarkDirty("player")
   end
 end
@@ -209,6 +212,19 @@ function module:RegisterAuraEvent()
   end
 end
 
+---Take mana events only while a task waits for mana.
+---@param watch boolean
+function module:SetManaWatch(watch)
+  if watch == self.dispatcher:IsRegistered("UNIT_POWER_UPDATE") then
+    return
+  end
+  if watch then
+    self.dispatcher:OnUnit("UNIT_POWER_UPDATE", onPlayerPower, "player")
+  else
+    self.dispatcher:Off("UNIT_POWER_UPDATE")
+  end
+end
+
 ---Register the scan events. Called once, when the addon is enabled.
 function module:Init()
   local dispatcher = kvEventsModule.NewDispatcher()
@@ -252,7 +268,7 @@ function module:Init()
   dispatcher:On("ZONE_CHANGED_NEW_AREA", onZoneChanged)
   dispatcher:OnUnit("UNIT_ENTERED_VEHICLE", onPlayerStateChanged, "player")
   dispatcher:OnUnit("UNIT_EXITED_VEHICLE", onPlayerStateChanged, "player")
-  dispatcher:OnUnit("UNIT_POWER_UPDATE", onPlayerPower, "player")
+  dispatcher:OnUnit("UNIT_FACTION", onPlayerStateChanged, "player") -- the PvP flag
 
   -- Casting
   dispatcher:OnUnit("UNIT_SPELLCAST_START", onCastStart, "player")

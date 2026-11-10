@@ -176,16 +176,13 @@ for _, modern in ipairs({ false, true }) do
     equal(member.auraDataUnavailable, false); equal(member.NeedBuff, true)
   end
 
-  -- Aura-free mode: the player's auras are unreadable, weapon enchants still are
-  f.state.weapon.main = { timeLeft = 60000, enchantId = 77 }
-  f:lib("Buffomat-AllBuffs").enchantToSpellLookup = { [77] = 8000 }
-  f:lib("Buffomat-AllBuffs").buffFromSpellIdLookup = {}
+  -- Aura-free mode: the player's auras are unreadable
   rosterScan:Rebuild({ auras = {}, status = {} }, true)
   f:resetCalls()
   auraScan:SetAuraFree(roster)
   equal(f:calls("aura"), 0, "no aura is read in aura-free mode")
   equal(roster.player.auraDataUnavailable, true); equal(roster.player.knownBuffs[FORTITUDE], nil)
-  equal(roster.player.mainhandEnchantment, 8000); equal(roster.player.weaponDataUnavailable, false)
+  equal(roster.player.NeedBuff, false)
 
   print("PASS: " .. (modern and "modern" or "legacy") .. " aura reads, budget, change detection and aura-free mode")
 end

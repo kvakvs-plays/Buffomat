@@ -103,15 +103,6 @@ for _, client in ipairs({
   local main, mainTime, mainCharges, mainID, off, offTime, offCharges, offID = env.GetWeaponEnchantInfo()
   equal(main, true); equal(mainTime, 120000); equal(mainCharges, 3); equal(mainID, 10)
   equal(off, true); equal(offTime, 60000); equal(offCharges, 2); equal(offID, 20)
-  loadModule("Src/Core/Buff.lua", globals)
-  loadModule("Src/Core/Unit.lua", globals)
-  libs["Buffomat-AllBuffs"].enchantToSpellLookup = { [10] = 100, [20] = 200 }
-  libs["Buffomat-AllBuffs"].buffFromSpellIdLookup = {}
-  local player = libs["Buffomat-Unit"]:New({ knownBuffs = {} })
-  player:UpdatePlayerWeaponEnchantments()
-  equal(player.mainhandEnchantment, 100); equal(player.offhandEnchantment, 200)
-  equal(player.knownBuffs[100].expirationTime, 220, "mainhand milliseconds converted once")
-  equal(player.knownBuffs[-200].expirationTime, 160, "offhand milliseconds converted once")
   if modern then
     for _, key in ipairs({ "hasEnchant", "timeLeft", "charges", "enchantID" }) do
       local saved = state.main[2][key]
@@ -120,12 +111,9 @@ for _, client in ipairs({
       state.main[2][key] = saved
     end
     state.main = nil
-    player:UpdatePlayerWeaponEnchantments()
-    equal(player.auraDataUnavailable, true, "unavailable enchant pauses decisions")
+    equal(env.GetWeaponEnchantInfo(), nil, "missing enchant data is unavailable, not unenchanted")
     state.main, state.off = {}, {}
     equal(env.GetWeaponEnchantInfo(), false, "empty weapon slot is readable")
-    player:UpdatePlayerWeaponEnchantments()
-    equal(player.mainhandEnchantment, nil); equal(player.offhandEnchantment, nil)
   end
 
   equal(env.UnitPower("player", 0), 100); equal(env.UnitPowerMax("player", 0), 200)

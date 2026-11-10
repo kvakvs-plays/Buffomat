@@ -30,7 +30,6 @@ end
 
 for _, modern in ipairs({ false, true }) do
   local f, scheduler, passes = setup({ modern = modern })
-  local party = f:lib("Buffomat-Party")
   local rosterScan = f:lib("Buffomat-RosterScan")
   rosterScan.roster = { isRaid = false, byUnitId = { player = {} } }
   rosterScan.ForgetResurrections = function() f.state.resurrectionsForgotten = true end
@@ -109,7 +108,8 @@ for _, modern in ipairs({ false, true }) do
 
   -- Mana only matters once the cheapest unaffordable spell becomes affordable
   before = #passes
-  party.playerManaLimit = 500
+  playerState.manaWakeLimit = 500
+  events:SetManaWatch(true)
   f.state.mana = 300
   f:fire("UNIT_POWER_UPDATE", "player", "MANA")
   f:advance(0.3)
@@ -125,6 +125,10 @@ for _, modern in ipairs({ false, true }) do
   f:fire("UNIT_POWER_UPDATE", "player", "MANA")
   f:advance(0.3)
   equal(#passes, before + 1); equal(passes[#passes].domains.player, true)
+  events:SetManaWatch(false)
+  f:fire("UNIT_POWER_UPDATE", "player", "MANA")
+  f:advance(0.3)
+  equal(#passes, before + 1, "no mana events while nothing waits for mana")
 
   -- A target outside the group, with the BuffTarget option
   before = #passes

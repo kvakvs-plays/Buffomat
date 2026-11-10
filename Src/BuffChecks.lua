@@ -8,6 +8,7 @@ local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionM
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local spellIdsModule = LibStub("Buffomat-SpellIds") --[[@as SpellIdsModule]]
+local playerStateModule = LibStub("Buffomat-PlayerStateScan") --[[@as PlayerStateScanModule]]
 local rosterScanModule = LibStub("Buffomat-RosterScan") --[[@as RosterScanModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
@@ -18,18 +19,7 @@ local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedu
 ---Checks whether a tracking spell is now active
 ---@param spell BomBuffDefinition The tracking spell which might have tracking enabled
 function module:IsTrackingActive(spell)
-  if envModule.usesTrackingSettings then
-    for i = 1, envModule.GetNumTrackingTypes() do
-      local _name, _texture, active, _category, _nesting, spellId = envModule.GetTrackingInfo(i)
-      if tContains(spell.singleFamily, spellId) then
-        return active
-      end
-    end
-    -- not found
-    return false
-  else
-    return envModule.GetTrackingTexture ~= nil and envModule.GetTrackingTexture() == spell.trackingIconId
-  end
+  return playerStateModule:IsTrackingActive(spell)
 end
 
 ---@param expirationTime number Buff expiration time
@@ -123,7 +113,7 @@ function module:WeaponFitsBuff(buff, slot)
   if not buff.weaponSubclasses then
     return true
   end
-  local itemId = GetInventoryItemID("player", slot)
+  local itemId = playerStateModule.inventory[slot]
   if itemId == nil then
     return false
   end
@@ -271,7 +261,7 @@ function module:PlayerNeedsTracking(buff, playerUnit)
   -- in cat form and track humanoids is enabled
   if (buff.highestRankSingleId == spellIdsModule.FindHerbs or
         buff.highestRankSingleId == spellIdsModule.FindMinerals)
-      and GetShapeshiftFormID() == envModule.CAT_FORM
+      and playerStateModule.formId == envModule.CAT_FORM
       and buffDefModule:IsBuffEnabled(spellIdsModule.Druid_TrackHumanoids, nil) then
     -- Do nothing - ignore herbs and minerals in catform if enabled track humanoids
   elseif not self:IsTrackingActive(buff)

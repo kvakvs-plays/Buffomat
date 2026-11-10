@@ -10,6 +10,7 @@ local auraScanModule = LibStub("Buffomat-AuraScan") --[[@as AuraScanModule]]
 local bagScanModule = LibStub("Buffomat-BagScan") --[[@as BagScanModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local kvUnitModule = LibStub("KvLibShared-Unit") --[[@as KvUnitModule]]
+local playerStateModule = LibStub("Buffomat-PlayerStateScan") --[[@as PlayerStateScanModule]]
 local rosterScanModule = LibStub("Buffomat-RosterScan") --[[@as RosterScanModule]]
 local scanEventsModule = LibStub("Buffomat-ScanEvents") --[[@as ScanEventsModule]]
 local scheduler = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
@@ -40,9 +41,6 @@ function module:Read(pending, pendingUnits, auraFree)
   if auraFree then
     auraScanModule:SetAuraFree(roster)
   else
-    if pending.weapon then
-      pendingUnits.auras.player = true -- weapon enchants are stored with the player's buffs
-    end
     auraScanModule:Enqueue(roster, pending.auras == true, pendingUnits.auras)
     more = auraScanModule:ReadQueued(roster)
   end
@@ -50,6 +48,17 @@ function module:Read(pending, pendingUnits, auraFree)
   -- Until the range reader is split out, every pass measures every unit
   for _, unit in ipairs(roster.units) do
     unit.distance = kvUnitModule.DistanceSquared(unit.unitId)
+  end
+
+  if pending.player or playerStateModule.version == 0 then
+    playerStateModule:Read()
+  end
+  if pending.weapon then
+    playerStateModule:ReadEquipment(roster.player)
+    if playerStateModule.enchantExpiresAt then
+      -- The end of a weapon enchant does not reliably send an event
+      scheduler:WakeAt(playerStateModule.enchantExpiresAt + 0.5, "weapon")
+    end
   end
 
   if pending.bags or bagScanModule:NeedsRead() then
@@ -89,7 +98,10 @@ function module:Run(pending, pendingUnits)
     return "continue"
   end
 
+  playerStateModule.manaWakeLimit = nil
   local active = taskScanModule:ScanTasks(roster, auraFree)
+  -- Mana events are only wanted while something waits for mana
+  scanEventsModule:SetManaWatch(playerStateModule.manaWakeLimit ~= nil)
 
   if active then
     if roster.hasDead then

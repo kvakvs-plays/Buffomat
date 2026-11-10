@@ -1,10 +1,9 @@
-local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
+-- A group member, the player, or a pet, as the scan sees it. The fields are filled by
+-- the readers in Src/Scan: identity and status by RosterScan, buffs by AuraScan, weapon
+-- enchants by PlayerStateScan, distance by RangeScan.
 
 ---@class UnitModule
 local module = LibStub("Buffomat-Unit") --[[@as UnitModule]]
-
-local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
-local buffModule = LibStub("Buffomat-Buff") --[[@as BuffModule]]
 
 ---@alias BomBuffidBuffLookup {[BomBuffId]: BomUnitBuff}
 
@@ -17,8 +16,6 @@ local buffModule = LibStub("Buffomat-Buff") --[[@as BuffModule]]
 ---@field group number Raid group number (9 if temporary moved out of the raid by BOM)
 ---@field guid string? Identity of the character behind the unit id
 ---@field auraSignature number? Checksum of the last aura read, to tell a real change from a repeated event
----@field hasReputationTrinket boolean Has AD reputation trinket equipped
----@field hasRidingTrinket boolean Has carrot riding trinket equipped
 ---@field hasResurrection boolean Was recently resurrected
 ---@field isConnected boolean Is online
 ---@field isDrinking boolean? Has a drinking buff
@@ -56,90 +53,4 @@ end
 
 function unitClass:GetText()
   return self.link or self.name
-end
-
-function unitClass:ClearMainhandBuff()
-  self.mainhandEnchantment = nil
-end
-
----@param enchantmentId BomEnchantmentId
----@param expiration number
-function unitClass:SetMainhandBuff(enchantmentId, expiration)
-  local enchantBuffId = allBuffsModule.enchantToSpellLookup[enchantmentId]
-  local duration
-
-  if allBuffsModule.buffFromSpellIdLookup[enchantBuffId]
-      and allBuffsModule.buffFromSpellIdLookup[enchantBuffId].singleDuration
-  then
-    duration = allBuffsModule.buffFromSpellIdLookup[enchantBuffId].singleDuration
-  else
-    duration = 300
-  end
-
-  self.knownBuffs[enchantBuffId] = buffModule:New(
-    enchantBuffId,
-    duration,
-    GetTime() + expiration / 1000,
-    "player",
-    true)
-  self.mainhandEnchantment = enchantBuffId
-end
-
-function unitClass:ClearOffhandBuff()
-  self.offhandEnchantment = nil
-end
-
----@param enchantmentId BomEnchantmentId
----@param expiration number
-function unitClass:SetOffhandBuff(enchantmentId, expiration)
-  local enchantBuffId = allBuffsModule.enchantToSpellLookup[enchantmentId]
-  local duration
-
-  if allBuffsModule.buffFromSpellIdLookup[enchantBuffId]
-      and allBuffsModule.buffFromSpellIdLookup[enchantBuffId].singleDuration
-  then
-    duration = allBuffsModule.buffFromSpellIdLookup[enchantBuffId].singleDuration
-  else
-    duration = 300
-  end
-
-  self.knownBuffs[-enchantBuffId] = buffModule:New(
-    -enchantBuffId,
-    duration,
-    GetTime() + expiration / 1000,
-    "player",
-    true)
-
-  self.offhandEnchantment = enchantBuffId
-end
-
-function unitClass:UpdatePlayerWeaponEnchantments()
-  ---@type boolean, number, number, BomEnchantmentId, boolean, number, number, BomEnchantmentId
-  local hasMainHandEnchant, mainHandExpiration, _mainHandCharges, mainHandEnchantID
-  , hasOffHandEnchant, offHandExpiration, _offHandCharges, offHandEnchantId = envModule.GetWeaponEnchantInfo()
-
-  if hasMainHandEnchant == nil or hasOffHandEnchant == nil then
-    self.auraDataUnavailable = true
-    self.weaponDataUnavailable = true
-    self.NeedBuff = false
-    return self
-  end
-  self.weaponDataUnavailable = false
-
-  if hasMainHandEnchant and mainHandEnchantID
-      and allBuffsModule.enchantToSpellLookup[mainHandEnchantID] then
-    self:SetMainhandBuff(mainHandEnchantID, mainHandExpiration)
-  else
-    self:ClearMainhandBuff()
-  end
-
-  if hasOffHandEnchant
-      and offHandEnchantId
-      and allBuffsModule.enchantToSpellLookup[offHandEnchantId] then
-    self:SetOffhandBuff(offHandEnchantId, offHandExpiration)
-  else
-    self:ClearOffhandBuff()
-  end
-
-  return self
 end

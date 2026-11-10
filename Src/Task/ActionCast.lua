@@ -4,7 +4,7 @@ local BuffomatAddon = BuffomatAddon
 local module = LibStub("Buffomat-ActionCast") --[[@as ActionCastModule]]
 
 local taskModule = LibStub("Buffomat-Task") --[[@as TaskModule]]
-local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
+local playerStateModule = LibStub("Buffomat-PlayerStateScan") --[[@as PlayerStateScanModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
@@ -58,7 +58,7 @@ function actionCastClass:CanCast()
     return taskModule.CAN_CAST_IS_DEAD
   end
 
-  if self.manaCost > partyModule.playerMana then
+  if self.manaCost > playerStateModule.mana then
     return taskModule.CAN_CAST_OOM
   end
 
