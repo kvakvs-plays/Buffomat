@@ -13,11 +13,26 @@ local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedu
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local libIcon = LibStub("LibDBIcon-1.0")
 
+---Any option can change what a scan decides or shows, and nothing else tells the scanner
+---about it: every option change asks for a new evaluation.
+---@param name string Option name
+---@param notify function|nil The option's own change handler
+---@return function notify
+local function requestScanThen(name, notify)
+  return function(...)
+    scanSchedulerModule:Request("option:" .. name)
+    if notify then
+      return notify(...)
+    end
+  end
+end
+
 ---@param dict table|nil
 ---@param key string|nil
 ---@param notify function|nil Call this with (key, value) on option change
 function module:TemplateCheckbox(name, dict, key, notify)
-  return kvOptionsModule:TemplateCheckbox(name, dict or BuffomatShared, key or name, notify, _t)
+  return kvOptionsModule:TemplateCheckbox(name, dict or BuffomatShared, key or name, requestScanThen(name, notify),
+    _t)
 end
 
 ---@param name string
@@ -30,7 +45,8 @@ end
 ---@param dict table|nil
 ---@param notifyFn function|nil Call this with (key, value) on option change
 function module:TemplateMultiselect(name, values, dict, notifyFn, setFn, getFn)
-  return kvOptionsModule:TemplateMultiselect(name, values, dict or BuffomatShared, notifyFn, setFn, getFn, _t)
+  return kvOptionsModule:TemplateMultiselect(name, values, dict or BuffomatShared,
+    requestScanThen(name, notifyFn), setFn, getFn, _t)
 end
 
 ---@param values table|function Key is sent to the setter, value is the string displayed
@@ -38,22 +54,24 @@ end
 ---@param style string|nil "dropdown" or "radio"
 ---@param notifyFn function|nil Call this with (key, value) on option change
 function module:TemplateSelect(name, values, style, dict, notifyFn, setFn, getFn)
-  return kvOptionsModule:TemplateSelect(name, values, style, dict or BuffomatShared, notifyFn, setFn, getFn, _t)
+  return kvOptionsModule:TemplateSelect(name, values, style, dict or BuffomatShared,
+    requestScanThen(name, notifyFn), setFn, getFn, _t)
 end
 
 ---@param dict table|nil
 ---@param key string|nil
 ---@param notify function|nil Call this with (key, value) on option change
 function module:TemplateInput(type, name, dict, key, notify)
-  return kvOptionsModule:TemplateInput(type, name, dict or BuffomatShared, key or name, notify, _t)
+  return kvOptionsModule:TemplateInput(type, name, dict or BuffomatShared, key or name,
+    requestScanThen(name, notify), _t)
 end
 
 ---@param dict table|nil
 ---@param key string|nil
 ---@param notify function|nil Call this with (key, value) on option change
 function module:TemplateRange(name, rangeFrom, rangeTo, step, dict, key, notify)
-  return kvOptionsModule:TemplateRange(name, rangeFrom, rangeTo, step, dict or BuffomatShared, key or name, notify,
-    _t)
+  return kvOptionsModule:TemplateRange(name, rangeFrom, rangeTo, step, dict or BuffomatShared, key or name,
+    requestScanThen(name, notify), _t)
 end
 
 function module:CreateGeneralOptionsTable()
@@ -148,12 +166,9 @@ function module:CreateLanguageOption()
 end
 
 ---A checkbox shown only on WoW: Forever; its label has the "[Forever]" prefix in the translations.
----Changing it rescans, so a reminder task appears or goes away at once.
 ---@param name string BomSharedSettings field
 function module:TemplateForeverCheckbox(name)
-  local checkbox = self:TemplateCheckbox(name, nil, nil, function()
-    scanSchedulerModule:Request("options:" .. name)
-  end)
+  local checkbox = self:TemplateCheckbox(name, nil, nil, nil)
   checkbox.hidden = function() return not envModule.isForever end
   return checkbox
 end

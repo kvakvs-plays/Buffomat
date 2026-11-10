@@ -167,6 +167,7 @@ function module:Evaluate(roster, auraFree)
   local tasklist, result = self.tasklist, self.result
   local hadTasks = #tasklist.tasks > 0
   tasklist:Clear()
+  playerStateModule:ReadMana()
   playerStateModule.manaWakeLimit = nil
   rangeScanModule:BeginPass()
 
@@ -197,6 +198,10 @@ end
 ---Timers which stand in for events the game does not send.
 ---@param roster BomRoster
 function module:ArmWatchTimers(roster)
+  if playerStateModule:CanTakeOff() then
+    -- Also while paused: landing is what ends the "flying" pause
+    scheduler:WakeAfter(scheduler.FLIGHT_WATCH, "player")
+  end
   if not self.wasActive then
     -- Paused: events are still read, but nothing is polled
     scheduler:CancelWake("deadWatch")

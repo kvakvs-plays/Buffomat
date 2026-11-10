@@ -44,7 +44,7 @@ stds.wow = { read_globals = {
   "GetMacroInfo", "GetNetStats", "GetNumGuildMembers", "GetNumMacros", "GetNumTrackingTypes",
   "GetPlayerInfoByGUID", "GetRaidRosterInfo", "GetShapeshiftForm", "GetShapeshiftFormID", "GetSpellCooldown",
   "GetSpellInfo", "GetSpellPowerCost", "GetSpellSubtext", "GetTime", "GetTrackingInfo", "GetTrackingTexture",
-  "GetWeaponEnchantInfo", "ICON_TAG_LIST", "InCombatLockdown", "IsAltKeyDown", "IsFlying", "IsInGroup",
+  "GetWeaponEnchantInfo", "geterrorhandler", "ICON_TAG_LIST", "InCombatLockdown", "IsAltKeyDown", "IsFlying", "IsInGroup",
   "IsInInstance", "IsInRaid", "IsItemInRange", "IsModifierKeyDown", "IsMounted", "IsOutdoors", "IsResting",
   "IsShiftKeyDown", "IsSpellInRange", "IsSpellKnown", "IsStealthed", "Item", "ITEM_MOD_AGILITY_SHORT",
   "ITEM_MOD_ATTACK_POWER_SHORT", "ITEM_MOD_CRIT_RATING_SHORT", "ITEM_MOD_DODGE_RATING_SHORT",

@@ -62,7 +62,7 @@ local changed = false -- set while filling units during a rebuild
 ---@param unit BomUnit
 ---@param isPet boolean
 local function describeUnit(unit, isPet)
-  local class = not isPet and kvUnitModule.GetPlayerClass(unit.guid) or nil
+  local class = not isPet and (kvUnitModule.GetPlayerClass(unit.guid) or kvUnitModule.GetClass(unit.unitId)) or nil
   if class then
     local color = constModule.CLASS_COLOR[class]
     unit.class = class

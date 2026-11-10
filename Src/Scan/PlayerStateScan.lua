@@ -77,15 +77,39 @@ local function set(key, value)
   end
 end
 
+-- Shapeshift form ids of the druid flight forms: swift flight form and flight form
+local FLIGHT_FORMS = { [27] = true, [29] = true }
+
+---@return number mana Current mana
+---@return number maxMana 0 when the client hides it
+local function readMana()
+  -- Forever can hide the player's power. Falling back to 0 made every spell too
+  -- expensive; assume full mana instead and let the client reject a cast.
+  local maxMana = envModule.UnitPowerMax("player", 0)
+  return envModule.UnitPower("player", 0) or maxMana or math.huge, maxMana or 0
+end
+
+---Mana regenerates without an event the scan listens to, so every evaluation reads it
+---first. This is not a change which asks for an evaluation: only a task which waits for
+---mana cares, and that one watches the power events.
+function module:ReadMana()
+  self.mana, self.maxMana = readMana()
+end
+
+---Whether the player may take off or land at any moment. Neither sends an event.
+---@return boolean
+function module:CanTakeOff()
+  return envModule.haveTBC == true
+      and (self.isMounted or self.isFlying or FLIGHT_FORMS[self.formId or 0] == true)
+end
+
 ---Read the player's state.
 ---@return boolean changed
 function module:Read()
   changed = false
-  -- Forever can hide the player's power. Falling back to 0 made every spell too
-  -- expensive; assume full mana instead and let the client reject a cast.
-  local maxMana = envModule.UnitPowerMax("player", 0)
-  set("maxMana", maxMana or 0)
-  set("mana", envModule.UnitPower("player", 0) or maxMana or math.huge)
+  local mana, maxMana = readMana()
+  set("maxMana", maxMana)
+  set("mana", mana)
 
   set("level", kvUnitModule.GetLevel("player"))
   set("isDead", kvPlayerModule.IsDeadOrGhost())

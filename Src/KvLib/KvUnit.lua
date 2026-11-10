@@ -216,7 +216,7 @@ end
 function module.GetRaidSlot(raidIndex)
   local name, _rank, subgroup, _level, _class, _fileName, _zone, _online, _isDead, role, _isML, combatRole =
       getRaidRosterInfo(raidIndex)
-  if name == nil or isSecret(name) or isSecret(subgroup) or isSecret(role) or isSecret(combatRole) then
+  if isSecret(name) or name == nil or isSecret(subgroup) or isSecret(role) or isSecret(combatRole) then
     return nil
   end
   if role == "MAINTANK" or role == "MAINASSIST" then
@@ -229,6 +229,23 @@ end
 
 local unitIsPlayer, unitIsOtherPlayersPet = UnitIsPlayer, UnitIsOtherPlayersPet
 local unitInParty, unitInRaid, unitCanCooperate = UnitInParty, UnitInRaid, UnitCanCooperate
+
+local unitClass = UnitClass
+
+---Class of a player behind a unit id. Answers also for a member who just joined or is far
+---away, when the lookup by GUID does not know the character yet.
+---@param unit string
+---@return ClassName? class Class token such as "PRIEST"; nil for pets and other creatures
+function module.GetClass(unit)
+  if not plainTrue(unitIsPlayer(unit)) then
+    return nil -- creatures have a class too, and it is not what a pet is buffed by
+  end
+  local _, class = unitClass(unit)
+  if isSecret(class) then
+    return nil
+  end
+  return class
+end
 
 ---A player or another player's pet outside the group which the player could buff.
 ---@param unit string

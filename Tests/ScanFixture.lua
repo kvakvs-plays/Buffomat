@@ -134,6 +134,14 @@ function fixtureClass:item(bag, slot, itemId, count, fields)
   }
 end
 
+---An error which the code under test caught and reported still fails the test, unless the
+---test set `state.expectErrors`.
+function fixtureClass:checkErrors()
+  if #self.errors > 0 and not self.state.expectErrors then
+    error("reported error: " .. self.errors[1], 0)
+  end
+end
+
 ---Deliver a game event to every frame and AceEvent handler registered for it.
 ---@param event string
 function fixtureClass:fire(event, ...)
@@ -149,6 +157,7 @@ function fixtureClass:fire(event, ...)
   if handler then
     handler(event, ...)
   end
+  self:checkErrors()
 end
 
 ---Move the clock forward, running the timers which come due, in order.
@@ -171,6 +180,7 @@ function fixtureClass:advance(seconds)
     nextTimer.fn()
   end
   self.state.now = target
+  self:checkErrors()
 end
 
 ---@return number count Timers waiting to fire
@@ -201,7 +211,7 @@ function fixture.new(options)
   local modern = options.modern == true
   local fx = setmetatable({
     libs = {}, units = {}, raidRoster = {}, bags = {}, frames = {}, timers = {}, aceHandlers = {},
-    printed = {}, secret = {},
+    printed = {}, secret = {}, errors = {},
     state = {
       now = 1000, calls = {}, inCombat = false, inRaid = false, inGroup = false, restrictions = {},
       mounted = false, flying = false, resting = false, stealthed = false, outdoors = true, taxi = false,
@@ -266,6 +276,9 @@ function fixture.new(options)
     RAID_CLASS_COLORS = setmetatable({}, { __index = function() return { colorStr = "ffffffff" } end }),
     LibStub = function(name) return fx:lib(name) end,
     GetTime = function() return state.now end,
+    geterrorhandler = function()
+      return function(message) table.insert(fx.errors, tostring(message)) end
+    end,
     InCombatLockdown = function() return state.inCombat end,
     wipe = function(t) for key in pairs(t) do t[key] = nil end return t end,
     tContains = function(t, value)
@@ -306,7 +319,7 @@ function fixture.new(options)
     end,
     GetPlayerInfoByGUID = function(guid)
       for _, unit in pairs(units) do
-        if unit.guid == guid then return unit.class, unit.class end
+        if unit.guid == guid and not unit.guidInfoMissing then return unit.class, unit.class end
       end
     end,
     UnitExists = function(unitId) return units[unitId] ~= nil end,

@@ -199,3 +199,28 @@ do
   equal(#passes, 7)
   print("PASS: blocked and continuing passes, slower hardware")
 end
+
+-- An error in a pass is reported and scanning goes on
+do
+  local f, scheduler, passes = setup()
+  scheduler:Start(); f:advance(1)
+  f.state.expectErrors = true
+  f.state.onPass = function()
+    f.state.onPass = nil
+    error("broken pass")
+  end
+  scheduler:MarkDirty("auras", "raid3")
+  f:advance(0.2)
+  equal(#passes, 2); equal(#f.errors, 1, "the error reached the error handler")
+  equal(scheduler.inPass, false)
+  f:advance(4)
+  equal(#passes, 2, "no retry at once")
+  f:advance(1.5)
+  equal(#passes, 3, "the failed pass is run again")
+  equal(passes[3].auras.raid3, true, "with what it was asked to read"); equal(passes[3].domains.settings, true)
+  scheduler:MarkDirty("bags")
+  f:advance(0.3)
+  equal(#passes, 4, "events schedule passes as before")
+  equal(#f.errors, 1)
+  print("PASS: an error in a pass is reported and does not stop scanning")
+end

@@ -70,6 +70,25 @@ Where the implementation differs from the plan below, this list is right:
 - **Removed as dead code:** `WhisperExpired` (the flag it tested was never set) and
   `BuffomatAddon.lastAura`. `SomeoneIsDrinking` is kept but, as before, nothing calls it.
 
+After step 9 the new code was reviewed against the Blizzard UI source and Ace3. What that changed:
+
+- **An error in a pass** is caught (`envModule.SafeCall`), reported to the client's error handler,
+  and the pass is run again after `ERROR_RETRY` (5 s). Before, it left `inPass` set and scanning
+  stopped until a reload.
+- **Mana** is read at the start of every evaluation (`PlayerStateScan:ReadMana`), not only when the
+  `player` domain is dirty: it regenerates without an event the scan listens to.
+- **Settings.** Every option (`Options.lua` templates) and every choice in the spells dialog calls
+  `Request`. The old loop picked such changes up by rescanning all the time.
+- **State without an event.** The macro frame's `OnShow` / `OnHide` are hooked (`Src/Events.lua`).
+  `MINIMAP_UPDATE_ZOOM` marks `player` (walking indoors or outdoors). Where flying exists, a
+  mounted player or a druid in flight form is read again every `FLIGHT_WATCH` (2 s), also while
+  paused, because taking off and landing send nothing.
+- **Roster.** A member whose class the GUID lookup does not know yet gets it from `UnitClass`
+  (`KvUnit.GetClass`); `UNIT_NAME_UPDATE` of a member rebuilds the roster.
+- **Window.** "Open" is `IsShown`, not `IsVisible`: with the whole interface hidden the window was
+  re-opened, and a pass requested, five times a second.
+- `UNIT_AURA` is no longer registered again by a roster event during combat.
+
 Defects of the old code fixed on the way:
 
 - An item on cooldown made a full scan run twice a second (relative time in `nextCooldownDue`).
@@ -347,6 +366,7 @@ refuses an event name the client does not have, so every row is "if valid". "pla
 | Event | Registration | Effect |
 |---|---|---|
 | `GROUP_ROSTER_UPDATE`, `GROUP_JOINED`, `GROUP_LEFT`, `RAID_ROSTER_UPDATE`, `PLAYER_ROLES_ASSIGNED` | all units | `roster` |
+| `UNIT_NAME_UPDATE` | all units | `roster`, for a member: the name or class arrived after the member did |
 | `UNIT_PET` | all units | `roster` for the player's pet and, outside a raid, a member's pet; for the player also `player` |
 | `UNIT_AURA` | player and pet only when alone; all units in a group or with BuffTarget, then filtered by `roster.byUnitId[unit]`; not registered in combat | `auras[unit]`, `status[unit]`; for `player` also `player` (mount, stealth and form are auras). Skipped when the payload says only harmful auras were added |
 | `UNIT_CONNECTION`, `INCOMING_RESURRECT_CHANGED` | all units, roster filter | `status[unit]` |
@@ -356,7 +376,7 @@ refuses an event name the client does not have, so every row is "if valid". "pla
 | `BAG_UPDATE_COOLDOWN` | | `bagCooldowns` |
 | `UNIT_INVENTORY_CHANGED` | player only | `weapon` |
 | `PLAYER_EQUIPMENT_CHANGED`, `WEAPON_ENCHANT_CHANGED` | | `weapon` |
-| `UPDATE_SHAPESHIFT_FORM`, `PLAYER_UPDATE_RESTING`, `ZONE_CHANGED_INDOORS`, `MINIMAP_UPDATE_TRACKING`, `PLAYER_MOUNT_DISPLAY_CHANGED`, `UPDATE_STEALTH`, `PLAYER_CONTROL_LOST` / `GAINED` | | `player` |
+| `UPDATE_SHAPESHIFT_FORM`, `PLAYER_UPDATE_RESTING`, `ZONE_CHANGED_INDOORS`, `MINIMAP_UPDATE_TRACKING`, `PLAYER_MOUNT_DISPLAY_CHANGED`, `UPDATE_STEALTH`, `MINIMAP_UPDATE_ZOOM` (indoors / outdoors), `PLAYER_CONTROL_LOST` / `GAINED` | | `player` |
 | `UNIT_ENTERED_VEHICLE` / `UNIT_EXITED_VEHICLE`, `UNIT_FACTION` | player only | `player` |
 | `ZONE_CHANGED`, `ZONE_CHANGED_NEW_AREA` | | `player`, `status` all (members are compared with the player's zone) |
 | `UNIT_POWER_UPDATE` | player only, registered only while a task waits for mana (`ScanEvents:SetManaWatch`) | `player`, once mana reaches `PlayerStateScan.manaWakeLimit` |
@@ -394,6 +414,8 @@ timer runs in combat, behind a loading screen, or when nothing is pending.
 | Range tick | 1.0 s, re-armed by the pass | a task builder made a task for another member, a group or a resurrection | Replaces `repeatUpdate`. Marks `range`, which forces an evaluation with fresh distances. Stops when no such task is left or Buffomat is paused. |
 | Dead watch | 2.0 s, re-armed by the pass | the roster has a dead member and Buffomat is active | Marks `deadWatch`: the status of the dead members only. |
 | Resync | 30 s, re-armed by the pass | more than one unit in the roster and Buffomat is active | Marks `auras` and `status` all. Insurance against a missed `UNIT_AURA` or a zone change of a far-away member. Remove it if in-game testing shows it never changes a snapshot version. |
+| Flight watch | 2.0 s, re-armed by the pass | flying exists on the client and the player is mounted or in a flight form; also while paused | Marks `player`. Taking off and landing send no event. |
+| Error retry | 5.0 s | a pass raised an error | Runs the failed pass again with the same input. An event may bring the next pass sooner. |
 | Loading grace | `constModule.LOADING_SCREEN_TIMEOUT` | loading screen ended | Opens the gate. Replaces the timeout polling. |
 
 `nextWakeAt` is the minimum, always as an absolute `GetTime()` value, of:

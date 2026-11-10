@@ -81,6 +81,7 @@ Design: `.agents/scan-plan.md`. The modules are in `Src/Scan/`.
 
 - Events never scan. A handler in `Src/Scan/ScanEvents.lua` marks the domain it affects with
   `scanSchedulerModule:MarkDirty(domain, unitId)`; UI and settings code calls `scanSchedulerModule:Request(reason)`.
+  Nothing rescans by itself: a setting which is changed without a `Request` has no effect until some event.
 - Only the readers (`RosterScan`, `AuraScan`, `BagScan`, `PlayerStateScan`, `RangeScan`) read the game state, and
   only through `Src/KvLib/` (`KvEnv`, `KvUnit`, `KvPlayer`, `KvEvents`). Evaluation (`ScanEvaluate`, `BuffChecks`)
   and the task builders (`Src/Task/`) read the snapshots. luacheck reports a raw WoW API call in these files as an

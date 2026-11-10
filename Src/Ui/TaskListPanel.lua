@@ -82,8 +82,11 @@ function module:ToggleWindow(_holdOpen)
   scanSchedulerModule:Request("toggleWindow")
 end
 
+---Whether the window is open. This is not "can be seen": with the whole interface hidden
+---(Alt-Z, a cinematic) an open window stays open, and must not be opened again every pass.
+---@return boolean
 function module:IsWindowVisible()
-  return self.taskFrame ~= nil and self.taskFrame:IsVisible()
+  return self.taskFrame ~= nil and self.taskFrame:IsShown() == true
 end
 
 ---@param byUser boolean The user asked for the window, as opposed to tasks appearing

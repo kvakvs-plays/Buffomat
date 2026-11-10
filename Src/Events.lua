@@ -151,6 +151,27 @@ function module.Event_SpellsChanged()
   scanSchedulerModule:Request("spellsChanged")
 end
 
+---While the macro frame is open Buffomat does not write its macro and shows why. The frame
+---is created when its addon loads, on first use, and opening or closing it sends no event.
+---@return boolean hooked False while the frame does not exist yet
+local function watchMacroFrame()
+  if MacroFrame == nil then
+    return false
+  end
+  local function request()
+    scanSchedulerModule:Request("macroFrame")
+  end
+  MacroFrame:HookScript("OnShow", request)
+  MacroFrame:HookScript("OnHide", request)
+  return true
+end
+
+local function Event_ADDON_LOADED()
+  if watchMacroFrame() then
+    BuffomatAddon:UnregisterEvent("ADDON_LOADED")
+  end
+end
+
 function module:InitEvents()
   -- After a loading screen: forget who was skipped and who was already being resurrected
   scanSchedulerModule.onLoadingEnd = function()
@@ -158,6 +179,10 @@ function module:InitEvents()
     rosterScanModule:ForgetResurrections()
   end
   scanEventsModule:Init()
+
+  if not watchMacroFrame() then
+    BuffomatAddon:RegisterEvent("ADDON_LOADED", Event_ADDON_LOADED)
+  end
 
   BuffomatAddon:RegisterEvent("PLAYER_LEVEL_UP", Event_PLAYER_LEVEL_UP)
   BuffomatAddon:RegisterEvent("TAXIMAP_OPENED", Event_TAXIMAP_OPENED)

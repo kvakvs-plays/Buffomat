@@ -144,6 +144,16 @@ for _, modern in ipairs({ false, true }) do
   f:advance(0.3)
   equal(#passes, before + 1, "the same target again changes nothing")
 
+  -- A member's name or class which arrives late rebuilds the roster; a stranger's does not.
+  -- Walking indoors or outdoors is only seen as a minimap zoom change.
+  before = #passes
+  f:fire("UNIT_NAME_UPDATE", "nameplate1")
+  equal(f:pendingTimers(), 0)
+  f:fire("UNIT_NAME_UPDATE", "raid2")
+  f:fire("MINIMAP_UPDATE_ZOOM")
+  f:advance(0.3)
+  equal(#passes, before + 1); equal(passes[#passes].domains.roster, true); equal(passes[#passes].domains.player, true)
+
   -- Combat: no aura events, no timers; one pass afterwards
   before = #passes
   f:fire("UNIT_AURA", "raid2")
@@ -152,6 +162,8 @@ for _, modern in ipairs({ false, true }) do
   f:fire("PLAYER_REGEN_DISABLED")
   equal(f:pendingTimers(), 0, "combat start cancels the timer")
   equal(events.dispatcher:IsRegistered("UNIT_AURA"), false, "aura events are not taken in combat")
+  f:fire("GROUP_ROSTER_UPDATE")
+  equal(events.dispatcher:IsRegistered("UNIT_AURA"), false, "a roster change in combat does not bring them back")
   f:fire("BAG_UPDATE_DELAYED")
   f:advance(5)
   equal(#passes, before)

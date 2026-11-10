@@ -258,6 +258,16 @@ do
   equal(f.panel.buttonEnabled, true)
   equal(events.dispatcher:IsRegistered("UNIT_POWER_UPDATE"), false, "nothing waits for mana any more")
 
+  -- Mana which came back unseen: an evaluation for another reason reads it again
+  f.state.mana = 50
+  f:fire("UNIT_SPELLCAST_SUCCEEDED", "player")
+  f:advance(0.5)
+  equal(f.panel.buttonEnabled, false)
+  f.state.mana = 1000
+  scheduler:Request("test")
+  f:advance(0.5)
+  equal(f.panel.buttonEnabled, true, "decided with the mana of now, not of the last read")
+
   -- Out of range: the task stays as information and the range is checked every second
   f:removeAura("raid40", PRAYER)
   f.units.raid40.distance = 2500
@@ -287,6 +297,27 @@ do
   f:fire("PLAYER_UPDATE_RESTING")
   f:advance(0.5)
   equal(#f:tasks(), 2)
+
+  -- Mounted where flying exists: taking off and landing send no event, so the player is
+  -- looked at every two seconds, also while flying pauses everything else
+  local env = f.globals.LibStub("KvLibShared-Env")
+  env.haveTBC = true
+  f.globals.BuffomatShared.ScanWhileMounted = true
+  f.state.mounted = true
+  f:fire("PLAYER_MOUNT_DISPLAY_CHANGED")
+  f:advance(0.5)
+  equal(f.panel.buttonEnabled, true, "mounted on the ground")
+  f.state.flying = true
+  f:advance(2.5)
+  equal(f.panel.buttonText, "castButton.inactive.Flying"); equal(f.panel.buttonEnabled, false)
+  f.state.flying = false
+  f:advance(2.5)
+  equal(f.panel.buttonEnabled, true, "landed")
+  f.state.mounted = false
+  f:fire("PLAYER_MOUNT_DISPLAY_CHANGED")
+  f:advance(3)
+  equal(scheduler.wakeTimes.player, nil, "nobody is watched on foot")
+  env.haveTBC = false
 
   -- A dead member: a resurrection task, and their status is watched without events
   f:buff({ id = RESURRECTION, name = "Resurrection", singleMana = 100, type = "resurrection" })

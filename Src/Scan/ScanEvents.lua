@@ -9,6 +9,7 @@ local addonName, ns = ...
 ---@field outsiderName string? Name of the targeted player outside the group, with BuffTarget on
 ---@field aurasForGroup boolean? UNIT_AURA is registered for all units, not only the player and pet
 ---@field modifierWatch boolean? A task waits for a modifier key; set by the pass
+---@field inCombat boolean? Between the combat start and end events
 local module = LibStub("Buffomat-ScanEvents") --[[@as ScanEventsModule]]
 
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
@@ -65,6 +66,15 @@ local function onUnitAura(_event, unitId, updateInfo)
   scheduler:MarkUnit(unitId)
   if unitId == "player" then
     scheduler:MarkDirty("player") -- mounts, stealth and forms are auras too
+  end
+end
+
+---A member's name and class can arrive after the member: the roster was built with a
+---placeholder and has to be built again.
+---@param unitId string
+local function onUnitName(_event, unitId)
+  if isScannedUnit(unitId) then
+    scheduler:MarkDirty("roster")
   end
 end
 
@@ -175,10 +185,12 @@ end
 local function onCombatStart()
   scheduler:OnCombatStart()
   -- Auras change constantly in combat and nothing is read until it ends
+  module.inCombat = true
   module.dispatcher:Off("UNIT_AURA")
 end
 
 local function onCombatEnd()
+  module.inCombat = false
   module:RegisterAuraEvent()
   scheduler:OnCombatEnd()
 end
@@ -201,6 +213,9 @@ end
 ---or when a target outside the group is buffed, every unit event arrives and is filtered
 ---by the roster.
 function module:RegisterAuraEvent()
+  if self.inCombat then
+    return -- a roster change in combat must not bring the event back; the end of combat does
+  end
   local forGroup = kvUnitModule.IsInGroup() or BuffomatShared.BuffTarget == true
   if forGroup == self.aurasForGroup and self.dispatcher:IsRegistered("UNIT_AURA") then
     return
@@ -231,6 +246,7 @@ function module:Init()
   local dispatcher = kvEventsModule.NewDispatcher()
   self.dispatcher = dispatcher
   self.isPlayerInGroup = kvUnitModule.IsInGroup()
+  self.inCombat = InCombatLockdown() == true
 
   -- Roster
   for _, event in ipairs({ "GROUP_ROSTER_UPDATE", "GROUP_JOINED", "GROUP_LEFT", "RAID_ROSTER_UPDATE",
@@ -238,6 +254,7 @@ function module:Init()
     dispatcher:On(event, onRosterChanged)
   end
   dispatcher:On("UNIT_PET", onUnitPet)
+  dispatcher:On("UNIT_NAME_UPDATE", onUnitName)
 
   -- Auras and member status
   self:RegisterAuraEvent()
@@ -263,6 +280,7 @@ function module:Init()
   -- Player state
   for _, event in ipairs({ "UPDATE_SHAPESHIFT_FORM", "PLAYER_UPDATE_RESTING", "ZONE_CHANGED_INDOORS",
     "MINIMAP_UPDATE_TRACKING", "PLAYER_MOUNT_DISPLAY_CHANGED", "UPDATE_STEALTH",
+    "MINIMAP_UPDATE_ZOOM",                                -- the only sign of walking indoors or outdoors
     "PLAYER_CONTROL_LOST", "PLAYER_CONTROL_GAINED" }) do -- control is lost and gained with a taxi ride
     dispatcher:On(event, onPlayerStateChanged)
   end

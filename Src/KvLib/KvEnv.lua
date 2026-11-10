@@ -580,6 +580,26 @@ function module.IsEventValid(event)
   return true
 end
 
+---@param message any
+---@return any message
+local function reportError(message)
+  local handler = geterrorhandler and geterrorhandler()
+  if handler then
+    handler(message)
+  end
+  return message
+end
+
+---Run a function so that an error in it is reported and does not stop the caller. The
+---error goes to the client's error handler (the error frame, or an addon which collects
+---errors), as an error in an event handler would.
+---@param func fun(): any
+---@return boolean ok
+---@return any result What the function returned; the error message when not ok
+function module.SafeCall(func)
+  return xpcall(func, reportError)
+end
+
 local getItemInfoInstant = (C_Item and C_Item.GetItemInfoInstant) or _G["GetItemInfoInstant"]
 local getItemSubClassInfo = (C_Item and C_Item.GetItemSubClassInfo) or _G["GetItemSubClassInfo"]
 

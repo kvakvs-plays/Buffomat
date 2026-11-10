@@ -37,6 +37,30 @@ for _, modern in ipairs({ false, true }) do
   equal(state:Read(), false)
   equal(state.version, 1)
 
+  -- Mana for an evaluation is read without counting as a change
+  f.state.mana = 450
+  state:ReadMana()
+  equal(state.mana, 450); equal(state.version, 1)
+  f.state.mana = 400
+  state:ReadMana()
+
+  -- Taking off sends no event: where flying exists, a mounted player is watched
+  local env = f.globals.LibStub("KvLibShared-Env")
+  local haveTBC = env.haveTBC
+  env.haveTBC = true
+  equal(state:CanTakeOff(), false, "on foot")
+  state.isMounted = true
+  equal(state:CanTakeOff(), true)
+  state.isMounted, state.formId = false, 27
+  equal(state:CanTakeOff(), true, "flight form")
+  state.formId = 5
+  equal(state:CanTakeOff(), false, "bear form")
+  state.isMounted, state.formId = true, nil
+  env.haveTBC = false
+  equal(state:CanTakeOff(), false, "no flying on this client")
+  env.haveTBC = haveTBC
+  state.isMounted = false
+
   f.state.mounted, f.state.resting, f.state.instanceType, f.state.instanceId = true, true, "raid", 533
   f.state.formId, f.state.form, f.state.mana = 5, 2, 380
   f.units.player.pvp = true

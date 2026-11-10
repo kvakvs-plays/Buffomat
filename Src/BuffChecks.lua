@@ -405,7 +405,7 @@ function module:PartyNeedsBuff(buffDef, need, roster)
         and partyMember.isConnected
         and (not BuffomatShared.SameZone
           or (partyMember.isSameZone
-            or partyMember.class == "pet" and (partyMember.owner).isSameZone))
+            or partyMember.class == "pet" and partyMember.owner ~= nil and partyMember.owner.isSameZone))
     then
       local found = false
       local partyMemberBuff = partyMember.knownBuffs[buffDef.buffId]

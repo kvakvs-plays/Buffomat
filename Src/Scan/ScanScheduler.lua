@@ -41,6 +41,7 @@ local addonName, ns = ...
 ---@field graceTimer table? AceTimer handle of the loading-screen grace timer
 ---@field onLoadingEnd fun()? Called when the grace time after a loading screen is over
 local module = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
+local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local scanPassModule = LibStub("Buffomat-ScanPass") --[[@as ScanPassModule]]
 local scanStatsModule = LibStub("Buffomat-ScanStats") --[[@as ScanStatsModule]]
 
@@ -51,6 +52,8 @@ module.CONTINUATION = 0.05 -- to the next pass while units are still queued for 
 module.RANGE_TICK = 1.0    -- between range checks while a task waits for range
 module.DEAD_WATCH = 2.0    -- between status checks of dead members
 module.RESYNC = 30         -- between full aura and status re-reads in a group
+module.FLIGHT_WATCH = 2.0  -- between looks at whether a mounted player took off or landed
+module.ERROR_RETRY = 5.0   -- to the next pass after one which failed with an error
 
 local EPSILON = 0.001
 
@@ -223,6 +226,12 @@ function module:RestorePending()
   end
 end
 
+---The pass of the running timer. A named function, so that no closure is made per pass.
+---@return BomScanPassResult
+local function runPass()
+  return scanPassModule:Run(module.pending, module.pendingUnits)
+end
+
 ---Timer callback: run a pass if anything is dirty, then arm the next timer.
 function module.OnTimer()
   local self = module
@@ -241,9 +250,19 @@ function module.OnTimer()
     self:BeginPass()
     self.inPass = true
     scanStatsModule:PassBegin()
-    result = scanPassModule:Run(self.pending, self.pendingUnits)
+    local ok
+    ok, result = envModule.SafeCall(runPass)
     scanStatsModule:PassEnd()
     self.inPass = false
+    if not ok then
+      -- The error was reported. Scanning has to survive it, so what the pass was to read
+      -- is asked for again; not at once, because an error which repeats would flood the
+      -- error handler. An event may still bring the next pass sooner.
+      self:RestorePending()
+      self.dirty.settings = true
+      self:SchedulePass(self:Interval(self.ERROR_RETRY))
+      return
+    end
   end
 
   if result == "blocked" then

@@ -164,6 +164,13 @@ for _, modern in ipairs({ false, true }) do
     equal(roster.incomplete, false); equal(roster.byUnitId.raid5.name, "Shaman")
   end
 
+  -- A member who just joined: the lookup by GUID does not know the character yet
+  local newcomer = f.units.raid5
+  newcomer.name, newcomer.guid, newcomer.guidInfoMissing = "Newcomer", "guid-Newcomer", true
+  rosterScan:Rebuild(pendingUnits(), false)
+  equal(roster.byUnitId.raid5.name, "Newcomer"); equal(roster.byUnitId.raid5.class, newcomer.class)
+  equal(roster.playerPet.class, "pet", "a pet has no player class")
+
   -- Aura-free mode: the player only, whatever the group
   version = roster.version
   rosterScan:Rebuild(pendingUnits(), true)

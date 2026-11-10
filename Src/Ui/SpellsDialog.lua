@@ -223,6 +223,11 @@ function module:CreateInfoIcon(buffDef)
   return iconButton
 end
 
+---A choice in this dialog changes what the next scan decides; nothing else tells the scanner.
+local function settingChanged()
+  scanSchedulerModule:Request("spellsDialog")
+end
+
 -- Player choices are stored separately in their profile
 ---@param buffDef BomBuffDefinition
 ---@param _context SpellsDialogContext
@@ -252,6 +257,7 @@ function module:CreateBuffRow(buffDef, profileBuff, _context)
     checkEnabled:SetValue(profileBuff.Enable)
     checkEnabled:SetCallback("OnValueChanged", function(_control, _callbackName, value)
       profileBuff.Enable = value
+      settingChanged()
     end)
     checkEnabled:SetLabel("-")
     buffDef:SetSpellListText(function(text)
@@ -319,7 +325,10 @@ function module:AddMainhandToggle(row, profileBuff)
     _t("tooltip.mainhand"),
     24, 20, texturesModule.ICON_MAINHAND_ON, texturesModule.ICON_MAINHAND_OFF,
     function() return profileBuff.MainHandEnable end,
-    function(value) profileBuff.MainHandEnable = value end
+    function(value)
+      profileBuff.MainHandEnable = value
+      settingChanged()
+    end
   )
   row:AddChild(mainhandToggle)
 end
@@ -329,7 +338,10 @@ function module:AddOffhandToggle(row, profileBuff)
     _t("tooltip.offhand"),
     24, 20, texturesModule.ICON_OFFHAND_ON, texturesModule.ICON_OFFHAND_OFF,
     function() return profileBuff.OffHandEnable end,
-    function(value) profileBuff.OffHandEnable = value end
+    function(value)
+      profileBuff.OffHandEnable = value
+      settingChanged()
+    end
   )
   row:AddChild(offhandToggle)
 end
@@ -350,7 +362,10 @@ function module:AddSelfCastToggle(row, profileBuff)
     texturesModule.ICON_SELF_CAST_ON,
     texturesModule.ICON_SELF_CAST_OFF,
     function() return profileBuff.SelfCast end,
-    function(value) profileBuff.SelfCast = value end
+    function(value)
+      profileBuff.SelfCast = value
+      settingChanged()
+    end
   )
 
   ngToolboxModule:SetTooltip(selfcastToggle, selfCastTooltip)
@@ -398,7 +413,10 @@ function module:AddClassRoleToggle(row, profileBuff, classOrRole)
       texturesModule.CLASS_ICONS_BUNDLED[classOrRole],
       texturesModule.ICON_EMPTY,
       function() return profileBuff.Class[classOrRole] == true end,
-      function(value) profileBuff.Class[classOrRole] = value end
+      function(value)
+        profileBuff.Class[classOrRole] = value
+        settingChanged()
+      end
     )
     row:AddChild(classToggle)
   end
@@ -419,7 +437,10 @@ function module:AddForceTargets(row, buffDef, profileBuff)
       local dialog = forceTargetDialogModule:Show(
         buffDef,
         function() return profileBuff.ForceTarget end,
-        function(dictionary) profileBuff.ForceTarget = dictionary end,
+        function(dictionary)
+          profileBuff.ForceTarget = dictionary
+          settingChanged()
+        end,
         _t("title.ForceTarget"),
         self.dialog
       )
@@ -436,7 +457,10 @@ function module:AddForceTargets(row, buffDef, profileBuff)
       local dialog = forceTargetDialogModule:Show(
         buffDef,
         function() return profileBuff.ExcludeTarget end,
-        function(dictionary) profileBuff.ExcludeTarget = dictionary end,
+        function(dictionary)
+          profileBuff.ExcludeTarget = dictionary
+          settingChanged()
+        end,
         _t("title.ExcludeTarget"),
         self.dialog
       )
@@ -498,7 +522,10 @@ function module:AddGroupScanSelector()
       texturesModule.ICON_SETTING_ON,
       texturesModule.ICON_SETTING_OFF,
       function() return BuffomatCharacter.WatchGroup[i] end,
-      function(value) BuffomatCharacter.WatchGroup[i] = value end
+      function(value)
+        BuffomatCharacter.WatchGroup[i] = value
+        settingChanged()
+      end
     )
     frame:AddChild(toggle)
   end
