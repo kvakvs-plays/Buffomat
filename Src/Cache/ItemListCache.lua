@@ -6,6 +6,7 @@ local module = LibStub("Buffomat-ItemListCache") --[[@as ItemListCacheModule]]
 local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
 local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
+local scanStatsModule = LibStub("Buffomat-ScanStats") --[[@as ScanStatsModule]]
 
 BuffomatAddon.wipeCachedItems = true
 
@@ -44,8 +45,10 @@ function module:GetItemList()
   if BuffomatAddon.wipeCachedItems then
     wipe(itemListCache)
     BuffomatAddon.wipeCachedItems = false
+    scanStatsModule:Count("bagScans")
 
     for _, bag in ipairs(envModule.playerBagIds) do
+      scanStatsModule:Count("bagSlotReads", envModule.GetContainerNumSlots(bag))
       for slot = 1, envModule.GetContainerNumSlots(bag) do
         --local itemID = GetContainerItemID(bag,slot)
         local itemInfo = envModule.GetContainerItemInfo(bag, slot)

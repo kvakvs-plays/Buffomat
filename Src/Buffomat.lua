@@ -28,6 +28,7 @@ local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxMod
 local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
 local throttleModule = LibStub("Buffomat-Throttle") --[[@as ThrottleModule]]
 local ngStringsModule = LibStub("Buffomat-NgStrings") --[[@as NgStringsModule]]
+local scanStatsModule = LibStub("Buffomat-ScanStats") --[[@as ScanStatsModule]]
 
 module.libIcon = LibStub("LibDBIcon-1.0")
 
@@ -353,6 +354,11 @@ function BuffomatAddon:MakeSlashCommand()
     --   description = "",
     --   handler = spellButtonsTabModule.UpdateSpellsTab
     -- },
+    {
+      command = "scanstats",
+      description = _t("SlashScanStats"),
+      handler = function() scanStatsModule:Print() end
+    },
     {
       command = "close",
       description = _t("SlashClose"),

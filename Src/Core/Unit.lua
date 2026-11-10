@@ -8,6 +8,7 @@ local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffModule = LibStub("Buffomat-Buff") --[[@as BuffModule]]
 local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxModule]]
+local scanStatsModule = LibStub("Buffomat-ScanStats") --[[@as ScanStatsModule]]
 
 ---@alias BomBuffidBuffLookup {[BomBuffId]: BomUnitBuff}
 
@@ -143,11 +144,13 @@ function unitClass:ForceUpdateBuffs(playerUnit)
   self.hasRidingTrinket = false
 
   local buffIndex = 0
+  scanStatsModule:Count("auraUnits")
 
   repeat
     buffIndex = buffIndex + 1
 
     local unitAura, readable = module:UnitAura(self.unitId, buffIndex, "HELPFUL")
+    scanStatsModule:Count("auraReads")
     if not readable then
       self.auraDataUnavailable = true
       self.NeedBuff = false

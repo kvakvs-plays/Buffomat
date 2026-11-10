@@ -386,6 +386,7 @@ function englishModule:Translations()
     SlashSpellBook = "Rescan spellbook",
     SlashUpdate = "Update macro / list",
     SlashClose = "Close BOM window",
+    SlashScanStats = "Print scan statistics (with debug logging on)",
     SlashReset = "Reset BOM window",
     SlashOpen = "Open BOM window",
     SlashProfile = "Change current profile to solo/group/raid/battleground/auto",

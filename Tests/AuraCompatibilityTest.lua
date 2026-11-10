@@ -73,6 +73,7 @@ local function run(mode)
     if mode == "mixed" then globals.C_UnitAuras = {} end
   end
   loadModule("Src/KvLib/KvEnv.lua", globals)
+  loadModule("Src/Scan/ScanStats.lua", globals)
   loadModule("Src/Core/Buff.lua", globals)
   loadModule("Src/Core/Unit.lua", globals)
   loadModule("Src/Task/TaskScan.lua", globals)

@@ -17,6 +17,9 @@ embeds.xml
 
 Src/EarlyBoot.lua
 Src/KvLib/KvEnv.lua
+Src/KvLib/KvUnit.lua
+Src/KvLib/KvPlayer.lua
+Src/KvLib/KvEvents.lua
 Src/Buffomat.lua
 Src/Throttle.lua
 
@@ -68,6 +71,8 @@ Src/Cache/ItemCache.lua
 Src/Cache/SpellCache.lua
 Src/Cache/ItemListCache.lua
 Src/Cache/UnitCache.lua
+
+Src/Scan/ScanStats.lua
 
 Src/Ui/Options.lua
 Src/Ui/OptionsPopupMenu.lua

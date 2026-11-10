@@ -12,6 +12,7 @@ local unitCacheModule = LibStub("Buffomat-UnitCache") --[[@as UnitCacheModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
+local scanStatsModule = LibStub("Buffomat-ScanStats") --[[@as ScanStatsModule]]
 
 ---Checks whether a tracking spell is now active
 ---@param spell BomBuffDefinition The tracking spell which might have tracking enabled
@@ -81,8 +82,10 @@ function module:HasOneItem(itemToCheck, cd)
     cachedItem = BuffomatAddon.cachedPlayerBag[key]
     cachedItem.a = false
     cachedItem.d = 0
+    scanStatsModule:Count("bagScans")
 
     for _, bag in ipairs(envModule.playerBagIds) do
+      scanStatsModule:Count("bagSlotReads", envModule.GetContainerNumSlots(bag))
       for slot = 1, envModule.GetContainerNumSlots(bag) do
         local itemInfo = envModule.GetContainerItemInfo(bag, slot)
         if itemInfo then

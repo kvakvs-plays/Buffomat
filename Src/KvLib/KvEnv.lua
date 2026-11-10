@@ -314,6 +314,33 @@ function module.GetContainerItemInfo(bag, slot)
   }
 end
 
+local scanTooltip ---@type table? Hidden tooltip, created on first use
+
+---Whether the tooltip of a bag item has a line with exactly this text, such as LOCKED
+---on a lockbox. The container API reports only the cursor lock, not a locked box.
+---@param bag number
+---@param slot number
+---@param text string
+---@return boolean
+function module.ContainerItemTooltipHasLine(bag, slot, text)
+  if scanTooltip == nil then
+    -- A tooltip needs a global name for its font strings
+    scanTooltip = CreateFrame("GameTooltip", addonName .. "_KvScanTooltip", nil, "GameTooltipTemplate")
+    scanTooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
+  end
+  scanTooltip:ClearLines()
+  scanTooltip:SetBagItem(bag, slot)
+  for _, region in ipairs({ scanTooltip:GetRegions() }) do
+    if region and region:GetObjectType() == "FontString" then
+      local line = region:GetText()
+      if not module.IsSecretValue(line) and line == text then
+        return true
+      end
+    end
+  end
+  return false
+end
+
 ---Backpack, equipped bags, and the reagent bag where one exists. Built once
 ---because bag scans run often; iterate with ipairs and do not modify.
 ---@type number[]

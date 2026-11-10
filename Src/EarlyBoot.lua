@@ -67,5 +67,12 @@ LibStub:NewLibrary("Buffomat-Unit", 1)
 LibStub:NewLibrary("Buffomat-UnitBuffTarget", 1)
 LibStub:NewLibrary("Buffomat-UnitCache", 1)
 
+-- Scanning: scheduler, events, readers and the pass (see .agents/scan-plan.md)
+LibStub:NewLibrary("Buffomat-ScanStats", 1)
+LibStub:NewLibrary("Buffomat-ScanScheduler", 1)
+
 LibStub:NewLibrary("KvLibShared-Env", 1)
+LibStub:NewLibrary("KvLibShared-Events", 1)
 LibStub:NewLibrary("KvLibShared-Options", 1)
+LibStub:NewLibrary("KvLibShared-Player", 1)
+LibStub:NewLibrary("KvLibShared-Unit", 1)

@@ -10,6 +10,7 @@ local eventsModule = LibStub("Buffomat-Events") --[[@as EventsModule]]
 local taskScanModule = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
+local scanStatsModule = LibStub("Buffomat-ScanStats") --[[@as ScanStatsModule]]
 
 module.taskRescanRequestedBy = {}
 
@@ -110,8 +111,16 @@ function module:Update(now, needForceUpdate)
   then
     throttleState.lastUpdateTimestamp = now
 
+    scanStatsModule:PassBegin()
+    for reason in pairs(self.taskRescanRequestedBy) do
+      scanStatsModule:Reason(reason)
+    end
+    if BuffomatAddon.repeatUpdate then
+      scanStatsModule:Reason("repeatUpdate")
+    end
     self:ClearForceUpdate(nil)
     taskScanModule:ScanTasks("timer")
+    scanStatsModule:PassEnd()
 
     -- If updatescan call above took longer than 32 ms, and repeated update, then
     -- bump the slow alarm counter, once it reaches 32 we consider throttling.

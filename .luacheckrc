@@ -1,5 +1,5 @@
 -- Lint: lua "%APPDATA%\luarocks\bin\luacheck" Src Tests --codes  (see .agents/luacheck-plan.md)
-std = "lua51"
+std = "lua51+wow"
 max_line_length = 120
 -- Type annotations (---@alias unions, ---@type tuples) and aligned trailing comments on data
 -- tables cannot be wrapped usefully; the limit applies to code
@@ -26,7 +26,7 @@ globals = {
 }
 
 -- WoW API, FrameXML globals, XML-defined frames, and client Lua extensions (bit, wipe, tContains...)
-read_globals = {
+stds.wow = { read_globals = {
   "BACKPACK_CONTAINER", "bit", "BomC_ListTab_Button", "BomC_Tooltip", "CancelUnitBuff", "CastSpellByID",
   "CAT_FORM", "ChatEdit_OnLoad", "ChatEdit_SendText", "ChatFrame_OpenChat", "CheckInteractDistance",
   "CLASS_ICON_TCOORDS", "CLASS_SORT_ORDER", "CombatLogGetCurrentEventInfo",
@@ -68,7 +68,11 @@ read_globals = {
   "UnitPower", "UnitPowerMax", "UnitRace", "UnitXPMax", "wipe", "WorldFrame", "WOW_PROJECT_BURNING_CRUSADE_CLASSIC",
   "WOW_PROJECT_CATACLYSM_CLASSIC", "WOW_PROJECT_CLASSIC", "WOW_PROJECT_ID", "WOW_PROJECT_MISTS_CLASSIC",
   "WOW_PROJECT_WRATH_CLASSIC",
-}
+} }
+
+-- Scan modules reach the game only through Src/KvLib (see .agents/scan-plan.md), so a raw
+-- WoW API call there is reported as an undefined global
+stds.scan = { read_globals = { "GetTime", "InCombatLockdown", "LibStub", "tContains", "wipe" } }
 
 files["Src/Languages/**"] = { max_line_length = false }
 -- Knowledge setup functions share one signature; not all of them use the enchantment table
@@ -76,4 +80,5 @@ files["Src/Knowledge/**"] = { ignore = { "212/enchantments" } }
 -- AceConfig option callbacks receive `info` whether they need it or not
 files["Src/Ui/Options.lua"] = { ignore = { "212/info" } }
 files["Src/KvLib/KvOptions.lua"] = { ignore = { "212/info" } }
+files["Src/Scan/**"] = { std = "lua51+scan" }
 files["Tests/**"] = { read_globals = { "setfenv", "loadfile" } }
