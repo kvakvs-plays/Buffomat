@@ -15,6 +15,7 @@ local actionCastModule = LibStub("Buffomat-ActionCast") --[[@as ActionCastModule
 local actionMacroModule = LibStub("Buffomat-ActionMacro") --[[@as ActionMacroModule]]
 local actionUseModule = LibStub("Buffomat-ActionUse") --[[@as ActionUseModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
+local auraScanModule = LibStub("Buffomat-AuraScan") --[[@as AuraScanModule]]
 local buffChecksModule = LibStub("Buffomat-BuffChecks") --[[@as BuffChecksModule]]
 local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionModule]]
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
@@ -1613,7 +1614,7 @@ end
 
 function module:SomeoneIsDrinking()
   if BuffomatShared.SomeoneIsDrinking ~= "hide" then
-    local count = BuffomatAddon.drinkingPersonCount
+    local count = auraScanModule.drinkingCount
 
     if count > 1 then
       if BuffomatShared.SomeoneIsDrinking == "low-prio" then
@@ -1870,6 +1871,7 @@ end
 --- Work out from the snapshots who needs a buff or a resurrection, and show the tasks.
 ---@param party BomParty The roster as read by this pass
 ---@param auraFree boolean PvP match hides auras: scan only tasks that do not read them
+---@return boolean active False when Buffomat is paused (resting, mounted, casting...)
 function module:ScanTasks(party, auraFree)
   -- to avoid re-playing the same sound, only play when task list changes from 0 to some tasks
   if not self.tasklist then
@@ -1890,7 +1892,7 @@ function module:ScanTasks(party, auraFree)
       or not self:CheckCastingChanneling(context)
       or not self:CheckGlobalCooldown(context)
   then
-    return
+    return false
   end
 
   -- All pre-checks passed
@@ -1901,6 +1903,7 @@ function module:ScanTasks(party, auraFree)
     self:DoScan(context)
   end
   self:Finalize(context) -- Sort and display the tasks, update the cast button
+  return true
 end
 
 ---If a spell cast failed, the member is temporarily added to skip list, to

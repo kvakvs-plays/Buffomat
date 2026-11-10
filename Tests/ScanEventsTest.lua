@@ -33,6 +33,7 @@ for _, modern in ipairs({ false, true }) do
   local party = f:lib("Buffomat-Party")
   local rosterScan = f:lib("Buffomat-RosterScan")
   rosterScan.roster = { isRaid = false, byUnitId = { player = {} } }
+  rosterScan.ForgetResurrections = function() f.state.resurrectionsForgotten = true end
   f.state.validEvents = modern and nil or setmetatable({}, { __index = function(_, event)
     -- Events this old client does not have
     return event ~= "WEAPON_ENCHANT_CHANGED" and event ~= "PLAYER_ROLES_ASSIGNED"
@@ -182,6 +183,7 @@ for _, modern in ipairs({ false, true }) do
   f:fire("MODIFIER_STATE_CHANGED")
   f:advance(0.3)
   equal(#passes, before + 2); equal(passes[#passes].domains.auras, true); equal(f.state.skipCleared, true)
+  equal(f.state.resurrectionsForgotten, true)
   f.state.alt, f.state.modifier = false, false
   f.globals.BuffomatAddon.scanModifierKeyDown = false
 
@@ -202,6 +204,21 @@ for _, modern in ipairs({ false, true }) do
   f:advance(0.3)
   f:fire("UNIT_AURA", "raid2")
   equal(f:pendingTimers(), 0, "alone again, only the player and pet are heard")
+
+  -- An update which only added debuffs is of no interest
+  f:advance(0.3)
+  before = #passes
+  f:fire("UNIT_AURA", "player", { isFullUpdate = false, addedAuras = { { spellId = 5, isHarmful = true } } })
+  equal(f:pendingTimers(), 0, "a debuff does not start a pass")
+  f:fire("UNIT_AURA", "player", { isFullUpdate = false, addedAuras = { { spellId = 5, isHarmful = false } } })
+  f:advance(0.3)
+  equal(#passes, before + 1, "a buff does")
+  f:fire("UNIT_AURA", "player", { isFullUpdate = false, removedAuraInstanceIDs = { 77 } })
+  f:advance(0.3)
+  equal(#passes, before + 2, "a removed aura could have been a buff")
+  f:fire("UNIT_AURA", "player", { addedAuras = {} })
+  f:advance(0.3)
+  equal(#passes, before + 3, "a payload without the full-update flag is not trusted")
 
   print("PASS: " .. (modern and "modern" or "legacy") .. " scan events mark their domains and respect the gates")
 end

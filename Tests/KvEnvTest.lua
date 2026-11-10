@@ -300,9 +300,12 @@ local function fixture(mode, projectID)
   allBuffs.selectedBuffsSpellIds = {}
   allBuffs.spellIdtoBuffId = {}
   allBuffs.allBuffs = {}
+  allBuffs.OnSpellSetupChanged = function() state.setupChanged = true end
+  globals.LibStub("Buffomat-ScanScheduler").MarkDirty = function(_, domain) state.dirty = domain end
   loadModule("Src/SpellSetup.lua", globals)
   libs["Buffomat-SpellSetup"]:SetupAvailableSpells()
   equal(#allBuffs.selectedBuffs, 0, "spell setup completed")
+  equal(state.setupChanged, true); equal(state.dirty, "auras", "a new spell setup re-reads the auras")
   equal(type(globals.BuffomatCharacter.profiles.solo.Spell), "table")
   equal(globals.BuffomatAddon.reputationTrinketZones.Link, nil, "no fabricated reputation spell link")
   equal(globals.BuffomatAddon.ridingSpeedZones.Link, nil, "no fabricated riding spell link")

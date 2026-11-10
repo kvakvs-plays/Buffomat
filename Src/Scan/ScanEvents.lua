@@ -54,8 +54,9 @@ local function onUnitPet(_event, unitId)
 end
 
 ---@param unitId string
-local function onUnitAura(_event, unitId)
-  if not isScannedUnit(unitId) then
+---@param updateInfo table? What changed, on clients which say
+local function onUnitAura(_event, unitId, updateInfo)
+  if not isScannedUnit(unitId) or not kvUnitModule.AuraUpdateTouchesBuffs(updateInfo) then
     return
   end
   scheduler:MarkUnit(unitId)
@@ -159,7 +160,7 @@ end
 ---"try again": the pass forgets skipped members and declined resurrections.
 local function onModifierChanged()
   if kvPlayerModule.IsAltKeyDown() then
-    BuffomatAddon.declineHasResurrection = true
+    rosterScanModule:ForgetResurrections()
     taskScanModule:ClearSkip()
     scheduler:MarkAllDirty("altKey")
   elseif BuffomatAddon.scanModifierKeyDown then

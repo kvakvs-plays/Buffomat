@@ -289,6 +289,42 @@ function module.ReadAura(unit, index, filter)
   return spellId, name, duration, expirationTime, source, true
 end
 
+---Whether a UNIT_AURA event can have changed the unit's buffs. Newer clients say what
+---changed; an update which only added harmful auras is of no interest to a buff scan.
+---Anything missing, unreadable or unexpected counts as a change.
+---@param updateInfo table? Second payload value of UNIT_AURA
+---@return boolean
+function module.AuraUpdateTouchesBuffs(updateInfo)
+  if isSecret(updateInfo) or type(updateInfo) ~= "table" then
+    return true
+  end
+  local isFullUpdate = updateInfo.isFullUpdate
+  if isSecret(isFullUpdate) or isFullUpdate ~= false then
+    return true
+  end
+  -- Removed and updated auras are known only by instance id, which says nothing about their kind
+  local removed, updated = updateInfo.removedAuraInstanceIDs, updateInfo.updatedAuraInstanceIDs
+  if isSecret(removed) or isSecret(updated) or (removed ~= nil and next(removed) ~= nil)
+      or (updated ~= nil and next(updated) ~= nil) then
+    return true
+  end
+  local added = updateInfo.addedAuras
+  if isSecret(added) then
+    return true
+  elseif added ~= nil then
+    for _, aura in pairs(added) do
+      if isSecret(aura) or type(aura) ~= "table" then
+        return true
+      end
+      local isHarmful = aura.isHarmful
+      if isSecret(isHarmful) or isHarmful ~= true then
+        return true
+      end
+    end
+  end
+  return false
+end
+
 local unitDistanceSquared = _G["UnitDistanceSquared"]
 local checkInteractDistance = _G["CheckInteractDistance"]
 

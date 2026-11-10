@@ -1,4 +1,3 @@
-local BuffomatAddon = BuffomatAddon
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 
 ---@class UnitModule
@@ -6,8 +5,6 @@ local module = LibStub("Buffomat-Unit") --[[@as UnitModule]]
 
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local buffModule = LibStub("Buffomat-Buff") --[[@as BuffModule]]
-local toolboxModule = LibStub("Buffomat-LegacyToolbox") --[[@as LegacyToolboxModule]]
-local scanStatsModule = LibStub("Buffomat-ScanStats") --[[@as ScanStatsModule]]
 
 ---@alias BomBuffidBuffLookup {[BomBuffId]: BomUnitBuff}
 
@@ -24,6 +21,7 @@ local scanStatsModule = LibStub("Buffomat-ScanStats") --[[@as ScanStatsModule]]
 ---@field hasRidingTrinket boolean Has carrot riding trinket equipped
 ---@field hasResurrection boolean Was recently resurrected
 ---@field isConnected boolean Is online
+---@field isDrinking boolean? Has a drinking buff
 ---@field isDead boolean Is this member dead
 ---@field isGhost boolean Is dead and corpse released
 ---@field isPlayer boolean Is this a player
@@ -45,137 +43,6 @@ function module:New(fields)
   fields = fields or {}
   setmetatable(fields, unitClass)
   return fields
-end
-
----Handles UnitAura WOW API call.
----For spells that are tracked by Buffomat the data is also stored in partyModule.buffs
----@param unitId string
----@param buffIndex number Index of buff/debuff slot starts 1 max 40?
----@param filter string Filter string like "HELPFUL", "PLAYER", "RAID"... etc
----@return BomUnitAuraResult?
----@return boolean readable
-function module:UnitAura(unitId, buffIndex, filter)
-  local aura, readable = envModule.GetUnitAura(unitId, buffIndex, filter)
-  if not readable or aura == nil then
-    return nil, readable
-  end
-  local name, spellId, source = aura.name, aura.spellId, aura.source
-  local duration, expirationTime = aura.duration, aura.expirationTime
-
-  if spellId
-      and allBuffsModule.allSpellIds
-      and tContains(allBuffsModule.allSpellIds, spellId) then
-    if source ~= nil and source ~= "" and envModule.UnitIsUnit(source, "player") then
-      if envModule.UnitIsUnit(unitId, "player") and duration ~= nil and duration > 0 then
-        BuffomatShared.Duration[name] = duration
-      end
-
-      if duration == nil or duration == 0 then
-        duration = BuffomatShared.Duration[name] or 0
-      end
-
-      if expirationTime == 0 then
-        duration = 0
-      end
-    end
-  end
-
-  aura.duration = duration
-  aura.expirationTime = expirationTime
-  return aura, true
-end
-
----Force updates buffs for one party member
----@param playerUnit BomUnit
-function unitClass:ForceUpdateBuffs(playerUnit)
-  if InCombatLockdown() or envModule.IsAuraRestricted() then
-    self.auraDataUnavailable = true
-    self.NeedBuff = false
-    -- Stale auras must not drive the aura-free scan; a full read refills these.
-    wipe(self.knownBuffs)
-    wipe(self.allBuffs)
-    -- Weapon enchants stay readable in a PvP match out of combat, and the
-    -- aura-free scan still offers weapon buffs from them.
-    if self == playerUnit and not InCombatLockdown() then
-      self.isPlayer = true
-      local isDead = UnitIsDeadOrGhost("player")
-      self.isDead = not envModule.IsSecretValue(isDead) and isDead == true
-      self:UpdatePlayerWeaponEnchantments()
-    end
-    return
-  end
-  self.auraDataUnavailable = false
-  self.isPlayer = (self == playerUnit)
-  self.isDead = UnitIsDeadOrGhost(self.unitId) and not UnitIsFeignDeath(self.unitId)
-  self.isGhost = UnitIsGhost(self.unitId)
-  self.isConnected = UnitIsConnected(self.unitId)
-  self.NeedBuff = true
-
-  wipe(self.knownBuffs)
-  wipe(self.allBuffs)
-
-  if self.isDead then
-    return -- the dead have no buffs
-  end
-
-  self.hasReputationTrinket = false
-  self.hasRidingTrinket = false
-
-  local buffIndex = 0
-  scanStatsModule:Count("auraUnits")
-
-  repeat
-    buffIndex = buffIndex + 1
-
-    local unitAura, readable = module:UnitAura(self.unitId, buffIndex, "HELPFUL")
-    scanStatsModule:Count("auraReads")
-    if not readable then
-      self.auraDataUnavailable = true
-      self.NeedBuff = false
-      wipe(self.knownBuffs)
-      wipe(self.allBuffs)
-      return
-    elseif unitAura == nil then
-      break
-    end
-
-    if unitAura.spellId then
-      self.allBuffs[unitAura.spellId] = true -- save all buffids even those not supported
-      if tContains(BuffomatAddon.AllDrink, unitAura.spellId) then
-        BuffomatAddon.drinkingPersonCount = BuffomatAddon.drinkingPersonCount + 1
-      end
-    end
-
-    local lookupBuff = allBuffsModule.selectedBuffsSpellIds[unitAura.spellId]
-
-    if lookupBuff then
-      -- Skip members who have a buff on the global ignore list - example phaseshifted imps
-      if tContains(BuffomatAddon.buffIgnoreAll, unitAura.spellId) then
-        wipe(self.knownBuffs)
-        self.NeedBuff = false
-        break
-      else
-        local buffOnUnit = buffModule:New(
-          unitAura.spellId,
-          unitAura.duration,
-          unitAura.expirationTime,
-          unitAura.source,
-          allBuffsModule.spellIdIsSingleLookup[unitAura.spellId] ~= nil)
-        self.knownBuffs[lookupBuff.buffId] = buffOnUnit
-      end
-      --if tContains(BOM.ReputationTrinket.spells, spellId) then
-      --  self.hasReputationTrinket = true
-      --end
-
-      --if tContains(BOM.Carrot.spells, spellId) then
-      --  self.hasCarrot = true
-      --end
-    end
-  until false -- The API returns nil at the end of the aura list.
-
-  if self.isPlayer then
-    self:UpdatePlayerWeaponEnchantments()
-  end
 end
 
 function unitClass:GetDistance()
@@ -244,29 +111,6 @@ function unitClass:SetOffhandBuff(enchantmentId, expiration)
     true)
 
   self.offhandEnchantment = enchantBuffId
-end
-
----@param party BomParty
----@param playerZone number
----@return BomUnit
-function unitClass:UpdateBuffs(party, playerZone)
-  self.isSameZone = (C_Map.GetBestMapForUnit(self.unitId) == playerZone)
-      or self.isGhost
-      or self.unitId == "target"
-
-  if not self.isDead
-      or BuffomatAddon.declineHasResurrection
-  then
-    self.hasResurrection = false
-    self.distance = toolboxModule:UnitDistanceSquared(self.unitId)
-  else
-    self.hasResurrection = UnitHasIncomingResurrection(self.unitId)
-        or self.hasResurrection
-  end
-
-  self:ForceUpdateBuffs(party.player)
-
-  return self
 end
 
 function unitClass:UpdatePlayerWeaponEnchantments()

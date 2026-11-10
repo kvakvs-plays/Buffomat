@@ -44,8 +44,6 @@ module.libIcon = LibStub("LibDBIcon-1.0")
 ---@field castFailedSpellId number|nil
 ---@field checkForError boolean Used by error suppression code
 ---@field currentProfile ProfileSettings Current profile from CharacterState.Profiles
----@field declineHasResurrection boolean Set to true on combat start, stop, holding Alt, cleared on party update
----@field drinkingPersonCount number Used for warning "X persons is/are drinking"
 ---@field AllDrink WowSpellId[] Used for warning "X persons is/are drinking"
 ---@field enchantList {[WowSpellId]: number[]} Spell ids mapping to enchantment ids
 ---@field forceProfile ProfileName|nil Nil will choose profile name automatically, otherwise this profile will be used

@@ -9,6 +9,10 @@ local BuffomatAddon = BuffomatAddon
 ---@class AllBuffsModule
 ---@field allBuffs BomBuffidBuffdefLookup All buffs, same as BOM.AllBuffomatSpells for convenience
 ---@field allSpellIds number[]
+---@field allSpellIdSet table<WowSpellId, boolean> The same ids as a set, for a lookup per aura
+---@field drinkSpellIdSet table<WowSpellId, boolean> Auras of somebody drinking
+---@field ignoreAllSpellIdSet table<WowSpellId, boolean> Auras which exclude a unit from all buffing
+---@field setupVersion number Counts spell setups; the auras stored per unit depend on the setup
 ---@field buffCategories BuffCategoryName[] Category names for buffs
 ---@field buffFromSpellIdLookup BomBuffBySpellId Lookup table for buff definitions by spell id
 ---@field CrusaderAuraSpell BomBuffDefinition
@@ -438,7 +442,6 @@ BuffomatAddon.buffIgnoreAll = {
   4511 -- Phase Shift (imp)
 }
 
-BuffomatAddon.drinkingPersonCount = 0
 BuffomatAddon.AllDrink = {
   30024,                                          -- Restores 20% mana
   430,                                            -- level 5 drink
@@ -451,6 +454,30 @@ BuffomatAddon.AllDrink = {
   34291,                                          -- TBC: level 70 drink
   27089, 43706, 46755,                            -- TBC? level 75 drink
 }
+
+---@param ids number[]
+---@return table<number, boolean>
+local function toSet(ids)
+  local set = {}
+  for _, id in ipairs(ids) do
+    set[id] = true
+  end
+  return set
+end
+
+module.drinkSpellIdSet = toSet(BuffomatAddon.AllDrink)
+module.ignoreAllSpellIdSet = toSet(BuffomatAddon.buffIgnoreAll)
+module.allSpellIdSet = {}
+module.setupVersion = 0
+
+---Called when the list of available spells was rebuilt.
+function module:OnSpellSetupChanged()
+  wipe(self.allSpellIdSet)
+  for _, spellId in ipairs(self.allSpellIds or {}) do
+    self.allSpellIdSet[spellId] = true
+  end
+  self.setupVersion = self.setupVersion + 1
+end
 
 ---For all spells database load data for spellids and items
 function module:LoadItemsAndSpells()

@@ -73,29 +73,19 @@ local function run(mode)
     if mode == "mixed" then globals.C_UnitAuras = {} end
   end
   loadModule("Src/KvLib/KvEnv.lua", globals)
-  loadModule("Src/Scan/ScanStats.lua", globals)
-  loadModule("Src/Core/Buff.lua", globals)
-  loadModule("Src/Core/Unit.lua", globals)
   loadModule("Src/Task/TaskScan.lua", globals)
   local env = libs["KvLibShared-Env"]
-  local unitModule = libs["Buffomat-Unit"]
   local scan = libs["Buffomat-TaskScan"]
   local allBuffs = libs["Buffomat-AllBuffs"]
-  allBuffs.allSpellIds = { 42 }
-  allBuffs.selectedBuffsSpellIds = { [42] = { buffId = 42 } }
-  allBuffs.spellIdIsSingleLookup = { [42] = true }
+  allBuffs.selectedBuffs = {}
   setmetatable(libs["Buffomat-Languages"], { __call = function(_, key) return key end })
   scan.ShowInactive = function(_, reason) state.paused = reason end
-  local player = unitModule:New({ unitId = "player", name = "Tester", knownBuffs = {}, allBuffs = {} })
-  player.UpdatePlayerWeaponEnchantments = function() state.weaponsUpdated = true end
+  local player = { unitId = "player", name = "Tester", knownBuffs = {}, allBuffs = {} }
   local context = { party = { player = player, byUnitId = { player = player } } }
 
   local aura, readable = env.GetUnitAura("player", 1, "HELPFUL")
   if mode == "unavailable" then
     equal(aura, nil); equal(readable, false)
-    player:ForceUpdateBuffs(player)
-    equal(player.auraDataUnavailable, true)
-    equal(scan:CheckAuraData(context), false)
     equal(state.calls, 0)
     print("PASS: unavailable aura API pauses scanning")
     return
@@ -106,10 +96,7 @@ local function run(mode)
   equal(aura.duration, 60); equal(aura.expirationTime, 90); equal(aura.timeMod, 1)
   aura, readable = env.GetUnitAura("player", 2, "HELPFUL")
   equal(aura, nil); equal(readable, true, "end of list remains readable")
-  player:ForceUpdateBuffs(player)
-  equal(player.knownBuffs[42].singleId, 42); equal(player.allBuffs[42], true)
-  equal(globals.BuffomatShared.Duration["Test Buff"], 60)
-  equal(state.weaponsUpdated, true); equal(scan:CheckAuraData(context), true)
+  equal(scan:CheckAuraData(context), true)
 
   -- Every returned primitive must be checked before use, including spell IDs,
   -- durations, source tokens, and aura names used as cache keys.
@@ -117,10 +104,6 @@ local function run(mode)
     data[key] = secret
     aura, readable = env.GetUnitAura("player", 1, "HELPFUL")
     equal(aura, nil); equal(readable, false, "secret field " .. key)
-    player:ForceUpdateBuffs(player)
-    equal(player.auraDataUnavailable, true); equal(player.NeedBuff, false)
-    equal(next(player.knownBuffs), nil); equal(next(player.allBuffs), nil)
-    equal(scan:CheckAuraData(context), false)
     data[key] = value
   end
 
@@ -128,14 +111,13 @@ local function run(mode)
   local callsBeforeCombat = state.calls
   aura, readable = env.GetUnitAura("player", 1, "HELPFUL")
   equal(aura, nil); equal(readable, false)
-  player:ForceUpdateBuffs(player)
-  equal(player.auraDataUnavailable, true)
   equal(scan:CancelBuff({42}), false)
   equal(state.calls, callsBeforeCombat, "no combat aura enumeration")
   state.inCombat = false
-  player:ForceUpdateBuffs(player)
-  equal(player.auraDataUnavailable, false); equal(player.NeedBuff, true)
-  equal(scan:CheckAuraData(context), true, "public data resumes scanning")
+
+  player.auraDataUnavailable = true
+  equal(scan:CheckAuraData(context), false, "an unread player blocks decisions")
+  player.auraDataUnavailable = false
 
   context.party.byUnitId.party1 = { auraDataUnavailable = true }
   equal(scan:CheckAuraData(context), false, "restricted party member blocks partial decisions")
@@ -153,11 +135,8 @@ local function run(mode)
   equal(scan:CancelBuff({42}), false); equal(state.cancelled, nil)
   data.spellId = 42
   state.empty = true
-  player:ForceUpdateBuffs(player)
-  equal(player.auraDataUnavailable, false); equal(player.NeedBuff, true)
-  equal(next(player.knownBuffs), nil, "empty public aura list can still need buffs")
   equal(scan:CancelBuff({42}), false)
-  print("PASS: " .. mode .. " aura mapping, unit scan, restrictions, and cancellation")
+  print("PASS: " .. mode .. " aura mapping, restrictions, and cancellation")
 end
 
 for _, mode in ipairs({ "legacy", "modern", "mixed", "unavailable" }) do run(mode) end

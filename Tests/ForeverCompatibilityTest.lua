@@ -163,17 +163,6 @@ for _, client in ipairs({
     local _, readable = env.GetUnitAura("player", 1, "HELPFUL")
     equal(readable, true); equal(state.auraRead, true)
 
-    -- Weapon enchants are read for the player even while auras are restricted
-    state.restrictions[3] = true
-    player.allBuffs = { [1] = true }
-    player.knownBuffs[1] = {}
-    player:ForceUpdateBuffs(player)
-    equal(player.auraDataUnavailable, true)
-    equal(player.weaponDataUnavailable, false)
-    equal(player.mainhandEnchantment, nil); equal(player.knownBuffs[1], nil, "stale auras wiped")
-    equal(next(player.allBuffs), nil)
-    state.restrictions[3] = nil
-
     -- During ADDON_RESTRICTION_STATE_CHANGED the restriction reports Activating
     globals.Enum.AddOnRestrictionState = { Inactive = 0, Activating = 1, Active = 2 }
     globals.C_RestrictedActions.GetAddOnRestrictionState = function(kind)

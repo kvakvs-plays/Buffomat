@@ -75,6 +75,7 @@ Src/Scan/ScanPass.lua
 Src/Scan/ScanEvents.lua
 Src/Scan/BagScan.lua
 Src/Scan/RosterScan.lua
+Src/Scan/AuraScan.lua
 
 Src/Ui/Options.lua
 Src/Ui/OptionsPopupMenu.lua

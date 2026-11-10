@@ -392,4 +392,8 @@ function module:SetupAvailableSpells()
   for _buffId, buff in pairs(allBuffsModule.allBuffs) do
     self:Setup_EachBuff(buff)
   end -- for all BOM-supported spells
+
+  -- Which auras are stored per unit depends on the spells just selected
+  allBuffsModule:OnSpellSetupChanged()
+  scanSchedulerModule:MarkDirty("auras")
 end
