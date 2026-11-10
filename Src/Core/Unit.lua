@@ -18,6 +18,8 @@ local scanStatsModule = LibStub("Buffomat-ScanStats") --[[@as ScanStatsModule]]
 ---@field class ClassName
 ---@field distance number
 ---@field group number Raid group number (9 if temporary moved out of the raid by BOM)
+---@field guid string? Identity of the character behind the unit id
+---@field auraSignature number? Checksum of the last aura read, to tell a real change from a repeated event
 ---@field hasReputationTrinket boolean Has AD reputation trinket equipped
 ---@field hasRidingTrinket boolean Has carrot riding trinket equipped
 ---@field hasResurrection boolean Was recently resurrected
@@ -112,8 +114,6 @@ function unitClass:ForceUpdateBuffs(playerUnit)
   wipe(self.knownBuffs)
   wipe(self.allBuffs)
 
-  BuffomatAddon.somebodyIsGhost = BuffomatAddon.somebodyIsGhost or self.isGhost
-
   if self.isDead then
     return -- the dead have no buffs
   end
@@ -176,25 +176,6 @@ function unitClass:ForceUpdateBuffs(playerUnit)
   if self.isPlayer then
     self:UpdatePlayerWeaponEnchantments()
   end
-end
-
----@param unitId string
----@param name string
----@param group number
----@param class ClassName
----@param link string
----@param isTank boolean
-function unitClass:Construct(unitId, name, group, class, link, isTank)
-  self.distance = 1000044 -- special value to find out that the range error originates from this module
-  self.unitId = unitId
-  self.name = name
-  self.group = group
-  self.hasResurrection = self.hasResurrection or false
-  self.class = class
-  self.link = link
-  self.isTank = isTank
-  self.knownBuffs = self.knownBuffs or {}
-  self.allBuffs = self.allBuffs or {}
 end
 
 function unitClass:GetDistance()

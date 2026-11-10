@@ -2,13 +2,11 @@ local BuffomatAddon = BuffomatAddon
 
 ---@class TaskScanModule
 ---@field taskListSizeBeforeScan number Saved size before scan
----@field roundRobinGroup number Group number to refresh, rotates from 1 to 8 in raid, or stays always 1 otherwise
 ---@field saveSomeoneIsDead boolean
 ---@field pvpMatchNoticeShown boolean? The PvP match chat notice was printed this session
 local module = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
 
 module.taskListSizeBeforeScan = 0
-module.roundRobinGroup = 0
 module.saveSomeoneIsDead = false
 module.tasklist = nil
 
@@ -36,7 +34,7 @@ local taskListModule = LibStub("Buffomat-TaskList") --[[@as TaskListModule]]
 local taskModule = LibStub("Buffomat-Task") --[[@as TaskModule]]
 local texturesModule = LibStub("Buffomat-Textures") --[[@as TexturesModule]]
 local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
-local unitCacheModule = LibStub("Buffomat-UnitCache") --[[@as UnitCacheModule]]
+local rosterScanModule = LibStub("Buffomat-RosterScan") --[[@as RosterScanModule]]
 local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
 
 ---@class BomBuffScanContext
@@ -1594,7 +1592,7 @@ end
 ---offer player to cast Crusader Aura.
 ---@return boolean True if the scanning should be interrupted and only crusader aura prompt will be visible
 function module:MountedCrusaderAuraPrompt()
-  local playerUnit = unitCacheModule:GetUnit("player", nil, nil, nil)
+  local playerUnit = rosterScanModule.roster.player
 
   if playerUnit and self:IsMountedAndCrusaderAuraRequired() then
     local spell = allBuffsModule.CrusaderAuraSpell
@@ -1708,21 +1706,6 @@ function module:IsAuraFreeBuff(buffDef, playerUnit)
       and not buffDef.isConsumable and not buffDef.petBuff and not buffDef.isInfo
 end
 
----A party of only the player. In a PvP match other players' names can be secret,
----and the full party refresh uses names as table keys and compares them.
----@return BomParty|nil
-function module:GetPlayerOnlyParty()
-  local player = unitCacheModule:GetUnit("player", nil, nil, nil)
-  if not player then
-    return nil
-  end
-  local party = partyModule:New()
-  party.player = player
-  party:Add(player)
-  player:UpdateBuffs(party, C_Map.GetBestMapForUnit("player"))
-  return party
-end
-
 ---Scan only tasks which do not depend on aura data: weapon buffs, conjured items,
 ---tracking, and usable or openable items. Used during a PvP match, where the
 ---client keeps aura data secret even out of combat.
@@ -1789,33 +1772,6 @@ function module:Finalize(context)
       taskListPanelModule:CastButtonText(_t("castButton.inactive.PvPMatch"), false)
     end
   end
-end
-
----For raid, invalidated group is rotated 1 to 8. For solo and party it does not rotate.
----Reloads party members and refreshes their buffs as necessary.
----@return BomParty
-function module:RotateInvalidatedGroup_GetGroup()
-  partyModule:InvalidatePartyGroup(self.roundRobinGroup)
-  local party = partyModule:GetParty()
-
-  -- Step to the next nonempty group
-  local repeatCounter = 9 -- to prevent endless loop if due to a bug all emptyGroups are empty
-  if IsInRaid() then
-    -- In raid we rotate groups 1 till 8 every refresh
-    repeat
-      self.roundRobinGroup = self.roundRobinGroup + 1
-
-      if self.roundRobinGroup > 8 then
-        self.roundRobinGroup = 1
-      end
-
-      repeatCounter = repeatCounter - 1
-    until not party.emptyGroups[self.roundRobinGroup] or repeatCounter <= 0
-  else
-    self.roundRobinGroup = 1 -- always reload group 1 (also this is ignored in solo or 5man)
-  end
-
-  return party
 end
 
 ---@param _context TaskScanContext
@@ -1908,25 +1864,13 @@ function module:ShowInactive(reason)
 end
 
 ---@class TaskScanContext
----@field callerLocation string Debug value to trace the caller of this function
 ---@field party BomParty
 ---@field auraFree boolean PvP match hides auras: scan only tasks that do not read them
 
---- THIS IS THE SCAN ENTRY POINT
---- Scan the available spells and group members to find who needs the rebuff/res and what would be their priority?
----@param callerLocation string Debug value to trace the caller of this function
-function module:ScanTasks(callerLocation)
-  if InCombatLockdown() then
-    return
-  end
-  -- A PvP match alone still allows tasks which do not read auras
-  local restriction = envModule.GetAuraRestriction()
-  local auraFree = restriction == "PvPMatch"
-  if restriction ~= nil and not auraFree then
-    self:ShowInactive(_t("castButton.inactive.AuraDataUnavailable"))
-    return
-  end
-
+--- Work out from the snapshots who needs a buff or a resurrection, and show the tasks.
+---@param party BomParty The roster as read by this pass
+---@param auraFree boolean PvP match hides auras: scan only tasks that do not read them
+function module:ScanTasks(party, auraFree)
   -- to avoid re-playing the same sound, only play when task list changes from 0 to some tasks
   if not self.tasklist then
     self.tasklist = taskListModule:New()
@@ -1936,19 +1880,9 @@ function module:ScanTasks(callerLocation)
 
   ---@type TaskScanContext
   local context = {
-    callerLocation = callerLocation,
+    party = party,
     auraFree = auraFree,
   }
-
-  if auraFree then
-    context.party = self:GetPlayerOnlyParty()
-    if not context.party then
-      self:ShowInactive(_t("castButton.inactive.PvPMatch"))
-      return
-    end
-  else
-    context.party = self:RotateInvalidatedGroup_GetGroup()
-  end
 
   if not self:Precheck(context)
       or not self:CheckAuraData(context)

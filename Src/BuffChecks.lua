@@ -8,7 +8,7 @@ local buffDefModule = LibStub("Buffomat-BuffDefinition") --[[@as BuffDefinitionM
 local buffomatModule = LibStub("Buffomat-Buffomat") --[[@as BuffomatModule]]
 local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local spellIdsModule = LibStub("Buffomat-SpellIds") --[[@as SpellIdsModule]]
-local unitCacheModule = LibStub("Buffomat-UnitCache") --[[@as UnitCacheModule]]
+local rosterScanModule = LibStub("Buffomat-RosterScan") --[[@as RosterScanModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local itemIdsModule = LibStub("Buffomat-ItemIds") --[[@as ItemIdsModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
@@ -165,13 +165,12 @@ function module:HunterPetNeedsBuff(buff, playerUnit)
     return -- pre-TBC this did not exist
   end
 
-  local pet = unitCacheModule:GetUnit("pet", nil, nil, false)
+  local pet = rosterScanModule.roster.playerPet
   if not pet then
     return -- no pet - no problem
   end
 
-  (pet):ForceUpdateBuffs(playerUnit)
-  if (pet):HaveBuff(buff.highestRankSingleId) then
+  if pet:HaveBuff(buff.highestRankSingleId) then
     return -- have pet, have buff
   end
 

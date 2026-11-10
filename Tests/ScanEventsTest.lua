@@ -15,7 +15,7 @@ local function setup(options)
   f:lib("Buffomat-Const").LOADING_SCREEN_TIMEOUT = 2
   f:lib("Buffomat-TaskList").WipeMacro = function() f.state.macroWiped = true end
   f:lib("Buffomat-TaskScan").MaybeResetWatchGroups = function() f.state.watchGroupsReset = true end
-  f:lib("Buffomat-Party").InvalidatePartyCache = function() end
+  f:lib("Buffomat-TaskScan").ClearSkip = function() f.state.skipCleared = true end
   local scheduler = f:lib("Buffomat-ScanScheduler")
   local passes = {}
   f:lib("Buffomat-ScanPass").Run = function(_, pending, pendingUnits)
@@ -31,7 +31,8 @@ end
 for _, modern in ipairs({ false, true }) do
   local f, scheduler, passes = setup({ modern = modern })
   local party = f:lib("Buffomat-Party")
-  local function setRoster() party.theParty = { byUnitId = { player = {}, raid2 = {} } } end
+  local rosterScan = f:lib("Buffomat-RosterScan")
+  rosterScan.roster = { isRaid = false, byUnitId = { player = {} } }
   f.state.validEvents = modern and nil or setmetatable({}, { __index = function(_, event)
     -- Events this old client does not have
     return event ~= "WEAPON_ENCHANT_CHANGED" and event ~= "PLAYER_ROLES_ASSIGNED"
@@ -60,7 +61,7 @@ for _, modern in ipairs({ false, true }) do
   f:fire("GROUP_ROSTER_UPDATE")
   f:advance(0.3)
   equal(#passes, 3); equal(passes[3].domains.roster, true)
-  setRoster()
+  rosterScan.roster = { isRaid = true, byUnitId = { player = {}, raid2 = {} } }
   f:fire("UNIT_AURA", "nameplate3")
   f:fire("UNIT_AURA", "raid7") -- not in the roster snapshot
   equal(f:pendingTimers(), 0, "an aura outside the roster schedules nothing")
@@ -167,6 +168,23 @@ for _, modern in ipairs({ false, true }) do
   f:advance(3)
   equal(#passes, before + 1)
 
+  -- Alt means "try again"; any other modifier only matters while a task waits for one
+  before = #passes
+  f.state.modifier = true
+  f:fire("MODIFIER_STATE_CHANGED")
+  f:advance(0.3)
+  equal(#passes, before, "nothing waits for a modifier key")
+  f.globals.BuffomatAddon.scanModifierKeyDown = true
+  f:fire("MODIFIER_STATE_CHANGED")
+  f:advance(0.3)
+  equal(#passes, before + 1); equal(passes[#passes].domains.settings, true); equal(passes[#passes].domains.auras, nil)
+  f.state.alt = true
+  f:fire("MODIFIER_STATE_CHANGED")
+  f:advance(0.3)
+  equal(#passes, before + 2); equal(passes[#passes].domains.auras, true); equal(f.state.skipCleared, true)
+  f.state.alt, f.state.modifier = false, false
+  f.globals.BuffomatAddon.scanModifierKeyDown = false
+
   -- A restriction change is never scanned inside the event
   if modern then
     before = #passes
@@ -178,6 +196,7 @@ for _, modern in ipairs({ false, true }) do
 
   -- Leaving the group resets the watched groups
   f.state.inGroup, f.state.inRaid = false, false
+  f.globals.BuffomatShared.BuffTarget = false
   f:fire("GROUP_LEFT")
   equal(f.state.watchGroupsReset, true)
   f:advance(0.3)

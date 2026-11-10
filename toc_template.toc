@@ -68,13 +68,13 @@ Src/Task/ActionMacro.lua
 
 Src/Cache/ItemCache.lua
 Src/Cache/SpellCache.lua
-Src/Cache/UnitCache.lua
 
 Src/Scan/ScanStats.lua
 Src/Scan/ScanScheduler.lua
 Src/Scan/ScanPass.lua
 Src/Scan/ScanEvents.lua
 Src/Scan/BagScan.lua
+Src/Scan/RosterScan.lua
 
 Src/Ui/Options.lua
 Src/Ui/OptionsPopupMenu.lua

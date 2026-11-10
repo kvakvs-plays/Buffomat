@@ -17,6 +17,7 @@ local kvPlayerModule = LibStub("KvLibShared-Player") --[[@as KvPlayerModule]]
 local kvUnitModule = LibStub("KvLibShared-Unit") --[[@as KvUnitModule]]
 local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local playerStateModule = LibStub("Buffomat-PlayerStateScan") --[[@as PlayerStateScanModule]]
+local rosterScanModule = LibStub("Buffomat-RosterScan") --[[@as RosterScanModule]]
 local scheduler = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
 local taskListModule = LibStub("Buffomat-TaskList") --[[@as TaskListModule]]
 local taskScanModule = LibStub("Buffomat-TaskScan") --[[@as TaskScanModule]]
@@ -28,16 +29,10 @@ module.isPlayerInGroup = false
 ---@param unitId string?
 ---@return boolean
 local function isScannedUnit(unitId)
-  if unitId == "player" or unitId == "pet" then
-    return true
-  end
-  local party = partyModule.theParty
-  return unitId ~= nil and party ~= nil and party.byUnitId[unitId] ~= nil
+  return unitId ~= nil and rosterScanModule.roster.byUnitId[unitId] ~= nil
 end
 
 local function onRosterChanged()
-  partyModule:InvalidatePartyCache()
-  partyModule.theParty = nil
   scheduler:MarkDirty("roster")
   module:RegisterAuraEvent()
 
@@ -50,9 +45,10 @@ local function onRosterChanged()
   end
 end
 
+---Raid pets are not scanned, so only the player's and the party's pets matter.
 ---@param unitId string Owner of the pet
 local function onUnitPet(_event, unitId)
-  if isScannedUnit(unitId) then
+  if isScannedUnit(unitId) and not rosterScanModule.roster.isRaid or unitId == "player" then
     scheduler:MarkDirty("roster")
   end
 end
@@ -162,8 +158,12 @@ end
 ---Tasks which wait for a held modifier key change with the key. Alt also means
 ---"try again": the pass forgets skipped members and declined resurrections.
 local function onModifierChanged()
-  if BuffomatAddon.scanModifierKeyDown or kvPlayerModule.IsAltKeyDown() then
-    scheduler:MarkAllDirty("modifierKey")
+  if kvPlayerModule.IsAltKeyDown() then
+    BuffomatAddon.declineHasResurrection = true
+    taskScanModule:ClearSkip()
+    scheduler:MarkAllDirty("altKey")
+  elseif BuffomatAddon.scanModifierKeyDown then
+    scheduler:Request("modifierKey")
   end
 end
 
@@ -189,7 +189,6 @@ end
 local function onRestrictionChanged()
   -- Nothing is read here: during this event the restriction which is about to begin
   -- still reports inactive. The pass runs from the scheduler timer.
-  partyModule:InvalidatePartyCache()
   scheduler:MarkAllDirty("restrictionChanged")
 end
 

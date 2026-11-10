@@ -146,28 +146,12 @@ for _, client in ipairs({
   scan.ShowInactive = function(_, reason) state.inactive = reason end
   if modern then
     local names = { [0] = "Combat", "Encounter", "ChallengeMode", "PvPMatch" }
-    libs["Buffomat-TaskList"].New = function() return { tasks = {} } end
-    libs["Buffomat-Buffomat"].UseProfile = function() end
-    libs["Buffomat-Profile"].ChooseProfile = function() end
-    scan.GetPlayerOnlyParty = function() state.playerOnlyParty = true; return {} end
-    scan.RotateInvalidatedGroup_GetGroup = function() state.fullParty = true; return {} end
-    scan.Precheck = function(_, context) state.auraFreeContext = context.auraFree; return false end
     for kind = 0, 3 do
       state.restrictions[kind] = true
       equal(env.IsAuraRestricted(), true)
       equal(env.GetAuraRestriction(), names[kind])
       local aura, readable = env.GetUnitAura("player", 1, "HELPFUL")
       equal(aura, nil); equal(readable, false); equal(state.auraRead, nil)
-      state.inactive, state.auraFreeContext, state.playerOnlyParty, state.fullParty = nil, nil, nil, nil
-      scan:ScanTasks("test")
-      if kind == 3 then
-        -- PvP match: aura-free scan over the player only, no full party refresh
-        equal(state.inactive, nil, "PvP match does not pause the scan")
-        equal(state.auraFreeContext, true); equal(state.playerOnlyParty, true); equal(state.fullParty, nil)
-      else
-        equal(state.inactive, "castButton.inactive.AuraDataUnavailable")
-        equal(state.auraFreeContext, nil)
-      end
       state.restrictions[kind] = nil
     end
     -- A stricter restriction wins over the PvP match

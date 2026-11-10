@@ -18,7 +18,6 @@ local eventsModule = LibStub("Buffomat-Events") --[[@as EventsModule]]
 local macroModule = LibStub("Buffomat-Macro") --[[@as MacroModule]]
 local optionsModule = LibStub("Buffomat-Options") --[[@as OptionsModule]]
 local optionsPopupModule = LibStub("Buffomat-OptionsPopup") --[[@as OptionsPopupModule]]
-local partyModule = LibStub("Buffomat-Party") --[[@as PartyModule]]
 local popupModule = LibStub("Buffomat-Popup") --[[@as PopupModule]]
 local profileModule = LibStub("Buffomat-Profile") --[[@as ProfileModule]]
 local slashModule = LibStub("Buffomat-SlashCommands") --[[@as SlashCommandsModule]]
@@ -62,7 +61,6 @@ module.libIcon = LibStub("LibDBIcon-1.0")
 ---@field ridingSpeedZones BomRidingSpeedZones Equipped Riding trinket: Spell to and zone ids to check
 ---@field SaveTargetName string|nil
 ---@field scanModifierKeyDown boolean Will update buffomat when modifier key is held down
----@field somebodyIsGhost boolean [unused?] Someone in the party is a ghost
 ---@field spellTabsCreatedFlag boolean Indicated spells tab already populated with controls
 ---@field setupAvailableSpellsFn function
 -- -@field Print fun(self: BomAddon, msg: string): void
@@ -241,7 +239,6 @@ function module:InitUI()
   libIcon:Register("BuffomatIcon", buffomatLDB, BuffomatShared.Minimap)
 
   module:OptionsInit()
-  partyModule:InvalidatePartyCache()
   scanSchedulerModule:Start()
 end
 
