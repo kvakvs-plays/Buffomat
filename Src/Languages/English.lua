@@ -107,6 +107,7 @@ function englishModule:Translations()
     ["options.short.SlashCommandBom"] = "Chat command /bom",
     ["options.short.SlashCommandBfm"] = "Chat command /bfm",
     ["options.short.SlashCommandBuffomat"] = "Chat command /buffomat",
+    ["options.short.WelcomeMessage"] = "Welcome message in chat at login",
     ["options.short.SomeoneIsDrinking"] = "When someone is drinking...",
     ["options.short.UseProfiles"] = "Use profiles",
     ["options.short.UseRank"] = "Use ranked buffs and downrank as necessary",
@@ -170,6 +171,8 @@ function englishModule:Translations()
     ["options.long.SlashCommandBuffomat"] = "Use /buffomat for Buffomat. With no command chosen, /buffomat is "
         .. "used anyway. Reload UI to apply.",
     ["options.SlashCommandReload"] = "Chat commands after the next reload (/reload): %s",
+    ["options.long.WelcomeMessage"] = "Say Buffomat's version in chat when you log in, with a link to the "
+        .. "What's new window.",
     ["options.long.SomeoneIsDrinking"] = "When someone is drinking a message can be shown or hidden",
     ["options.long.UseProfiles"] = "Use profiles based on whether the player is solo, in a group, raid or a battleground",
     ["options.long.UseRank"] =
@@ -399,7 +402,23 @@ function englishModule:Translations()
     SlashScanStats = "Print scan statistics (with debug logging on)",
     SlashReset = "Reset BOM window",
     SlashOpen = "Open BOM window",
+    SlashChanges = "Show what changed in each version",
     SlashProfile = "Change current profile to solo/group/raid/battleground/auto",
+
+    -- The What's new window and the welcome message with a link to it
+    ["whatsNew.link"] = "What's new",
+    ["whatsNew.title"] = "What's new in %s",
+    ["whatsNew.summary"] = "Changes in all versions: %d. The newest version is first.",
+    ["whatsNew.versions"] = "Versions: %d",
+    ["whatsNew.changes"] = "Changes: %d",
+    ["whatsNew.newer"] = "Newer",
+    ["whatsNew.older"] = "Older",
+    ["whatsNew.footer"] = "Bug reports and feature requests are welcome on GitHub",
+    ["whatsNew.copyHint"] = "click, then Ctrl+C",
+    -- Version, the [What's new] link, the chat command
+    ["whatsNew.welcome.installed"] = "%s installed. See what it does: %s or %s",
+    ["whatsNew.welcome.updated"] = "Updated to %s. See what changed: %s or %s",
+    ["whatsNew.welcome.loaded"] = "%s loaded. %s",
 
     Tank = "Tank", -- LOCALIZED_CLASS_NAMES from wow but for tank role
     Pet = "Pet",   -- LOCALIZED_CLASS_NAMES from wow but for pet role

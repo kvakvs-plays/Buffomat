@@ -26,7 +26,9 @@ When need to search for code locations, consult with `.agents/code-index.md`
 * For Forever trainer lists, talents, consumables and spell details use ForeverDB, which welcomes
   AI assistants: `.agents/foreverdb/foreverdb.py`, then read `.agents/foreverdb/out/summary.txt`.
   The API key is `FOREVERDB_API_KEY` in the git-ignored repository `.env`; the client reads it from
-  there. Never print or commit the key. Limits: 60 requests a minute, 10,000 a day.
+  there. Never print or commit the key. 
+  Till 12 Dec 2026 - Limits: 60 requests a minute, 10,000 a day.
+  After 12 Dec 2026 - Free tier: 5,000 requests a day and 30 a minute for every account, counted across all its keys.
   Request counts per minute for the last 24 hours are kept in the git-ignored
   `.agents/foreverdb/usage-24h.log` (`YYYY-MM-DD HH:MM<TAB>count`); run
   `python .agents/foreverdb/foreverdb.py usage` before a large query to see how many are left.

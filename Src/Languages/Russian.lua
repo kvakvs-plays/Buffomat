@@ -96,6 +96,7 @@ function russianModule:Translations()
     ["options.short.SlashCommandBom"] = "Команда чата /bom",
     ["options.short.SlashCommandBfm"] = "Команда чата /bfm",
     ["options.short.SlashCommandBuffomat"] = "Команда чата /buffomat",
+    ["options.short.WelcomeMessage"] = "Приветствие в чате при входе",
     ["options.short.SomeoneIsDrinking"] = "Когда кто-то в группе пьёт",
     ["options.short.UseProfiles"] = "Использовать профили",
     ["options.short.UseRank"] = "Использовать понижение ранга заклинаний",
@@ -148,6 +149,8 @@ function russianModule:Translations()
     ["options.long.SlashCommandBuffomat"] = "Использовать /buffomat для Buffomat. Если не выбрана ни одна "
         .. "команда, /buffomat всё равно работает. Применится после перезагрузки интерфейса.",
     ["options.SlashCommandReload"] = "Команды чата после перезагрузки интерфейса (/reload): %s",
+    ["options.long.WelcomeMessage"] = "При входе в игру сообщать в чат версию Buffomat со ссылкой на окно "
+        .. "«Что нового».",
     ["options.long.SomeoneIsDrinking"] = "Когда кто-то пьёт, сообщение можно показать или скрыть",
     ["options.long.UseProfiles"] = "Использовать профили в зависимости от соло, группы, рейда или поля боя",
     ["options.long.UseRank"] = "Если у цели уровень слишком низкий, то использовать пониженный ранг заклинания",
@@ -430,6 +433,21 @@ function russianModule:Translations()
     SlashReset = "Сбросить окно Бафомёта",
 
     SlashOpen = "Открыть Бафомёт",
+    SlashChanges = "Показать изменения по версиям",
+
+    -- Окно «Что нового» и приветствие со ссылкой на него
+    ["whatsNew.link"] = "Что нового",
+    ["whatsNew.title"] = "Что нового в %s",
+    ["whatsNew.summary"] = "Изменений во всех версиях: %d. Сначала новые.",
+    ["whatsNew.versions"] = "Версий: %d",
+    ["whatsNew.changes"] = "Изменений: %d",
+    ["whatsNew.newer"] = "Новее",
+    ["whatsNew.older"] = "Старее",
+    ["whatsNew.footer"] = "Сообщения об ошибках и пожелания принимаются на GitHub",
+    ["whatsNew.copyHint"] = "нажмите, затем Ctrl+C",
+    ["whatsNew.welcome.installed"] = "%s установлен. Что он умеет: %s или %s",
+    ["whatsNew.welcome.updated"] = "Обновлён до %s. Что изменилось: %s или %s",
+    ["whatsNew.welcome.loaded"] = "%s загружен. %s",
 
     SlashProfile = "Сменить текущий профиль на соло/группа/рейд/поле боя/авто",
 

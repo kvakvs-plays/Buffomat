@@ -16,6 +16,7 @@ local popupModule = LibStub("Buffomat-Popup") --[[@as PopupModule]]
 local allBuffsModule = LibStub("Buffomat-AllBuffs") --[[@as AllBuffsModule]]
 local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
 local characterSettingsModule = LibStub("Buffomat-CharacterSettings") --[[@as CharacterSettingsModule]]
+local whatsNewModule = LibStub("Buffomat-WhatsNew") --[[@as WhatsNewModule]]
 ---Makes a tuple to pass to the menubuilder to display a settings checkbox in popup menu
 ---@param db table - BuffomatShared reference to read settings from it
 ---@param var string Variable name from optionsPopupModule.BehaviourSettings
@@ -120,6 +121,8 @@ function module:Setup(control, minimap)
 
   table.insert(menuItems, popupModule:Clickable(_t("optionsMenu.Settings"),
     module.OpenOptions, 1, nil))
+  table.insert(menuItems, popupModule:Clickable(_t("whatsNew.link"),
+    function() whatsNewModule:Show() end, nil, nil))
 
   dyn:SetMenuItems(menuItems)
   dyn:Show(control or "cursor", 0, 0)
