@@ -35,6 +35,7 @@ local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local libGUI = LibStub("AceGUI-3.0")
 local ngToolboxModule = LibStub("Buffomat-NgToolbox") --[[@as NgToolboxModule]]
 local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
+local slashModule = LibStub("Buffomat-SlashCommands") --[[@as SlashCommandsModule]]
 
 --- Constructs the window. Only called from one location - WindowCommand()
 function module:ConstructWindow()
@@ -333,7 +334,7 @@ function module:CheckWindowBounds()
   local outOfBounds = self.taskFrame:isWindowOutOfBounds()
   if outOfBounds and not flagIsOutofBounds then
     flagIsOutofBounds = true
-    BuffomatAddon:Print("Window is off-screen. Use /bom reset to restore it.")
+    BuffomatAddon:Print("Window is off-screen. Use " .. slashModule.mainCommand .. " reset to restore it.")
   elseif not outOfBounds and flagIsOutofBounds then
     flagIsOutofBounds = false
   end

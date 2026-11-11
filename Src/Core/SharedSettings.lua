@@ -44,6 +44,9 @@ local supportedLanguageSettings = {
 ---@field FadeWhenNothingToDo number Allows Buffomat window to fade when nothing to do
 ---@field UseProfiles boolean
 ---@field SlowerHardware boolean
+---@field SlashCommandBom boolean Register /bom; read at load
+---@field SlashCommandBfm boolean Register /bfm; read at load
+---@field SlashCommandBuffomat boolean Register /buffomat; read at load
 ---@field ScanInRestArea boolean
 ---@field ScanInStealth boolean
 ---@field ScanWhileMounted boolean
@@ -121,6 +124,9 @@ function module:Defaults()
     FadeWhenNothingToDo = 1.0,
     UseProfiles = false,
     SlowerHardware = false,
+    SlashCommandBom = true,
+    SlashCommandBfm = false,
+    SlashCommandBuffomat = true,
     ----------------------
     ScanInRestArea = false,
     ScanInStealth = false,

@@ -9,6 +9,7 @@ module.lastMacroSet = ''
 
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
+local slashModule = LibStub("Buffomat-SlashCommands") --[[@as SlashCommandsModule]]
 
 ---@class BomMacro
 ---@field name string Macro name, default Buff'o'mat
@@ -59,7 +60,8 @@ end
 ---@return string
 ---@nodiscard
 function macroClass:GetText()
-  local t = "#showtooltip\n/bom update\n/bom _checkforerror"
+  local command = slashModule.mainCommand or "/bom"
+  local t = "#showtooltip\n" .. command .. " update\n" .. command .. " _checkforerror"
   for _, line in ipairs(self.lines) do
     t = t .. "\n" .. line
   end

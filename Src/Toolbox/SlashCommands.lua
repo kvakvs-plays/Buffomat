@@ -15,6 +15,58 @@ local kvEnvModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
 local slashCommandConf ---@type BomSlashCommand[]
 local slashCommandStrings ---@type string[]
 
+---@class BomSlashCommandChoice
+---@field setting string BomSharedSettings field which turns the command on
+---@field command string
+---@field default boolean
+
+---The commands the user can choose from, shortest first: the first chosen one is used in
+---the macro and in messages.
+---@type BomSlashCommandChoice[]
+module.CHOICES = {
+  { setting = "SlashCommandBom", command = "/bom", default = true },
+  { setting = "SlashCommandBfm", command = "/bfm", default = false },
+  { setting = "SlashCommandBuffomat", command = "/buffomat", default = true },
+}
+-- With none chosen there would be no way to type a command, and the macro needs one
+local FALLBACK_COMMAND = "/buffomat"
+
+---The command the macro and messages use, fixed at load like the registered commands.
+module.mainCommand = "/bom"
+
+---Give the settings saved before these options existed their default values.
+---@param settings SharedSettings
+function module:UpgradeSettings(settings)
+  for _, choice in ipairs(self.CHOICES) do
+    if settings[choice.setting] == nil then
+      settings[choice.setting] = choice.default
+    end
+  end
+end
+
+---The commands chosen in the options, shortest first; never empty.
+---@param settings SharedSettings
+---@return string[]
+function module:ChosenCommands(settings)
+  local commands = {}
+  for _, choice in ipairs(self.CHOICES) do
+    if settings[choice.setting] == true then
+      table.insert(commands, choice.command)
+    end
+  end
+  if #commands == 0 then
+    commands[1] = FALLBACK_COMMAND
+  end
+  return commands
+end
+
+---Replace "/bom" in a text, such as a translated hint, with the command in use.
+---@param text string
+---@return string
+function module:WithMainCommand(text)
+  return (text:gsub("/bom", self.mainCommand))
+end
+
 ---@param slashStrings string[]
 ---@param sep string|nil
 function module:SlashUnpack(slashStrings, sep)
@@ -142,6 +194,7 @@ end
 function module:RegisterSlashCommandHandler(cmds, subcommand)
   slashCommandConf = subcommand
   slashCommandStrings = cmds
+  module.mainCommand = type(cmds) == "table" and cmds[1] or cmds --[[@as string]]
 
   if type(cmds) == "table" then
     for i, cmd in ipairs(cmds) do

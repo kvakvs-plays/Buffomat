@@ -11,6 +11,7 @@ local kvOptionsModule = LibStub("KvLibShared-Options") --[[@as KvOptionsModule]]
 local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
 local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
 local envModule = LibStub("KvLibShared-Env") --[[@as KvSharedEnvModule]]
+local slashModule = LibStub("Buffomat-SlashCommands") --[[@as SlashCommandsModule]]
 local libIcon = LibStub("LibDBIcon-1.0")
 
 ---Any option can change what a scan decides or shows, and nothing else tells the scanner
@@ -74,6 +75,16 @@ function module:TemplateRange(name, rangeFrom, rangeTo, step, dict, key, notify)
     requestScanThen(name, notify), _t)
 end
 
+---A checkbox for one slash command. Slash commands are registered when the addon loads, so a
+---change asks for a reload.
+---@param name string BomSharedSettings field, one of the slash command choices
+function module:TemplateSlashCommandCheckbox(name)
+  return self:TemplateCheckbox(name, BuffomatShared, nil, function()
+    local commands = table.concat(slashModule:ChosenCommands(BuffomatShared), ", ")
+    BuffomatAddon:Print(string.format(_t("options.SlashCommandReload"), commands))
+  end)
+end
+
 function module:CreateGeneralOptionsTable()
   local sounds = --[[@as {[string]: string} ]] {}
   sounds[_t("task.notifications.no-sound")] = "-"
@@ -101,6 +112,9 @@ function module:CreateGeneralOptionsTable()
       ),
       useProfiles = self:TemplateCheckbox("UseProfiles", BuffomatCharacter, nil, nil),
       slowerHardware = self:TemplateCheckbox("SlowerHardware", BuffomatShared, nil, nil),
+      slashCommandBom = self:TemplateSlashCommandCheckbox("SlashCommandBom"),
+      slashCommandBfm = self:TemplateSlashCommandCheckbox("SlashCommandBfm"),
+      slashCommandBuffomat = self:TemplateSlashCommandCheckbox("SlashCommandBuffomat"),
       minimapButtonShow = {
         type = "toggle",
         name = _t("options.short.ShowMinimapButton"),

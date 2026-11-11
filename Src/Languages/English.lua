@@ -104,6 +104,9 @@ function englishModule:Translations()
     ["options.short.ShamanFlametongueRanked"] = "Shaman: Use downranked Flametongue on mainhand",
     ["options.short.ShowMinimapButton"] = "Show minimap button",
     ["options.short.SlowerHardware"] = "Scan buffs less often",
+    ["options.short.SlashCommandBom"] = "Chat command /bom",
+    ["options.short.SlashCommandBfm"] = "Chat command /bfm",
+    ["options.short.SlashCommandBuffomat"] = "Chat command /buffomat",
     ["options.short.SomeoneIsDrinking"] = "When someone is drinking...",
     ["options.short.UseProfiles"] = "Use profiles",
     ["options.short.UseRank"] = "Use ranked buffs and downrank as necessary",
@@ -160,6 +163,13 @@ function englishModule:Translations()
     ["options.long.ShowMinimapButton"] = "Show minimap button",
     ["options.long.ShowTBCConsumables"] = "Show consumables available in TBC",
     ["options.long.SlowerHardware"] = "Less frequent buff checks (slow hardware/raid)",
+    ["options.long.SlashCommandBom"] = "Use /bom for Buffomat. Turn it off if another addon uses /bom. "
+        .. "The shortest command chosen is used in the Buffomat macro. Reload UI to apply.",
+    ["options.long.SlashCommandBfm"] = "Use /bfm for Buffomat. "
+        .. "The shortest command chosen is used in the Buffomat macro. Reload UI to apply.",
+    ["options.long.SlashCommandBuffomat"] = "Use /buffomat for Buffomat. With no command chosen, /buffomat is "
+        .. "used anyway. Reload UI to apply.",
+    ["options.SlashCommandReload"] = "Chat commands after the next reload (/reload): %s",
     ["options.long.SomeoneIsDrinking"] = "When someone is drinking a message can be shown or hidden",
     ["options.long.UseProfiles"] = "Use profiles based on whether the player is solo, in a group, raid or a battleground",
     ["options.long.UseRank"] =

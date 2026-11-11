@@ -244,6 +244,8 @@ function module:InitGlobalStates()
     BuffomatCharacter = characterSettingsModule:NewDefaultCharacterSettings()
   end
 
+  slashModule:UpgradeSettings(BuffomatShared)
+
   if type(BuffomatShared.TargetTooLowLevel) ~= "table" then
     BuffomatShared.TargetTooLowLevel = {} --[[@as table<number, number>]]
   end
@@ -344,7 +346,8 @@ function BuffomatAddon:Init()
   BuffomatAddon.theMacro = macroModule:NewMacro(constModule.MACRO_NAME, nil)
 
   languagesModule:LocalizationInit()
-  slashModule:RegisterSlashCommandHandler({ "/bom", "/buffomat" }, self:MakeSlashCommand())
+  -- The chosen commands; a change in the options takes effect after a reload
+  slashModule:RegisterSlashCommandHandler(slashModule:ChosenCommands(BuffomatShared), self:MakeSlashCommand())
   module:InitUI()
 
   -- Which groups are watched by the buff scanner - save in character state

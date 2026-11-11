@@ -5,6 +5,7 @@
 local _t = LibStub("Buffomat-Languages") --[[@as LanguagesModule]]
 local AceGUI = LibStub("AceGUI-3.0")
 local constModule = LibStub("Buffomat-Const") --[[@as ConstModule]]
+local slashModule = LibStub("Buffomat-SlashCommands") --[[@as SlashCommandsModule]]
 local optionsPopupModule = LibStub("Buffomat-OptionsPopup") --[[@as OptionsPopupModule]]
 local spellsDialogModule = LibStub("Buffomat-SpellsDialog") --[[@as SpellsDialogModule]]
 local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPanelModule]]
@@ -300,7 +301,8 @@ do
     close:SetScript("OnClick", closeOnClick)
     toolboxModule:Tooltip(
       close,
-      string.format(_t("tooltip.button.HideBuffomat"), GetBindingKey("BUFFOMAT_WINDOW") or _t("binding.notSet"))
+      string.format(slashModule:WithMainCommand(_t("tooltip.button.HideBuffomat")),
+        GetBindingKey("BUFFOMAT_WINDOW") or _t("binding.notSet"))
     )
     window.closebutton = close
     close.obj = window

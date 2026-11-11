@@ -93,6 +93,9 @@ function russianModule:Translations()
     ["options.short.ShamanFlametongueRanked"] = "Шаман: Использовать пониженный ранг языков пламени на правой руке",
     ["options.short.ShowMinimapButton"] = "Показать кнопку у миникарты",
     ["options.short.SlowerHardware"] = "Сканировать бафы реже",
+    ["options.short.SlashCommandBom"] = "Команда чата /bom",
+    ["options.short.SlashCommandBfm"] = "Команда чата /bfm",
+    ["options.short.SlashCommandBuffomat"] = "Команда чата /buffomat",
     ["options.short.SomeoneIsDrinking"] = "Когда кто-то в группе пьёт",
     ["options.short.UseProfiles"] = "Использовать профили",
     ["options.short.UseRank"] = "Использовать понижение ранга заклинаний",
@@ -137,6 +140,14 @@ function russianModule:Translations()
     ["options.long.ShowMinimapButton"] = "Показать кнопку у миникарты",
     ["options.long.ShowTBCConsumables"] = "Показывать расходники TBC",
     ["options.long.SlowerHardware"] = "Менее частые проверки бафов (слабое железо/рейд)",
+    ["options.long.SlashCommandBom"] = "Использовать /bom для Buffomat. Выключите, если /bom занята другим "
+        .. "аддоном. Самая короткая из выбранных команд используется в макросе Buffomat. Применится после "
+        .. "перезагрузки интерфейса.",
+    ["options.long.SlashCommandBfm"] = "Использовать /bfm для Buffomat. Самая короткая из выбранных команд "
+        .. "используется в макросе Buffomat. Применится после перезагрузки интерфейса.",
+    ["options.long.SlashCommandBuffomat"] = "Использовать /buffomat для Buffomat. Если не выбрана ни одна "
+        .. "команда, /buffomat всё равно работает. Применится после перезагрузки интерфейса.",
+    ["options.SlashCommandReload"] = "Команды чата после перезагрузки интерфейса (/reload): %s",
     ["options.long.SomeoneIsDrinking"] = "Когда кто-то пьёт, сообщение можно показать или скрыть",
     ["options.long.UseProfiles"] = "Использовать профили в зависимости от соло, группы, рейда или поля боя",
     ["options.long.UseRank"] = "Если у цели уровень слишком низкий, то использовать пониженный ранг заклинания",
