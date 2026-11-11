@@ -89,6 +89,8 @@ Src/Ui/NgSecureActionButton.lua
 Src/Ui/NgTaskListWindow.lua
 Src/Ui/Buffomat.xml
 Src/Ui/ForceTargetDialog.lua
+Src/Changelog.lua
+Src/Ui/WhatsNew.lua
 
 Src/Events.lua
 Src/SpellSetup.lua

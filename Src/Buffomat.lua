@@ -27,6 +27,7 @@ local taskListPanelModule = LibStub("Buffomat-TaskListPanel") --[[@as TaskListPa
 local scanSchedulerModule = LibStub("Buffomat-ScanScheduler") --[[@as ScanSchedulerModule]]
 local ngStringsModule = LibStub("Buffomat-NgStrings") --[[@as NgStringsModule]]
 local scanStatsModule = LibStub("Buffomat-ScanStats") --[[@as ScanStatsModule]]
+local whatsNewModule = LibStub("Buffomat-WhatsNew") --[[@as WhatsNewModule]]
 
 module.libIcon = LibStub("LibDBIcon-1.0")
 
@@ -245,6 +246,7 @@ function module:InitGlobalStates()
   end
 
   slashModule:UpgradeSettings(BuffomatShared)
+  whatsNewModule:UpgradeSettings(BuffomatShared)
 
   if type(BuffomatShared.TargetTooLowLevel) ~= "table" then
     BuffomatShared.TargetTooLowLevel = {} --[[@as table<number, number>]]
@@ -305,6 +307,11 @@ function BuffomatAddon:MakeSlashCommand()
       command = "scanstats",
       description = _t("SlashScanStats"),
       handler = function() scanStatsModule:Print() end
+    },
+    {
+      command = whatsNewModule.SLASH_COMMAND,
+      description = _t("SlashChanges"),
+      handler = function() whatsNewModule:Toggle() end
     },
     {
       command = "close",
@@ -395,6 +402,7 @@ function BuffomatAddon:OnEnable()
 
   toolboxModule:AddDataBroker(constModule.BOM_BEAR_ICON_FULLPATH, onClick, nil, nil)
   module:UseProfile(profileModule:SoloProfile())
+  whatsNewModule:Init()
 end
 
 ---AceAddon handler

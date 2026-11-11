@@ -130,6 +130,10 @@ Design: `.agents/scan-plan.md`. The modules are in `Src/Scan/`.
 - `wowaddon.py` is the Python build/install tool. It writes flavor TOCs, installs addon files, and builds release zips.
 - `toc_template.toc` is the authoritative load-order template for generated TOC files.
 - When adding a module, update `Src/EarlyBoot.lua` and ensure the module is included in the TOC load order.
+- `CHANGELOG.md` is shown in the game by the What's new window (`Src/Ui/WhatsNew.lua`). `wowaddon.py` writes it
+  into the git-ignored `Src/Changelog.lua` on every install or zip. Write each point as
+  `- **Short title phrase.** What changed.`; the window shows the title phrase in red and `` `code` `` as a
+  command. Only the first top-level section is shown, not the legacy changelog.
 - `luacheck Src Tests` must report 0 warnings with the committed `.luacheckrc`. Prefix intentionally unused
   values with `_`, and add new WoW API globals to `stds.wow` there. On Windows there is no launcher:
   run `lua "%APPDATA%\luarocks\bin\luacheck"` with `LUA_PATH` set (see `.agents/luacheck-plan.md`).

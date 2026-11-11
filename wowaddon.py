@@ -5,14 +5,15 @@
 
 import argparse
 import os
+import re
 import shutil
 import subprocess
 import sys
 import zipfile
-from typing import Iterator, Tuple
+from typing import Dict, Iterator, List, Tuple
 
 # Version bumping rules: Begin each new month with <year>.<month>.0 and increase by 1 with every new bump.
-VERSION = "2026.11.4"  # year.month.build_num
+VERSION = "2026.11.5"  # year.month.build_num
 
 ADDON_NAME_CLASSIC = "BuffomatClassic"  # Directory and zip name
 ADDON_TITLE_CLASSIC = "Buffomat Classic"  # Title field in TOC
@@ -33,6 +34,10 @@ COPY_FILES = [
     "README.md",
     "README.Deutsch.txt",
 ]
+
+# The What's new window shows CHANGELOG.md; the game reads no Markdown, so it is written as Lua
+CHANGELOG_SOURCE = "CHANGELOG.md"
+CHANGELOG_LUA = "Src/Changelog.lua"
 
 # Client TOC suffixes: https://warcraft.wiki.gg/wiki/TOC_format
 # Full catalog, including modes this addon does not support. A suffix constant
@@ -61,6 +66,91 @@ CLASSIC_TOC_VARIANTS = (
 )
 
 
+def parse_changelog(markdown: str) -> List[Dict]:
+    """Read the releases of CHANGELOG.md, newest first, for the What's new window.
+
+    A release is a `## ` heading with a list below it. A point is `- **Title phrase.** Text`,
+    may continue on the following lines, and may have points nested below it. Only the first
+    top-level (`# `) section is read: the legacy changelog below it is not shown in the game.
+
+    Returns a list of {"version": str, "items": [{"lead": str, "text": str, "level": 0 or 1}]}.
+    """
+    releases: List[Dict] = []
+    release = None
+    item = None
+    sections = 0
+    in_comment = False
+
+    for line in markdown.splitlines():
+        line = line.rstrip()
+        if in_comment or line.lstrip().startswith("<!--"):
+            in_comment = "-->" not in line
+            continue
+        if line.startswith("# "):
+            sections += 1
+            if sections > 1:
+                break
+            continue
+        if line.startswith("## "):
+            version = re.sub(r"^Buffomat Classic( and TBC)? ", "", line[3:].strip())
+            release = {"version": version, "items": []}
+            releases.append(release)
+            item = None
+            continue
+        if release is None:
+            continue
+        if not line.strip():
+            item = None
+            continue
+        bullet = re.match(r"^(\s*)[-*] +(.*)$", line)
+        if bullet:
+            item = {"level": 1 if len(bullet.group(1)) >= 2 else 0, "text": bullet.group(2)}
+            release["items"].append(item)
+        elif item is not None:
+            item["text"] += " " + line.strip()
+        else:
+            # A paragraph outside the list is shown as a point without a title
+            item = {"level": 0, "text": line.strip()}
+            release["items"].append(item)
+
+    for release in releases:
+        for item in release["items"]:
+            lead = re.match(r"^\*\*(.+?)\*\*\s*(.*)$", item["text"])
+            item["lead"] = lead.group(1) if lead else ""
+            item["text"] = lead.group(2) if lead else item["text"]
+
+    return [release for release in releases if release["items"]]
+
+
+def lua_string(text: str) -> str:
+    """Quote a text as a Lua string which the game also shows as written."""
+    text = text.replace("|", "||")  # a single | starts an escape sequence in the game's text
+    text = text.replace("\\", "\\\\").replace('"', '\\"')
+    return f'"{text}"'
+
+
+def changelog_to_lua(releases: List[Dict]) -> str:
+    """Write the releases as the Lua file loaded by Src/Ui/WhatsNew.lua."""
+    out = [
+        f"-- Generated from {CHANGELOG_SOURCE} by wowaddon.py. Do not edit: change {CHANGELOG_SOURCE},",
+        "-- then run wowaddon.py (install or zip) to write this file again.",
+        "",
+        'local changelogModule = LibStub("Buffomat-Changelog") --[[@as BomChangelogModule]]',
+        "",
+        "changelogModule.releases = {",
+    ]
+    for release in releases:
+        out.append(f'  {{ version = {lua_string(release["version"])}, items = {{')
+        for item in release["items"]:
+            fields = [lua_string(item["lead"]), lua_string(item["text"])]
+            if item["level"]:
+                fields.append(str(item["level"]))
+            out.append(f'    {{ {", ".join(fields)} }},')
+        out.append("  } },")
+    out.append("}")
+    return "\n".join(out) + "\n"
+
+
 class BuildTool:
     def __init__(self, args: argparse.Namespace):
         self.args = args
@@ -68,6 +158,9 @@ class BuildTool:
         self.copy_dirs = COPY_DIRS[:]
         self.copy_files = COPY_FILES[:]
         self.is_forever = args.version == "forever"
+
+        # Before anything is copied: Src/ is packaged with the changelog in it
+        self.create_changelog()
 
         # Camelot TOC is written for every target: Forever ships it as its only
         # TOC, and the combined Classic package carries it alongside the others.
@@ -173,6 +266,26 @@ class BuildTool:
         p = subprocess.check_output(["git", "rev-parse", "HEAD"])
         hash1 = str(p).rstrip("\\n'").lstrip("b'")
         return hash1[:8]
+
+    @staticmethod
+    def create_changelog():
+        """Write Src/Changelog.lua from CHANGELOG.md, for the What's new window."""
+        with open(CHANGELOG_SOURCE, "rt", encoding="utf-8") as in_f:
+            releases = parse_changelog(in_f.read())
+
+        missing = [
+            f'{release["version"]}: {item["text"][:50]}'
+            for release in releases
+            for item in release["items"]
+            if not item["lead"]
+        ]
+        if missing:
+            print(f"Warning: {len(missing)} changelog points have no **title phrase**:")
+            for point in missing:
+                print(f"  {point}")
+
+        with open(CHANGELOG_LUA, "wt", encoding="utf-8", newline="\n") as out_f:
+            out_f.write(changelog_to_lua(releases))
 
     @staticmethod
     def create_toc(dst: str, ui_version: str, title: str):

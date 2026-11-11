@@ -68,6 +68,9 @@ stds.wow = { read_globals = {
   "UnitPower", "UnitPowerMax", "UnitRace", "UnitXPMax", "wipe", "WorldFrame", "WOW_PROJECT_BURNING_CRUSADE_CLASSIC",
   "WOW_PROJECT_CATACLYSM_CLASSIC", "WOW_PROJECT_CLASSIC", "WOW_PROJECT_ID", "WOW_PROJECT_MISTS_CLASSIC",
   "WOW_PROJECT_WRATH_CLASSIC",
+  -- The What's new window (Src/Ui/WhatsNew.lua)
+  "ButtonFrameTemplate_HidePortrait", "CLOSE", "C_Texture", "HIGHLIGHT_FONT_COLOR", "hooksecurefunc",
+  "NORMAL_FONT_COLOR", "QuestFont", "QuestTitleFont", "SOUNDKIT", "UISpecialFrames",
 } }
 
 -- The scan pipeline (readers, evaluation, task builders) reaches the game only through
@@ -76,6 +79,8 @@ stds.wow = { read_globals = {
 stds.scan = { read_globals = { "GetTime", "InCombatLockdown", "LibStub", "tContains", "wipe" } }
 
 files["Src/Languages/**"] = { max_line_length = false }
+-- Written by wowaddon.py from CHANGELOG.md, one changelog point per line
+files["Src/Changelog.lua"] = { max_line_length = false }
 -- Knowledge setup functions share one signature; not all of them use the enchantment table
 files["Src/Knowledge/**"] = { ignore = { "212/enchantments" } }
 -- AceConfig option callbacks receive `info` whether they need it or not

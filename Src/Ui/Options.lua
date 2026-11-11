@@ -115,6 +115,7 @@ function module:CreateGeneralOptionsTable()
       slashCommandBom = self:TemplateSlashCommandCheckbox("SlashCommandBom"),
       slashCommandBfm = self:TemplateSlashCommandCheckbox("SlashCommandBfm"),
       slashCommandBuffomat = self:TemplateSlashCommandCheckbox("SlashCommandBuffomat"),
+      welcomeMessage = self:TemplateCheckbox("WelcomeMessage", nil, nil, nil),
       minimapButtonShow = {
         type = "toggle",
         name = _t("options.short.ShowMinimapButton"),

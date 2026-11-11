@@ -48,6 +48,7 @@ during combat!
 * `/bom update` - Update macro / list
 * `/bom close` - Close BOM window
 * `/bom reset` - Reset BOM window
+* `/bom changes` - What's new: the changes in each version
 * `/bom` - Open BOM window
 
 ## Supported spells

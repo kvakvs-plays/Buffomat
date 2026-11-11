@@ -47,6 +47,9 @@ local supportedLanguageSettings = {
 ---@field SlashCommandBom boolean Register /bom; read at load
 ---@field SlashCommandBfm boolean Register /bfm; read at load
 ---@field SlashCommandBuffomat boolean Register /buffomat; read at load
+---@field WelcomeMessage boolean Say the version in chat at login, with a link to the What's new window
+---@field SeenVersion string|nil The version for which the What's new window was last opened
+---@field WhatsNewPoint table|nil Where the What's new window was dragged to: point, relative point, x, y
 ---@field ScanInRestArea boolean
 ---@field ScanInStealth boolean
 ---@field ScanWhileMounted boolean
@@ -127,6 +130,7 @@ function module:Defaults()
     SlashCommandBom = true,
     SlashCommandBfm = false,
     SlashCommandBuffomat = true,
+    WelcomeMessage = true,
     ----------------------
     ScanInRestArea = false,
     ScanInStealth = false,
